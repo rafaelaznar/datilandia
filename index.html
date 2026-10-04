@@ -955,6 +955,36 @@
       min-height: 40vh;
     }
 
+    #dlg-structure {
+      width: min(760px, 94vw);
+      height: min(720px, 88vh);
+      padding: 8px 10px;
+      border: 1px solid #999;
+      background: #fff;
+      color: #000;
+    }
+
+    /*  The window is one column: header on top, the JSON box taking the rest
+        and the toolbar at the bottom, so the box fits the size of the window.  */
+    #dlg-structure[open] {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #dlg-structure::backdrop {
+      background: rgb(0 0 0 / 0.25);
+    }
+
+    #dlg-structure #structure-json-text {
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: 0;
+      padding: 3px 4px;
+      border: 1px solid #bbb;
+      resize: none;
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+    }
+
     #dlg-settings {
       width: min(640px, 94vw);
       padding: 8px 10px;
@@ -1839,6 +1869,7 @@ ORDER BY edificios DESC, sede;</pre>
           <button data-i18n-title="markup.button.deleteTableAllItsData" data-i18n="markup.button.deleteTable" id="btn-delete-table" type="button" title="Eliminar la tabla y todos sus datos">Eliminar tabla</button>
           <span class="sep"></span>
           <button data-i18n-title="markup.button.seeEditFieldsMetadataPop" data-i18n="markup.button.fieldsMetadata" id="btn-fields" type="button" title="Ver y editar los campos y metadatos en una ventana emergente">Campos y metadatos…</button>
+          <button data-i18n-title="markup.button.seeStructureJsonPop" data-i18n="markup.button.structureJson" id="btn-structure" type="button" title="Ver la estructura de la tabla en JSON en una ventana emergente">Estructura JSON…</button>
           <span class="sep"></span>
           <button data-i18n-title="markup.button.addRowAtEnd" data-i18n="markup.button.addRow" id="btn-add-row" type="button" title="Añadir una fila al final">Añadir fila</button>
           <span class="sep"></span>
@@ -1970,6 +2001,19 @@ ORDER BY edificios DESC, sede;</pre>
       <span class="sep"></span>
       <input id="id-field-name" type="text" size="8" value="id" title="Nombre del campo ID autonumérico">
       <button data-i18n-title="markup.button.createCorrelativeAutoNumberedID" data-i18n="markup.button.createAutoNumberedIDField" id="btn-create-id" type="button" title="Crear un campo ID autonumérico correlativo">Crear campo ID autonumérico</button>
+    </div>
+  </dialog>
+
+  <!-- Modal window: structure of the table as JSON -->
+  <dialog id="dlg-structure" aria-labelledby="dlg-structure-titulo">
+    <div class="dlg-header">
+      <b data-i18n="markup.b.tableStructureJson" id="dlg-structure-titulo">Estructura de la tabla (JSON)</b>
+      <span id="dlg-structure-table" class="muted"></span>
+      <button data-i18n-title="markup.button.closeWindowEsc8" data-i18n="markup.button.close8" class="derecha" id="btn-close-structure" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+    </div>
+    <textarea data-i18n-aria-label="markup.textarea.tableStructureAsJson" data-i18n-title="markup.textarea.structureJsonReadOnly" id="structure-json-text" readonly spellcheck="false" aria-label="Estructura de la tabla en JSON" title="Estructura de la tabla en JSON (solo lectura)"></textarea>
+    <div class="toolbar">
+      <button data-i18n-title="markup.button.copyStructureJsonClipboard" data-i18n="markup.button.copy" id="btn-copiar-structure" type="button" title="Copiar el JSON al portapapeles">Copiar</button>
     </div>
   </dialog>
 
@@ -2193,6 +2237,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.b.resultCSV": "Result in CSV",
         "markup.b.searchTable": "Search in the table",
         "markup.b.selfTestReport": "Self-test report",
+        "markup.b.tableStructureJson": "Table structure (JSON)",
         "markup.b.testReport": "Test report",
         "markup.button.addField": "Add field",
         "markup.button.addFieldNullValues": "Add a field (null values)",
@@ -2208,6 +2253,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.close5": "Close",
         "markup.button.close6": "Close",
         "markup.button.close7": "Close",
+        "markup.button.close8": "Close",
         "markup.button.closeWindowEsc": "Close the window (Esc)",
         "markup.button.closeWindowEsc2": "Close the window (Esc)",
         "markup.button.closeWindowEsc3": "Close the window (Esc)",
@@ -2215,12 +2261,14 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.closeWindowEsc5": "Close the window (Esc)",
         "markup.button.closeWindowEsc6": "Close the window (Esc)",
         "markup.button.closeWindowEsc7": "Close the window (Esc)",
+        "markup.button.closeWindowEsc8": "Close the window (Esc)",
         "markup.button.copy": "Copy",
         "markup.button.copyCSVTextClipboard": "Copy the CSV text to the clipboard",
         "markup.button.copyCompleteReportAsText": "Copy the complete report as text",
         "markup.button.copyCompleteReportAsText2": "Copy the complete report as text",
         "markup.button.copyReport": "Copy report",
         "markup.button.copyReport2": "Copy report",
+        "markup.button.copyStructureJsonClipboard": "Copy the JSON to the clipboard",
         "markup.button.createAutoNumberedIDField": "Create auto-numbered ID field",
         "markup.button.createCorrelativeAutoNumberedID": "Create a correlative auto-numbered ID field",
         "markup.button.createEmptyTable": "Create an empty table",
@@ -2300,6 +2348,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.seeEveryQueryItsProperties": "See every query with its properties",
         "markup.button.seeEveryTableItsProperties": "See every table with its properties",
         "markup.button.seeRelations": "See relations",
+        "markup.button.seeStructureJsonPop": "See the structure of the table in JSON in a pop-up window",
         "markup.button.selectFiles": "Select files…",
         "markup.button.selectSeveralCSVJSONFiles": "Select several CSV/JSON files",
         "markup.button.selfTests": "Self-tests",
@@ -2307,6 +2356,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.settings": "Settings",
         "markup.button.settingsProjectNameRowsPer": "Settings: project name, rows per page and CSV options for import/export",
         "markup.button.shortcuts": "Shortcuts",
+        "markup.button.structureJson": "Structure JSON…",
         "markup.button.summariseSort": "Summarise and sort",
         "markup.button.tables": "Tables",
         "markup.button.tablesAliasesViews": "Tables, aliases and views",
@@ -2585,6 +2635,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.textarea.resultAsCSVText": "Result as CSV text",
         "markup.textarea.sqlQuery": "SQL query",
         "markup.textarea.sqlQuerySELECTOnly": "SQL query (SELECT only)",
+        "markup.textarea.structureJsonReadOnly": "Table structure in JSON (read-only)",
+        "markup.textarea.tableStructureAsJson": "Table structure as JSON",
 
         "project.label": "Project:",
         "selfTests.noFailures": {"one":"No failures: the {count} self-test passes.","other":"No failures: the {count} self-tests pass."},
@@ -3051,6 +3103,9 @@ ORDER BY edificios DESC, sede;</pre>
         "ui.tableNoLongerInProject": "The table “{tableName}” is no longer in the project.",
         "ui.tableNoRows": "The table has no rows. Use “Add row” or import data.",
         "ui.tableRenamed": "Table renamed: “{oldName}” → “{newName}” ({queries}{refs}).",
+        "ui.tableStructureCopied": "Structure JSON copied to the clipboard.",
+        "ui.tableStructureCopyManual": "It could not be copied on its own: the text is selected, press Ctrl+C.",
+        "ui.tableStructureHint": "Structure of “{tableName}” as JSON. Close with Esc or the “Close” button.",
         "ui.tableSummaryTip": "Table “{name}”: {rowCount} row(s), {fieldCount} field(s).",
         "ui.tableTitle": "Table “{tableName}”",
         "ui.testLabel": "Test: {assertion}",
@@ -3108,6 +3163,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.b.resultCSV": "Resultado en CSV",
         "markup.b.searchTable": "Buscar en la tabla",
         "markup.b.selfTestReport": "Informe de auto-tests",
+        "markup.b.tableStructureJson": "Estructura de la tabla (JSON)",
         "markup.b.testReport": "Informe de pruebas",
         "markup.button.addField": "Añadir campo",
         "markup.button.addFieldNullValues": "Añadir un campo (valores nulos)",
@@ -3123,6 +3179,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.close5": "Cerrar",
         "markup.button.close6": "Cerrar",
         "markup.button.close7": "Cerrar",
+        "markup.button.close8": "Cerrar",
         "markup.button.closeWindowEsc": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc2": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc3": "Cerrar la ventana (Esc)",
@@ -3130,12 +3187,14 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.closeWindowEsc5": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc6": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc7": "Cerrar la ventana (Esc)",
+        "markup.button.closeWindowEsc8": "Cerrar la ventana (Esc)",
         "markup.button.copy": "Copiar",
         "markup.button.copyCSVTextClipboard": "Copiar el texto CSV al portapapeles",
         "markup.button.copyCompleteReportAsText": "Copiar el informe completo como texto",
         "markup.button.copyCompleteReportAsText2": "Copiar el informe completo como texto",
         "markup.button.copyReport": "Copiar informe",
         "markup.button.copyReport2": "Copiar informe",
+        "markup.button.copyStructureJsonClipboard": "Copiar el JSON al portapapeles",
         "markup.button.createAutoNumberedIDField": "Crear campo ID autonumérico",
         "markup.button.createCorrelativeAutoNumberedID": "Crear un campo ID autonumérico correlativo",
         "markup.button.createEmptyTable": "Crear una tabla vacía",
@@ -3215,6 +3274,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.seeEveryQueryItsProperties": "Ver todas las consultas con sus propiedades",
         "markup.button.seeEveryTableItsProperties": "Ver todas las tablas con sus propiedades",
         "markup.button.seeRelations": "Ver relaciones",
+        "markup.button.seeStructureJsonPop": "Ver la estructura de la tabla en JSON en una ventana emergente",
         "markup.button.selectFiles": "Seleccionar ficheros…",
         "markup.button.selectSeveralCSVJSONFiles": "Seleccionar varios ficheros CSV/JSON",
         "markup.button.selfTests": "Auto-tests",
@@ -3222,6 +3282,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.settings": "Ajustes",
         "markup.button.settingsProjectNameRowsPer": "Ajustes: nombre del proyecto, filas por página y CSV al importar/exportar",
         "markup.button.shortcuts": "Atajos",
+        "markup.button.structureJson": "Estructura JSON…",
         "markup.button.summariseSort": "Resumir y ordenar",
         "markup.button.tables": "Tablas",
         "markup.button.tablesAliasesViews": "Tablas, alias y vistas",
@@ -3500,6 +3561,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.textarea.resultAsCSVText": "Resultado en texto CSV",
         "markup.textarea.sqlQuery": "Consulta SQL",
         "markup.textarea.sqlQuerySELECTOnly": "Consulta SQL (solo SELECT)",
+        "markup.textarea.structureJsonReadOnly": "Estructura de la tabla en JSON (solo lectura)",
+        "markup.textarea.tableStructureAsJson": "Estructura de la tabla en JSON",
 
         "project.label": "Proyecto:",
         "selfTests.noFailures": {"one":"Sin fallos: el {count} auto-test pasa.","other":"Sin fallos: los {count} auto-tests pasan."},
@@ -3966,6 +4029,9 @@ ORDER BY edificios DESC, sede;</pre>
         "ui.tableNoLongerInProject": "La tabla «{tableName}» ya no está en el proyecto.",
         "ui.tableNoRows": "La tabla no tiene filas. Usa «Añadir fila» o importa datos.",
         "ui.tableRenamed": "Tabla renombrada: «{oldName}» → «{newName}» ({queries}{refs}).",
+        "ui.tableStructureCopied": "JSON de la estructura copiado al portapapeles.",
+        "ui.tableStructureCopyManual": "No se pudo copiar solo: el texto queda seleccionado, pulsa Ctrl+C.",
+        "ui.tableStructureHint": "Estructura de «{tableName}» en JSON. Cierra con Esc o con el botón «Cerrar».",
         "ui.tableSummaryTip": "Tabla «{name}»: {rowCount} fila(s), {fieldCount} campo(s).",
         "ui.tableTitle": "Tabla «{tableName}»",
         "ui.testLabel": "Test: {assertion}",
@@ -8594,6 +8660,14 @@ ORDER BY edificios DESC, sede;</pre>
             Ui.closeFields();
           }
         });
+        document.getElementById("btn-structure").addEventListener("click", () => Ui.openStructure());
+        document.getElementById("btn-close-structure").addEventListener("click", () => Ui.closeStructure());
+        document.getElementById("btn-copiar-structure").addEventListener("click", () => Ui.copyStructure());
+        document.getElementById("dlg-structure").addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            Ui.closeStructure();
+          }
+        });
 
         // Tables: create, rename and delete.
         document.getElementById("btn-new-table").addEventListener("click", () => Ui.createTable());
@@ -9412,6 +9486,65 @@ ORDER BY edificios DESC, sede;</pre>
         if (dialog.open) {
           dialog.close();
         }
+      },
+
+      /* --- Structure of the table as JSON -------------------------------- */
+
+      /** Opens the modal window with the structure of the table as JSON: name,
+       *  description, ID field, the counter and the fields with their foreign
+       *  key references. The rows are left out. */
+      openStructure() {
+        const table = Ui.activeTableOrNull();
+        if (!table) {
+          return;
+        }
+        document.getElementById("structure-json-text").value = Ui.structureJson(table);
+        document.getElementById("dlg-structure-table").textContent = I18n.t("ui.tableTitle", { tableName: table.name });
+        document.getElementById("dlg-structure").showModal();
+        setStatus(I18n.t("ui.tableStructureHint", { tableName: table.name }));
+      },
+
+      /** Closes the structure modal window when it is open. */
+      closeStructure() {
+        const dialog = document.getElementById("dlg-structure");
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Structure of the table as readable JSON: the metadata and the fields
+       *  with their type and their foreign key references, but no rows. */
+      structureJson(table) {
+        return JSON.stringify(
+          {
+            name: table.name,
+            description: table.description || "",
+            idField: table.idField,
+            nextId: table.nextId,
+            fields: table.fields.map((field) => Model.fieldMeta(field)),
+          },
+          null,
+          2,
+        );
+      },
+
+      /** Copies the JSON of the structure to the clipboard (or leaves it
+       *  selected when there is no permission). */
+      async copyStructure() {
+        const text = document.getElementById("structure-json-text");
+        if (text.value === "") {
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(text.value);
+          setStatus(I18n.t("ui.tableStructureCopied"));
+          return;
+        } catch (err) {
+          // Without clipboard permission: it is selected so it can be copied with Ctrl+C.
+        }
+        text.focus();
+        text.select();
+        setStatus(I18n.t("ui.tableStructureCopyManual"));
       },
 
       renderFields(table) {
@@ -16405,6 +16538,63 @@ ORDER BY edificios DESC, sede;</pre>
       document.querySelectorAll("#table-fields input.field-fk")[0].click();
       const combo = document.querySelector("#table-fields select.field-fk-table");
       assertEqual([...combo.options].map((option) => option.value), ["campuses", "classrooms", "buildings"], "the target combo lists the other tables and, at the end, its own");
+
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_OpenStructureJson_Expect_MetadataAndReferences", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        table: Ui.state.activeTable,
+        view: Ui.state.view,
+      };
+      Store.replaceProject({
+        name: "structure",
+        testing: false,
+        tables: [
+          {
+            name: "sedes",
+            description: "Campus de la universidad.",
+            idField: "id_sede",
+            nextId: 5,
+            fields: [
+              { name: "id_sede", description: "Identificador", type: "number" },
+              { name: "nombre", description: "Nombre del campus", type: "string" },
+              { name: "id_edificio", description: "Edificio al que pertenece", type: "number", references: { table: "edificios", field: "id_edificio" } },
+            ],
+            rows: [{ id_sede: 1, nombre: "Norte", id_edificio: 1 }],
+          },
+        ],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      Ui.selectTable("sedes");
+      const table = Model.findTable(Store.project, "sedes");
+
+      // The JSON keeps the metadata and the foreign reference, and leaves the rows out.
+      const structure = JSON.parse(Ui.structureJson(table));
+      assertEqual(structure.name, "sedes", "the name is written");
+      assertEqual(structure.description, "Campus de la universidad.", "the description is written");
+      assertEqual(structure.idField, "id_sede", "the ID field is written");
+      assertEqual(structure.nextId, 5, "the counter is written");
+      assertEqual(structure.fields.length, 3, "every field is written");
+      assertEqual(structure.fields[2].references, { table: "edificios", field: "id_edificio" }, "the foreign key reference is included");
+      assert(!("rows" in structure), "the rows are left out");
+
+      // The button opens the window and fills the box with the same JSON.
+      document.getElementById("btn-structure").click();
+      const dialog = document.getElementById("dlg-structure");
+      assertEqual(dialog.open, true, "the structure window opens");
+      assertEqual(document.getElementById("structure-json-text").value, Ui.structureJson(table), "the box shows the structure");
+      assertEqual(document.getElementById("dlg-structure-table").textContent, I18n.t("ui.tableTitle", { tableName: "sedes" }), "the title names the table");
+      document.getElementById("btn-close-structure").click();
+      assertEqual(dialog.open, false, "it closes with the button");
 
       Store.replaceProject(antes.project);
       Ui.state.activeTable = antes.table;
