@@ -1,0 +1,5863 @@
+{
+  "format": "extractor",
+  "version": 1,
+  "name": "Pruebas SQL · Educación (8 tablas, 112 consultas)",
+  "folders": [
+    "A · Básicas y agregados",
+    "B · Uniones (join)",
+    "C · Consultas relacionadas",
+    "D · Integridad",
+    "E · Vistas"
+  ],
+  "tables": [
+    {
+      "name": "sedes",
+      "description": "Campus de la universidad: cada sede agrupa edificios y estudiantes.",
+      "idField": "id_sede",
+      "nextId": 5,
+      "fields": [
+        {
+          "name": "id_sede",
+          "description": "Identificador de la sede",
+          "type": "number"
+        },
+        {
+          "name": "nombre",
+          "description": "Nombre del campus",
+          "type": "string"
+        },
+        {
+          "name": "ciudad",
+          "description": "Ciudad donde está el campus",
+          "type": "string"
+        },
+        {
+          "name": "pais",
+          "description": "País del campus",
+          "type": "string"
+        },
+        {
+          "name": "aforo_maximo",
+          "description": "Aforo máximo de estudiantes",
+          "type": "number"
+        },
+        {
+          "name": "es_principal",
+          "description": "¿Es la sede principal?",
+          "type": "boolean"
+        },
+        {
+          "name": "telefono",
+          "description": "Teléfono de atención (puede faltar)",
+          "type": "string"
+        },
+        {
+          "name": "anio_fundacion",
+          "description": "Año de fundación",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        {
+          "id_sede": 1,
+          "nombre": "Campus Norte",
+          "ciudad": "Madrid",
+          "pais": "España",
+          "aforo_maximo": 4500,
+          "es_principal": true,
+          "telefono": "910111222",
+          "anio_fundacion": 1968
+        },
+        {
+          "id_sede": 2,
+          "nombre": "Campus Sur",
+          "ciudad": "Sevilla",
+          "pais": "España",
+          "aforo_maximo": 2800,
+          "es_principal": false,
+          "telefono": "954333444",
+          "anio_fundacion": 1985
+        },
+        {
+          "id_sede": 3,
+          "nombre": "Campus del Mar",
+          "ciudad": "Valencia",
+          "pais": "España",
+          "aforo_maximo": 1900,
+          "es_principal": false,
+          "telefono": null,
+          "anio_fundacion": 1997
+        },
+        {
+          "id_sede": 4,
+          "nombre": "Campus Andino",
+          "ciudad": "Bogotá",
+          "pais": "Colombia",
+          "aforo_maximo": 3200,
+          "es_principal": false,
+          "telefono": "601555666",
+          "anio_fundacion": 2004
+        }
+      ]
+    },
+    {
+      "name": "edificios",
+      "description": "Edificios de cada sede. Relación 1:M con sedes por id_sede.",
+      "idField": "id_edificio",
+      "nextId": 9,
+      "fields": [
+        {
+          "name": "id_edificio",
+          "description": "Identificador del edificio",
+          "type": "number"
+        },
+        {
+          "name": "id_sede",
+          "description": "Sede a la que pertenece (→ sedes.id_sede)",
+          "type": "number",
+          "references": {
+            "table": "sedes",
+            "field": "id_sede"
+          }
+        },
+        {
+          "name": "nombre",
+          "description": "Nombre del edificio",
+          "type": "string"
+        },
+        {
+          "name": "plantas",
+          "description": "Número de plantas",
+          "type": "number"
+        },
+        {
+          "name": "anio_construccion",
+          "description": "Año de construcción",
+          "type": "number"
+        },
+        {
+          "name": "tiene_ascensor",
+          "description": "¿Tiene ascensor?",
+          "type": "boolean"
+        },
+        {
+          "name": "notas",
+          "description": "Observaciones (puede faltar)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_edificio": 1,
+          "id_sede": 1,
+          "nombre": "Aulario Kepler",
+          "plantas": 4,
+          "anio_construccion": 1972,
+          "tiene_ascensor": true,
+          "notas": "Reformado en 2015"
+        },
+        {
+          "id_edificio": 2,
+          "id_sede": 1,
+          "nombre": "Laboratorios Curie",
+          "plantas": 3,
+          "anio_construccion": 1990,
+          "tiene_ascensor": true,
+          "notas": null
+        },
+        {
+          "id_edificio": 3,
+          "id_sede": 1,
+          "nombre": "Biblioteca Central",
+          "plantas": 6,
+          "anio_construccion": 1968,
+          "tiene_ascensor": true,
+          "notas": "Acceso restringido por obras"
+        },
+        {
+          "id_edificio": 4,
+          "id_sede": 2,
+          "nombre": "Aulario Pitágoras",
+          "plantas": 3,
+          "anio_construccion": 1988,
+          "tiene_ascensor": false,
+          "notas": null
+        },
+        {
+          "id_edificio": 5,
+          "id_sede": 2,
+          "nombre": "Pabellón Deportivo",
+          "plantas": 2,
+          "anio_construccion": 2001,
+          "tiene_ascensor": false,
+          "notas": "Solo planta baja y primera"
+        },
+        {
+          "id_edificio": 6,
+          "id_sede": 3,
+          "nombre": "Edificio Ramón y Cajal",
+          "plantas": 5,
+          "anio_construccion": 1997,
+          "tiene_ascensor": true,
+          "notas": null
+        },
+        {
+          "id_edificio": 7,
+          "id_sede": 4,
+          "nombre": "Bloque Bolívar",
+          "plantas": 4,
+          "anio_construccion": 2006,
+          "tiene_ascensor": true,
+          "notas": null
+        },
+        {
+          "id_edificio": 8,
+          "id_sede": 3,
+          "nombre": "Anexo Marina",
+          "plantas": 1,
+          "anio_construccion": 2012,
+          "tiene_ascensor": false,
+          "notas": "Aulas modulares"
+        }
+      ]
+    },
+    {
+      "name": "aulas",
+      "description": "Aulas de cada edificio. Relación 1:M con edificios por id_edificio.",
+      "idField": "id_aula",
+      "nextId": 17,
+      "fields": [
+        {
+          "name": "id_aula",
+          "description": "Identificador del aula",
+          "type": "number"
+        },
+        {
+          "name": "id_edificio",
+          "description": "Edificio al que pertenece (→ edificios.id_edificio)",
+          "type": "number",
+          "references": {
+            "table": "edificios",
+            "field": "id_edificio"
+          }
+        },
+        {
+          "name": "codigo",
+          "description": "Código del aula (único)",
+          "type": "string"
+        },
+        {
+          "name": "capacidad",
+          "description": "Plazas del aula",
+          "type": "number"
+        },
+        {
+          "name": "tiene_proyector",
+          "description": "¿Tiene proyector?",
+          "type": "boolean"
+        },
+        {
+          "name": "tipo_pizarra",
+          "description": "Tipo de pizarra (puede faltar)",
+          "type": "string"
+        },
+        {
+          "name": "planta",
+          "description": "Planta del edificio (0 = baja)",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        {
+          "id_aula": 1,
+          "id_edificio": 1,
+          "codigo": "K-101",
+          "capacidad": 60,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 1
+        },
+        {
+          "id_aula": 2,
+          "id_edificio": 1,
+          "codigo": "K-102",
+          "capacidad": 45,
+          "tiene_proyector": false,
+          "tipo_pizarra": "tiza",
+          "planta": 1
+        },
+        {
+          "id_aula": 3,
+          "id_edificio": 1,
+          "codigo": "K-201",
+          "capacidad": 30,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 2
+        },
+        {
+          "id_aula": 4,
+          "id_edificio": 2,
+          "codigo": "C-LAB1",
+          "capacidad": 24,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 1
+        },
+        {
+          "id_aula": 5,
+          "id_edificio": 2,
+          "codigo": "C-LAB2",
+          "capacidad": 20,
+          "tiene_proyector": true,
+          "tipo_pizarra": null,
+          "planta": 1
+        },
+        {
+          "id_aula": 6,
+          "id_edificio": 3,
+          "codigo": "B-SALA",
+          "capacidad": 80,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 3
+        },
+        {
+          "id_aula": 7,
+          "id_edificio": 3,
+          "codigo": "B-EST1",
+          "capacidad": 12,
+          "tiene_proyector": false,
+          "tipo_pizarra": null,
+          "planta": 2
+        },
+        {
+          "id_aula": 8,
+          "id_edificio": 4,
+          "codigo": "P-101",
+          "capacidad": 55,
+          "tiene_proyector": true,
+          "tipo_pizarra": "tiza",
+          "planta": 1
+        },
+        {
+          "id_aula": 9,
+          "id_edificio": 4,
+          "codigo": "P-102",
+          "capacidad": 55,
+          "tiene_proyector": false,
+          "tipo_pizarra": "tiza",
+          "planta": 1
+        },
+        {
+          "id_aula": 10,
+          "id_edificio": 4,
+          "codigo": "P-201",
+          "capacidad": 40,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 2
+        },
+        {
+          "id_aula": 11,
+          "id_edificio": 6,
+          "codigo": "R-101",
+          "capacidad": 70,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 1
+        },
+        {
+          "id_aula": 12,
+          "id_edificio": 6,
+          "codigo": "R-102",
+          "capacidad": 35,
+          "tiene_proyector": false,
+          "tipo_pizarra": "tiza",
+          "planta": 1
+        },
+        {
+          "id_aula": 13,
+          "id_edificio": 7,
+          "codigo": "L-301",
+          "capacidad": 50,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 3
+        },
+        {
+          "id_aula": 14,
+          "id_edificio": 7,
+          "codigo": "L-302",
+          "capacidad": 25,
+          "tiene_proyector": false,
+          "tipo_pizarra": null,
+          "planta": 3
+        },
+        {
+          "id_aula": 15,
+          "id_edificio": 8,
+          "codigo": "M-001",
+          "capacidad": 18,
+          "tiene_proyector": false,
+          "tipo_pizarra": null,
+          "planta": 1
+        },
+        {
+          "id_aula": 16,
+          "id_edificio": 8,
+          "codigo": "M-002",
+          "capacidad": 22,
+          "tiene_proyector": true,
+          "tipo_pizarra": "digital",
+          "planta": 1
+        }
+      ]
+    },
+    {
+      "name": "docentes",
+      "description": "Profesorado. Relación 1:M con asignaturas por id_docente.",
+      "idField": "id_docente",
+      "nextId": 13,
+      "fields": [
+        {
+          "name": "id_docente",
+          "description": "Identificador del docente",
+          "type": "number"
+        },
+        {
+          "name": "nombre",
+          "description": "Nombre",
+          "type": "string"
+        },
+        {
+          "name": "apellidos",
+          "description": "Apellidos",
+          "type": "string"
+        },
+        {
+          "name": "categoria",
+          "description": "Categoría profesional",
+          "type": "string"
+        },
+        {
+          "name": "horas_semanales",
+          "description": "Horas de docencia semanales",
+          "type": "number"
+        },
+        {
+          "name": "es_investigador",
+          "description": "¿Pertenece a un grupo de investigación?",
+          "type": "boolean"
+        },
+        {
+          "name": "email",
+          "description": "Correo de contacto (puede faltar)",
+          "type": "string"
+        },
+        {
+          "name": "despacho",
+          "description": "Despacho (puede faltar)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_docente": 1,
+          "nombre": "Elena",
+          "apellidos": "Vargas Ruiz",
+          "categoria": "Catedrática",
+          "horas_semanales": 18,
+          "es_investigador": true,
+          "email": "elena.vargas@uni.es",
+          "despacho": "D-201"
+        },
+        {
+          "id_docente": 2,
+          "nombre": "Marc",
+          "apellidos": "Oliver Pons",
+          "categoria": "Titular",
+          "horas_semanales": 20,
+          "es_investigador": true,
+          "email": "marc.oliver@uni.es",
+          "despacho": "D-114"
+        },
+        {
+          "id_docente": 3,
+          "nombre": "Nieves",
+          "apellidos": "Salgado Ortiz",
+          "categoria": "Titular",
+          "horas_semanales": 16,
+          "es_investigador": false,
+          "email": null,
+          "despacho": "D-115"
+        },
+        {
+          "id_docente": 4,
+          "nombre": "Iván",
+          "apellidos": "Requena Soto",
+          "categoria": "Asociado",
+          "horas_semanales": 6,
+          "es_investigador": false,
+          "email": "ivan.requena@uni.es",
+          "despacho": null
+        },
+        {
+          "id_docente": 5,
+          "nombre": "Carmen",
+          "apellidos": "Ibáñez Luna",
+          "categoria": "Catedrática",
+          "horas_semanales": 15,
+          "es_investigador": true,
+          "email": "carmen.ibanez@uni.es",
+          "despacho": "D-330"
+        },
+        {
+          "id_docente": 6,
+          "nombre": "Youssef",
+          "apellidos": "Amrani Belkacem",
+          "categoria": "Ayudante",
+          "horas_semanales": 12,
+          "es_investigador": true,
+          "email": null,
+          "despacho": "D-041"
+        },
+        {
+          "id_docente": 7,
+          "nombre": "Paula",
+          "apellidos": "Ferrer Gil",
+          "categoria": "Titular",
+          "horas_semanales": 19,
+          "es_investigador": false,
+          "email": "paula.ferrer@uni.es",
+          "despacho": "D-208"
+        },
+        {
+          "id_docente": 8,
+          "nombre": "Hugo",
+          "apellidos": "Naranjo Peña",
+          "categoria": "Asociado",
+          "horas_semanales": 8,
+          "es_investigador": false,
+          "email": "hugo.naranjo@uni.es",
+          "despacho": null
+        },
+        {
+          "id_docente": 9,
+          "nombre": "Lucía",
+          "apellidos": "Sáenz Molina",
+          "categoria": "Titular",
+          "horas_semanales": 17,
+          "es_investigador": true,
+          "email": "lucia.saenz@uni.es",
+          "despacho": "D-150"
+        },
+        {
+          "id_docente": 10,
+          "nombre": "Tomás",
+          "apellidos": "Arroyo Vidal",
+          "categoria": "Ayudante",
+          "horas_semanales": 10,
+          "es_investigador": false,
+          "email": null,
+          "despacho": "D-042"
+        },
+        {
+          "id_docente": 11,
+          "nombre": "Sofía",
+          "apellidos": "Kovalchuk Marín",
+          "categoria": "Catedrática",
+          "horas_semanales": 14,
+          "es_investigador": true,
+          "email": "sofia.kovalchuk@uni.es",
+          "despacho": "D-335"
+        },
+        {
+          "id_docente": 12,
+          "nombre": "Andrés",
+          "apellidos": "Cano Duarte",
+          "categoria": "Asociado",
+          "horas_semanales": 6,
+          "es_investigador": false,
+          "email": "andres.cano@uni.es",
+          "despacho": null
+        }
+      ]
+    },
+    {
+      "name": "estudios",
+      "description": "Titulaciones. Relación 1:M con asignaturas por codigo (texto) y con estudiantes.",
+      "idField": "id_estudio",
+      "nextId": 7,
+      "fields": [
+        {
+          "name": "id_estudio",
+          "description": "Identificador del estudio",
+          "type": "number"
+        },
+        {
+          "name": "codigo",
+          "description": "Código del estudio (único, texto)",
+          "type": "string"
+        },
+        {
+          "name": "nombre",
+          "description": "Nombre de la titulación",
+          "type": "string"
+        },
+        {
+          "name": "nivel",
+          "description": "Grado o Máster",
+          "type": "string"
+        },
+        {
+          "name": "creditos",
+          "description": "Créditos totales",
+          "type": "number"
+        },
+        {
+          "name": "duracion_anios",
+          "description": "Duración en años",
+          "type": "number"
+        },
+        {
+          "name": "es_oficial",
+          "description": "¿Titulación oficial?",
+          "type": "boolean"
+        },
+        {
+          "name": "fecha_acreditacion",
+          "description": "Fecha de acreditación (puede faltar)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_estudio": 1,
+          "codigo": "GINF",
+          "nombre": "Ingeniería Informática",
+          "nivel": "Grado",
+          "creditos": 240,
+          "duracion_anios": 4,
+          "es_oficial": true,
+          "fecha_acreditacion": "2019-06-30"
+        },
+        {
+          "id_estudio": 2,
+          "codigo": "GMED",
+          "nombre": "Medicina",
+          "nivel": "Grado",
+          "creditos": 360,
+          "duracion_anios": 6,
+          "es_oficial": true,
+          "fecha_acreditacion": "2018-03-15"
+        },
+        {
+          "id_estudio": 3,
+          "codigo": "GEDU",
+          "nombre": "Educación Primaria",
+          "nivel": "Grado",
+          "creditos": 240,
+          "duracion_anios": 4,
+          "es_oficial": true,
+          "fecha_acreditacion": "2020-11-20"
+        },
+        {
+          "id_estudio": 4,
+          "codigo": "MSW",
+          "nombre": "Ingeniería del Software",
+          "nivel": "Máster",
+          "creditos": 90,
+          "duracion_anios": 1,
+          "es_oficial": true,
+          "fecha_acreditacion": null
+        },
+        {
+          "id_estudio": 5,
+          "codigo": "MBD",
+          "nombre": "Ciencia de Datos",
+          "nivel": "Máster",
+          "creditos": 120,
+          "duracion_anios": 2,
+          "es_oficial": false,
+          "fecha_acreditacion": "2021-09-01"
+        },
+        {
+          "id_estudio": 6,
+          "codigo": "TDER",
+          "nombre": "Derecho",
+          "nivel": "Grado",
+          "creditos": 240,
+          "duracion_anios": 4,
+          "es_oficial": true,
+          "fecha_acreditacion": null
+        }
+      ]
+    },
+    {
+      "name": "asignaturas",
+      "description": "Asignaturas de cada estudio e impartidas por un docente. Dos 1:M.",
+      "idField": "id_asignatura",
+      "nextId": 17,
+      "fields": [
+        {
+          "name": "id_asignatura",
+          "description": "Identificador de la asignatura",
+          "type": "number"
+        },
+        {
+          "name": "codigo_estudio",
+          "description": "Estudio al que pertenece (→ estudios.codigo)",
+          "type": "string",
+          "references": {
+            "table": "estudios",
+            "field": "codigo"
+          }
+        },
+        {
+          "name": "id_docente",
+          "description": "Docente que la imparte (→ docentes.id_docente)",
+          "type": "number",
+          "references": {
+            "table": "docentes",
+            "field": "id_docente"
+          }
+        },
+        {
+          "name": "nombre",
+          "description": "Nombre de la asignatura",
+          "type": "string"
+        },
+        {
+          "name": "curso",
+          "description": "Curso en el que se imparte",
+          "type": "number"
+        },
+        {
+          "name": "creditos",
+          "description": "Créditos ECTS",
+          "type": "number"
+        },
+        {
+          "name": "horas_presenciales",
+          "description": "Horas presenciales",
+          "type": "number"
+        },
+        {
+          "name": "es_obligatoria",
+          "description": "¿Es obligatoria?",
+          "type": "boolean"
+        },
+        {
+          "name": "idioma",
+          "description": "Idioma de impartición (puede faltar)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_asignatura": 1,
+          "codigo_estudio": "GINF",
+          "id_docente": 1,
+          "nombre": "Estructuras de Datos",
+          "curso": 2,
+          "creditos": 6,
+          "horas_presenciales": 60,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 2,
+          "codigo_estudio": "GINF",
+          "id_docente": 2,
+          "nombre": "Bases de Datos",
+          "curso": 2,
+          "creditos": 6,
+          "horas_presenciales": 55,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 3,
+          "codigo_estudio": "GINF",
+          "id_docente": 5,
+          "nombre": "Compiladores",
+          "curso": 3,
+          "creditos": 6,
+          "horas_presenciales": 50,
+          "es_obligatoria": false,
+          "idioma": "inglés"
+        },
+        {
+          "id_asignatura": 4,
+          "codigo_estudio": "GINF",
+          "id_docente": 9,
+          "nombre": "Redes de Computadores",
+          "curso": 3,
+          "creditos": 6,
+          "horas_presenciales": 52,
+          "es_obligatoria": true,
+          "idioma": null
+        },
+        {
+          "id_asignatura": 5,
+          "codigo_estudio": "GMED",
+          "id_docente": 1,
+          "nombre": "Anatomía Humana",
+          "curso": 1,
+          "creditos": 9,
+          "horas_presenciales": 90,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 6,
+          "codigo_estudio": "GMED",
+          "id_docente": 5,
+          "nombre": "Farmacología",
+          "curso": 2,
+          "creditos": 6,
+          "horas_presenciales": 48,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 7,
+          "codigo_estudio": "GMED",
+          "id_docente": 11,
+          "nombre": "Salud Pública",
+          "curso": 5,
+          "creditos": 4,
+          "horas_presenciales": 30,
+          "es_obligatoria": false,
+          "idioma": null
+        },
+        {
+          "id_asignatura": 8,
+          "codigo_estudio": "GEDU",
+          "id_docente": 7,
+          "nombre": "Didáctica de las Matemáticas",
+          "curso": 2,
+          "creditos": 5,
+          "horas_presenciales": 40,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 9,
+          "codigo_estudio": "GEDU",
+          "id_docente": 3,
+          "nombre": "Psicología del Desarrollo",
+          "curso": 1,
+          "creditos": 6,
+          "horas_presenciales": 45,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 10,
+          "codigo_estudio": "GEDU",
+          "id_docente": 10,
+          "nombre": "Educación Inclusiva",
+          "curso": 4,
+          "creditos": 4,
+          "horas_presenciales": 32,
+          "es_obligatoria": false,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 11,
+          "codigo_estudio": "MSW",
+          "id_docente": 2,
+          "nombre": "Arquitectura de Software",
+          "curso": 1,
+          "creditos": 6,
+          "horas_presenciales": 45,
+          "es_obligatoria": true,
+          "idioma": "inglés"
+        },
+        {
+          "id_asignatura": 12,
+          "codigo_estudio": "MSW",
+          "id_docente": 9,
+          "nombre": "Pruebas y Calidad",
+          "curso": 1,
+          "creditos": 4,
+          "horas_presenciales": 30,
+          "es_obligatoria": true,
+          "idioma": null
+        },
+        {
+          "id_asignatura": 13,
+          "codigo_estudio": "MBD",
+          "id_docente": 5,
+          "nombre": "Estadística Aplicada",
+          "curso": 1,
+          "creditos": 6,
+          "horas_presenciales": 50,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 14,
+          "codigo_estudio": "MBD",
+          "id_docente": 11,
+          "nombre": "Aprendizaje Automático",
+          "curso": 2,
+          "creditos": 6,
+          "horas_presenciales": 48,
+          "es_obligatoria": false,
+          "idioma": "inglés"
+        },
+        {
+          "id_asignatura": 15,
+          "codigo_estudio": "TDER",
+          "id_docente": 7,
+          "nombre": "Derecho Constitucional",
+          "curso": 1,
+          "creditos": 6,
+          "horas_presenciales": 55,
+          "es_obligatoria": true,
+          "idioma": "español"
+        },
+        {
+          "id_asignatura": 16,
+          "codigo_estudio": "TDER",
+          "id_docente": 12,
+          "nombre": "Derecho Mercantil",
+          "curso": 3,
+          "creditos": 5,
+          "horas_presenciales": 40,
+          "es_obligatoria": false,
+          "idioma": null
+        }
+      ]
+    },
+    {
+      "name": "estudiantes",
+      "description": "Alumnado: pertenece a un estudio y a una sede. Relación 1:M con matrículas.",
+      "idField": "id_estudiante",
+      "nextId": 25,
+      "fields": [
+        {
+          "name": "id_estudiante",
+          "description": "Identificador del estudiante",
+          "type": "number"
+        },
+        {
+          "name": "nombre",
+          "description": "Nombre",
+          "type": "string"
+        },
+        {
+          "name": "apellidos",
+          "description": "Apellidos",
+          "type": "string"
+        },
+        {
+          "name": "codigo_estudio",
+          "description": "Estudio matriculado (→ estudios.codigo)",
+          "type": "string",
+          "references": {
+            "table": "estudios",
+            "field": "codigo"
+          }
+        },
+        {
+          "name": "email",
+          "description": "Correo (puede faltar)",
+          "type": "string"
+        },
+        {
+          "name": "telefono",
+          "description": "Teléfono (puede faltar)",
+          "type": "string"
+        },
+        {
+          "name": "fecha_nacimiento",
+          "description": "Fecha de nacimiento (AAAA-MM-DD)",
+          "type": "string"
+        },
+        {
+          "name": "es_becado",
+          "description": "¿Tiene beca?",
+          "type": "boolean"
+        },
+        {
+          "name": "id_sede",
+          "description": "Sede donde estudia (→ sedes.id_sede)",
+          "type": "number",
+          "references": {
+            "table": "sedes",
+            "field": "id_sede"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id_estudiante": 1,
+          "nombre": "Ana",
+          "apellidos": "García López",
+          "codigo_estudio": "GINF",
+          "email": "ana.garcia@alu.es",
+          "telefono": "600111222",
+          "fecha_nacimiento": "2003-04-12",
+          "es_becado": true,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 2,
+          "nombre": "Luis",
+          "apellidos": "Martín Soto",
+          "codigo_estudio": "GINF",
+          "email": "luis.martin@alu.es",
+          "telefono": null,
+          "fecha_nacimiento": "2002-09-30",
+          "es_becado": false,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 3,
+          "nombre": "Sofía",
+          "apellidos": "Hernández Ruiz",
+          "codigo_estudio": "GINF",
+          "email": null,
+          "telefono": "611333444",
+          "fecha_nacimiento": "2004-01-22",
+          "es_becado": true,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 4,
+          "nombre": "Diego",
+          "apellidos": "Fernández Blanco",
+          "codigo_estudio": "GMED",
+          "email": "diego.fernandez@alu.es",
+          "telefono": "622555666",
+          "fecha_nacimiento": "2001-11-05",
+          "es_becado": false,
+          "id_sede": 2
+        },
+        {
+          "id_estudiante": 5,
+          "nombre": "Marta",
+          "apellidos": "Ruiz Navarro",
+          "codigo_estudio": "GEDU",
+          "email": "marta.ruiz@alu.es",
+          "telefono": null,
+          "fecha_nacimiento": "2003-07-18",
+          "es_becado": false,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 6,
+          "nombre": "Javier",
+          "apellidos": "Ortega Díaz",
+          "codigo_estudio": "TDER",
+          "email": "javier.ortega@alu.es",
+          "telefono": "633777888",
+          "fecha_nacimiento": "2002-03-09",
+          "es_becado": false,
+          "id_sede": 3
+        },
+        {
+          "id_estudiante": 7,
+          "nombre": "Lucía",
+          "apellidos": "Moreno Pascual",
+          "codigo_estudio": "MSW",
+          "email": null,
+          "telefono": "644999000",
+          "fecha_nacimiento": "2004-05-27",
+          "es_becado": true,
+          "id_sede": 2
+        },
+        {
+          "id_estudiante": 8,
+          "nombre": "Pablo",
+          "apellidos": "Gómez Frías",
+          "codigo_estudio": "GINF",
+          "email": "pablo.gomez@alu.es",
+          "telefono": "655111222",
+          "fecha_nacimiento": "2001-12-14",
+          "es_becado": false,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 9,
+          "nombre": "Carmen",
+          "apellidos": "Santos Iglesias",
+          "codigo_estudio": "GMED",
+          "email": "carmen.santos@alu.es",
+          "telefono": null,
+          "fecha_nacimiento": "2003-02-03",
+          "es_becado": true,
+          "id_sede": 3
+        },
+        {
+          "id_estudiante": 10,
+          "nombre": "Álvaro",
+          "apellidos": "Domínguez Rey",
+          "codigo_estudio": "MBD",
+          "email": "alvaro.dominguez@alu.es",
+          "telefono": "666333444",
+          "fecha_nacimiento": "2002-06-21",
+          "es_becado": false,
+          "id_sede": 4
+        },
+        {
+          "id_estudiante": 11,
+          "nombre": "Nerea",
+          "apellidos": "Castro Peña",
+          "codigo_estudio": "GEDU",
+          "email": "nerea.castro@alu.es",
+          "telefono": null,
+          "fecha_nacimiento": "2004-10-08",
+          "es_becado": true,
+          "id_sede": 2
+        },
+        {
+          "id_estudiante": 12,
+          "nombre": "Iván",
+          "apellidos": "Ramírez Cortés",
+          "codigo_estudio": "GINF",
+          "email": null,
+          "telefono": "677555666",
+          "fecha_nacimiento": "2001-08-16",
+          "es_becado": false,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 13,
+          "nombre": "Paula",
+          "apellidos": "Vega Salas",
+          "codigo_estudio": "GMED",
+          "email": "paula.vega@alu.es",
+          "telefono": "688777888",
+          "fecha_nacimiento": "2003-12-01",
+          "es_becado": false,
+          "id_sede": 3
+        },
+        {
+          "id_estudiante": 14,
+          "nombre": "Hugo",
+          "apellidos": "Serrano Bravo",
+          "codigo_estudio": "GEDU",
+          "email": "hugo.serrano@alu.es",
+          "telefono": null,
+          "fecha_nacimiento": "2002-04-25",
+          "es_becado": true,
+          "id_sede": 2
+        },
+        {
+          "id_estudiante": 15,
+          "nombre": "Elena",
+          "apellidos": "Molina Ríos",
+          "codigo_estudio": "MSW",
+          "email": "elena.molina@alu.es",
+          "telefono": "699999000",
+          "fecha_nacimiento": "2004-07-07",
+          "es_becado": false,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 16,
+          "nombre": "Marcos",
+          "apellidos": "Delgado Cano",
+          "codigo_estudio": "TDER",
+          "email": null,
+          "telefono": null,
+          "fecha_nacimiento": "2001-05-19",
+          "es_becado": false,
+          "id_sede": 4
+        },
+        {
+          "id_estudiante": 17,
+          "nombre": "Irene",
+          "apellidos": "Suárez Nieto",
+          "codigo_estudio": "GMED",
+          "email": "irene.suarez@alu.es",
+          "telefono": "610222333",
+          "fecha_nacimiento": "2003-09-11",
+          "es_becado": true,
+          "id_sede": 3
+        },
+        {
+          "id_estudiante": 18,
+          "nombre": "Adrián",
+          "apellidos": "Cabrera Luna",
+          "codigo_estudio": "MBD",
+          "email": "adrian.cabrera@alu.es",
+          "telefono": null,
+          "fecha_nacimiento": "2002-11-23",
+          "es_becado": false,
+          "id_sede": 2
+        },
+        {
+          "id_estudiante": 19,
+          "nombre": "Claudia",
+          "apellidos": "Reyes Baena",
+          "codigo_estudio": "GINF",
+          "email": "claudia.reyes@alu.es",
+          "telefono": "621444555",
+          "fecha_nacimiento": "2004-03-15",
+          "es_becado": false,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 20,
+          "nombre": "Rubén",
+          "apellidos": "Parra Aguilar",
+          "codigo_estudio": "GEDU",
+          "email": null,
+          "telefono": "632666777",
+          "fecha_nacimiento": "2001-01-29",
+          "es_becado": true,
+          "id_sede": 2
+        },
+        {
+          "id_estudiante": 21,
+          "nombre": "Julia",
+          "apellidos": "Bermúdez Soler",
+          "codigo_estudio": "GMED",
+          "email": "julia.bermudez@alu.es",
+          "telefono": "643888999",
+          "fecha_nacimiento": "2003-06-06",
+          "es_becado": false,
+          "id_sede": 3
+        },
+        {
+          "id_estudiante": 22,
+          "nombre": "Óscar",
+          "apellidos": "Lozano Prieto",
+          "codigo_estudio": "TDER",
+          "email": "oscar.lozano@alu.es",
+          "telefono": null,
+          "fecha_nacimiento": "2002-08-02",
+          "es_becado": false,
+          "id_sede": 4
+        },
+        {
+          "id_estudiante": 23,
+          "nombre": "Sara",
+          "apellidos": "Guerrero Vidal",
+          "codigo_estudio": "GINF",
+          "email": "sara.guerrero@alu.es",
+          "telefono": "665000111",
+          "fecha_nacimiento": "2004-11-19",
+          "es_becado": true,
+          "id_sede": 1
+        },
+        {
+          "id_estudiante": 24,
+          "nombre": "Marc",
+          "apellidos": "Esteban Quiles",
+          "codigo_estudio": "TDER",
+          "email": null,
+          "telefono": "676222333",
+          "fecha_nacimiento": "2001-03-27",
+          "es_becado": false,
+          "id_sede": 3
+        }
+      ]
+    },
+    {
+      "name": "matriculas",
+      "description": "Matrículas: descompone la relación M:M estudiantes ↔ asignaturas en dos 1:M. Nota nula mientras la asignatura está activa o anulada.",
+      "idField": "id_matricula",
+      "nextId": 49,
+      "fields": [
+        {
+          "name": "id_matricula",
+          "description": "Identificador de la matrícula",
+          "type": "number"
+        },
+        {
+          "name": "id_estudiante",
+          "description": "Estudiante matriculado (→ estudiantes.id_estudiante)",
+          "type": "number",
+          "references": {
+            "table": "estudiantes",
+            "field": "id_estudiante"
+          }
+        },
+        {
+          "name": "id_asignatura",
+          "description": "Asignatura matriculada (→ asignaturas.id_asignatura)",
+          "type": "number",
+          "references": {
+            "table": "asignaturas",
+            "field": "id_asignatura"
+          }
+        },
+        {
+          "name": "curso_academico",
+          "description": "Curso académico (por ejemplo 2025-2026)",
+          "type": "string"
+        },
+        {
+          "name": "nota",
+          "description": "Nota final (null si no está calificada)",
+          "type": "number"
+        },
+        {
+          "name": "estado",
+          "description": "activa, superada o anulada",
+          "type": "string"
+        },
+        {
+          "name": "es_convalidada",
+          "description": "¿Se convalidó la asignatura?",
+          "type": "boolean"
+        },
+        {
+          "name": "fecha_matricula",
+          "description": "Fecha de matrícula (AAAA-MM-DD)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_matricula": 1,
+          "id_estudiante": 1,
+          "id_asignatura": 1,
+          "curso_academico": "2024-2025",
+          "nota": 8.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-10"
+        },
+        {
+          "id_matricula": 2,
+          "id_estudiante": 1,
+          "id_asignatura": 2,
+          "curso_academico": "2024-2025",
+          "nota": 7.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-10"
+        },
+        {
+          "id_matricula": 3,
+          "id_estudiante": 1,
+          "id_asignatura": 3,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-08"
+        },
+        {
+          "id_matricula": 4,
+          "id_estudiante": 1,
+          "id_asignatura": 4,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-08"
+        },
+        {
+          "id_matricula": 5,
+          "id_estudiante": 2,
+          "id_asignatura": 1,
+          "curso_academico": "2024-2025",
+          "nota": 6,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-11"
+        },
+        {
+          "id_matricula": 6,
+          "id_estudiante": 2,
+          "id_asignatura": 2,
+          "curso_academico": "2024-2025",
+          "nota": 5,
+          "estado": "superada",
+          "es_convalidada": true,
+          "fecha_matricula": "2024-09-11"
+        },
+        {
+          "id_matricula": 7,
+          "id_estudiante": 2,
+          "id_asignatura": 4,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-09"
+        },
+        {
+          "id_matricula": 8,
+          "id_estudiante": 3,
+          "id_asignatura": 1,
+          "curso_academico": "2024-2025",
+          "nota": 9,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-12"
+        },
+        {
+          "id_matricula": 9,
+          "id_estudiante": 3,
+          "id_asignatura": 2,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-10"
+        },
+        {
+          "id_matricula": 10,
+          "id_estudiante": 8,
+          "id_asignatura": 2,
+          "curso_academico": "2024-2025",
+          "nota": 7,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-15"
+        },
+        {
+          "id_matricula": 11,
+          "id_estudiante": 8,
+          "id_asignatura": 3,
+          "curso_academico": "2024-2025",
+          "nota": 6.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-15"
+        },
+        {
+          "id_matricula": 12,
+          "id_estudiante": 8,
+          "id_asignatura": 4,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-12"
+        },
+        {
+          "id_matricula": 13,
+          "id_estudiante": 19,
+          "id_asignatura": 1,
+          "curso_academico": "2024-2025",
+          "nota": 8,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-16"
+        },
+        {
+          "id_matricula": 14,
+          "id_estudiante": 19,
+          "id_asignatura": 3,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-14"
+        },
+        {
+          "id_matricula": 15,
+          "id_estudiante": 19,
+          "id_asignatura": 4,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-14"
+        },
+        {
+          "id_matricula": 16,
+          "id_estudiante": 23,
+          "id_asignatura": 1,
+          "curso_academico": "2025-2026",
+          "nota": 9.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-05"
+        },
+        {
+          "id_matricula": 17,
+          "id_estudiante": 23,
+          "id_asignatura": 2,
+          "curso_academico": "2024-2025",
+          "nota": 6,
+          "estado": "superada",
+          "es_convalidada": true,
+          "fecha_matricula": "2024-09-18"
+        },
+        {
+          "id_matricula": 18,
+          "id_estudiante": 23,
+          "id_asignatura": 3,
+          "curso_academico": "2024-2025",
+          "nota": 5.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-18"
+        },
+        {
+          "id_matricula": 19,
+          "id_estudiante": 4,
+          "id_asignatura": 5,
+          "curso_academico": "2024-2025",
+          "nota": 7,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-09"
+        },
+        {
+          "id_matricula": 20,
+          "id_estudiante": 4,
+          "id_asignatura": 6,
+          "curso_academico": "2024-2025",
+          "nota": 6.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-09"
+        },
+        {
+          "id_matricula": 21,
+          "id_estudiante": 4,
+          "id_asignatura": 7,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-11"
+        },
+        {
+          "id_matricula": 22,
+          "id_estudiante": 9,
+          "id_asignatura": 5,
+          "curso_academico": "2024-2025",
+          "nota": 8,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-10"
+        },
+        {
+          "id_matricula": 23,
+          "id_estudiante": 9,
+          "id_asignatura": 6,
+          "curso_academico": "2024-2025",
+          "nota": 7.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-10"
+        },
+        {
+          "id_matricula": 24,
+          "id_estudiante": 9,
+          "id_asignatura": 7,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-12"
+        },
+        {
+          "id_matricula": 25,
+          "id_estudiante": 13,
+          "id_asignatura": 5,
+          "curso_academico": "2024-2025",
+          "nota": 5,
+          "estado": "superada",
+          "es_convalidada": true,
+          "fecha_matricula": "2024-09-11"
+        },
+        {
+          "id_matricula": 26,
+          "id_estudiante": 13,
+          "id_asignatura": 7,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-13"
+        },
+        {
+          "id_matricula": 27,
+          "id_estudiante": 17,
+          "id_asignatura": 5,
+          "curso_academico": "2024-2025",
+          "nota": 9,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-12"
+        },
+        {
+          "id_matricula": 28,
+          "id_estudiante": 17,
+          "id_asignatura": 6,
+          "curso_academico": "2025-2026",
+          "nota": 8.5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-06"
+        },
+        {
+          "id_matricula": 29,
+          "id_estudiante": 17,
+          "id_asignatura": 7,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-15"
+        },
+        {
+          "id_matricula": 30,
+          "id_estudiante": 21,
+          "id_asignatura": 6,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "anulada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-16"
+        },
+        {
+          "id_matricula": 31,
+          "id_estudiante": 21,
+          "id_asignatura": 7,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-16"
+        },
+        {
+          "id_matricula": 32,
+          "id_estudiante": 5,
+          "id_asignatura": 8,
+          "curso_academico": "2024-2025",
+          "nota": 5,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-13"
+        },
+        {
+          "id_matricula": 33,
+          "id_estudiante": 5,
+          "id_asignatura": 9,
+          "curso_academico": "2024-2025",
+          "nota": 6,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-13"
+        },
+        {
+          "id_matricula": 34,
+          "id_estudiante": 5,
+          "id_asignatura": 10,
+          "curso_academico": "2025-2026",
+          "nota": 7,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-07"
+        },
+        {
+          "id_matricula": 35,
+          "id_estudiante": 11,
+          "id_asignatura": 8,
+          "curso_academico": "2024-2025",
+          "nota": 6,
+          "estado": "superada",
+          "es_convalidada": true,
+          "fecha_matricula": "2024-09-14"
+        },
+        {
+          "id_matricula": 36,
+          "id_estudiante": 11,
+          "id_asignatura": 9,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "activa",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-17"
+        },
+        {
+          "id_matricula": 37,
+          "id_estudiante": 14,
+          "id_asignatura": 8,
+          "curso_academico": "2024-2025",
+          "nota": 10,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-15"
+        },
+        {
+          "id_matricula": 38,
+          "id_estudiante": 14,
+          "id_asignatura": 9,
+          "curso_academico": "2024-2025",
+          "nota": 8,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-15"
+        },
+        {
+          "id_matricula": 39,
+          "id_estudiante": 14,
+          "id_asignatura": 10,
+          "curso_academico": "2025-2026",
+          "nota": 9,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-08"
+        },
+        {
+          "id_matricula": 40,
+          "id_estudiante": 20,
+          "id_asignatura": 8,
+          "curso_academico": "2024-2025",
+          "nota": 7,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-16"
+        },
+        {
+          "id_matricula": 41,
+          "id_estudiante": 20,
+          "id_asignatura": 10,
+          "curso_academico": "2024-2025",
+          "nota": null,
+          "estado": "anulada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-16"
+        },
+        {
+          "id_matricula": 42,
+          "id_estudiante": 7,
+          "id_asignatura": 11,
+          "curso_academico": "2025-2026",
+          "nota": 8,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-04"
+        },
+        {
+          "id_matricula": 43,
+          "id_estudiante": 15,
+          "id_asignatura": 11,
+          "curso_academico": "2024-2025",
+          "nota": 9,
+          "estado": "superada",
+          "es_convalidada": true,
+          "fecha_matricula": "2024-09-17"
+        },
+        {
+          "id_matricula": 44,
+          "id_estudiante": 10,
+          "id_asignatura": 13,
+          "curso_academico": "2024-2025",
+          "nota": 7,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-18"
+        },
+        {
+          "id_matricula": 45,
+          "id_estudiante": 10,
+          "id_asignatura": 14,
+          "curso_academico": "2025-2026",
+          "nota": 8,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-09"
+        },
+        {
+          "id_matricula": 46,
+          "id_estudiante": 18,
+          "id_asignatura": 13,
+          "curso_academico": "2024-2025",
+          "nota": 8,
+          "estado": "superada",
+          "es_convalidada": false,
+          "fecha_matricula": "2024-09-19"
+        },
+        {
+          "id_matricula": 47,
+          "id_estudiante": 6,
+          "id_asignatura": 15,
+          "curso_academico": "2024-2025",
+          "nota": 6,
+          "estado": "superada",
+          "es_convalidada": true,
+          "fecha_matricula": "2024-09-20"
+        },
+        {
+          "id_matricula": 48,
+          "id_estudiante": 24,
+          "id_asignatura": 15,
+          "curso_academico": "2025-2026",
+          "nota": null,
+          "estado": "anulada",
+          "es_convalidada": false,
+          "fecha_matricula": "2025-09-18"
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "name": "A01 · Todas las sedes",
+      "description": "SELECT * sobre sedes: columnas en el orden de la tabla y las 4 filas por identificador.",
+      "sql": "SELECT * FROM sedes ORDER BY id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "nombre",
+          "ciudad",
+          "pais",
+          "aforo_maximo",
+          "es_principal",
+          "telefono",
+          "anio_fundacion"
+        ],
+        "rows": [
+          [
+            1,
+            "Campus Norte",
+            "Madrid",
+            "España",
+            4500,
+            true,
+            "910111222",
+            1968
+          ],
+          [
+            2,
+            "Campus Sur",
+            "Sevilla",
+            "España",
+            2800,
+            false,
+            "954333444",
+            1985
+          ],
+          [
+            3,
+            "Campus del Mar",
+            "Valencia",
+            "España",
+            1900,
+            false,
+            null,
+            1997
+          ],
+          [
+            4,
+            "Campus Andino",
+            "Bogotá",
+            "Colombia",
+            3200,
+            false,
+            "601555666",
+            2004
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A02 · Proyección con alias y aritmética",
+      "description": "Divide el aforo entre 1000 y ordena por aforo descendente: los 4 campus de mayor a menor.",
+      "sql": "SELECT nombre AS sede, ciudad, aforo_maximo / 1000 AS aforo_miles, anio_fundacion FROM sedes ORDER BY aforo_maximo DESC",
+      "assert": {
+        "columns": [
+          "sede",
+          "ciudad",
+          "aforo_miles",
+          "anio_fundacion"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            "Madrid",
+            4.5,
+            1968
+          ],
+          [
+            "Campus Andino",
+            "Bogotá",
+            3.2,
+            2004
+          ],
+          [
+            "Campus Sur",
+            "Sevilla",
+            2.8,
+            1985
+          ],
+          [
+            "Campus del Mar",
+            "Valencia",
+            1.9,
+            1997
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A03 · Aulas grandes (>= 55 plazas)",
+      "description": "Filtro numérico con >= y orden por capacidad descendente y código: 5 aulas.",
+      "sql": "SELECT codigo, capacidad, planta FROM aulas WHERE capacidad >= 55 ORDER BY capacidad DESC, codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad",
+          "planta"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            3
+          ],
+          [
+            "R-101",
+            70,
+            1
+          ],
+          [
+            "K-101",
+            60,
+            1
+          ],
+          [
+            "P-101",
+            55,
+            1
+          ],
+          [
+            "P-102",
+            55,
+            1
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A04 · Aulas con proyector",
+      "description": "Filtro booleano (tiene_proyector = true): 10 aulas ordenadas por capacidad.",
+      "sql": "SELECT codigo, capacidad FROM aulas WHERE tiene_proyector = true ORDER BY capacidad DESC, codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ],
+          [
+            "R-101",
+            70
+          ],
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "L-301",
+            50
+          ],
+          [
+            "P-201",
+            40
+          ],
+          [
+            "K-201",
+            30
+          ],
+          [
+            "C-LAB1",
+            24
+          ],
+          [
+            "M-002",
+            22
+          ],
+          [
+            "C-LAB2",
+            20
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A05 · Docentes no investigadores con carga alta",
+      "description": "AND de un booleano (false) y un rango (>= 10 h): 3 docentes.",
+      "sql": "SELECT nombre, apellidos, categoria, horas_semanales FROM docentes WHERE es_investigador = false AND horas_semanales >= 10 ORDER BY horas_semanales DESC, apellidos",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "categoria",
+          "horas_semanales"
+        ],
+        "rows": [
+          [
+            "Paula",
+            "Ferrer Gil",
+            "Titular",
+            19
+          ],
+          [
+            "Nieves",
+            "Salgado Ortiz",
+            "Titular",
+            16
+          ],
+          [
+            "Tomás",
+            "Arroyo Vidal",
+            "Ayudante",
+            10
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A06 · Estudiantes sin teléfono",
+      "description": "IS NULL sobre un campo con huecos: 8 estudiantes.",
+      "sql": "SELECT nombre, apellidos FROM estudiantes WHERE telefono IS NULL ORDER BY apellidos",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            "Adrián",
+            "Cabrera Luna"
+          ],
+          [
+            "Nerea",
+            "Castro Peña"
+          ],
+          [
+            "Marcos",
+            "Delgado Cano"
+          ],
+          [
+            "Óscar",
+            "Lozano Prieto"
+          ],
+          [
+            "Luis",
+            "Martín Soto"
+          ],
+          [
+            "Marta",
+            "Ruiz Navarro"
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias"
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A07 · Docentes con despacho (IS NOT NULL) en mayúsculas",
+      "description": "IS NOT NULL más UPPER de dos columnas: 9 docentes con despacho, los 3 asociados sin él no salen.",
+      "sql": "SELECT id_docente, UPPER(nombre) AS nombre, UPPER(apellidos) AS apellidos, despacho FROM docentes WHERE despacho IS NOT NULL ORDER BY id_docente",
+      "assert": {
+        "columns": [
+          "id_docente",
+          "nombre",
+          "apellidos",
+          "despacho"
+        ],
+        "rows": [
+          [
+            1,
+            "ELENA",
+            "VARGAS RUIZ",
+            "D-201"
+          ],
+          [
+            2,
+            "MARC",
+            "OLIVER PONS",
+            "D-114"
+          ],
+          [
+            3,
+            "NIEVES",
+            "SALGADO ORTIZ",
+            "D-115"
+          ],
+          [
+            5,
+            "CARMEN",
+            "IBÁÑEZ LUNA",
+            "D-330"
+          ],
+          [
+            6,
+            "YOUSSEF",
+            "AMRANI BELKACEM",
+            "D-041"
+          ],
+          [
+            7,
+            "PAULA",
+            "FERRER GIL",
+            "D-208"
+          ],
+          [
+            9,
+            "LUCÍA",
+            "SÁENZ MOLINA",
+            "D-150"
+          ],
+          [
+            10,
+            "TOMÁS",
+            "ARROYO VIDAL",
+            "D-042"
+          ],
+          [
+            11,
+            "SOFÍA",
+            "KOVALCHUK MARÍN",
+            "D-335"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A08 · Apellidos que empiezan por G",
+      "description": "LIKE con comodín al final: 3 estudiantes llamados García, Gómez y Guerrero.",
+      "sql": "SELECT nombre, apellidos FROM estudiantes WHERE apellidos LIKE 'G%' ORDER BY id_estudiante",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            "Ana",
+            "García López"
+          ],
+          [
+            "Pablo",
+            "Gómez Frías"
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A09 · Correos institucionales que no empiezan por a",
+      "description": "LIKE y NOT LIKE combinados con LIMIT 5 sobre el correo ordenado.",
+      "sql": "SELECT nombre, apellidos, email FROM estudiantes WHERE email LIKE '%@alu.es' AND email NOT LIKE 'a%' ORDER BY email LIMIT 5",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "email"
+        ],
+        "rows": [
+          [
+            "Carmen",
+            "Santos Iglesias",
+            "carmen.santos@alu.es"
+          ],
+          [
+            "Claudia",
+            "Reyes Baena",
+            "claudia.reyes@alu.es"
+          ],
+          [
+            "Diego",
+            "Fernández Blanco",
+            "diego.fernandez@alu.es"
+          ],
+          [
+            "Elena",
+            "Molina Ríos",
+            "elena.molina@alu.es"
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo",
+            "hugo.serrano@alu.es"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A10 · Tres aulas concretas (IN) y resto de la división",
+      "description": "IN con lista de códigos y operador de resto (%): el resto de dividir la capacidad entre 10.",
+      "sql": "SELECT codigo, capacidad, capacidad % 10 AS resto FROM aulas WHERE codigo IN ('K-101', 'B-SALA', 'M-001') ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad",
+          "resto"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            0
+          ],
+          [
+            "K-101",
+            60,
+            0
+          ],
+          [
+            "M-001",
+            18,
+            8
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A11 · Estudios que no son de informática ni educación (NOT IN)",
+      "description": "NOT IN con tres códigos: quedan Ciencia de Datos, Ingeniería del Software y Derecho.",
+      "sql": "SELECT codigo, nombre, nivel FROM estudios WHERE codigo NOT IN ('GINF', 'GMED', 'GEDU') ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "nombre",
+          "nivel"
+        ],
+        "rows": [
+          [
+            "MBD",
+            "Ciencia de Datos",
+            "Máster"
+          ],
+          [
+            "MSW",
+            "Ingeniería del Software",
+            "Máster"
+          ],
+          [
+            "TDER",
+            "Derecho",
+            "Grado"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A12 · Matrículas aprobadas entre 7 y 8 (BETWEEN)",
+      "description": "BETWEEN incluye los extremos: 12 matrículas con nota 7, 7.5 u 8, ordenadas por nota.",
+      "sql": "SELECT id_matricula, nota FROM matriculas WHERE nota BETWEEN 7 AND 8 ORDER BY nota, id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota"
+        ],
+        "rows": [
+          [
+            10,
+            7
+          ],
+          [
+            19,
+            7
+          ],
+          [
+            34,
+            7
+          ],
+          [
+            40,
+            7
+          ],
+          [
+            44,
+            7
+          ],
+          [
+            2,
+            7.5
+          ],
+          [
+            23,
+            7.5
+          ],
+          [
+            13,
+            8
+          ],
+          [
+            22,
+            8
+          ],
+          [
+            38,
+            8
+          ],
+          [
+            42,
+            8
+          ],
+          [
+            45,
+            8
+          ],
+          [
+            46,
+            8
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A13 · Asignaturas de primero y segundo con pocos créditos",
+      "description": "Paréntesis con OR, un booleano y NOT BETWEEN: 9 asignaturas obligatorias de 1.º y 2.º con menos de 7 créditos.",
+      "sql": "SELECT nombre, curso, creditos FROM asignaturas WHERE (curso = 1 OR curso = 2) AND es_obligatoria = true AND creditos NOT BETWEEN 7 AND 10 ORDER BY nombre",
+      "assert": {
+        "columns": [
+          "nombre",
+          "curso",
+          "creditos"
+        ],
+        "rows": [
+          [
+            "Arquitectura de Software",
+            1,
+            6
+          ],
+          [
+            "Bases de Datos",
+            2,
+            6
+          ],
+          [
+            "Derecho Constitucional",
+            1,
+            6
+          ],
+          [
+            "Didáctica de las Matemáticas",
+            2,
+            5
+          ],
+          [
+            "Estadística Aplicada",
+            1,
+            6
+          ],
+          [
+            "Estructuras de Datos",
+            2,
+            6
+          ],
+          [
+            "Farmacología",
+            2,
+            6
+          ],
+          [
+            "Pruebas y Calidad",
+            1,
+            4
+          ],
+          [
+            "Psicología del Desarrollo",
+            1,
+            6
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A14 · Categorías de docente (DISTINCT)",
+      "description": "DISTINCT sobre una columna de texto: 4 categorías profesionales.",
+      "sql": "SELECT DISTINCT categoria FROM docentes ORDER BY categoria",
+      "assert": {
+        "columns": [
+          "categoria"
+        ],
+        "rows": [
+          [
+            "Asociado"
+          ],
+          [
+            "Ayudante"
+          ],
+          [
+            "Catedrática"
+          ],
+          [
+            "Titular"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A15 · Combinaciones nivel/oficialidad (DISTINCT de dos columnas)",
+      "description": "DISTINCT sobre dos columnas, con booleano incluido: 3 combinaciones.",
+      "sql": "SELECT DISTINCT nivel, es_oficial FROM estudios ORDER BY nivel, es_oficial",
+      "assert": {
+        "columns": [
+          "nivel",
+          "es_oficial"
+        ],
+        "rows": [
+          [
+            "Grado",
+            true
+          ],
+          [
+            "Máster",
+            false
+          ],
+          [
+            "Máster",
+            true
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A16 · Totales del expediente (COUNT, DISTINCT, MIN, MAX, SUM)",
+      "description": "Agregados sin GROUP BY: 48 matrículas, 32 calificadas, 21 estudiantes y 14 asignaturas con matrícula.",
+      "sql": "SELECT COUNT(*) AS matriculas, COUNT(nota) AS con_nota, COUNT(DISTINCT id_estudiante) AS estudiantes, COUNT(DISTINCT id_asignatura) AS asignaturas, MIN(nota) AS nota_minima, MAX(nota) AS nota_maxima, SUM(nota) AS suma_notas FROM matriculas",
+      "assert": {
+        "columns": [
+          "matriculas",
+          "con_nota",
+          "estudiantes",
+          "asignaturas",
+          "nota_minima",
+          "nota_maxima",
+          "suma_notas"
+        ],
+        "rows": [
+          [
+            48,
+            32,
+            21,
+            14,
+            5,
+            10,
+            234
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A17 · Matrículas por estado",
+      "description": "GROUP BY con dos agregados: las 13 activas y las 3 anuladas no tienen nota, las 32 superadas sí.",
+      "sql": "SELECT estado, COUNT(*) AS total, COUNT(nota) AS calificadas FROM matriculas GROUP BY estado ORDER BY total DESC, estado",
+      "assert": {
+        "columns": [
+          "estado",
+          "total",
+          "calificadas"
+        ],
+        "rows": [
+          [
+            "superada",
+            32,
+            32
+          ],
+          [
+            "activa",
+            13,
+            0
+          ],
+          [
+            "anulada",
+            3,
+            0
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A18 · Matrículas por curso académico (HAVING)",
+      "description": "GROUP BY con HAVING COUNT(*) > 20: los dos cursos superan el umbral.",
+      "sql": "SELECT curso_academico, COUNT(*) AS total FROM matriculas GROUP BY curso_academico HAVING COUNT(*) > 20 ORDER BY curso_academico",
+      "assert": {
+        "columns": [
+          "curso_academico",
+          "total"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            27
+          ],
+          [
+            "2025-2026",
+            21
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A19 · Estudiantes con tres o más matrículas",
+      "description": "GROUP BY sobre la M:M y HAVING >= 3: 10 estudiantes, uno de ellos con 4 matrículas.",
+      "sql": "SELECT id_estudiante, COUNT(*) AS matriculas FROM matriculas GROUP BY id_estudiante HAVING COUNT(*) >= 3 ORDER BY matriculas DESC, id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "matriculas"
+        ],
+        "rows": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            8,
+            3
+          ],
+          [
+            9,
+            3
+          ],
+          [
+            14,
+            3
+          ],
+          [
+            17,
+            3
+          ],
+          [
+            19,
+            3
+          ],
+          [
+            23,
+            3
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A20 · Aulas por inicial del código (GROUP BY con expresión)",
+      "description": "GROUP BY sobre SUBSTR: 7 iniciales distintas con su número de aulas y plazas sumadas.",
+      "sql": "SELECT SUBSTR(codigo, 1, 1) AS inicial, COUNT(*) AS aulas, SUM(capacidad) AS plazas FROM aulas GROUP BY SUBSTR(codigo, 1, 1) ORDER BY inicial",
+      "assert": {
+        "columns": [
+          "inicial",
+          "aulas",
+          "plazas"
+        ],
+        "rows": [
+          [
+            "B",
+            2,
+            92
+          ],
+          [
+            "C",
+            2,
+            44
+          ],
+          [
+            "K",
+            3,
+            135
+          ],
+          [
+            "L",
+            2,
+            75
+          ],
+          [
+            "M",
+            2,
+            40
+          ],
+          [
+            "P",
+            3,
+            150
+          ],
+          [
+            "R",
+            2,
+            105
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A21 · Notas de la asignatura 6, de mayor a menor (NULLS LAST)",
+      "description": "ORDER BY ... DESC NULLS LAST: la matrícula anulada sin nota queda al final.",
+      "sql": "SELECT id_matricula, nota FROM matriculas WHERE id_asignatura = 6 ORDER BY nota DESC NULLS LAST, id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota"
+        ],
+        "rows": [
+          [
+            28,
+            8.5
+          ],
+          [
+            23,
+            7.5
+          ],
+          [
+            20,
+            6.5
+          ],
+          [
+            30,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A22 · Notas de la asignatura 6, de menor a mayor (nulls primero)",
+      "description": "En ASC los null van primero por defecto: la matrícula sin nota encabeza el resultado.",
+      "sql": "SELECT id_matricula, nota FROM matriculas WHERE id_asignatura = 6 ORDER BY nota ASC, id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota"
+        ],
+        "rows": [
+          [
+            30,
+            null
+          ],
+          [
+            20,
+            6.5
+          ],
+          [
+            23,
+            7.5
+          ],
+          [
+            28,
+            8.5
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A23 · Estudiantes más mayores, página 2 (LIMIT/OFFSET)",
+      "description": "Ordena por fecha de nacimiento y salta las dos primeras filas: 4 filas a partir de la tercera.",
+      "sql": "SELECT nombre, apellidos, fecha_nacimiento FROM estudiantes ORDER BY fecha_nacimiento LIMIT 4 OFFSET 2",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "fecha_nacimiento"
+        ],
+        "rows": [
+          [
+            "Marcos",
+            "Delgado Cano",
+            "2001-05-19"
+          ],
+          [
+            "Iván",
+            "Ramírez Cortés",
+            "2001-08-16"
+          ],
+          [
+            "Diego",
+            "Fernández Blanco",
+            "2001-11-05"
+          ],
+          [
+            "Pablo",
+            "Gómez Frías",
+            "2001-12-14"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A24 · Cuatro estudiantes desde el cuarto (LIMIT estilo MySQL)",
+      "description": "LIMIT 3, 4 equivale a OFFSET 3 LIMIT 4: devuelve los identificadores 4 a 7.",
+      "sql": "SELECT id_estudiante, nombre FROM estudiantes ORDER BY id_estudiante LIMIT 3, 4",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "nombre"
+        ],
+        "rows": [
+          [
+            4,
+            "Diego"
+          ],
+          [
+            5,
+            "Marta"
+          ],
+          [
+            6,
+            "Javier"
+          ],
+          [
+            7,
+            "Lucía"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A25 · Ficha de tres estudiantes (concatenación y funciones de texto)",
+      "description": "|| concatena, LENGTH cuenta caracteres y SUBSTR recorta: apellidos en mayúsculas y tres iniciales.",
+      "sql": "SELECT UPPER(apellidos) || ', ' || nombre AS ficha, LENGTH(nombre) AS letras, SUBSTR(nombre, 1, 3) AS iniciales FROM estudiantes WHERE id_estudiante IN (1, 9, 14) ORDER BY id_estudiante",
+      "assert": {
+        "columns": [
+          "ficha",
+          "letras",
+          "iniciales"
+        ],
+        "rows": [
+          [
+            "GARCÍA LÓPEZ, Ana",
+            3,
+            "Ana"
+          ],
+          [
+            "SANTOS IGLESIAS, Carmen",
+            6,
+            "Car"
+          ],
+          [
+            "SERRANO BRAVO, Hugo",
+            4,
+            "Hug"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A26 · Notas ausentes: COALESCE, IFNULL, NULLIF y ROUND",
+      "description": "Los valores null se sustituyen por -1 y 0; NULLIF convierte «anulada» en null y la distancia a 7.5 propaga el null.",
+      "sql": "SELECT id_matricula, COALESCE(nota, -1) AS nota_coalesce, IFNULL(nota, 0) AS nota_ifnull, NULLIF(estado, 'anulada') AS estado_o_null, ROUND(ABS(nota - 7.5), 2) AS distancia FROM matriculas WHERE id_matricula IN (2, 6, 28, 30, 48) ORDER BY id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota_coalesce",
+          "nota_ifnull",
+          "estado_o_null",
+          "distancia"
+        ],
+        "rows": [
+          [
+            2,
+            7.5,
+            7.5,
+            "superada",
+            0
+          ],
+          [
+            6,
+            5,
+            5,
+            "superada",
+            2.5
+          ],
+          [
+            28,
+            8.5,
+            8.5,
+            "superada",
+            1
+          ],
+          [
+            30,
+            -1,
+            0,
+            null,
+            null
+          ],
+          [
+            48,
+            -1,
+            0,
+            null,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A27 · Teléfono de sede normalizado",
+      "description": "IFNULL + TRIM + NULLIF: la sede sin teléfono devuelve null en lugar de cadena vacía.",
+      "sql": "SELECT id_sede, NULLIF(TRIM(IFNULL(telefono, '')), '') AS telefono, nombre FROM sedes ORDER BY id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "telefono",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "910111222",
+            "Campus Norte"
+          ],
+          [
+            2,
+            "954333444",
+            "Campus Sur"
+          ],
+          [
+            3,
+            null,
+            "Campus del Mar"
+          ],
+          [
+            4,
+            "601555666",
+            "Campus Andino"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A28 · Pizarras que no son digitales (comentario y corchetes)",
+      "description": "El comentario -- se ignora, [codigo] es lo mismo que codigo y <> descarta además los null.",
+      "sql": "-- Aulas con pizarra de tiza (las de pizarra desconocida no cuentan)\nSELECT [codigo] AS aula, [tipo_pizarra] AS pizarra, capacidad FROM aulas WHERE tipo_pizarra <> 'digital' ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "aula",
+          "pizarra",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "K-102",
+            "tiza",
+            45
+          ],
+          [
+            "P-101",
+            "tiza",
+            55
+          ],
+          [
+            "P-102",
+            "tiza",
+            55
+          ],
+          [
+            "R-102",
+            "tiza",
+            35
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A29 · Docentes que no son asociados (NOT)",
+      "description": "NOT sobre una igualdad: quedan 9 de los 12 docentes.",
+      "sql": "SELECT nombre, categoria FROM docentes WHERE NOT (categoria = 'Asociado') ORDER BY id_docente",
+      "assert": {
+        "columns": [
+          "nombre",
+          "categoria"
+        ],
+        "rows": [
+          [
+            "Elena",
+            "Catedrática"
+          ],
+          [
+            "Marc",
+            "Titular"
+          ],
+          [
+            "Nieves",
+            "Titular"
+          ],
+          [
+            "Carmen",
+            "Catedrática"
+          ],
+          [
+            "Youssef",
+            "Ayudante"
+          ],
+          [
+            "Paula",
+            "Titular"
+          ],
+          [
+            "Lucía",
+            "Titular"
+          ],
+          [
+            "Tomás",
+            "Ayudante"
+          ],
+          [
+            "Sofía",
+            "Catedrática"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A30 · Consulta sin resultados",
+      "description": "Ninguna aula pasa de 200 plazas: el resultado tiene las columnas y cero filas (rowCount 0).",
+      "sql": "SELECT codigo FROM aulas WHERE capacidad > 200",
+      "assert": {
+        "columns": [
+          "codigo"
+        ],
+        "rows": [],
+        "rowCount": 0
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A31 · Nota media por asignatura (HAVING y ORDER BY por alias)",
+      "description": "Solo asignaturas con dos o más notas; se ordena por la media y un empate se rompe por identificador.",
+      "sql": "SELECT id_asignatura, COUNT(*) AS matriculas, COUNT(nota) AS calificadas, ROUND(AVG(nota), 2) AS nota_media FROM matriculas GROUP BY id_asignatura HAVING COUNT(nota) >= 2 ORDER BY nota_media DESC, id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "matriculas",
+          "calificadas",
+          "nota_media"
+        ],
+        "rows": [
+          [
+            11,
+            2,
+            2,
+            8.5
+          ],
+          [
+            1,
+            5,
+            5,
+            8.2
+          ],
+          [
+            10,
+            3,
+            2,
+            8
+          ],
+          [
+            6,
+            4,
+            3,
+            7.5
+          ],
+          [
+            13,
+            2,
+            2,
+            7.5
+          ],
+          [
+            5,
+            4,
+            4,
+            7.25
+          ],
+          [
+            8,
+            4,
+            4,
+            7
+          ],
+          [
+            9,
+            3,
+            2,
+            7
+          ],
+          [
+            2,
+            5,
+            4,
+            6.38
+          ],
+          [
+            3,
+            4,
+            2,
+            6
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A32 · Estudiantes y correos por sede",
+      "description": "GROUP BY id_sede con COUNT(*) y COUNT(email): 18 de los 24 estudiantes tienen correo.",
+      "sql": "SELECT id_sede, COUNT(*) AS estudiantes, COUNT(email) AS con_email FROM estudiantes GROUP BY id_sede ORDER BY id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "estudiantes",
+          "con_email"
+        ],
+        "rows": [
+          [
+            1,
+            9,
+            7
+          ],
+          [
+            2,
+            6,
+            4
+          ],
+          [
+            3,
+            6,
+            5
+          ],
+          [
+            4,
+            3,
+            2
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "B01 · Sedes con sus edificios (INNER JOIN)",
+      "description": "Join 1:M por id_sede: los 8 edificios con el nombre de su sede, ordenados por sede y edificio.",
+      "sql": "SELECT s.nombre AS sede, e.nombre AS edificio, e.plantas, e.tiene_ascensor FROM sedes AS s INNER JOIN edificios AS e ON e.id_sede = s.id_sede ORDER BY s.id_sede, e.id_edificio",
+      "assert": {
+        "columns": [
+          "sede",
+          "edificio",
+          "plantas",
+          "tiene_ascensor"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            "Aulario Kepler",
+            4,
+            true
+          ],
+          [
+            "Campus Norte",
+            "Laboratorios Curie",
+            3,
+            true
+          ],
+          [
+            "Campus Norte",
+            "Biblioteca Central",
+            6,
+            true
+          ],
+          [
+            "Campus Sur",
+            "Aulario Pitágoras",
+            3,
+            false
+          ],
+          [
+            "Campus Sur",
+            "Pabellón Deportivo",
+            2,
+            false
+          ],
+          [
+            "Campus del Mar",
+            "Edificio Ramón y Cajal",
+            5,
+            true
+          ],
+          [
+            "Campus del Mar",
+            "Anexo Marina",
+            1,
+            false
+          ],
+          [
+            "Campus Andino",
+            "Bloque Bolívar",
+            4,
+            true
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B02 · Tres tablas: aulas grandes de la sede 1",
+      "description": "sedes → edificios → aulas con filtro por sede y capacidad: 3 aulas, de mayor a menor.",
+      "sql": "SELECT s.nombre AS sede, e.nombre AS edificio, a.codigo, a.capacidad FROM sedes AS s INNER JOIN edificios AS e ON e.id_sede = s.id_sede INNER JOIN aulas AS a ON a.id_edificio = e.id_edificio WHERE s.id_sede = 1 AND a.capacidad >= 45 ORDER BY a.capacidad DESC, a.codigo",
+      "assert": {
+        "columns": [
+          "sede",
+          "edificio",
+          "codigo",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            "Biblioteca Central",
+            "B-SALA",
+            80
+          ],
+          [
+            "Campus Norte",
+            "Aulario Kepler",
+            "K-101",
+            60
+          ],
+          [
+            "Campus Norte",
+            "Aulario Kepler",
+            "K-102",
+            45
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B03 · Sedes sin edificios (LEFT JOIN sin pareja)",
+      "description": "LEFT JOIN más IS NULL: las 4 sedes tienen edificios, así que el resultado está vacío.",
+      "sql": "SELECT s.nombre AS sede FROM sedes AS s LEFT JOIN edificios AS e ON e.id_sede = s.id_sede WHERE e.id_edificio IS NULL ORDER BY s.id_sede",
+      "assert": {
+        "columns": [
+          "sede"
+        ],
+        "rows": [],
+        "rowCount": 0
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B03b · Edificios sin aulas",
+      "description": "LEFT JOIN con IS NULL: solo el Pabellón Deportivo se queda sin aulas.",
+      "sql": "SELECT e.id_edificio, e.nombre FROM edificios AS e LEFT JOIN aulas AS a ON a.id_edificio = e.id_edificio WHERE a.id_aula IS NULL ORDER BY e.id_edificio",
+      "assert": {
+        "columns": [
+          "id_edificio",
+          "nombre"
+        ],
+        "rows": [
+          [
+            5,
+            "Pabellón Deportivo"
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B04 · Docentes sin asignaturas",
+      "description": "LEFT JOIN docentes → asignaturas con IS NULL: 3 asociados no imparten ninguna asignatura.",
+      "sql": "SELECT d.id_docente, d.nombre, d.apellidos FROM docentes AS d LEFT JOIN asignaturas AS a ON a.id_docente = d.id_docente WHERE a.id_asignatura IS NULL ORDER BY d.id_docente",
+      "assert": {
+        "columns": [
+          "id_docente",
+          "nombre",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            4,
+            "Iván",
+            "Requena Soto"
+          ],
+          [
+            6,
+            "Youssef",
+            "Amrani Belkacem"
+          ],
+          [
+            8,
+            "Hugo",
+            "Naranjo Peña"
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B05 · Join implícito por comas (aulas de la sede 2)",
+      "description": "FROM aulas, edificios con la igualdad en el WHERE: el motor lo resuelve como join.",
+      "sql": "SELECT a.codigo, a.capacidad, e.nombre AS edificio FROM aulas AS a, edificios AS e WHERE a.id_edificio = e.id_edificio AND e.id_sede = 2 ORDER BY a.id_aula",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad",
+          "edificio"
+        ],
+        "rows": [
+          [
+            "P-101",
+            55,
+            "Aulario Pitágoras"
+          ],
+          [
+            "P-102",
+            55,
+            "Aulario Pitágoras"
+          ],
+          [
+            "P-201",
+            40,
+            "Aulario Pitágoras"
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B06 · Asignaturas y créditos por estudio (join por código de texto)",
+      "description": "Join por estudios.codigo = asignaturas.codigo_estudio, con COUNT y SUM por estudio.",
+      "sql": "SELECT e.codigo, e.nombre AS estudio, COUNT(a.id_asignatura) AS asignaturas, SUM(a.creditos) AS creditos FROM estudios AS e INNER JOIN asignaturas AS a ON a.codigo_estudio = e.codigo GROUP BY e.codigo, e.nombre ORDER BY creditos DESC, e.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "estudio",
+          "asignaturas",
+          "creditos"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Ingeniería Informática",
+            4,
+            24
+          ],
+          [
+            "GMED",
+            "Medicina",
+            3,
+            19
+          ],
+          [
+            "GEDU",
+            "Educación Primaria",
+            3,
+            15
+          ],
+          [
+            "MBD",
+            "Ciencia de Datos",
+            2,
+            12
+          ],
+          [
+            "TDER",
+            "Derecho",
+            2,
+            11
+          ],
+          [
+            "MSW",
+            "Ingeniería del Software",
+            2,
+            10
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B07 · Estudios con al menos tres asignaturas (LEFT JOIN + HAVING)",
+      "description": "LEFT JOIN con HAVING COUNT >= 3: Grado en Informática, Primaria y Medicina.",
+      "sql": "SELECT e.codigo, e.nombre AS estudio, COUNT(a.id_asignatura) AS asignaturas FROM estudios AS e LEFT JOIN asignaturas AS a ON a.codigo_estudio = e.codigo GROUP BY e.codigo, e.nombre HAVING COUNT(a.id_asignatura) >= 3 ORDER BY asignaturas DESC, e.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "estudio",
+          "asignaturas"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Ingeniería Informática",
+            4
+          ],
+          [
+            "GEDU",
+            "Educación Primaria",
+            3
+          ],
+          [
+            "GMED",
+            "Medicina",
+            3
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B08 · Aulas y plazas por edificio",
+      "description": "Agrupación por edificio con COUNT y SUM: el Aulario Pitágoras encabeza con 150 plazas.",
+      "sql": "SELECT e.id_edificio, e.nombre AS edificio, COUNT(a.id_aula) AS aulas, SUM(a.capacidad) AS plazas FROM edificios AS e INNER JOIN aulas AS a ON a.id_edificio = e.id_edificio GROUP BY e.id_edificio, e.nombre ORDER BY plazas DESC, e.id_edificio",
+      "assert": {
+        "columns": [
+          "id_edificio",
+          "edificio",
+          "aulas",
+          "plazas"
+        ],
+        "rows": [
+          [
+            4,
+            "Aulario Pitágoras",
+            3,
+            150
+          ],
+          [
+            1,
+            "Aulario Kepler",
+            3,
+            135
+          ],
+          [
+            6,
+            "Edificio Ramón y Cajal",
+            2,
+            105
+          ],
+          [
+            3,
+            "Biblioteca Central",
+            2,
+            92
+          ],
+          [
+            7,
+            "Bloque Bolívar",
+            2,
+            75
+          ],
+          [
+            2,
+            "Laboratorios Curie",
+            2,
+            44
+          ],
+          [
+            8,
+            "Anexo Marina",
+            2,
+            40
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B09 · Aulas por edificio, incluidos los que no tienen (LEFT JOIN)",
+      "description": "LEFT JOIN con COUNT: el Pabellón Deportivo aparece con 0 aulas.",
+      "sql": "SELECT e.id_edificio, e.nombre AS edificio, COUNT(a.id_aula) AS aulas FROM edificios AS e LEFT JOIN aulas AS a ON a.id_edificio = e.id_edificio GROUP BY e.id_edificio, e.nombre ORDER BY aulas ASC, e.id_edificio",
+      "assert": {
+        "columns": [
+          "id_edificio",
+          "edificio",
+          "aulas"
+        ],
+        "rows": [
+          [
+            5,
+            "Pabellón Deportivo",
+            0
+          ],
+          [
+            2,
+            "Laboratorios Curie",
+            2
+          ],
+          [
+            3,
+            "Biblioteca Central",
+            2
+          ],
+          [
+            6,
+            "Edificio Ramón y Cajal",
+            2
+          ],
+          [
+            7,
+            "Bloque Bolívar",
+            2
+          ],
+          [
+            8,
+            "Anexo Marina",
+            2
+          ],
+          [
+            1,
+            "Aulario Kepler",
+            3
+          ],
+          [
+            4,
+            "Aulario Pitágoras",
+            3
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B10 · Carga docente: asignaturas y horas presenciales",
+      "description": "docentes → asignaturas con COUNT y SUM: Elena y Carmen superan las 145 horas.",
+      "sql": "SELECT d.id_docente, d.nombre, COUNT(a.id_asignatura) AS asignaturas, SUM(a.horas_presenciales) AS horas FROM docentes AS d INNER JOIN asignaturas AS a ON a.id_docente = d.id_docente GROUP BY d.id_docente, d.nombre ORDER BY horas DESC, d.id_docente",
+      "assert": {
+        "columns": [
+          "id_docente",
+          "nombre",
+          "asignaturas",
+          "horas"
+        ],
+        "rows": [
+          [
+            1,
+            "Elena",
+            2,
+            150
+          ],
+          [
+            5,
+            "Carmen",
+            3,
+            148
+          ],
+          [
+            2,
+            "Marc",
+            2,
+            100
+          ],
+          [
+            7,
+            "Paula",
+            2,
+            95
+          ],
+          [
+            9,
+            "Lucía",
+            2,
+            82
+          ],
+          [
+            11,
+            "Sofía",
+            2,
+            78
+          ],
+          [
+            3,
+            "Nieves",
+            1,
+            45
+          ],
+          [
+            12,
+            "Andrés",
+            1,
+            40
+          ],
+          [
+            10,
+            "Tomás",
+            1,
+            32
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B11 · Docentes con dos asignaturas y 12 créditos o más (HAVING doble)",
+      "description": "HAVING con COUNT y SUM a la vez: solo Carmen, Elena y Marc pasan el corte.",
+      "sql": "SELECT d.id_docente, d.apellidos, COUNT(*) AS asignaturas, SUM(a.creditos) AS creditos FROM docentes AS d INNER JOIN asignaturas AS a ON a.id_docente = d.id_docente GROUP BY d.id_docente, d.apellidos HAVING COUNT(*) >= 2 AND SUM(a.creditos) >= 12 ORDER BY creditos DESC, d.id_docente",
+      "assert": {
+        "columns": [
+          "id_docente",
+          "apellidos",
+          "asignaturas",
+          "creditos"
+        ],
+        "rows": [
+          [
+            5,
+            "Ibáñez Luna",
+            3,
+            18
+          ],
+          [
+            1,
+            "Vargas Ruiz",
+            2,
+            15
+          ],
+          [
+            2,
+            "Oliver Pons",
+            2,
+            12
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B12 · Asignaturas sin idioma definido, con estudio y docente",
+      "description": "Tres tablas (asignaturas + estudios + docentes) y IS NULL sobre el idioma.",
+      "sql": "SELECT a.id_asignatura, a.nombre AS asignatura, e.nombre AS estudio, d.apellidos AS docente, a.creditos FROM asignaturas AS a INNER JOIN estudios AS e ON e.codigo = a.codigo_estudio INNER JOIN docentes AS d ON d.id_docente = a.id_docente WHERE a.idioma IS NULL ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "asignatura",
+          "estudio",
+          "docente",
+          "creditos"
+        ],
+        "rows": [
+          [
+            4,
+            "Redes de Computadores",
+            "Ingeniería Informática",
+            "Sáenz Molina",
+            6
+          ],
+          [
+            7,
+            "Salud Pública",
+            "Medicina",
+            "Kovalchuk Marín",
+            4
+          ],
+          [
+            12,
+            "Pruebas y Calidad",
+            "Ingeniería del Software",
+            "Sáenz Molina",
+            4
+          ],
+          [
+            16,
+            "Derecho Mercantil",
+            "Derecho",
+            "Cano Duarte",
+            5
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B13 · Estudiantes, correos y teléfonos por sede",
+      "description": "LEFT JOIN sedes → estudiantes con tres recuentos: 18 correos y 16 teléfonos en total.",
+      "sql": "SELECT s.id_sede, s.nombre AS sede, COUNT(e.id_estudiante) AS estudiantes, COUNT(e.email) AS con_email, COUNT(e.telefono) AS con_telefono FROM sedes AS s LEFT JOIN estudiantes AS e ON e.id_sede = s.id_sede GROUP BY s.id_sede, s.nombre ORDER BY estudiantes DESC, s.id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "sede",
+          "estudiantes",
+          "con_email",
+          "con_telefono"
+        ],
+        "rows": [
+          [
+            1,
+            "Campus Norte",
+            9,
+            7,
+            7
+          ],
+          [
+            2,
+            "Campus Sur",
+            6,
+            4,
+            3
+          ],
+          [
+            3,
+            "Campus del Mar",
+            6,
+            5,
+            5
+          ],
+          [
+            4,
+            "Campus Andino",
+            3,
+            2,
+            1
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B14 · Producto cartesiano (6 estudios × 4 sedes)",
+      "description": "Sin condición de unión se obtienen todas las combinaciones; con LIMIT 6 se ven las primeras.",
+      "sql": "SELECT e.codigo, s.nombre AS sede FROM estudios AS e, sedes AS s ORDER BY e.codigo, s.id_sede LIMIT 6",
+      "assert": {
+        "columns": [
+          "codigo",
+          "sede"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "Campus Norte"
+          ],
+          [
+            "GEDU",
+            "Campus Sur"
+          ],
+          [
+            "GEDU",
+            "Campus del Mar"
+          ],
+          [
+            "GEDU",
+            "Campus Andino"
+          ],
+          [
+            "GINF",
+            "Campus Norte"
+          ],
+          [
+            "GINF",
+            "Campus Sur"
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B15 · Las cinco aulas más grandes (JOIN + ORDER BY alias + LIMIT)",
+      "description": "Se ordena por el alias de una columna y por el código del aula; el desempate a 55 plazas lo decide el aula.",
+      "sql": "SELECT a.codigo AS aula, a.capacidad AS plazas, e.nombre AS edificio FROM aulas AS a INNER JOIN edificios AS e ON e.id_edificio = a.id_edificio ORDER BY plazas DESC, aula LIMIT 5",
+      "assert": {
+        "columns": [
+          "aula",
+          "plazas",
+          "edificio"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            "Biblioteca Central"
+          ],
+          [
+            "R-101",
+            70,
+            "Edificio Ramón y Cajal"
+          ],
+          [
+            "K-101",
+            60,
+            "Aulario Kepler"
+          ],
+          [
+            "P-101",
+            55,
+            "Aulario Pitágoras"
+          ],
+          [
+            "P-102",
+            55,
+            "Aulario Pitágoras"
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B16 · Docentes distintos por estudio (COUNT DISTINCT)",
+      "description": "COUNT(DISTINCT id_docente) por estudio: Informática es el que reparte su docencia entre más profesores.",
+      "sql": "SELECT e.codigo, COUNT(DISTINCT a.id_docente) AS docentes_distintos, COUNT(*) AS asignaturas FROM estudios AS e INNER JOIN asignaturas AS a ON a.codigo_estudio = e.codigo GROUP BY e.codigo ORDER BY docentes_distintos DESC, e.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "docentes_distintos",
+          "asignaturas"
+        ],
+        "rows": [
+          [
+            "GINF",
+            4,
+            4
+          ],
+          [
+            "GEDU",
+            3,
+            3
+          ],
+          [
+            "GMED",
+            3,
+            3
+          ],
+          [
+            "MBD",
+            2,
+            2
+          ],
+          [
+            "MSW",
+            2,
+            2
+          ],
+          [
+            "TDER",
+            2,
+            2
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B17 · Horas de docencia por categoría (MIN y MAX)",
+      "description": "GROUP BY categoria con recuento y extremos: los titulares son los más numerosos.",
+      "sql": "SELECT categoria, COUNT(*) AS docentes, MIN(horas_semanales) AS min_horas, MAX(horas_semanales) AS max_horas FROM docentes GROUP BY categoria ORDER BY docentes DESC, categoria",
+      "assert": {
+        "columns": [
+          "categoria",
+          "docentes",
+          "min_horas",
+          "max_horas"
+        ],
+        "rows": [
+          [
+            "Titular",
+            4,
+            16,
+            20
+          ],
+          [
+            "Asociado",
+            3,
+            6,
+            8
+          ],
+          [
+            "Catedrática",
+            3,
+            14,
+            18
+          ],
+          [
+            "Ayudante",
+            2,
+            10,
+            12
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B18 · Asignaturas básicas de primero y segundo con su docente",
+      "description": "Join docentes → asignaturas con BETWEEN, >= y booleano en el WHERE: 8 asignaturas.",
+      "sql": "SELECT d.nombre, d.apellidos, a.nombre AS asignatura, a.curso FROM docentes AS d INNER JOIN asignaturas AS a ON a.id_docente = d.id_docente WHERE a.curso BETWEEN 1 AND 2 AND a.creditos >= 6 AND a.es_obligatoria = true ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "asignatura",
+          "curso"
+        ],
+        "rows": [
+          [
+            "Elena",
+            "Vargas Ruiz",
+            "Estructuras de Datos",
+            2
+          ],
+          [
+            "Marc",
+            "Oliver Pons",
+            "Bases de Datos",
+            2
+          ],
+          [
+            "Elena",
+            "Vargas Ruiz",
+            "Anatomía Humana",
+            1
+          ],
+          [
+            "Carmen",
+            "Ibáñez Luna",
+            "Farmacología",
+            2
+          ],
+          [
+            "Nieves",
+            "Salgado Ortiz",
+            "Psicología del Desarrollo",
+            1
+          ],
+          [
+            "Marc",
+            "Oliver Pons",
+            "Arquitectura de Software",
+            1
+          ],
+          [
+            "Carmen",
+            "Ibáñez Luna",
+            "Estadística Aplicada",
+            1
+          ],
+          [
+            "Paula",
+            "Ferrer Gil",
+            "Derecho Constitucional",
+            1
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B19 · Matrículas y nota media por nivel (Grado / Máster)",
+      "description": "Cuatro tablas y ROUND(AVG()): los másteres suben la media del grado (43 matrículas frente a 5).",
+      "sql": "SELECT e.nivel, COUNT(DISTINCT m.id_matricula) AS matriculas, ROUND(AVG(m.nota), 2) AS media FROM estudios AS e INNER JOIN asignaturas AS a ON a.codigo_estudio = e.codigo INNER JOIN matriculas AS m ON m.id_asignatura = a.id_asignatura GROUP BY e.nivel ORDER BY media DESC",
+      "assert": {
+        "columns": [
+          "nivel",
+          "matriculas",
+          "media"
+        ],
+        "rows": [
+          [
+            "Máster",
+            5,
+            8
+          ],
+          [
+            "Grado",
+            43,
+            7.19
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B20 · Asignaturas optativas y su estudio",
+      "description": "Filtro booleano (es_obligatoria = false) sobre el join estudios ↔ asignaturas: 5 optativas.",
+      "sql": "SELECT a.id_asignatura, a.nombre, e.nombre AS estudio, a.idioma FROM asignaturas AS a INNER JOIN estudios AS e ON e.codigo = a.codigo_estudio WHERE a.es_obligatoria = false ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre",
+          "estudio",
+          "idioma"
+        ],
+        "rows": [
+          [
+            3,
+            "Compiladores",
+            "Ingeniería Informática",
+            "inglés"
+          ],
+          [
+            7,
+            "Salud Pública",
+            "Medicina",
+            null
+          ],
+          [
+            10,
+            "Educación Inclusiva",
+            "Educación Primaria",
+            "español"
+          ],
+          [
+            14,
+            "Aprendizaje Automático",
+            "Ciencia de Datos",
+            "inglés"
+          ],
+          [
+            16,
+            "Derecho Mercantil",
+            "Derecho",
+            null
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B21 · Estudiantes de máster con su titulación",
+      "description": "Join estudiantes → estudios por el código de texto, filtrando por nivel Máster: 4 estudiantes.",
+      "sql": "SELECT es.id_estudiante, es.nombre, es.apellidos, e.nombre AS estudio, e.nivel FROM estudiantes AS es INNER JOIN estudios AS e ON e.codigo = es.codigo_estudio WHERE e.nivel = 'Máster' ORDER BY es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "nombre",
+          "apellidos",
+          "estudio",
+          "nivel"
+        ],
+        "rows": [
+          [
+            7,
+            "Lucía",
+            "Moreno Pascual",
+            "Ingeniería del Software",
+            "Máster"
+          ],
+          [
+            10,
+            "Álvaro",
+            "Domínguez Rey",
+            "Ciencia de Datos",
+            "Máster"
+          ],
+          [
+            15,
+            "Elena",
+            "Molina Ríos",
+            "Ingeniería del Software",
+            "Máster"
+          ],
+          [
+            18,
+            "Adrián",
+            "Cabrera Luna",
+            "Ciencia de Datos",
+            "Máster"
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "B22 · Jornada diaria del profesorado investigador",
+      "description": "Filtro booleano y ROUND sobre una división, ordenado por horas semanales: 6 investigadores.",
+      "sql": "SELECT d.nombre, d.horas_semanales, ROUND(d.horas_semanales / 5, 1) AS horas_dia FROM docentes AS d WHERE d.es_investigador = true ORDER BY d.horas_semanales DESC, d.id_docente",
+      "assert": {
+        "columns": [
+          "nombre",
+          "horas_semanales",
+          "horas_dia"
+        ],
+        "rows": [
+          [
+            "Marc",
+            20,
+            4
+          ],
+          [
+            "Elena",
+            18,
+            3.6
+          ],
+          [
+            "Lucía",
+            17,
+            3.4
+          ],
+          [
+            "Carmen",
+            15,
+            3
+          ],
+          [
+            "Sofía",
+            14,
+            2.8
+          ],
+          [
+            "Youssef",
+            12,
+            2.4
+          ]
+        ]
+      },
+      "folder": "B · Uniones (join)"
+    },
+    {
+      "name": "C01 · Expediente completo de una estudiante (M:M resuelta)",
+      "description": "Tres tablas sobre la M:M: las 4 asignaturas de Ana, con nota y estado.",
+      "sql": "SELECT m.id_matricula, es.apellidos AS estudiante, a.nombre AS asignatura, m.nota, m.estado FROM matriculas AS m INNER JOIN estudiantes AS es ON es.id_estudiante = m.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura WHERE m.id_estudiante = 1 ORDER BY m.id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "estudiante",
+          "asignatura",
+          "nota",
+          "estado"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            "Estructuras de Datos",
+            8.5,
+            "superada"
+          ],
+          [
+            2,
+            "García López",
+            "Bases de Datos",
+            7.5,
+            "superada"
+          ],
+          [
+            3,
+            "García López",
+            "Compiladores",
+            null,
+            "activa"
+          ],
+          [
+            4,
+            "García López",
+            "Redes de Computadores",
+            null,
+            "activa"
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C02 · Asignaturas con cuatro o más estudiantes (grupo grande)",
+      "description": "Recorre la M:M en sentido asignatura → matrículas y agrupa con HAVING >= 4: 8 asignaturas.",
+      "sql": "SELECT a.id_asignatura, a.nombre AS asignatura, COUNT(DISTINCT m.id_estudiante) AS estudiantes FROM asignaturas AS a INNER JOIN matriculas AS m ON m.id_asignatura = a.id_asignatura GROUP BY a.id_asignatura, a.nombre HAVING COUNT(DISTINCT m.id_estudiante) >= 4 ORDER BY estudiantes DESC, a.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "asignatura",
+          "estudiantes"
+        ],
+        "rows": [
+          [
+            1,
+            "Estructuras de Datos",
+            5
+          ],
+          [
+            2,
+            "Bases de Datos",
+            5
+          ],
+          [
+            7,
+            "Salud Pública",
+            5
+          ],
+          [
+            3,
+            "Compiladores",
+            4
+          ],
+          [
+            4,
+            "Redes de Computadores",
+            4
+          ],
+          [
+            5,
+            "Anatomía Humana",
+            4
+          ],
+          [
+            6,
+            "Farmacología",
+            4
+          ],
+          [
+            8,
+            "Didáctica de las Matemáticas",
+            4
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C03 · Carga de cada estudiante (asignaturas y créditos)",
+      "description": "La otra cara de la M:M: 21 estudiantes con matrícula, ordenados por créditos y desempatando por identificador.",
+      "sql": "SELECT es.id_estudiante, es.nombre, es.apellidos, COUNT(*) AS asignaturas, SUM(a.creditos) AS creditos FROM estudiantes AS es INNER JOIN matriculas AS m ON m.id_estudiante = es.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura GROUP BY es.id_estudiante, es.nombre, es.apellidos ORDER BY creditos DESC, es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "nombre",
+          "apellidos",
+          "asignaturas",
+          "creditos"
+        ],
+        "rows": [
+          [
+            1,
+            "Ana",
+            "García López",
+            4,
+            24
+          ],
+          [
+            4,
+            "Diego",
+            "Fernández Blanco",
+            3,
+            19
+          ],
+          [
+            9,
+            "Carmen",
+            "Santos Iglesias",
+            3,
+            19
+          ],
+          [
+            17,
+            "Irene",
+            "Suárez Nieto",
+            3,
+            19
+          ],
+          [
+            2,
+            "Luis",
+            "Martín Soto",
+            3,
+            18
+          ],
+          [
+            8,
+            "Pablo",
+            "Gómez Frías",
+            3,
+            18
+          ],
+          [
+            19,
+            "Claudia",
+            "Reyes Baena",
+            3,
+            18
+          ],
+          [
+            23,
+            "Sara",
+            "Guerrero Vidal",
+            3,
+            18
+          ],
+          [
+            5,
+            "Marta",
+            "Ruiz Navarro",
+            3,
+            15
+          ],
+          [
+            14,
+            "Hugo",
+            "Serrano Bravo",
+            3,
+            15
+          ],
+          [
+            13,
+            "Paula",
+            "Vega Salas",
+            2,
+            13
+          ],
+          [
+            3,
+            "Sofía",
+            "Hernández Ruiz",
+            2,
+            12
+          ],
+          [
+            10,
+            "Álvaro",
+            "Domínguez Rey",
+            2,
+            12
+          ],
+          [
+            11,
+            "Nerea",
+            "Castro Peña",
+            2,
+            11
+          ],
+          [
+            21,
+            "Julia",
+            "Bermúdez Soler",
+            2,
+            10
+          ],
+          [
+            20,
+            "Rubén",
+            "Parra Aguilar",
+            2,
+            9
+          ],
+          [
+            6,
+            "Javier",
+            "Ortega Díaz",
+            1,
+            6
+          ],
+          [
+            7,
+            "Lucía",
+            "Moreno Pascual",
+            1,
+            6
+          ],
+          [
+            15,
+            "Elena",
+            "Molina Ríos",
+            1,
+            6
+          ],
+          [
+            18,
+            "Adrián",
+            "Cabrera Luna",
+            1,
+            6
+          ],
+          [
+            24,
+            "Marc",
+            "Esteban Quiles",
+            1,
+            6
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C04 · Notas de un estudiante con COALESCE",
+      "description": "COALESCE convierte el null de la asignatura activa en 0 en lugar de dejarlo vacío.",
+      "sql": "SELECT a.nombre AS asignatura, m.estado, COALESCE(m.nota, 0) AS nota FROM matriculas AS m INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura WHERE m.id_estudiante = 4 ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "estado",
+          "nota"
+        ],
+        "rows": [
+          [
+            "Anatomía Humana",
+            "superada",
+            7
+          ],
+          [
+            "Farmacología",
+            "superada",
+            6.5
+          ],
+          [
+            "Salud Pública",
+            "activa",
+            0
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C05 · Matrículas todavía sin nota (IS NULL)",
+      "description": "Las seis primeras matrículas sin calificar, con estudiante y asignatura.",
+      "sql": "SELECT m.id_matricula, es.apellidos AS estudiante, a.nombre AS asignatura, m.estado FROM matriculas AS m INNER JOIN estudiantes AS es ON es.id_estudiante = m.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura WHERE m.nota IS NULL ORDER BY m.id_matricula LIMIT 6",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "estudiante",
+          "asignatura",
+          "estado"
+        ],
+        "rows": [
+          [
+            3,
+            "García López",
+            "Compiladores",
+            "activa"
+          ],
+          [
+            4,
+            "García López",
+            "Redes de Computadores",
+            "activa"
+          ],
+          [
+            7,
+            "Martín Soto",
+            "Redes de Computadores",
+            "activa"
+          ],
+          [
+            9,
+            "Hernández Ruiz",
+            "Bases de Datos",
+            "activa"
+          ],
+          [
+            12,
+            "Gómez Frías",
+            "Redes de Computadores",
+            "activa"
+          ],
+          [
+            14,
+            "Reyes Baena",
+            "Compiladores",
+            "activa"
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C06 · Matrículas con sobresaliente (nota >= 9)",
+      "description": "Seis matrículas de 9 o más, de mayor a menor nota y desempatando por estudiante.",
+      "sql": "SELECT es.apellidos AS estudiante, a.nombre AS asignatura, m.nota FROM matriculas AS m INNER JOIN estudiantes AS es ON es.id_estudiante = m.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura WHERE m.nota >= 9 ORDER BY m.nota DESC, es.id_estudiante",
+      "assert": {
+        "columns": [
+          "estudiante",
+          "asignatura",
+          "nota"
+        ],
+        "rows": [
+          [
+            "Serrano Bravo",
+            "Didáctica de las Matemáticas",
+            10
+          ],
+          [
+            "Guerrero Vidal",
+            "Estructuras de Datos",
+            9.5
+          ],
+          [
+            "Hernández Ruiz",
+            "Estructuras de Datos",
+            9
+          ],
+          [
+            "Serrano Bravo",
+            "Educación Inclusiva",
+            9
+          ],
+          [
+            "Molina Ríos",
+            "Arquitectura de Software",
+            9
+          ],
+          [
+            "Suárez Nieto",
+            "Anatomía Humana",
+            9
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C07 · Estudiantes sin ninguna matrícula (LEFT JOIN y media nula)",
+      "description": "Tres estudiantes no tienen matrículas: COUNT vale 0 y ROUND(AVG()) es null.",
+      "sql": "SELECT es.id_estudiante, es.nombre, es.apellidos, COUNT(m.id_matricula) AS matriculas, ROUND(AVG(m.nota), 2) AS media FROM estudiantes AS es LEFT JOIN matriculas AS m ON m.id_estudiante = es.id_estudiante GROUP BY es.id_estudiante, es.nombre, es.apellidos HAVING COUNT(m.id_matricula) = 0 ORDER BY es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "nombre",
+          "apellidos",
+          "matriculas",
+          "media"
+        ],
+        "rows": [
+          [
+            12,
+            "Iván",
+            "Ramírez Cortés",
+            0,
+            null
+          ],
+          [
+            16,
+            "Marcos",
+            "Delgado Cano",
+            0,
+            null
+          ],
+          [
+            22,
+            "Óscar",
+            "Lozano Prieto",
+            0,
+            null
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C08 · Asignaturas sin ninguna matrícula",
+      "description": "LEFT JOIN con IS NULL: Pruebas y Calidad y Derecho Mercantil se quedan sin alumnado.",
+      "sql": "SELECT a.id_asignatura, a.nombre, a.codigo_estudio FROM asignaturas AS a LEFT JOIN matriculas AS m ON m.id_asignatura = a.id_asignatura WHERE m.id_matricula IS NULL ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre",
+          "codigo_estudio"
+        ],
+        "rows": [
+          [
+            12,
+            "Pruebas y Calidad",
+            "MSW"
+          ],
+          [
+            16,
+            "Derecho Mercantil",
+            "TDER"
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C09 · Cobertura: estudiantes con matrícula por estudio",
+      "description": "Cuatro tablas (estudios → asignaturas → matrículas → estudiantes) para contar el alumnado real de cada titulación.",
+      "sql": "SELECT e.codigo, COUNT(DISTINCT es.id_estudiante) AS estudiantes FROM estudios AS e INNER JOIN asignaturas AS a ON a.codigo_estudio = e.codigo INNER JOIN matriculas AS m ON m.id_asignatura = a.id_asignatura INNER JOIN estudiantes AS es ON es.id_estudiante = m.id_estudiante GROUP BY e.codigo ORDER BY estudiantes DESC, e.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "estudiantes"
+        ],
+        "rows": [
+          [
+            "GINF",
+            6
+          ],
+          [
+            "GMED",
+            5
+          ],
+          [
+            "GEDU",
+            4
+          ],
+          [
+            "MBD",
+            2
+          ],
+          [
+            "MSW",
+            2
+          ],
+          [
+            "TDER",
+            2
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C10 · Nadie cursa asignaturas de dos estudios (solo rowCount)",
+      "description": "Assert sin filas esperadas: basta con comprobar que el resultado está vacío (rowCount 0).",
+      "sql": "SELECT es.id_estudiante, COUNT(DISTINCT a.codigo_estudio) AS estudios FROM estudiantes AS es INNER JOIN matriculas AS m ON m.id_estudiante = es.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura GROUP BY es.id_estudiante HAVING COUNT(DISTINCT a.codigo_estudio) >= 2 ORDER BY es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "estudios"
+        ],
+        "rowCount": 0
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C11 · Matrículas convalidadas",
+      "description": "Booleano es_convalidada = true sobre la M:M: 6 matrículas, una por estudiante.",
+      "sql": "SELECT m.id_matricula, es.apellidos AS estudiante, a.nombre AS asignatura, e.codigo AS estudio FROM matriculas AS m INNER JOIN estudiantes AS es ON es.id_estudiante = m.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura INNER JOIN estudios AS e ON e.codigo = a.codigo_estudio WHERE m.es_convalidada = true ORDER BY m.id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "estudiante",
+          "asignatura",
+          "estudio"
+        ],
+        "rows": [
+          [
+            6,
+            "Martín Soto",
+            "Bases de Datos",
+            "GINF"
+          ],
+          [
+            17,
+            "Guerrero Vidal",
+            "Bases de Datos",
+            "GINF"
+          ],
+          [
+            25,
+            "Vega Salas",
+            "Anatomía Humana",
+            "GMED"
+          ],
+          [
+            35,
+            "Castro Peña",
+            "Didáctica de las Matemáticas",
+            "GEDU"
+          ],
+          [
+            43,
+            "Molina Ríos",
+            "Arquitectura de Software",
+            "MSW"
+          ],
+          [
+            47,
+            "Ortega Díaz",
+            "Derecho Constitucional",
+            "TDER"
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C12 · Asignaturas de un estudiante sin importar el orden (ignoreOrder)",
+      "description": "El assert no ordena: se comprueba que el conjunto de filas coincide, ignoreOrder true.",
+      "sql": "SELECT a.nombre AS asignatura FROM asignaturas AS a INNER JOIN matriculas AS m ON m.id_asignatura = a.id_asignatura WHERE m.id_estudiante = 4",
+      "assert": {
+        "columns": [
+          "asignatura"
+        ],
+        "rows": [
+          [
+            "Anatomía Humana"
+          ],
+          [
+            "Farmacología"
+          ],
+          [
+            "Salud Pública"
+          ]
+        ],
+        "ignoreOrder": true
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C13 · Asignaturas con más matrículas (ORDER BY de un agregado)",
+      "description": "Se ordena por COUNT(*) descendente y se cortan las 5 primeras: tres asignaturas empatan a 5 matrículas.",
+      "sql": "SELECT a.nombre AS asignatura, COUNT(*) AS matriculas FROM asignaturas AS a INNER JOIN matriculas AS m ON m.id_asignatura = a.id_asignatura GROUP BY a.nombre ORDER BY COUNT(*) DESC, a.nombre LIMIT 5",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "matriculas"
+        ],
+        "rows": [
+          [
+            "Bases de Datos",
+            5
+          ],
+          [
+            "Estructuras de Datos",
+            5
+          ],
+          [
+            "Salud Pública",
+            5
+          ],
+          [
+            "Anatomía Humana",
+            4
+          ],
+          [
+            "Compiladores",
+            4
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C14 · Nombres de asignatura más largos (ORDER BY de una función)",
+      "description": "Se ordena por LENGTH(nombre) descendente, no por el texto: 5 filas.",
+      "sql": "SELECT a.nombre AS asignatura, LENGTH(a.nombre) AS letras FROM asignaturas AS a ORDER BY LENGTH(a.nombre) DESC, a.nombre LIMIT 5",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "letras"
+        ],
+        "rows": [
+          [
+            "Didáctica de las Matemáticas",
+            28
+          ],
+          [
+            "Psicología del Desarrollo",
+            25
+          ],
+          [
+            "Arquitectura de Software",
+            24
+          ],
+          [
+            "Aprendizaje Automático",
+            22
+          ],
+          [
+            "Derecho Constitucional",
+            22
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C15 · Estudiantes con más créditos matriculados (ORDER BY alias + LIMIT)",
+      "description": "Se ordena por el alias creditos: Ana encabeza con 24 créditos y el resto empata a 19.",
+      "sql": "SELECT es.id_estudiante, es.apellidos, COUNT(*) AS asignaturas, SUM(a.creditos) AS creditos FROM estudiantes AS es INNER JOIN matriculas AS m ON m.id_estudiante = es.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura GROUP BY es.id_estudiante, es.apellidos ORDER BY creditos DESC, es.id_estudiante LIMIT 4",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "apellidos",
+          "asignaturas",
+          "creditos"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            4,
+            24
+          ],
+          [
+            4,
+            "Fernández Blanco",
+            3,
+            19
+          ],
+          [
+            9,
+            "Santos Iglesias",
+            3,
+            19
+          ],
+          [
+            17,
+            "Suárez Nieto",
+            3,
+            19
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C16 · Nota media de las asignaturas de Informática",
+      "description": "Filtro por código de estudio, agregados y NULLS LAST: la asignatura sin calificar queda al final.",
+      "sql": "SELECT a.nombre AS asignatura, COUNT(m.id_matricula) AS matriculas, COUNT(m.nota) AS calificadas, ROUND(AVG(m.nota), 2) AS media FROM asignaturas AS a INNER JOIN matriculas AS m ON m.id_asignatura = a.id_asignatura WHERE a.codigo_estudio = 'GINF' GROUP BY a.id_asignatura, a.nombre ORDER BY media DESC NULLS LAST, a.id_asignatura",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "matriculas",
+          "calificadas",
+          "media"
+        ],
+        "rows": [
+          [
+            "Estructuras de Datos",
+            5,
+            5,
+            8.2
+          ],
+          [
+            "Bases de Datos",
+            5,
+            4,
+            6.38
+          ],
+          [
+            "Compiladores",
+            4,
+            2,
+            6
+          ],
+          [
+            "Redes de Computadores",
+            4,
+            0,
+            null
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C17 · Becados en Anatomía Humana",
+      "description": "Booleano de estudiante y filtro por asignatura sobre la M:M: 2 becadas de las 4 matriculadas.",
+      "sql": "SELECT es.apellidos AS estudiante, es.es_becado, a.nombre AS asignatura FROM estudiantes AS es INNER JOIN matriculas AS m ON m.id_estudiante = es.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura WHERE es.es_becado = true AND m.id_asignatura = 5 ORDER BY es.id_estudiante",
+      "assert": {
+        "columns": [
+          "estudiante",
+          "es_becado",
+          "asignatura"
+        ],
+        "rows": [
+          [
+            "Santos Iglesias",
+            true,
+            "Anatomía Humana"
+          ],
+          [
+            "Suárez Nieto",
+            true,
+            "Anatomía Humana"
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C18 · Matrículas por estudio y curso académico",
+      "description": "GROUP BY con dos claves de texto: 12 combinaciones, en el orden estudio + curso.",
+      "sql": "SELECT a.codigo_estudio, m.curso_academico, COUNT(*) AS matriculas FROM matriculas AS m INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura GROUP BY a.codigo_estudio, m.curso_academico ORDER BY a.codigo_estudio, m.curso_academico",
+      "assert": {
+        "columns": [
+          "codigo_estudio",
+          "curso_academico",
+          "matriculas"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "2024-2025",
+            7
+          ],
+          [
+            "GEDU",
+            "2025-2026",
+            3
+          ],
+          [
+            "GINF",
+            "2024-2025",
+            10
+          ],
+          [
+            "GINF",
+            "2025-2026",
+            8
+          ],
+          [
+            "GMED",
+            "2024-2025",
+            6
+          ],
+          [
+            "GMED",
+            "2025-2026",
+            7
+          ],
+          [
+            "MBD",
+            "2024-2025",
+            2
+          ],
+          [
+            "MBD",
+            "2025-2026",
+            1
+          ],
+          [
+            "MSW",
+            "2024-2025",
+            1
+          ],
+          [
+            "MSW",
+            "2025-2026",
+            1
+          ],
+          [
+            "TDER",
+            "2024-2025",
+            1
+          ],
+          [
+            "TDER",
+            "2025-2026",
+            1
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C19 · Asignaturas con sobresalientes",
+      "description": "Filtro de nota y GROUP BY: Estructuras de Datos es la única con dos sobresalientes.",
+      "sql": "SELECT a.nombre AS asignatura, COUNT(*) AS sobresalientes FROM matriculas AS m INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura WHERE m.nota >= 9 GROUP BY a.nombre ORDER BY sobresalientes DESC, a.nombre",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "sobresalientes"
+        ],
+        "rows": [
+          [
+            "Estructuras de Datos",
+            2
+          ],
+          [
+            "Anatomía Humana",
+            1
+          ],
+          [
+            "Arquitectura de Software",
+            1
+          ],
+          [
+            "Didáctica de las Matemáticas",
+            1
+          ],
+          [
+            "Educación Inclusiva",
+            1
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "C20 · Media por estudiante de Informática con dos o más notas",
+      "description": "Cuatro tablas, IS NOT NULL y HAVING COUNT >= 2: Ana y Sara superan el 7.",
+      "sql": "SELECT es.id_estudiante, es.apellidos, ROUND(AVG(m.nota), 2) AS media FROM estudiantes AS es INNER JOIN matriculas AS m ON m.id_estudiante = es.id_estudiante INNER JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura INNER JOIN estudios AS e ON e.codigo = a.codigo_estudio WHERE e.codigo = 'GINF' AND m.nota IS NOT NULL GROUP BY es.id_estudiante, es.apellidos HAVING COUNT(*) >= 2 ORDER BY media DESC, es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "apellidos",
+          "media"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            8
+          ],
+          [
+            23,
+            "Guerrero Vidal",
+            7
+          ],
+          [
+            8,
+            "Gómez Frías",
+            6.75
+          ],
+          [
+            2,
+            "Martín Soto",
+            5.5
+          ]
+        ]
+      },
+      "folder": "C · Consultas relacionadas"
+    },
+    {
+      "name": "D01 · Matrículas sin estudiante (integridad de la 1:M)",
+      "description": "Anti-join matriculas → estudiantes: ninguna matrícula apunta a un estudiante inexistente.",
+      "sql": "SELECT m.id_matricula, m.id_estudiante FROM matriculas AS m LEFT JOIN estudiantes AS es ON es.id_estudiante = m.id_estudiante WHERE es.id_estudiante IS NULL ORDER BY m.id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "id_estudiante"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D02 · Matrículas sin asignatura (integridad de la otra 1:M)",
+      "description": "Anti-join matriculas → asignaturas: la M:M no tiene referencias colgando.",
+      "sql": "SELECT m.id_matricula, m.id_asignatura FROM matriculas AS m LEFT JOIN asignaturas AS a ON a.id_asignatura = m.id_asignatura WHERE a.id_asignatura IS NULL ORDER BY m.id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "id_asignatura"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D03 · Asignaturas sin estudio (integridad del código de texto)",
+      "description": "Anti-join asignaturas → estudios por codigo_estudio = codigo: las 16 asignaturas tienen estudio.",
+      "sql": "SELECT a.id_asignatura, a.codigo_estudio FROM asignaturas AS a LEFT JOIN estudios AS e ON e.codigo = a.codigo_estudio WHERE e.id_estudio IS NULL ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "codigo_estudio"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D04 · Asignaturas sin docente",
+      "description": "Anti-join asignaturas → docentes: todas las asignaturas tienen profesor asignado.",
+      "sql": "SELECT a.id_asignatura, a.id_docente FROM asignaturas AS a LEFT JOIN docentes AS d ON d.id_docente = a.id_docente WHERE d.id_docente IS NULL ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "id_docente"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D05 · Aulas sin edificio",
+      "description": "Anti-join aulas → edificios: ningún aula queda fuera de un edificio.",
+      "sql": "SELECT a.id_aula, a.id_edificio FROM aulas AS a LEFT JOIN edificios AS e ON e.id_edificio = a.id_edificio WHERE e.id_edificio IS NULL ORDER BY a.id_aula",
+      "assert": {
+        "columns": [
+          "id_aula",
+          "id_edificio"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D06 · Edificios sin sede",
+      "description": "Anti-join edificios → sedes: los 8 edificios cuelgan de una sede existente.",
+      "sql": "SELECT e.id_edificio, e.id_sede FROM edificios AS e LEFT JOIN sedes AS s ON s.id_sede = e.id_sede WHERE s.id_sede IS NULL ORDER BY e.id_edificio",
+      "assert": {
+        "columns": [
+          "id_edificio",
+          "id_sede"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D07 · Estudiantes sin sede o sin estudio",
+      "description": "Dos anti-joins a la vez con OR: todo el alumnado tiene sede y titulación válidas.",
+      "sql": "SELECT es.id_estudiante FROM estudiantes AS es LEFT JOIN sedes AS s ON s.id_sede = es.id_sede LEFT JOIN estudios AS e ON e.codigo = es.codigo_estudio WHERE s.id_sede IS NULL OR e.id_estudio IS NULL ORDER BY es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D08 · Matrículas repetidas del mismo par estudiante/asignatura",
+      "description": "GROUP BY + HAVING sobre la M:M: no hay pares duplicados, la clave natural es única.",
+      "sql": "SELECT m.id_estudiante, m.id_asignatura, COUNT(*) AS veces FROM matriculas AS m GROUP BY m.id_estudiante, m.id_asignatura HAVING COUNT(*) > 1",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "id_asignatura",
+          "veces"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D09 · Notas fuera del rango 0–10",
+      "description": "Regla de negocio sobre el rango de las notas: ninguna fuera de 0–10.",
+      "sql": "SELECT id_matricula, nota FROM matriculas WHERE nota IS NOT NULL AND (nota < 0 OR nota > 10)",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D10 · Estados de matrícula inventados",
+      "description": "NOT IN contra la lista de estados permitidos: solo existen activa, superada y anulada.",
+      "sql": "SELECT id_matricula, estado FROM matriculas WHERE estado NOT IN ('activa', 'superada', 'anulada') ORDER BY id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "estado"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D11 · Matrículas superadas sin nota",
+      "description": "Regla «superada ⇒ nota informada»: ninguna superada se queda sin calificación.",
+      "sql": "SELECT id_matricula, estado, nota FROM matriculas WHERE estado = 'superada' AND nota IS NULL ORDER BY id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "estado",
+          "nota"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D12 · Matrículas calificadas que no están superadas",
+      "description": "La regla inversa: si hay nota, la matrícula está superada (activas y anuladas no se califican).",
+      "sql": "SELECT id_matricula, estado, nota FROM matriculas WHERE nota IS NOT NULL AND estado <> 'superada' ORDER BY id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "estado",
+          "nota"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "D13 · Aulas sin plazas",
+      "description": "Regla de negocio: toda aula oferta al menos una plaza.",
+      "sql": "SELECT id_aula, codigo, capacidad FROM aulas WHERE capacidad <= 0 ORDER BY id_aula",
+      "assert": {
+        "columns": [
+          "id_aula",
+          "codigo",
+          "capacidad"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integridad"
+    },
+    {
+      "name": "E01 · Vista sencilla: SELECT * de otra consulta",
+      "description": "El resultado de A03 se lee como tabla: las 5 aulas grandes con sus tres columnas (codigo, capacidad, planta), ordenadas por capacidad.",
+      "sql": "SELECT * FROM [A03 · Aulas grandes (>= 55 plazas)] ORDER BY capacidad DESC, codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad",
+          "planta"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            3
+          ],
+          [
+            "R-101",
+            70,
+            1
+          ],
+          [
+            "K-101",
+            60,
+            1
+          ],
+          [
+            "P-101",
+            55,
+            1
+          ],
+          [
+            "P-102",
+            55,
+            1
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E02 · Aritmética sobre columnas de una vista",
+      "description": "La capacidad sigue siendo un número después de pasar por la vista A03: se puede dividir entre 10 y calcular el resto.",
+      "sql": "SELECT codigo AS aula, capacidad, capacidad / 10 AS decenas, capacidad % 10 AS resto FROM [A03 · Aulas grandes (>= 55 plazas)] ORDER BY capacidad DESC, codigo",
+      "assert": {
+        "columns": [
+          "aula",
+          "capacidad",
+          "decenas",
+          "resto"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            8,
+            0
+          ],
+          [
+            "R-101",
+            70,
+            7,
+            0
+          ],
+          [
+            "K-101",
+            60,
+            6,
+            0
+          ],
+          [
+            "P-101",
+            55,
+            5.5,
+            5
+          ],
+          [
+            "P-102",
+            55,
+            5.5,
+            5
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E03 · WHERE y DISTINCT sobre una vista",
+      "description": "Filtra la vista A03 por capacidad >= 60 y deja las plantas distintas: quedan las plantas 1 y 3.",
+      "sql": "SELECT DISTINCT planta FROM [A03 · Aulas grandes (>= 55 plazas)] WHERE capacidad >= 60 ORDER BY planta",
+      "assert": {
+        "columns": [
+          "planta"
+        ],
+        "rows": [
+          [
+            1
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E04 · Agregados sobre una vista",
+      "description": "Cinco agregados en una fila sobre el resultado de A03: 5 aulas, 320 plazas, de 55 a 80 y media 64.",
+      "sql": "SELECT COUNT(*) AS aulas, SUM(capacidad) AS plazas, MIN(capacidad) AS minima, MAX(capacidad) AS maxima, ROUND(AVG(capacidad), 2) AS media FROM [A03 · Aulas grandes (>= 55 plazas)]",
+      "assert": {
+        "columns": [
+          "aulas",
+          "plazas",
+          "minima",
+          "maxima",
+          "media"
+        ],
+        "rows": [
+          [
+            5,
+            320,
+            55,
+            80,
+            64
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E05 · Plantas con dos o más aulas grandes",
+      "description": "Agrupa la vista A03 por planta y se queda con las plantas con dos o más aulas: solo la planta 1 (4 aulas, 240 plazas).",
+      "sql": "SELECT planta, COUNT(*) AS aulas, SUM(capacidad) AS plazas FROM [A03 · Aulas grandes (>= 55 plazas)] GROUP BY planta HAVING COUNT(*) >= 2 ORDER BY planta",
+      "assert": {
+        "columns": [
+          "planta",
+          "aulas",
+          "plazas"
+        ],
+        "rows": [
+          [
+            1,
+            4,
+            240
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E06 · Vista unida a una tabla base (INNER JOIN)",
+      "description": "La vista C02 unida a la tabla asignaturas por id_asignatura: las 8 asignaturas con cuatro o más estudiantes, con su curso y sus créditos.",
+      "sql": "SELECT c.asignatura, c.estudiantes, a.curso, a.creditos FROM [C02 · Asignaturas con cuatro o más estudiantes (grupo grande)] AS c INNER JOIN asignaturas AS a ON a.id_asignatura = c.id_asignatura ORDER BY c.estudiantes DESC, c.id_asignatura",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "estudiantes",
+          "curso",
+          "creditos"
+        ],
+        "rows": [
+          [
+            "Estructuras de Datos",
+            5,
+            2,
+            6
+          ],
+          [
+            "Bases de Datos",
+            5,
+            2,
+            6
+          ],
+          [
+            "Salud Pública",
+            5,
+            5,
+            4
+          ],
+          [
+            "Compiladores",
+            4,
+            3,
+            6
+          ],
+          [
+            "Redes de Computadores",
+            4,
+            3,
+            6
+          ],
+          [
+            "Anatomía Humana",
+            4,
+            1,
+            9
+          ],
+          [
+            "Farmacología",
+            4,
+            2,
+            6
+          ],
+          [
+            "Didáctica de las Matemáticas",
+            4,
+            2,
+            5
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E07 · Dos vistas unidas por asignatura",
+      "description": "Las vistas C02 y A31 unidas por id_asignatura: las 6 asignaturas grandes que además tienen nota media calculada.",
+      "sql": "SELECT c.asignatura, c.estudiantes, n.nota_media FROM [C02 · Asignaturas con cuatro o más estudiantes (grupo grande)] AS c INNER JOIN [A31 · Nota media por asignatura (HAVING y ORDER BY por alias)] AS n ON n.id_asignatura = c.id_asignatura ORDER BY c.estudiantes DESC, c.id_asignatura",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "estudiantes",
+          "nota_media"
+        ],
+        "rows": [
+          [
+            "Estructuras de Datos",
+            5,
+            8.2
+          ],
+          [
+            "Bases de Datos",
+            5,
+            6.38
+          ],
+          [
+            "Compiladores",
+            4,
+            6
+          ],
+          [
+            "Anatomía Humana",
+            4,
+            7.25
+          ],
+          [
+            "Farmacología",
+            4,
+            7.5
+          ],
+          [
+            "Didáctica de las Matemáticas",
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E08 · Tabla LEFT JOIN vista con IS NULL",
+      "description": "LEFT JOIN de la tabla edificios contra la vista B08 más IS NULL: el único edificio sin aulas, el Pabellón Deportivo.",
+      "sql": "SELECT e.id_edificio, e.nombre AS edificio FROM edificios AS e LEFT JOIN [B08 · Aulas y plazas por edificio] AS v ON v.id_edificio = e.id_edificio WHERE v.aulas IS NULL ORDER BY e.id_edificio",
+      "assert": {
+        "columns": [
+          "id_edificio",
+          "edificio"
+        ],
+        "rows": [
+          [
+            5,
+            "Pabellón Deportivo"
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E09 · Vista de vista (dos niveles de consulta)",
+      "description": "Lee la vista E05, que a su vez lee la vista A03: tres niveles de consulta encadenados y una sola fila (planta 1, 240 plazas).",
+      "sql": "SELECT planta, aulas, plazas FROM [E05 · Plantas con dos o más aulas grandes] WHERE plazas >= 100 ORDER BY plazas DESC",
+      "assert": {
+        "columns": [
+          "planta",
+          "aulas",
+          "plazas"
+        ],
+        "rows": [
+          [
+            1,
+            4,
+            240
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E10 · La misma vista dos veces (auto-unión)",
+      "description": "La vista A03 aparece dos veces con alias distintos y se une consigo misma por capacidad: solo P-101 y P-102 empatan a 55 plazas.",
+      "sql": "SELECT a.codigo AS aula_1, b.codigo AS aula_2, a.capacidad FROM [A03 · Aulas grandes (>= 55 plazas)] AS a INNER JOIN [A03 · Aulas grandes (>= 55 plazas)] AS b ON b.capacidad = a.capacidad AND b.codigo > a.codigo ORDER BY a.capacidad DESC, a.codigo, b.codigo",
+      "assert": {
+        "columns": [
+          "aula_1",
+          "aula_2",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "P-101",
+            "P-102",
+            55
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E11 · Join implícito por comas con una vista",
+      "description": "Producto cartesiano de la vista B06 con la tabla sedes, filtrado por la sede 1: los 6 estudios con sus créditos, de más a menos.",
+      "sql": "SELECT c.codigo, c.estudio, c.creditos, s.nombre AS sede FROM [B06 · Asignaturas y créditos por estudio (join por código de texto)] AS c, sedes AS s WHERE s.id_sede = 1 ORDER BY c.creditos DESC, c.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "estudio",
+          "creditos",
+          "sede"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Ingeniería Informática",
+            24,
+            "Campus Norte"
+          ],
+          [
+            "GMED",
+            "Medicina",
+            19,
+            "Campus Norte"
+          ],
+          [
+            "GEDU",
+            "Educación Primaria",
+            15,
+            "Campus Norte"
+          ],
+          [
+            "MBD",
+            "Ciencia de Datos",
+            12,
+            "Campus Norte"
+          ],
+          [
+            "TDER",
+            "Derecho",
+            11,
+            "Campus Norte"
+          ],
+          [
+            "MSW",
+            "Ingeniería del Software",
+            10,
+            "Campus Norte"
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E12 · ORDER BY por alias y LIMIT sobre una vista",
+      "description": "Ordena por el alias materia y recorta a 3 filas la vista C02: las tres asignaturas con 5 estudiantes.",
+      "sql": "SELECT asignatura AS materia, estudiantes FROM [C02 · Asignaturas con cuatro o más estudiantes (grupo grande)] ORDER BY estudiantes DESC, asignatura LIMIT 3",
+      "assert": {
+        "columns": [
+          "materia",
+          "estudiantes"
+        ],
+        "rows": [
+          [
+            "Bases de Datos",
+            5
+          ],
+          [
+            "Estructuras de Datos",
+            5
+          ],
+          [
+            "Salud Pública",
+            5
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E13 · Booleano a través de una vista",
+      "description": "El booleano es_principal viaja intacto desde la tabla sedes hasta la vista A01: solo el Campus Norte es la sede principal.",
+      "sql": "SELECT nombre AS sede, es_principal FROM [A01 · Todas las sedes] WHERE es_principal = true ORDER BY id_sede",
+      "assert": {
+        "columns": [
+          "sede",
+          "es_principal"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            true
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E14 · Nulos a través de una vista (COALESCE)",
+      "description": "El teléfono ausente de la sede 3 sigue siendo nulo tras leer la vista A01, y COALESCE lo sustituye por «sin teléfono».",
+      "sql": "SELECT nombre AS sede, COALESCE(telefono, 'sin teléfono') AS contacto FROM [A01 · Todas las sedes] ORDER BY id_sede",
+      "assert": {
+        "columns": [
+          "sede",
+          "contacto"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            "910111222"
+          ],
+          [
+            "Campus Sur",
+            "954333444"
+          ],
+          [
+            "Campus del Mar",
+            "sin teléfono"
+          ],
+          [
+            "Campus Andino",
+            "601555666"
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E15 · Agregados sobre una vista ya agregada",
+      "description": "Resume la vista ya agregada A32 (una fila por sede): 4 sedes, 24 estudiantes y entre 3 y 9 por sede.",
+      "sql": "SELECT COUNT(*) AS sedes, SUM(estudiantes) AS estudiantes, MIN(estudiantes) AS minimo, MAX(estudiantes) AS maximo FROM [A32 · Estudiantes y correos por sede]",
+      "assert": {
+        "columns": [
+          "sedes",
+          "estudiantes",
+          "minimo",
+          "maximo"
+        ],
+        "rows": [
+          [
+            4,
+            24,
+            3,
+            9
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E16 · Vista que lee una consulta con LIMIT",
+      "description": "La vista C13 lleva LIMIT 5: al leerla como tabla llegan solo esas 5 filas (23 matrículas en total).",
+      "sql": "SELECT COUNT(*) AS filas, SUM(matriculas) AS matriculas FROM [C13 · Asignaturas con más matrículas (ORDER BY de un agregado)]",
+      "assert": {
+        "columns": [
+          "filas",
+          "matriculas"
+        ],
+        "rows": [
+          [
+            5,
+            23
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E17 · Vista de un resultado vacío",
+      "description": "La vista C10 no devuelve filas: leerla como tabla da una tabla vacía, y COUNT(*) devuelve 0 en lugar de un error.",
+      "sql": "SELECT COUNT(*) AS filas FROM [C10 · Nadie cursa asignaturas de dos estudios (solo rowCount)]",
+      "assert": {
+        "columns": [
+          "filas"
+        ],
+        "rows": [
+          [
+            0
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E18 · LIMIT y OFFSET sobre una vista",
+      "description": "LIMIT 3 OFFSET 2 sobre las 5 filas de la vista A03: la tercera, cuarta y quinta aulas por capacidad.",
+      "sql": "SELECT codigo, capacidad FROM [A03 · Aulas grandes (>= 55 plazas)] ORDER BY capacidad DESC, codigo LIMIT 3 OFFSET 2",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "P-102",
+            55
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E19 · Filtro con LIKE sobre una vista",
+      "description": "LIKE sobre una columna de la vista A03: la única aula grande cuyo código empieza por K.",
+      "sql": "SELECT codigo, capacidad FROM [A03 · Aulas grandes (>= 55 plazas)] WHERE codigo LIKE 'K%' ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "K-101",
+            60
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E20 · Vista de una vista que une dos vistas",
+      "description": "Lee la vista E07 (que une C02 y A31) y se queda con las notas medias de 7 o más: 4 asignaturas.",
+      "sql": "SELECT asignatura, estudiantes, nota_media FROM [E07 · Dos vistas unidas por asignatura] WHERE nota_media >= 7 ORDER BY nota_media DESC, asignatura",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "estudiantes",
+          "nota_media"
+        ],
+        "rows": [
+          [
+            "Estructuras de Datos",
+            5,
+            8.2
+          ],
+          [
+            "Farmacología",
+            4,
+            7.5
+          ],
+          [
+            "Anatomía Humana",
+            4,
+            7.25
+          ],
+          [
+            "Didáctica de las Matemáticas",
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E21 · LEFT JOIN entre dos vistas",
+      "description": "C02 LEFT JOIN A31: las asignaturas grandes que no llegan al HAVING de A31 (Redes de Computadores y Salud Pública) salen con nota_media nula, las primeras.",
+      "sql": "SELECT c.asignatura, c.estudiantes, n.nota_media FROM [C02 · Asignaturas con cuatro o más estudiantes (grupo grande)] AS c LEFT JOIN [A31 · Nota media por asignatura (HAVING y ORDER BY por alias)] AS n ON n.id_asignatura = c.id_asignatura ORDER BY n.nota_media ASC NULLS FIRST, c.asignatura",
+      "assert": {
+        "columns": [
+          "asignatura",
+          "estudiantes",
+          "nota_media"
+        ],
+        "rows": [
+          [
+            "Redes de Computadores",
+            4,
+            null
+          ],
+          [
+            "Salud Pública",
+            5,
+            null
+          ],
+          [
+            "Compiladores",
+            4,
+            6
+          ],
+          [
+            "Bases de Datos",
+            5,
+            6.38
+          ],
+          [
+            "Didáctica de las Matemáticas",
+            4,
+            7
+          ],
+          [
+            "Anatomía Humana",
+            4,
+            7.25
+          ],
+          [
+            "Farmacología",
+            4,
+            7.5
+          ],
+          [
+            "Estructuras de Datos",
+            5,
+            8.2
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E22 · Proyección con alias y asterisco sobre una vista",
+      "description": "El asterisco del alias (v.*) sobre la vista A04: las 10 aulas con proyector, con sus dos columnas.",
+      "sql": "SELECT v.* FROM [A04 · Aulas con proyector] AS v ORDER BY v.capacidad DESC, v.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ],
+          [
+            "R-101",
+            70
+          ],
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "L-301",
+            50
+          ],
+          [
+            "P-201",
+            40
+          ],
+          [
+            "K-201",
+            30
+          ],
+          [
+            "C-LAB1",
+            24
+          ],
+          [
+            "M-002",
+            22
+          ],
+          [
+            "C-LAB2",
+            20
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E23 · Vista que lee una consulta con tres tablas",
+      "description": "La vista B02 une tres tablas por dentro (sedes, edificios y aulas): al leerla como tabla llegan sus 3 filas.",
+      "sql": "SELECT COUNT(*) AS filas FROM [B02 · Tres tablas: aulas grandes de la sede 1]",
+      "assert": {
+        "columns": [
+          "filas"
+        ],
+        "rows": [
+          [
+            3
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    },
+    {
+      "name": "E24 · Agrupar por un booleano de una vista",
+      "description": "GROUP BY sobre un booleano que llega de la vista A15: cuántas combinaciones nivel/oficialidad hay de cada tipo.",
+      "sql": "SELECT es_oficial, COUNT(*) AS combinaciones FROM [A15 · Combinaciones nivel/oficialidad (DISTINCT de dos columnas)] GROUP BY es_oficial ORDER BY es_oficial",
+      "assert": {
+        "columns": [
+          "es_oficial",
+          "combinaciones"
+        ],
+        "rows": [
+          [
+            false,
+            1
+          ],
+          [
+            true,
+            2
+          ]
+        ]
+      },
+      "folder": "E · Vistas"
+    }
+  ],
+  "settings": {
+    "language": "es",
+    "rowsPerPageTable": 200,
+    "rowsPerPageQuery": 100,
+    "importCsv": {
+      "delimiter": "tab",
+      "customDelimiter": "",
+      "header": true,
+      "infer": true,
+      "skipInvalid": false
+    },
+    "exportCsv": {
+      "delimiter": ";",
+      "customDelimiter": "",
+      "header": true,
+      "decimalComma": false
+    }
+  }
+}

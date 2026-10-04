@@ -1,0 +1,5863 @@
+{
+  "format": "extractor",
+  "version": 1,
+  "name": "SQL tests · Education (8 tables, 112 queries)",
+  "folders": [
+    "A · Basics and aggregation",
+    "B · Joins",
+    "C · Related queries",
+    "D · Integrity",
+    "E · Views"
+  ],
+  "tables": [
+    {
+      "name": "campuses",
+      "description": "University campuses: every campus groups buildings and students.",
+      "idField": "id_campus",
+      "nextId": 5,
+      "fields": [
+        {
+          "name": "id_campus",
+          "description": "Campus identifier",
+          "type": "number"
+        },
+        {
+          "name": "name",
+          "description": "Campus name",
+          "type": "string"
+        },
+        {
+          "name": "city",
+          "description": "City where the campus is",
+          "type": "string"
+        },
+        {
+          "name": "country",
+          "description": "Country of the campus",
+          "type": "string"
+        },
+        {
+          "name": "max_capacity",
+          "description": "Maximum number of students",
+          "type": "number"
+        },
+        {
+          "name": "is_main",
+          "description": "Is it the main campus?",
+          "type": "boolean"
+        },
+        {
+          "name": "phone",
+          "description": "Information phone (may be missing)",
+          "type": "string"
+        },
+        {
+          "name": "founded_year",
+          "description": "Year it was founded",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        {
+          "id_campus": 1,
+          "name": "North Campus",
+          "city": "Madrid",
+          "country": "Spain",
+          "max_capacity": 4500,
+          "is_main": true,
+          "phone": "910111222",
+          "founded_year": 1968
+        },
+        {
+          "id_campus": 2,
+          "name": "South Campus",
+          "city": "Seville",
+          "country": "Spain",
+          "max_capacity": 2800,
+          "is_main": false,
+          "phone": "954333444",
+          "founded_year": 1985
+        },
+        {
+          "id_campus": 3,
+          "name": "Seaside Campus",
+          "city": "Valencia",
+          "country": "Spain",
+          "max_capacity": 1900,
+          "is_main": false,
+          "phone": null,
+          "founded_year": 1997
+        },
+        {
+          "id_campus": 4,
+          "name": "Andean Campus",
+          "city": "Bogota",
+          "country": "Colombia",
+          "max_capacity": 3200,
+          "is_main": false,
+          "phone": "601555666",
+          "founded_year": 2004
+        }
+      ]
+    },
+    {
+      "name": "buildings",
+      "description": "Buildings of each campus. One-to-many relation with campuses by id_campus.",
+      "idField": "id_building",
+      "nextId": 9,
+      "fields": [
+        {
+          "name": "id_building",
+          "description": "Building identifier",
+          "type": "number"
+        },
+        {
+          "name": "id_campus",
+          "description": "Campus it belongs to (→ campuses.id_campus)",
+          "type": "number",
+          "references": {
+            "table": "campuses",
+            "field": "id_campus"
+          }
+        },
+        {
+          "name": "name",
+          "description": "Building name",
+          "type": "string"
+        },
+        {
+          "name": "floors",
+          "description": "Number of floors",
+          "type": "number"
+        },
+        {
+          "name": "construction_year",
+          "description": "Year it was built",
+          "type": "number"
+        },
+        {
+          "name": "has_lift",
+          "description": "Does it have a lift?",
+          "type": "boolean"
+        },
+        {
+          "name": "notes",
+          "description": "Remarks (may be missing)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_building": 1,
+          "id_campus": 1,
+          "name": "Kepler Lecture Hall",
+          "floors": 4,
+          "construction_year": 1972,
+          "has_lift": true,
+          "notes": "Refurbished in 2015"
+        },
+        {
+          "id_building": 2,
+          "id_campus": 1,
+          "name": "Curie Laboratories",
+          "floors": 3,
+          "construction_year": 1990,
+          "has_lift": true,
+          "notes": null
+        },
+        {
+          "id_building": 3,
+          "id_campus": 1,
+          "name": "Central Library",
+          "floors": 6,
+          "construction_year": 1968,
+          "has_lift": true,
+          "notes": "Access restricted by building works"
+        },
+        {
+          "id_building": 4,
+          "id_campus": 2,
+          "name": "Pythagoras Lecture Hall",
+          "floors": 3,
+          "construction_year": 1988,
+          "has_lift": false,
+          "notes": null
+        },
+        {
+          "id_building": 5,
+          "id_campus": 2,
+          "name": "Sports Pavilion",
+          "floors": 2,
+          "construction_year": 2001,
+          "has_lift": false,
+          "notes": "Ground and first floors only"
+        },
+        {
+          "id_building": 6,
+          "id_campus": 3,
+          "name": "Ramón y Cajal Building",
+          "floors": 5,
+          "construction_year": 1997,
+          "has_lift": true,
+          "notes": null
+        },
+        {
+          "id_building": 7,
+          "id_campus": 4,
+          "name": "Bolívar Block",
+          "floors": 4,
+          "construction_year": 2006,
+          "has_lift": true,
+          "notes": null
+        },
+        {
+          "id_building": 8,
+          "id_campus": 3,
+          "name": "Marina Annex",
+          "floors": 1,
+          "construction_year": 2012,
+          "has_lift": false,
+          "notes": "Modular classrooms"
+        }
+      ]
+    },
+    {
+      "name": "classrooms",
+      "description": "Classrooms of each building. One-to-many relation with buildings by id_building.",
+      "idField": "id_classroom",
+      "nextId": 17,
+      "fields": [
+        {
+          "name": "id_classroom",
+          "description": "Classroom identifier",
+          "type": "number"
+        },
+        {
+          "name": "id_building",
+          "description": "Building it belongs to (→ buildings.id_building)",
+          "type": "number",
+          "references": {
+            "table": "buildings",
+            "field": "id_building"
+          }
+        },
+        {
+          "name": "code",
+          "description": "Classroom code (unique)",
+          "type": "string"
+        },
+        {
+          "name": "capacity",
+          "description": "Seats in the classroom",
+          "type": "number"
+        },
+        {
+          "name": "has_projector",
+          "description": "Does it have a projector?",
+          "type": "boolean"
+        },
+        {
+          "name": "board_type",
+          "description": "Board type (may be missing)",
+          "type": "string"
+        },
+        {
+          "name": "floor",
+          "description": "Floor of the building (0 = ground floor)",
+          "type": "number"
+        }
+      ],
+      "rows": [
+        {
+          "id_classroom": 1,
+          "id_building": 1,
+          "code": "K-101",
+          "capacity": 60,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 1
+        },
+        {
+          "id_classroom": 2,
+          "id_building": 1,
+          "code": "K-102",
+          "capacity": 45,
+          "has_projector": false,
+          "board_type": "chalk",
+          "floor": 1
+        },
+        {
+          "id_classroom": 3,
+          "id_building": 1,
+          "code": "K-201",
+          "capacity": 30,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 2
+        },
+        {
+          "id_classroom": 4,
+          "id_building": 2,
+          "code": "C-LAB1",
+          "capacity": 24,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 1
+        },
+        {
+          "id_classroom": 5,
+          "id_building": 2,
+          "code": "C-LAB2",
+          "capacity": 20,
+          "has_projector": true,
+          "board_type": null,
+          "floor": 1
+        },
+        {
+          "id_classroom": 6,
+          "id_building": 3,
+          "code": "B-SALA",
+          "capacity": 80,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 3
+        },
+        {
+          "id_classroom": 7,
+          "id_building": 3,
+          "code": "B-EST1",
+          "capacity": 12,
+          "has_projector": false,
+          "board_type": null,
+          "floor": 2
+        },
+        {
+          "id_classroom": 8,
+          "id_building": 4,
+          "code": "P-101",
+          "capacity": 55,
+          "has_projector": true,
+          "board_type": "chalk",
+          "floor": 1
+        },
+        {
+          "id_classroom": 9,
+          "id_building": 4,
+          "code": "P-102",
+          "capacity": 55,
+          "has_projector": false,
+          "board_type": "chalk",
+          "floor": 1
+        },
+        {
+          "id_classroom": 10,
+          "id_building": 4,
+          "code": "P-201",
+          "capacity": 40,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 2
+        },
+        {
+          "id_classroom": 11,
+          "id_building": 6,
+          "code": "R-101",
+          "capacity": 70,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 1
+        },
+        {
+          "id_classroom": 12,
+          "id_building": 6,
+          "code": "R-102",
+          "capacity": 35,
+          "has_projector": false,
+          "board_type": "chalk",
+          "floor": 1
+        },
+        {
+          "id_classroom": 13,
+          "id_building": 7,
+          "code": "L-301",
+          "capacity": 50,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 3
+        },
+        {
+          "id_classroom": 14,
+          "id_building": 7,
+          "code": "L-302",
+          "capacity": 25,
+          "has_projector": false,
+          "board_type": null,
+          "floor": 3
+        },
+        {
+          "id_classroom": 15,
+          "id_building": 8,
+          "code": "M-001",
+          "capacity": 18,
+          "has_projector": false,
+          "board_type": null,
+          "floor": 1
+        },
+        {
+          "id_classroom": 16,
+          "id_building": 8,
+          "code": "M-002",
+          "capacity": 22,
+          "has_projector": true,
+          "board_type": "digital",
+          "floor": 1
+        }
+      ]
+    },
+    {
+      "name": "teachers",
+      "description": "Teaching staff. One-to-many relation with subjects by id_teacher.",
+      "idField": "id_teacher",
+      "nextId": 13,
+      "fields": [
+        {
+          "name": "id_teacher",
+          "description": "Teacher identifier",
+          "type": "number"
+        },
+        {
+          "name": "name",
+          "description": "First name",
+          "type": "string"
+        },
+        {
+          "name": "last_name",
+          "description": "Last name",
+          "type": "string"
+        },
+        {
+          "name": "category",
+          "description": "Professional category",
+          "type": "string"
+        },
+        {
+          "name": "weekly_hours",
+          "description": "Teaching hours per week",
+          "type": "number"
+        },
+        {
+          "name": "is_researcher",
+          "description": "Does the teacher belong to a research group?",
+          "type": "boolean"
+        },
+        {
+          "name": "email",
+          "description": "Contact address (may be missing)",
+          "type": "string"
+        },
+        {
+          "name": "office",
+          "description": "Office (may be missing)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_teacher": 1,
+          "name": "Elena",
+          "last_name": "Vargas Ruiz",
+          "category": "Full professor",
+          "weekly_hours": 18,
+          "is_researcher": true,
+          "email": "elena.vargas@uni.es",
+          "office": "D-201"
+        },
+        {
+          "id_teacher": 2,
+          "name": "Marc",
+          "last_name": "Oliver Pons",
+          "category": "Senior lecturer",
+          "weekly_hours": 20,
+          "is_researcher": true,
+          "email": "marc.oliver@uni.es",
+          "office": "D-114"
+        },
+        {
+          "id_teacher": 3,
+          "name": "Nieves",
+          "last_name": "Salgado Ortiz",
+          "category": "Senior lecturer",
+          "weekly_hours": 16,
+          "is_researcher": false,
+          "email": null,
+          "office": "D-115"
+        },
+        {
+          "id_teacher": 4,
+          "name": "Iván",
+          "last_name": "Requena Soto",
+          "category": "Associate",
+          "weekly_hours": 6,
+          "is_researcher": false,
+          "email": "ivan.requena@uni.es",
+          "office": null
+        },
+        {
+          "id_teacher": 5,
+          "name": "Carmen",
+          "last_name": "Ibáñez Luna",
+          "category": "Full professor",
+          "weekly_hours": 15,
+          "is_researcher": true,
+          "email": "carmen.ibanez@uni.es",
+          "office": "D-330"
+        },
+        {
+          "id_teacher": 6,
+          "name": "Youssef",
+          "last_name": "Amrani Belkacem",
+          "category": "Assistant",
+          "weekly_hours": 12,
+          "is_researcher": true,
+          "email": null,
+          "office": "D-041"
+        },
+        {
+          "id_teacher": 7,
+          "name": "Paula",
+          "last_name": "Ferrer Gil",
+          "category": "Senior lecturer",
+          "weekly_hours": 19,
+          "is_researcher": false,
+          "email": "paula.ferrer@uni.es",
+          "office": "D-208"
+        },
+        {
+          "id_teacher": 8,
+          "name": "Hugo",
+          "last_name": "Naranjo Peña",
+          "category": "Associate",
+          "weekly_hours": 8,
+          "is_researcher": false,
+          "email": "hugo.naranjo@uni.es",
+          "office": null
+        },
+        {
+          "id_teacher": 9,
+          "name": "Lucía",
+          "last_name": "Sáenz Molina",
+          "category": "Senior lecturer",
+          "weekly_hours": 17,
+          "is_researcher": true,
+          "email": "lucia.saenz@uni.es",
+          "office": "D-150"
+        },
+        {
+          "id_teacher": 10,
+          "name": "Tomás",
+          "last_name": "Arroyo Vidal",
+          "category": "Assistant",
+          "weekly_hours": 10,
+          "is_researcher": false,
+          "email": null,
+          "office": "D-042"
+        },
+        {
+          "id_teacher": 11,
+          "name": "Sofía",
+          "last_name": "Kovalchuk Marín",
+          "category": "Full professor",
+          "weekly_hours": 14,
+          "is_researcher": true,
+          "email": "sofia.kovalchuk@uni.es",
+          "office": "D-335"
+        },
+        {
+          "id_teacher": 12,
+          "name": "Andrés",
+          "last_name": "Cano Duarte",
+          "category": "Associate",
+          "weekly_hours": 6,
+          "is_researcher": false,
+          "email": "andres.cano@uni.es",
+          "office": null
+        }
+      ]
+    },
+    {
+      "name": "degrees",
+      "description": "Degrees. One-to-many relation with subjects by code (text) and with students.",
+      "idField": "id_degree",
+      "nextId": 7,
+      "fields": [
+        {
+          "name": "id_degree",
+          "description": "Degree identifier",
+          "type": "number"
+        },
+        {
+          "name": "code",
+          "description": "Degree code (unique, text)",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "description": "Degree name",
+          "type": "string"
+        },
+        {
+          "name": "level",
+          "description": "Bachelor or Master",
+          "type": "string"
+        },
+        {
+          "name": "credits",
+          "description": "Total credits",
+          "type": "number"
+        },
+        {
+          "name": "duration_years",
+          "description": "Length in years",
+          "type": "number"
+        },
+        {
+          "name": "is_official",
+          "description": "Is it an official degree?",
+          "type": "boolean"
+        },
+        {
+          "name": "accreditation_date",
+          "description": "Accreditation date (may be missing)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_degree": 1,
+          "code": "GINF",
+          "name": "Computer Engineering",
+          "level": "Bachelor",
+          "credits": 240,
+          "duration_years": 4,
+          "is_official": true,
+          "accreditation_date": "2019-06-30"
+        },
+        {
+          "id_degree": 2,
+          "code": "GMED",
+          "name": "Medicine",
+          "level": "Bachelor",
+          "credits": 360,
+          "duration_years": 6,
+          "is_official": true,
+          "accreditation_date": "2018-03-15"
+        },
+        {
+          "id_degree": 3,
+          "code": "GEDU",
+          "name": "Primary Education",
+          "level": "Bachelor",
+          "credits": 240,
+          "duration_years": 4,
+          "is_official": true,
+          "accreditation_date": "2020-11-20"
+        },
+        {
+          "id_degree": 4,
+          "code": "MSW",
+          "name": "Software Engineering",
+          "level": "Master",
+          "credits": 90,
+          "duration_years": 1,
+          "is_official": true,
+          "accreditation_date": null
+        },
+        {
+          "id_degree": 5,
+          "code": "MBD",
+          "name": "Data Science",
+          "level": "Master",
+          "credits": 120,
+          "duration_years": 2,
+          "is_official": false,
+          "accreditation_date": "2021-09-01"
+        },
+        {
+          "id_degree": 6,
+          "code": "TDER",
+          "name": "Law",
+          "level": "Bachelor",
+          "credits": 240,
+          "duration_years": 4,
+          "is_official": true,
+          "accreditation_date": null
+        }
+      ]
+    },
+    {
+      "name": "subjects",
+      "description": "Subjects of each degree, taught by a teacher. Two one-to-many relations.",
+      "idField": "id_subject",
+      "nextId": 17,
+      "fields": [
+        {
+          "name": "id_subject",
+          "description": "Subject identifier",
+          "type": "number"
+        },
+        {
+          "name": "degree_code",
+          "description": "Degree it belongs to (→ degrees.code)",
+          "type": "string",
+          "references": {
+            "table": "degrees",
+            "field": "code"
+          }
+        },
+        {
+          "name": "id_teacher",
+          "description": "Teacher who teaches it (→ teachers.id_teacher)",
+          "type": "number",
+          "references": {
+            "table": "teachers",
+            "field": "id_teacher"
+          }
+        },
+        {
+          "name": "name",
+          "description": "Subject name",
+          "type": "string"
+        },
+        {
+          "name": "year",
+          "description": "Year it is taught in",
+          "type": "number"
+        },
+        {
+          "name": "credits",
+          "description": "ECTS credits",
+          "type": "number"
+        },
+        {
+          "name": "classroom_hours",
+          "description": "Classroom hours",
+          "type": "number"
+        },
+        {
+          "name": "is_compulsory",
+          "description": "Is it compulsory?",
+          "type": "boolean"
+        },
+        {
+          "name": "language",
+          "description": "Language it is taught in (may be missing)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_subject": 1,
+          "degree_code": "GINF",
+          "id_teacher": 1,
+          "name": "Data Structures",
+          "year": 2,
+          "credits": 6,
+          "classroom_hours": 60,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 2,
+          "degree_code": "GINF",
+          "id_teacher": 2,
+          "name": "Databases",
+          "year": 2,
+          "credits": 6,
+          "classroom_hours": 55,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 3,
+          "degree_code": "GINF",
+          "id_teacher": 5,
+          "name": "Compilers",
+          "year": 3,
+          "credits": 6,
+          "classroom_hours": 50,
+          "is_compulsory": false,
+          "language": "English"
+        },
+        {
+          "id_subject": 4,
+          "degree_code": "GINF",
+          "id_teacher": 9,
+          "name": "Computer Networks",
+          "year": 3,
+          "credits": 6,
+          "classroom_hours": 52,
+          "is_compulsory": true,
+          "language": null
+        },
+        {
+          "id_subject": 5,
+          "degree_code": "GMED",
+          "id_teacher": 1,
+          "name": "Human Anatomy",
+          "year": 1,
+          "credits": 9,
+          "classroom_hours": 90,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 6,
+          "degree_code": "GMED",
+          "id_teacher": 5,
+          "name": "Pharmacology",
+          "year": 2,
+          "credits": 6,
+          "classroom_hours": 48,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 7,
+          "degree_code": "GMED",
+          "id_teacher": 11,
+          "name": "Public Health",
+          "year": 5,
+          "credits": 4,
+          "classroom_hours": 30,
+          "is_compulsory": false,
+          "language": null
+        },
+        {
+          "id_subject": 8,
+          "degree_code": "GEDU",
+          "id_teacher": 7,
+          "name": "Teaching Mathematics",
+          "year": 2,
+          "credits": 5,
+          "classroom_hours": 40,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 9,
+          "degree_code": "GEDU",
+          "id_teacher": 3,
+          "name": "Developmental Psychology",
+          "year": 1,
+          "credits": 6,
+          "classroom_hours": 45,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 10,
+          "degree_code": "GEDU",
+          "id_teacher": 10,
+          "name": "Inclusive Education",
+          "year": 4,
+          "credits": 4,
+          "classroom_hours": 32,
+          "is_compulsory": false,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 11,
+          "degree_code": "MSW",
+          "id_teacher": 2,
+          "name": "Software Architecture",
+          "year": 1,
+          "credits": 6,
+          "classroom_hours": 45,
+          "is_compulsory": true,
+          "language": "English"
+        },
+        {
+          "id_subject": 12,
+          "degree_code": "MSW",
+          "id_teacher": 9,
+          "name": "Testing and Quality",
+          "year": 1,
+          "credits": 4,
+          "classroom_hours": 30,
+          "is_compulsory": true,
+          "language": null
+        },
+        {
+          "id_subject": 13,
+          "degree_code": "MBD",
+          "id_teacher": 5,
+          "name": "Applied Statistics",
+          "year": 1,
+          "credits": 6,
+          "classroom_hours": 50,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 14,
+          "degree_code": "MBD",
+          "id_teacher": 11,
+          "name": "Machine Learning",
+          "year": 2,
+          "credits": 6,
+          "classroom_hours": 48,
+          "is_compulsory": false,
+          "language": "English"
+        },
+        {
+          "id_subject": 15,
+          "degree_code": "TDER",
+          "id_teacher": 7,
+          "name": "Constitutional Law",
+          "year": 1,
+          "credits": 6,
+          "classroom_hours": 55,
+          "is_compulsory": true,
+          "language": "Spanish"
+        },
+        {
+          "id_subject": 16,
+          "degree_code": "TDER",
+          "id_teacher": 12,
+          "name": "Business Law",
+          "year": 3,
+          "credits": 5,
+          "classroom_hours": 40,
+          "is_compulsory": false,
+          "language": null
+        }
+      ]
+    },
+    {
+      "name": "students",
+      "description": "Students: each one belongs to a degree and to a campus. One-to-many relation with enrollments.",
+      "idField": "id_student",
+      "nextId": 25,
+      "fields": [
+        {
+          "name": "id_student",
+          "description": "Student identifier",
+          "type": "number"
+        },
+        {
+          "name": "name",
+          "description": "First name",
+          "type": "string"
+        },
+        {
+          "name": "last_name",
+          "description": "Last name",
+          "type": "string"
+        },
+        {
+          "name": "degree_code",
+          "description": "Degree the student is enrolled in (→ degrees.code)",
+          "type": "string",
+          "references": {
+            "table": "degrees",
+            "field": "code"
+          }
+        },
+        {
+          "name": "email",
+          "description": "Address (may be missing)",
+          "type": "string"
+        },
+        {
+          "name": "phone",
+          "description": "Phone (may be missing)",
+          "type": "string"
+        },
+        {
+          "name": "birth_date",
+          "description": "Date of birth (YYYY-MM-DD)",
+          "type": "string"
+        },
+        {
+          "name": "has_scholarship",
+          "description": "Does the student have a scholarship?",
+          "type": "boolean"
+        },
+        {
+          "name": "id_campus",
+          "description": "Campus where the student studies (→ campuses.id_campus)",
+          "type": "number",
+          "references": {
+            "table": "campuses",
+            "field": "id_campus"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id_student": 1,
+          "name": "Ana",
+          "last_name": "García López",
+          "degree_code": "GINF",
+          "email": "ana.garcia@alu.es",
+          "phone": "600111222",
+          "birth_date": "2003-04-12",
+          "has_scholarship": true,
+          "id_campus": 1
+        },
+        {
+          "id_student": 2,
+          "name": "Luis",
+          "last_name": "Martín Soto",
+          "degree_code": "GINF",
+          "email": "luis.martin@alu.es",
+          "phone": null,
+          "birth_date": "2002-09-30",
+          "has_scholarship": false,
+          "id_campus": 1
+        },
+        {
+          "id_student": 3,
+          "name": "Sofía",
+          "last_name": "Hernández Ruiz",
+          "degree_code": "GINF",
+          "email": null,
+          "phone": "611333444",
+          "birth_date": "2004-01-22",
+          "has_scholarship": true,
+          "id_campus": 1
+        },
+        {
+          "id_student": 4,
+          "name": "Diego",
+          "last_name": "Fernández Blanco",
+          "degree_code": "GMED",
+          "email": "diego.fernandez@alu.es",
+          "phone": "622555666",
+          "birth_date": "2001-11-05",
+          "has_scholarship": false,
+          "id_campus": 2
+        },
+        {
+          "id_student": 5,
+          "name": "Marta",
+          "last_name": "Ruiz Navarro",
+          "degree_code": "GEDU",
+          "email": "marta.ruiz@alu.es",
+          "phone": null,
+          "birth_date": "2003-07-18",
+          "has_scholarship": false,
+          "id_campus": 1
+        },
+        {
+          "id_student": 6,
+          "name": "Javier",
+          "last_name": "Ortega Díaz",
+          "degree_code": "TDER",
+          "email": "javier.ortega@alu.es",
+          "phone": "633777888",
+          "birth_date": "2002-03-09",
+          "has_scholarship": false,
+          "id_campus": 3
+        },
+        {
+          "id_student": 7,
+          "name": "Lucía",
+          "last_name": "Moreno Pascual",
+          "degree_code": "MSW",
+          "email": null,
+          "phone": "644999000",
+          "birth_date": "2004-05-27",
+          "has_scholarship": true,
+          "id_campus": 2
+        },
+        {
+          "id_student": 8,
+          "name": "Pablo",
+          "last_name": "Gómez Frías",
+          "degree_code": "GINF",
+          "email": "pablo.gomez@alu.es",
+          "phone": "655111222",
+          "birth_date": "2001-12-14",
+          "has_scholarship": false,
+          "id_campus": 1
+        },
+        {
+          "id_student": 9,
+          "name": "Carmen",
+          "last_name": "Santos Iglesias",
+          "degree_code": "GMED",
+          "email": "carmen.santos@alu.es",
+          "phone": null,
+          "birth_date": "2003-02-03",
+          "has_scholarship": true,
+          "id_campus": 3
+        },
+        {
+          "id_student": 10,
+          "name": "Álvaro",
+          "last_name": "Domínguez Rey",
+          "degree_code": "MBD",
+          "email": "alvaro.dominguez@alu.es",
+          "phone": "666333444",
+          "birth_date": "2002-06-21",
+          "has_scholarship": false,
+          "id_campus": 4
+        },
+        {
+          "id_student": 11,
+          "name": "Nerea",
+          "last_name": "Castro Peña",
+          "degree_code": "GEDU",
+          "email": "nerea.castro@alu.es",
+          "phone": null,
+          "birth_date": "2004-10-08",
+          "has_scholarship": true,
+          "id_campus": 2
+        },
+        {
+          "id_student": 12,
+          "name": "Iván",
+          "last_name": "Ramírez Cortés",
+          "degree_code": "GINF",
+          "email": null,
+          "phone": "677555666",
+          "birth_date": "2001-08-16",
+          "has_scholarship": false,
+          "id_campus": 1
+        },
+        {
+          "id_student": 13,
+          "name": "Paula",
+          "last_name": "Vega Salas",
+          "degree_code": "GMED",
+          "email": "paula.vega@alu.es",
+          "phone": "688777888",
+          "birth_date": "2003-12-01",
+          "has_scholarship": false,
+          "id_campus": 3
+        },
+        {
+          "id_student": 14,
+          "name": "Hugo",
+          "last_name": "Serrano Bravo",
+          "degree_code": "GEDU",
+          "email": "hugo.serrano@alu.es",
+          "phone": null,
+          "birth_date": "2002-04-25",
+          "has_scholarship": true,
+          "id_campus": 2
+        },
+        {
+          "id_student": 15,
+          "name": "Elena",
+          "last_name": "Molina Ríos",
+          "degree_code": "MSW",
+          "email": "elena.molina@alu.es",
+          "phone": "699999000",
+          "birth_date": "2004-07-07",
+          "has_scholarship": false,
+          "id_campus": 1
+        },
+        {
+          "id_student": 16,
+          "name": "Marcos",
+          "last_name": "Delgado Cano",
+          "degree_code": "TDER",
+          "email": null,
+          "phone": null,
+          "birth_date": "2001-05-19",
+          "has_scholarship": false,
+          "id_campus": 4
+        },
+        {
+          "id_student": 17,
+          "name": "Irene",
+          "last_name": "Suárez Nieto",
+          "degree_code": "GMED",
+          "email": "irene.suarez@alu.es",
+          "phone": "610222333",
+          "birth_date": "2003-09-11",
+          "has_scholarship": true,
+          "id_campus": 3
+        },
+        {
+          "id_student": 18,
+          "name": "Adrián",
+          "last_name": "Cabrera Luna",
+          "degree_code": "MBD",
+          "email": "adrian.cabrera@alu.es",
+          "phone": null,
+          "birth_date": "2002-11-23",
+          "has_scholarship": false,
+          "id_campus": 2
+        },
+        {
+          "id_student": 19,
+          "name": "Claudia",
+          "last_name": "Reyes Baena",
+          "degree_code": "GINF",
+          "email": "claudia.reyes@alu.es",
+          "phone": "621444555",
+          "birth_date": "2004-03-15",
+          "has_scholarship": false,
+          "id_campus": 1
+        },
+        {
+          "id_student": 20,
+          "name": "Rubén",
+          "last_name": "Parra Aguilar",
+          "degree_code": "GEDU",
+          "email": null,
+          "phone": "632666777",
+          "birth_date": "2001-01-29",
+          "has_scholarship": true,
+          "id_campus": 2
+        },
+        {
+          "id_student": 21,
+          "name": "Julia",
+          "last_name": "Bermúdez Soler",
+          "degree_code": "GMED",
+          "email": "julia.bermudez@alu.es",
+          "phone": "643888999",
+          "birth_date": "2003-06-06",
+          "has_scholarship": false,
+          "id_campus": 3
+        },
+        {
+          "id_student": 22,
+          "name": "Óscar",
+          "last_name": "Lozano Prieto",
+          "degree_code": "TDER",
+          "email": "oscar.lozano@alu.es",
+          "phone": null,
+          "birth_date": "2002-08-02",
+          "has_scholarship": false,
+          "id_campus": 4
+        },
+        {
+          "id_student": 23,
+          "name": "Sara",
+          "last_name": "Guerrero Vidal",
+          "degree_code": "GINF",
+          "email": "sara.guerrero@alu.es",
+          "phone": "665000111",
+          "birth_date": "2004-11-19",
+          "has_scholarship": true,
+          "id_campus": 1
+        },
+        {
+          "id_student": 24,
+          "name": "Marc",
+          "last_name": "Esteban Quiles",
+          "degree_code": "TDER",
+          "email": null,
+          "phone": "676222333",
+          "birth_date": "2001-03-27",
+          "has_scholarship": false,
+          "id_campus": 3
+        }
+      ]
+    },
+    {
+      "name": "enrollments",
+      "description": "Enrollments: they break the many-to-many relation students ↔ subjects into two one-to-many. The grade is null while the subject is active or cancelled.",
+      "idField": "id_enrollment",
+      "nextId": 49,
+      "fields": [
+        {
+          "name": "id_enrollment",
+          "description": "Enrollment identifier",
+          "type": "number"
+        },
+        {
+          "name": "id_student",
+          "description": "Student enrolled (→ students.id_student)",
+          "type": "number",
+          "references": {
+            "table": "students",
+            "field": "id_student"
+          }
+        },
+        {
+          "name": "id_subject",
+          "description": "Subject enrolled in (→ subjects.id_subject)",
+          "type": "number",
+          "references": {
+            "table": "subjects",
+            "field": "id_subject"
+          }
+        },
+        {
+          "name": "academic_year",
+          "description": "Academic year (for instance 2025-2026)",
+          "type": "string"
+        },
+        {
+          "name": "grade",
+          "description": "Final grade (null when it is not graded)",
+          "type": "number"
+        },
+        {
+          "name": "status",
+          "description": "active, passed or cancelled",
+          "type": "string"
+        },
+        {
+          "name": "is_recognised",
+          "description": "Was the subject recognised from another degree?",
+          "type": "boolean"
+        },
+        {
+          "name": "enrollment_date",
+          "description": "Enrollment date (YYYY-MM-DD)",
+          "type": "string"
+        }
+      ],
+      "rows": [
+        {
+          "id_enrollment": 1,
+          "id_student": 1,
+          "id_subject": 1,
+          "academic_year": "2024-2025",
+          "grade": 8.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-10"
+        },
+        {
+          "id_enrollment": 2,
+          "id_student": 1,
+          "id_subject": 2,
+          "academic_year": "2024-2025",
+          "grade": 7.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-10"
+        },
+        {
+          "id_enrollment": 3,
+          "id_student": 1,
+          "id_subject": 3,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-08"
+        },
+        {
+          "id_enrollment": 4,
+          "id_student": 1,
+          "id_subject": 4,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-08"
+        },
+        {
+          "id_enrollment": 5,
+          "id_student": 2,
+          "id_subject": 1,
+          "academic_year": "2024-2025",
+          "grade": 6,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-11"
+        },
+        {
+          "id_enrollment": 6,
+          "id_student": 2,
+          "id_subject": 2,
+          "academic_year": "2024-2025",
+          "grade": 5,
+          "status": "passed",
+          "is_recognised": true,
+          "enrollment_date": "2024-09-11"
+        },
+        {
+          "id_enrollment": 7,
+          "id_student": 2,
+          "id_subject": 4,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-09"
+        },
+        {
+          "id_enrollment": 8,
+          "id_student": 3,
+          "id_subject": 1,
+          "academic_year": "2024-2025",
+          "grade": 9,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-12"
+        },
+        {
+          "id_enrollment": 9,
+          "id_student": 3,
+          "id_subject": 2,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-10"
+        },
+        {
+          "id_enrollment": 10,
+          "id_student": 8,
+          "id_subject": 2,
+          "academic_year": "2024-2025",
+          "grade": 7,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-15"
+        },
+        {
+          "id_enrollment": 11,
+          "id_student": 8,
+          "id_subject": 3,
+          "academic_year": "2024-2025",
+          "grade": 6.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-15"
+        },
+        {
+          "id_enrollment": 12,
+          "id_student": 8,
+          "id_subject": 4,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-12"
+        },
+        {
+          "id_enrollment": 13,
+          "id_student": 19,
+          "id_subject": 1,
+          "academic_year": "2024-2025",
+          "grade": 8,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-16"
+        },
+        {
+          "id_enrollment": 14,
+          "id_student": 19,
+          "id_subject": 3,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-14"
+        },
+        {
+          "id_enrollment": 15,
+          "id_student": 19,
+          "id_subject": 4,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-14"
+        },
+        {
+          "id_enrollment": 16,
+          "id_student": 23,
+          "id_subject": 1,
+          "academic_year": "2025-2026",
+          "grade": 9.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-05"
+        },
+        {
+          "id_enrollment": 17,
+          "id_student": 23,
+          "id_subject": 2,
+          "academic_year": "2024-2025",
+          "grade": 6,
+          "status": "passed",
+          "is_recognised": true,
+          "enrollment_date": "2024-09-18"
+        },
+        {
+          "id_enrollment": 18,
+          "id_student": 23,
+          "id_subject": 3,
+          "academic_year": "2024-2025",
+          "grade": 5.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-18"
+        },
+        {
+          "id_enrollment": 19,
+          "id_student": 4,
+          "id_subject": 5,
+          "academic_year": "2024-2025",
+          "grade": 7,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-09"
+        },
+        {
+          "id_enrollment": 20,
+          "id_student": 4,
+          "id_subject": 6,
+          "academic_year": "2024-2025",
+          "grade": 6.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-09"
+        },
+        {
+          "id_enrollment": 21,
+          "id_student": 4,
+          "id_subject": 7,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-11"
+        },
+        {
+          "id_enrollment": 22,
+          "id_student": 9,
+          "id_subject": 5,
+          "academic_year": "2024-2025",
+          "grade": 8,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-10"
+        },
+        {
+          "id_enrollment": 23,
+          "id_student": 9,
+          "id_subject": 6,
+          "academic_year": "2024-2025",
+          "grade": 7.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-10"
+        },
+        {
+          "id_enrollment": 24,
+          "id_student": 9,
+          "id_subject": 7,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-12"
+        },
+        {
+          "id_enrollment": 25,
+          "id_student": 13,
+          "id_subject": 5,
+          "academic_year": "2024-2025",
+          "grade": 5,
+          "status": "passed",
+          "is_recognised": true,
+          "enrollment_date": "2024-09-11"
+        },
+        {
+          "id_enrollment": 26,
+          "id_student": 13,
+          "id_subject": 7,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-13"
+        },
+        {
+          "id_enrollment": 27,
+          "id_student": 17,
+          "id_subject": 5,
+          "academic_year": "2024-2025",
+          "grade": 9,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-12"
+        },
+        {
+          "id_enrollment": 28,
+          "id_student": 17,
+          "id_subject": 6,
+          "academic_year": "2025-2026",
+          "grade": 8.5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-06"
+        },
+        {
+          "id_enrollment": 29,
+          "id_student": 17,
+          "id_subject": 7,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-15"
+        },
+        {
+          "id_enrollment": 30,
+          "id_student": 21,
+          "id_subject": 6,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "cancelled",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-16"
+        },
+        {
+          "id_enrollment": 31,
+          "id_student": 21,
+          "id_subject": 7,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-16"
+        },
+        {
+          "id_enrollment": 32,
+          "id_student": 5,
+          "id_subject": 8,
+          "academic_year": "2024-2025",
+          "grade": 5,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-13"
+        },
+        {
+          "id_enrollment": 33,
+          "id_student": 5,
+          "id_subject": 9,
+          "academic_year": "2024-2025",
+          "grade": 6,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-13"
+        },
+        {
+          "id_enrollment": 34,
+          "id_student": 5,
+          "id_subject": 10,
+          "academic_year": "2025-2026",
+          "grade": 7,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-07"
+        },
+        {
+          "id_enrollment": 35,
+          "id_student": 11,
+          "id_subject": 8,
+          "academic_year": "2024-2025",
+          "grade": 6,
+          "status": "passed",
+          "is_recognised": true,
+          "enrollment_date": "2024-09-14"
+        },
+        {
+          "id_enrollment": 36,
+          "id_student": 11,
+          "id_subject": 9,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "active",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-17"
+        },
+        {
+          "id_enrollment": 37,
+          "id_student": 14,
+          "id_subject": 8,
+          "academic_year": "2024-2025",
+          "grade": 10,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-15"
+        },
+        {
+          "id_enrollment": 38,
+          "id_student": 14,
+          "id_subject": 9,
+          "academic_year": "2024-2025",
+          "grade": 8,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-15"
+        },
+        {
+          "id_enrollment": 39,
+          "id_student": 14,
+          "id_subject": 10,
+          "academic_year": "2025-2026",
+          "grade": 9,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-08"
+        },
+        {
+          "id_enrollment": 40,
+          "id_student": 20,
+          "id_subject": 8,
+          "academic_year": "2024-2025",
+          "grade": 7,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-16"
+        },
+        {
+          "id_enrollment": 41,
+          "id_student": 20,
+          "id_subject": 10,
+          "academic_year": "2024-2025",
+          "grade": null,
+          "status": "cancelled",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-16"
+        },
+        {
+          "id_enrollment": 42,
+          "id_student": 7,
+          "id_subject": 11,
+          "academic_year": "2025-2026",
+          "grade": 8,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-04"
+        },
+        {
+          "id_enrollment": 43,
+          "id_student": 15,
+          "id_subject": 11,
+          "academic_year": "2024-2025",
+          "grade": 9,
+          "status": "passed",
+          "is_recognised": true,
+          "enrollment_date": "2024-09-17"
+        },
+        {
+          "id_enrollment": 44,
+          "id_student": 10,
+          "id_subject": 13,
+          "academic_year": "2024-2025",
+          "grade": 7,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-18"
+        },
+        {
+          "id_enrollment": 45,
+          "id_student": 10,
+          "id_subject": 14,
+          "academic_year": "2025-2026",
+          "grade": 8,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-09"
+        },
+        {
+          "id_enrollment": 46,
+          "id_student": 18,
+          "id_subject": 13,
+          "academic_year": "2024-2025",
+          "grade": 8,
+          "status": "passed",
+          "is_recognised": false,
+          "enrollment_date": "2024-09-19"
+        },
+        {
+          "id_enrollment": 47,
+          "id_student": 6,
+          "id_subject": 15,
+          "academic_year": "2024-2025",
+          "grade": 6,
+          "status": "passed",
+          "is_recognised": true,
+          "enrollment_date": "2024-09-20"
+        },
+        {
+          "id_enrollment": 48,
+          "id_student": 24,
+          "id_subject": 15,
+          "academic_year": "2025-2026",
+          "grade": null,
+          "status": "cancelled",
+          "is_recognised": false,
+          "enrollment_date": "2025-09-18"
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "name": "A01 · All campuses",
+      "description": "SELECT * over campuses: the columns in table order and the 4 rows by identifier.",
+      "sql": "SELECT * FROM campuses ORDER BY id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "name",
+          "city",
+          "country",
+          "max_capacity",
+          "is_main",
+          "phone",
+          "founded_year"
+        ],
+        "rows": [
+          [
+            1,
+            "North Campus",
+            "Madrid",
+            "Spain",
+            4500,
+            true,
+            "910111222",
+            1968
+          ],
+          [
+            2,
+            "South Campus",
+            "Seville",
+            "Spain",
+            2800,
+            false,
+            "954333444",
+            1985
+          ],
+          [
+            3,
+            "Seaside Campus",
+            "Valencia",
+            "Spain",
+            1900,
+            false,
+            null,
+            1997
+          ],
+          [
+            4,
+            "Andean Campus",
+            "Bogota",
+            "Colombia",
+            3200,
+            false,
+            "601555666",
+            2004
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A02 · Projection with aliases and arithmetic",
+      "description": "Divides the capacity by 1000 and sorts by capacity descending: the 4 campuses from largest to smallest.",
+      "sql": "SELECT name AS campus, city, max_capacity / 1000 AS capacity_thousands, founded_year FROM campuses ORDER BY max_capacity DESC",
+      "assert": {
+        "columns": [
+          "campus",
+          "city",
+          "capacity_thousands",
+          "founded_year"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            "Madrid",
+            4.5,
+            1968
+          ],
+          [
+            "Andean Campus",
+            "Bogota",
+            3.2,
+            2004
+          ],
+          [
+            "South Campus",
+            "Seville",
+            2.8,
+            1985
+          ],
+          [
+            "Seaside Campus",
+            "Valencia",
+            1.9,
+            1997
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A03 · Large classrooms (>= 55 seats)",
+      "description": "Numeric filter with >= and order by capacity descending and code: 5 classrooms.",
+      "sql": "SELECT code, capacity, floor FROM classrooms WHERE capacity >= 55 ORDER BY capacity DESC, code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity",
+          "floor"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            3
+          ],
+          [
+            "R-101",
+            70,
+            1
+          ],
+          [
+            "K-101",
+            60,
+            1
+          ],
+          [
+            "P-101",
+            55,
+            1
+          ],
+          [
+            "P-102",
+            55,
+            1
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A04 · Classrooms with a projector",
+      "description": "Boolean filter (has_projector = true): 10 classrooms sorted by capacity.",
+      "sql": "SELECT code, capacity FROM classrooms WHERE has_projector = true ORDER BY capacity DESC, code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ],
+          [
+            "R-101",
+            70
+          ],
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "L-301",
+            50
+          ],
+          [
+            "P-201",
+            40
+          ],
+          [
+            "K-201",
+            30
+          ],
+          [
+            "C-LAB1",
+            24
+          ],
+          [
+            "M-002",
+            22
+          ],
+          [
+            "C-LAB2",
+            20
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A05 · Teachers who do not research and have a heavy load",
+      "description": "AND of a boolean (false) and a range (>= 10 h): 3 teachers.",
+      "sql": "SELECT name, last_name, category, weekly_hours FROM teachers WHERE is_researcher = false AND weekly_hours >= 10 ORDER BY weekly_hours DESC, last_name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "category",
+          "weekly_hours"
+        ],
+        "rows": [
+          [
+            "Paula",
+            "Ferrer Gil",
+            "Senior lecturer",
+            19
+          ],
+          [
+            "Nieves",
+            "Salgado Ortiz",
+            "Senior lecturer",
+            16
+          ],
+          [
+            "Tomás",
+            "Arroyo Vidal",
+            "Assistant",
+            10
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A06 · Students with no phone",
+      "description": "IS NULL over a field with gaps: 8 students.",
+      "sql": "SELECT name, last_name FROM students WHERE phone IS NULL ORDER BY last_name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name"
+        ],
+        "rows": [
+          [
+            "Adrián",
+            "Cabrera Luna"
+          ],
+          [
+            "Nerea",
+            "Castro Peña"
+          ],
+          [
+            "Marcos",
+            "Delgado Cano"
+          ],
+          [
+            "Óscar",
+            "Lozano Prieto"
+          ],
+          [
+            "Luis",
+            "Martín Soto"
+          ],
+          [
+            "Marta",
+            "Ruiz Navarro"
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias"
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A07 · Teachers with an office (IS NOT NULL) in upper case",
+      "description": "IS NOT NULL plus UPPER over two columns: 9 teachers with an office, the 3 associates without one are left out.",
+      "sql": "SELECT id_teacher, UPPER(name) AS name, UPPER(last_name) AS last_name, office FROM teachers WHERE office IS NOT NULL ORDER BY id_teacher",
+      "assert": {
+        "columns": [
+          "id_teacher",
+          "name",
+          "last_name",
+          "office"
+        ],
+        "rows": [
+          [
+            1,
+            "ELENA",
+            "VARGAS RUIZ",
+            "D-201"
+          ],
+          [
+            2,
+            "MARC",
+            "OLIVER PONS",
+            "D-114"
+          ],
+          [
+            3,
+            "NIEVES",
+            "SALGADO ORTIZ",
+            "D-115"
+          ],
+          [
+            5,
+            "CARMEN",
+            "IBÁÑEZ LUNA",
+            "D-330"
+          ],
+          [
+            6,
+            "YOUSSEF",
+            "AMRANI BELKACEM",
+            "D-041"
+          ],
+          [
+            7,
+            "PAULA",
+            "FERRER GIL",
+            "D-208"
+          ],
+          [
+            9,
+            "LUCÍA",
+            "SÁENZ MOLINA",
+            "D-150"
+          ],
+          [
+            10,
+            "TOMÁS",
+            "ARROYO VIDAL",
+            "D-042"
+          ],
+          [
+            11,
+            "SOFÍA",
+            "KOVALCHUK MARÍN",
+            "D-335"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A08 · Last names that start with G",
+      "description": "LIKE with a trailing wildcard: 3 students called García, Gómez and Guerrero.",
+      "sql": "SELECT name, last_name FROM students WHERE last_name LIKE 'G%' ORDER BY id_student",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name"
+        ],
+        "rows": [
+          [
+            "Ana",
+            "García López"
+          ],
+          [
+            "Pablo",
+            "Gómez Frías"
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A09 · Institutional addresses that do not start with a",
+      "description": "LIKE and NOT LIKE combined with LIMIT 5 over the sorted address.",
+      "sql": "SELECT name, last_name, email FROM students WHERE email LIKE '%@alu.es' AND email NOT LIKE 'a%' ORDER BY email LIMIT 5",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "email"
+        ],
+        "rows": [
+          [
+            "Carmen",
+            "Santos Iglesias",
+            "carmen.santos@alu.es"
+          ],
+          [
+            "Claudia",
+            "Reyes Baena",
+            "claudia.reyes@alu.es"
+          ],
+          [
+            "Diego",
+            "Fernández Blanco",
+            "diego.fernandez@alu.es"
+          ],
+          [
+            "Elena",
+            "Molina Ríos",
+            "elena.molina@alu.es"
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo",
+            "hugo.serrano@alu.es"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A10 · Three given classrooms (IN) and the remainder of the division",
+      "description": "IN with a list of codes and the remainder operator (%): the remainder of dividing the capacity by 10.",
+      "sql": "SELECT code, capacity, capacity % 10 AS remainder FROM classrooms WHERE code IN ('K-101', 'B-SALA', 'M-001') ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity",
+          "remainder"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            0
+          ],
+          [
+            "K-101",
+            60,
+            0
+          ],
+          [
+            "M-001",
+            18,
+            8
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A11 · Degrees that are neither computing nor education (NOT IN)",
+      "description": "NOT IN with three codes: Data Science, Software Engineering and Law are left.",
+      "sql": "SELECT code, name, level FROM degrees WHERE code NOT IN ('GINF', 'GMED', 'GEDU') ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "name",
+          "level"
+        ],
+        "rows": [
+          [
+            "MBD",
+            "Data Science",
+            "Master"
+          ],
+          [
+            "MSW",
+            "Software Engineering",
+            "Master"
+          ],
+          [
+            "TDER",
+            "Law",
+            "Bachelor"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A12 · Enrollments passed with a grade between 7 and 8 (BETWEEN)",
+      "description": "BETWEEN includes the ends: 12 enrollments with a grade of 7, 7.5 or 8, sorted by grade.",
+      "sql": "SELECT id_enrollment, grade FROM enrollments WHERE grade BETWEEN 7 AND 8 ORDER BY grade, id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade"
+        ],
+        "rows": [
+          [
+            10,
+            7
+          ],
+          [
+            19,
+            7
+          ],
+          [
+            34,
+            7
+          ],
+          [
+            40,
+            7
+          ],
+          [
+            44,
+            7
+          ],
+          [
+            2,
+            7.5
+          ],
+          [
+            23,
+            7.5
+          ],
+          [
+            13,
+            8
+          ],
+          [
+            22,
+            8
+          ],
+          [
+            38,
+            8
+          ],
+          [
+            42,
+            8
+          ],
+          [
+            45,
+            8
+          ],
+          [
+            46,
+            8
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A13 · First and second year subjects with few credits",
+      "description": "Parentheses with OR, a boolean and NOT BETWEEN: 9 compulsory subjects of years 1 and 2 with fewer than 7 credits.",
+      "sql": "SELECT name, year, credits FROM subjects WHERE (year = 1 OR year = 2) AND is_compulsory = true AND credits NOT BETWEEN 7 AND 10 ORDER BY name",
+      "assert": {
+        "columns": [
+          "name",
+          "year",
+          "credits"
+        ],
+        "rows": [
+          [
+            "Applied Statistics",
+            1,
+            6
+          ],
+          [
+            "Constitutional Law",
+            1,
+            6
+          ],
+          [
+            "Data Structures",
+            2,
+            6
+          ],
+          [
+            "Databases",
+            2,
+            6
+          ],
+          [
+            "Developmental Psychology",
+            1,
+            6
+          ],
+          [
+            "Pharmacology",
+            2,
+            6
+          ],
+          [
+            "Software Architecture",
+            1,
+            6
+          ],
+          [
+            "Teaching Mathematics",
+            2,
+            5
+          ],
+          [
+            "Testing and Quality",
+            1,
+            4
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A14 · Teacher categories (DISTINCT)",
+      "description": "DISTINCT over a text column: 4 professional categories.",
+      "sql": "SELECT DISTINCT category FROM teachers ORDER BY category",
+      "assert": {
+        "columns": [
+          "category"
+        ],
+        "rows": [
+          [
+            "Assistant"
+          ],
+          [
+            "Associate"
+          ],
+          [
+            "Full professor"
+          ],
+          [
+            "Senior lecturer"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A15 · Level/officialness combinations (DISTINCT of two columns)",
+      "description": "DISTINCT over two columns, a boolean included: 3 combinations.",
+      "sql": "SELECT DISTINCT level, is_official FROM degrees ORDER BY level, is_official",
+      "assert": {
+        "columns": [
+          "level",
+          "is_official"
+        ],
+        "rows": [
+          [
+            "Bachelor",
+            true
+          ],
+          [
+            "Master",
+            false
+          ],
+          [
+            "Master",
+            true
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A16 · Totals of the records (COUNT, DISTINCT, MIN, MAX, SUM)",
+      "description": "Aggregates with no GROUP BY: 48 enrollments, 32 graded, 21 students and 14 subjects with enrollments.",
+      "sql": "SELECT COUNT(*) AS enrollments, COUNT(grade) AS with_grade, COUNT(DISTINCT id_student) AS students, COUNT(DISTINCT id_subject) AS subjects, MIN(grade) AS min_grade, MAX(grade) AS max_grade, SUM(grade) AS grade_sum FROM enrollments",
+      "assert": {
+        "columns": [
+          "enrollments",
+          "with_grade",
+          "students",
+          "subjects",
+          "min_grade",
+          "max_grade",
+          "grade_sum"
+        ],
+        "rows": [
+          [
+            48,
+            32,
+            21,
+            14,
+            5,
+            10,
+            234
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A17 · Enrollments by status",
+      "description": "GROUP BY with two aggregates: the 13 active and the 3 cancelled have no grade, the 32 passed do.",
+      "sql": "SELECT status, COUNT(*) AS total, COUNT(grade) AS graded FROM enrollments GROUP BY status ORDER BY total DESC, status",
+      "assert": {
+        "columns": [
+          "status",
+          "total",
+          "graded"
+        ],
+        "rows": [
+          [
+            "passed",
+            32,
+            32
+          ],
+          [
+            "active",
+            13,
+            0
+          ],
+          [
+            "cancelled",
+            3,
+            0
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A18 · Enrollments by academic year (HAVING)",
+      "description": "GROUP BY with HAVING COUNT(*) > 20: both years go over the threshold.",
+      "sql": "SELECT academic_year, COUNT(*) AS total FROM enrollments GROUP BY academic_year HAVING COUNT(*) > 20 ORDER BY academic_year",
+      "assert": {
+        "columns": [
+          "academic_year",
+          "total"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            27
+          ],
+          [
+            "2025-2026",
+            21
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A19 · Students with three or more enrollments",
+      "description": "GROUP BY over the M:M plus HAVING >= 3: 10 students, one of them with 4 enrollments.",
+      "sql": "SELECT id_student, COUNT(*) AS enrollments FROM enrollments GROUP BY id_student HAVING COUNT(*) >= 3 ORDER BY enrollments DESC, id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "enrollments"
+        ],
+        "rows": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            8,
+            3
+          ],
+          [
+            9,
+            3
+          ],
+          [
+            14,
+            3
+          ],
+          [
+            17,
+            3
+          ],
+          [
+            19,
+            3
+          ],
+          [
+            23,
+            3
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A20 · Classrooms by the first letter of the code (GROUP BY with an expression)",
+      "description": "GROUP BY over SUBSTR: 7 different initials with their number of classrooms and added seats.",
+      "sql": "SELECT SUBSTR(code, 1, 1) AS initial, COUNT(*) AS classrooms, SUM(capacity) AS seats FROM classrooms GROUP BY SUBSTR(code, 1, 1) ORDER BY initial",
+      "assert": {
+        "columns": [
+          "initial",
+          "classrooms",
+          "seats"
+        ],
+        "rows": [
+          [
+            "B",
+            2,
+            92
+          ],
+          [
+            "C",
+            2,
+            44
+          ],
+          [
+            "K",
+            3,
+            135
+          ],
+          [
+            "L",
+            2,
+            75
+          ],
+          [
+            "M",
+            2,
+            40
+          ],
+          [
+            "P",
+            3,
+            150
+          ],
+          [
+            "R",
+            2,
+            105
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A21 · Grades of subject 6, from highest to lowest (NULLS LAST)",
+      "description": "ORDER BY ... DESC NULLS LAST: the cancelled enrollment with no grade goes last.",
+      "sql": "SELECT id_enrollment, grade FROM enrollments WHERE id_subject = 6 ORDER BY grade DESC NULLS LAST, id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade"
+        ],
+        "rows": [
+          [
+            28,
+            8.5
+          ],
+          [
+            23,
+            7.5
+          ],
+          [
+            20,
+            6.5
+          ],
+          [
+            30,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A22 · Grades of subject 6, from lowest to highest (nulls first)",
+      "description": "In ASC the nulls go first by default: the enrollment with no grade heads the result.",
+      "sql": "SELECT id_enrollment, grade FROM enrollments WHERE id_subject = 6 ORDER BY grade ASC, id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade"
+        ],
+        "rows": [
+          [
+            30,
+            null
+          ],
+          [
+            20,
+            6.5
+          ],
+          [
+            23,
+            7.5
+          ],
+          [
+            28,
+            8.5
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A23 · Oldest students, page 2 (LIMIT/OFFSET)",
+      "description": "It sorts by date of birth and skips the first two rows: 4 rows from the third one on.",
+      "sql": "SELECT name, last_name, birth_date FROM students ORDER BY birth_date LIMIT 4 OFFSET 2",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "birth_date"
+        ],
+        "rows": [
+          [
+            "Marcos",
+            "Delgado Cano",
+            "2001-05-19"
+          ],
+          [
+            "Iván",
+            "Ramírez Cortés",
+            "2001-08-16"
+          ],
+          [
+            "Diego",
+            "Fernández Blanco",
+            "2001-11-05"
+          ],
+          [
+            "Pablo",
+            "Gómez Frías",
+            "2001-12-14"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A24 · Four students starting at the fourth (MySQL style LIMIT)",
+      "description": "LIMIT 3, 4 is the same as OFFSET 3 LIMIT 4: it returns identifiers 4 to 7.",
+      "sql": "SELECT id_student, name FROM students ORDER BY id_student LIMIT 3, 4",
+      "assert": {
+        "columns": [
+          "id_student",
+          "name"
+        ],
+        "rows": [
+          [
+            4,
+            "Diego"
+          ],
+          [
+            5,
+            "Marta"
+          ],
+          [
+            6,
+            "Javier"
+          ],
+          [
+            7,
+            "Lucía"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A25 · Record of three students (concatenation and text functions)",
+      "description": "|| concatenates, LENGTH counts characters and SUBSTR trims: last names in upper case and three initials.",
+      "sql": "SELECT UPPER(last_name) || ', ' || name AS record, LENGTH(name) AS letters, SUBSTR(name, 1, 3) AS initials FROM students WHERE id_student IN (1, 9, 14) ORDER BY id_student",
+      "assert": {
+        "columns": [
+          "record",
+          "letters",
+          "initials"
+        ],
+        "rows": [
+          [
+            "GARCÍA LÓPEZ, Ana",
+            3,
+            "Ana"
+          ],
+          [
+            "SANTOS IGLESIAS, Carmen",
+            6,
+            "Car"
+          ],
+          [
+            "SERRANO BRAVO, Hugo",
+            4,
+            "Hug"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A26 · Missing grades: COALESCE, IFNULL, NULLIF and ROUND",
+      "description": "The null values are replaced by -1 and 0; NULLIF turns «cancelled» into null and the distance to 7.5 spreads the null.",
+      "sql": "SELECT id_enrollment, COALESCE(grade, -1) AS grade_coalesce, IFNULL(grade, 0) AS grade_ifnull, NULLIF(status, 'cancelled') AS status_or_null, ROUND(ABS(grade - 7.5), 2) AS distance FROM enrollments WHERE id_enrollment IN (2, 6, 28, 30, 48) ORDER BY id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade_coalesce",
+          "grade_ifnull",
+          "status_or_null",
+          "distance"
+        ],
+        "rows": [
+          [
+            2,
+            7.5,
+            7.5,
+            "passed",
+            0
+          ],
+          [
+            6,
+            5,
+            5,
+            "passed",
+            2.5
+          ],
+          [
+            28,
+            8.5,
+            8.5,
+            "passed",
+            1
+          ],
+          [
+            30,
+            -1,
+            0,
+            null,
+            null
+          ],
+          [
+            48,
+            -1,
+            0,
+            null,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A27 · Campus phone normalised",
+      "description": "IFNULL + TRIM + NULLIF: the campus with no phone returns null instead of an empty string.",
+      "sql": "SELECT id_campus, NULLIF(TRIM(IFNULL(phone, '')), '') AS phone, name FROM campuses ORDER BY id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "phone",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "910111222",
+            "North Campus"
+          ],
+          [
+            2,
+            "954333444",
+            "South Campus"
+          ],
+          [
+            3,
+            null,
+            "Seaside Campus"
+          ],
+          [
+            4,
+            "601555666",
+            "Andean Campus"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A28 · Boards that are not digital (comment and brackets)",
+      "description": "The -- comment is ignored, [code] is the same as code and <> also discards the nulls.",
+      "sql": "-- Classrooms with a chalk board (those with an unknown board do not count)\nSELECT [code] AS classroom, [board_type] AS board, capacity FROM classrooms WHERE board_type <> 'digital' ORDER BY code",
+      "assert": {
+        "columns": [
+          "classroom",
+          "board",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "K-102",
+            "chalk",
+            45
+          ],
+          [
+            "P-101",
+            "chalk",
+            55
+          ],
+          [
+            "P-102",
+            "chalk",
+            55
+          ],
+          [
+            "R-102",
+            "chalk",
+            35
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A29 · Teachers who are not associates (NOT)",
+      "description": "NOT over an equality: 9 of the 12 teachers are left.",
+      "sql": "SELECT name, category FROM teachers WHERE NOT (category = 'Associate') ORDER BY id_teacher",
+      "assert": {
+        "columns": [
+          "name",
+          "category"
+        ],
+        "rows": [
+          [
+            "Elena",
+            "Full professor"
+          ],
+          [
+            "Marc",
+            "Senior lecturer"
+          ],
+          [
+            "Nieves",
+            "Senior lecturer"
+          ],
+          [
+            "Carmen",
+            "Full professor"
+          ],
+          [
+            "Youssef",
+            "Assistant"
+          ],
+          [
+            "Paula",
+            "Senior lecturer"
+          ],
+          [
+            "Lucía",
+            "Senior lecturer"
+          ],
+          [
+            "Tomás",
+            "Assistant"
+          ],
+          [
+            "Sofía",
+            "Full professor"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A30 · A query with no results",
+      "description": "No classroom goes over 200 seats: the result has the columns and zero rows (rowCount 0).",
+      "sql": "SELECT code FROM classrooms WHERE capacity > 200",
+      "assert": {
+        "columns": [
+          "code"
+        ],
+        "rows": [],
+        "rowCount": 0
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A31 · Average grade per subject (HAVING and ORDER BY by alias)",
+      "description": "Only subjects with two or more grades; it sorts by the average and a tie is broken by identifier.",
+      "sql": "SELECT id_subject, COUNT(*) AS enrollments, COUNT(grade) AS graded, ROUND(AVG(grade), 2) AS average_grade FROM enrollments GROUP BY id_subject HAVING COUNT(grade) >= 2 ORDER BY average_grade DESC, id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "enrollments",
+          "graded",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            11,
+            2,
+            2,
+            8.5
+          ],
+          [
+            1,
+            5,
+            5,
+            8.2
+          ],
+          [
+            10,
+            3,
+            2,
+            8
+          ],
+          [
+            6,
+            4,
+            3,
+            7.5
+          ],
+          [
+            13,
+            2,
+            2,
+            7.5
+          ],
+          [
+            5,
+            4,
+            4,
+            7.25
+          ],
+          [
+            8,
+            4,
+            4,
+            7
+          ],
+          [
+            9,
+            3,
+            2,
+            7
+          ],
+          [
+            2,
+            5,
+            4,
+            6.38
+          ],
+          [
+            3,
+            4,
+            2,
+            6
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A32 · Students and addresses per campus",
+      "description": "GROUP BY id_campus with COUNT(*) and COUNT(email): 18 of the 24 students have an address.",
+      "sql": "SELECT id_campus, COUNT(*) AS students, COUNT(email) AS with_email FROM students GROUP BY id_campus ORDER BY id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "students",
+          "with_email"
+        ],
+        "rows": [
+          [
+            1,
+            9,
+            7
+          ],
+          [
+            2,
+            6,
+            4
+          ],
+          [
+            3,
+            6,
+            5
+          ],
+          [
+            4,
+            3,
+            2
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "B01 · Campuses with their buildings (INNER JOIN)",
+      "description": "1:M join by id_campus: the 8 buildings with the name of their campus, sorted by campus and building.",
+      "sql": "SELECT s.name AS campus, e.name AS building, e.floors, e.has_lift FROM campuses AS s INNER JOIN buildings AS e ON e.id_campus = s.id_campus ORDER BY s.id_campus, e.id_building",
+      "assert": {
+        "columns": [
+          "campus",
+          "building",
+          "floors",
+          "has_lift"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            "Kepler Lecture Hall",
+            4,
+            true
+          ],
+          [
+            "North Campus",
+            "Curie Laboratories",
+            3,
+            true
+          ],
+          [
+            "North Campus",
+            "Central Library",
+            6,
+            true
+          ],
+          [
+            "South Campus",
+            "Pythagoras Lecture Hall",
+            3,
+            false
+          ],
+          [
+            "South Campus",
+            "Sports Pavilion",
+            2,
+            false
+          ],
+          [
+            "Seaside Campus",
+            "Ramón y Cajal Building",
+            5,
+            true
+          ],
+          [
+            "Seaside Campus",
+            "Marina Annex",
+            1,
+            false
+          ],
+          [
+            "Andean Campus",
+            "Bolívar Block",
+            4,
+            true
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B02 · Three tables: large classrooms of campus 1",
+      "description": "campuses → buildings → classrooms with a filter by campus and capacity: 3 classrooms, from largest to smallest.",
+      "sql": "SELECT s.name AS campus, e.name AS building, a.code, a.capacity FROM campuses AS s INNER JOIN buildings AS e ON e.id_campus = s.id_campus INNER JOIN classrooms AS a ON a.id_building = e.id_building WHERE s.id_campus = 1 AND a.capacity >= 45 ORDER BY a.capacity DESC, a.code",
+      "assert": {
+        "columns": [
+          "campus",
+          "building",
+          "code",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            "Central Library",
+            "B-SALA",
+            80
+          ],
+          [
+            "North Campus",
+            "Kepler Lecture Hall",
+            "K-101",
+            60
+          ],
+          [
+            "North Campus",
+            "Kepler Lecture Hall",
+            "K-102",
+            45
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B03 · Campuses with no buildings (LEFT JOIN with no pair)",
+      "description": "LEFT JOIN plus IS NULL: the 4 campuses have buildings, so the result is empty.",
+      "sql": "SELECT s.name AS campus FROM campuses AS s LEFT JOIN buildings AS e ON e.id_campus = s.id_campus WHERE e.id_building IS NULL ORDER BY s.id_campus",
+      "assert": {
+        "columns": [
+          "campus"
+        ],
+        "rows": [],
+        "rowCount": 0
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B03b · Buildings with no classrooms",
+      "description": "LEFT JOIN with IS NULL: only the Sports Pavilion is left with no classrooms.",
+      "sql": "SELECT e.id_building, e.name FROM buildings AS e LEFT JOIN classrooms AS a ON a.id_building = e.id_building WHERE a.id_classroom IS NULL ORDER BY e.id_building",
+      "assert": {
+        "columns": [
+          "id_building",
+          "name"
+        ],
+        "rows": [
+          [
+            5,
+            "Sports Pavilion"
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B04 · Teachers with no subjects",
+      "description": "LEFT JOIN teachers → subjects with IS NULL: 3 associates teach no subject.",
+      "sql": "SELECT d.id_teacher, d.name, d.last_name FROM teachers AS d LEFT JOIN subjects AS a ON a.id_teacher = d.id_teacher WHERE a.id_subject IS NULL ORDER BY d.id_teacher",
+      "assert": {
+        "columns": [
+          "id_teacher",
+          "name",
+          "last_name"
+        ],
+        "rows": [
+          [
+            4,
+            "Iván",
+            "Requena Soto"
+          ],
+          [
+            6,
+            "Youssef",
+            "Amrani Belkacem"
+          ],
+          [
+            8,
+            "Hugo",
+            "Naranjo Peña"
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B05 · Implicit join with commas (classrooms of campus 2)",
+      "description": "FROM classrooms, buildings with the equality in the WHERE: the engine resolves it as a join.",
+      "sql": "SELECT a.code, a.capacity, e.name AS building FROM classrooms AS a, buildings AS e WHERE a.id_building = e.id_building AND e.id_campus = 2 ORDER BY a.id_classroom",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity",
+          "building"
+        ],
+        "rows": [
+          [
+            "P-101",
+            55,
+            "Pythagoras Lecture Hall"
+          ],
+          [
+            "P-102",
+            55,
+            "Pythagoras Lecture Hall"
+          ],
+          [
+            "P-201",
+            40,
+            "Pythagoras Lecture Hall"
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B06 · Subjects and credits per degree (join by a text code)",
+      "description": "Join by degrees.code = subjects.degree_code, with COUNT and SUM per degree.",
+      "sql": "SELECT e.code, e.name AS degree, COUNT(a.id_subject) AS subjects, SUM(a.credits) AS credits FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code GROUP BY e.code, e.name ORDER BY credits DESC, e.code",
+      "assert": {
+        "columns": [
+          "code",
+          "degree",
+          "subjects",
+          "credits"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Computer Engineering",
+            4,
+            24
+          ],
+          [
+            "GMED",
+            "Medicine",
+            3,
+            19
+          ],
+          [
+            "GEDU",
+            "Primary Education",
+            3,
+            15
+          ],
+          [
+            "MBD",
+            "Data Science",
+            2,
+            12
+          ],
+          [
+            "TDER",
+            "Law",
+            2,
+            11
+          ],
+          [
+            "MSW",
+            "Software Engineering",
+            2,
+            10
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B07 · Degrees with at least three subjects (LEFT JOIN + HAVING)",
+      "description": "LEFT JOIN with HAVING COUNT >= 3: Computer Engineering, Primary Education and Medicine.",
+      "sql": "SELECT e.code, e.name AS degree, COUNT(a.id_subject) AS subjects FROM degrees AS e LEFT JOIN subjects AS a ON a.degree_code = e.code GROUP BY e.code, e.name HAVING COUNT(a.id_subject) >= 3 ORDER BY subjects DESC, e.code",
+      "assert": {
+        "columns": [
+          "code",
+          "degree",
+          "subjects"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Computer Engineering",
+            4
+          ],
+          [
+            "GEDU",
+            "Primary Education",
+            3
+          ],
+          [
+            "GMED",
+            "Medicine",
+            3
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B08 · Classrooms and seats per building",
+      "description": "Grouping by building with COUNT and SUM: the Pythagoras Lecture Hall heads it with 150 seats.",
+      "sql": "SELECT e.id_building, e.name AS building, COUNT(a.id_classroom) AS classrooms, SUM(a.capacity) AS seats FROM buildings AS e INNER JOIN classrooms AS a ON a.id_building = e.id_building GROUP BY e.id_building, e.name ORDER BY seats DESC, e.id_building",
+      "assert": {
+        "columns": [
+          "id_building",
+          "building",
+          "classrooms",
+          "seats"
+        ],
+        "rows": [
+          [
+            4,
+            "Pythagoras Lecture Hall",
+            3,
+            150
+          ],
+          [
+            1,
+            "Kepler Lecture Hall",
+            3,
+            135
+          ],
+          [
+            6,
+            "Ramón y Cajal Building",
+            2,
+            105
+          ],
+          [
+            3,
+            "Central Library",
+            2,
+            92
+          ],
+          [
+            7,
+            "Bolívar Block",
+            2,
+            75
+          ],
+          [
+            2,
+            "Curie Laboratories",
+            2,
+            44
+          ],
+          [
+            8,
+            "Marina Annex",
+            2,
+            40
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B09 · Classrooms per building, including those with none (LEFT JOIN)",
+      "description": "LEFT JOIN with COUNT: the Sports Pavilion appears with 0 classrooms.",
+      "sql": "SELECT e.id_building, e.name AS building, COUNT(a.id_classroom) AS classrooms FROM buildings AS e LEFT JOIN classrooms AS a ON a.id_building = e.id_building GROUP BY e.id_building, e.name ORDER BY classrooms ASC, e.id_building",
+      "assert": {
+        "columns": [
+          "id_building",
+          "building",
+          "classrooms"
+        ],
+        "rows": [
+          [
+            5,
+            "Sports Pavilion",
+            0
+          ],
+          [
+            2,
+            "Curie Laboratories",
+            2
+          ],
+          [
+            3,
+            "Central Library",
+            2
+          ],
+          [
+            6,
+            "Ramón y Cajal Building",
+            2
+          ],
+          [
+            7,
+            "Bolívar Block",
+            2
+          ],
+          [
+            8,
+            "Marina Annex",
+            2
+          ],
+          [
+            1,
+            "Kepler Lecture Hall",
+            3
+          ],
+          [
+            4,
+            "Pythagoras Lecture Hall",
+            3
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B10 · Teaching load: subjects and classroom hours",
+      "description": "teachers → subjects with COUNT and SUM: Elena and Carmen go over 145 hours.",
+      "sql": "SELECT d.id_teacher, d.name, COUNT(a.id_subject) AS subjects, SUM(a.classroom_hours) AS hours FROM teachers AS d INNER JOIN subjects AS a ON a.id_teacher = d.id_teacher GROUP BY d.id_teacher, d.name ORDER BY hours DESC, d.id_teacher",
+      "assert": {
+        "columns": [
+          "id_teacher",
+          "name",
+          "subjects",
+          "hours"
+        ],
+        "rows": [
+          [
+            1,
+            "Elena",
+            2,
+            150
+          ],
+          [
+            5,
+            "Carmen",
+            3,
+            148
+          ],
+          [
+            2,
+            "Marc",
+            2,
+            100
+          ],
+          [
+            7,
+            "Paula",
+            2,
+            95
+          ],
+          [
+            9,
+            "Lucía",
+            2,
+            82
+          ],
+          [
+            11,
+            "Sofía",
+            2,
+            78
+          ],
+          [
+            3,
+            "Nieves",
+            1,
+            45
+          ],
+          [
+            12,
+            "Andrés",
+            1,
+            40
+          ],
+          [
+            10,
+            "Tomás",
+            1,
+            32
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B11 · Teachers with two subjects and 12 credits or more (double HAVING)",
+      "description": "HAVING with COUNT and SUM at once: only Carmen, Elena and Marc make the cut.",
+      "sql": "SELECT d.id_teacher, d.last_name, COUNT(*) AS subjects, SUM(a.credits) AS credits FROM teachers AS d INNER JOIN subjects AS a ON a.id_teacher = d.id_teacher GROUP BY d.id_teacher, d.last_name HAVING COUNT(*) >= 2 AND SUM(a.credits) >= 12 ORDER BY credits DESC, d.id_teacher",
+      "assert": {
+        "columns": [
+          "id_teacher",
+          "last_name",
+          "subjects",
+          "credits"
+        ],
+        "rows": [
+          [
+            5,
+            "Ibáñez Luna",
+            3,
+            18
+          ],
+          [
+            1,
+            "Vargas Ruiz",
+            2,
+            15
+          ],
+          [
+            2,
+            "Oliver Pons",
+            2,
+            12
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B12 · Subjects with no language set, with their degree and teacher",
+      "description": "Three tables (subjects + degrees + teachers) and IS NULL over the language.",
+      "sql": "SELECT a.id_subject, a.name AS subject, e.name AS degree, d.last_name AS teacher, a.credits FROM subjects AS a INNER JOIN degrees AS e ON e.code = a.degree_code INNER JOIN teachers AS d ON d.id_teacher = a.id_teacher WHERE a.language IS NULL ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "subject",
+          "degree",
+          "teacher",
+          "credits"
+        ],
+        "rows": [
+          [
+            4,
+            "Computer Networks",
+            "Computer Engineering",
+            "Sáenz Molina",
+            6
+          ],
+          [
+            7,
+            "Public Health",
+            "Medicine",
+            "Kovalchuk Marín",
+            4
+          ],
+          [
+            12,
+            "Testing and Quality",
+            "Software Engineering",
+            "Sáenz Molina",
+            4
+          ],
+          [
+            16,
+            "Business Law",
+            "Law",
+            "Cano Duarte",
+            5
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B13 · Students, addresses and phones per campus",
+      "description": "LEFT JOIN campuses → students with three counts: 18 addresses and 16 phones in all.",
+      "sql": "SELECT s.id_campus, s.name AS campus, COUNT(e.id_student) AS students, COUNT(e.email) AS with_email, COUNT(e.phone) AS with_phone FROM campuses AS s LEFT JOIN students AS e ON e.id_campus = s.id_campus GROUP BY s.id_campus, s.name ORDER BY students DESC, s.id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "campus",
+          "students",
+          "with_email",
+          "with_phone"
+        ],
+        "rows": [
+          [
+            1,
+            "North Campus",
+            9,
+            7,
+            7
+          ],
+          [
+            2,
+            "South Campus",
+            6,
+            4,
+            3
+          ],
+          [
+            3,
+            "Seaside Campus",
+            6,
+            5,
+            5
+          ],
+          [
+            4,
+            "Andean Campus",
+            3,
+            2,
+            1
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B14 · Cartesian product (6 degrees × 4 campuses)",
+      "description": "With no join condition you get every combination; LIMIT 6 shows the first ones.",
+      "sql": "SELECT e.code, s.name AS campus FROM degrees AS e, campuses AS s ORDER BY e.code, s.id_campus LIMIT 6",
+      "assert": {
+        "columns": [
+          "code",
+          "campus"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "North Campus"
+          ],
+          [
+            "GEDU",
+            "South Campus"
+          ],
+          [
+            "GEDU",
+            "Seaside Campus"
+          ],
+          [
+            "GEDU",
+            "Andean Campus"
+          ],
+          [
+            "GINF",
+            "North Campus"
+          ],
+          [
+            "GINF",
+            "South Campus"
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B15 · The five largest classrooms (JOIN + ORDER BY alias + LIMIT)",
+      "description": "It sorts by the alias of a column and by the classroom code; the tie at 55 seats is decided by the classroom.",
+      "sql": "SELECT a.code AS classroom, a.capacity AS seats, e.name AS building FROM classrooms AS a INNER JOIN buildings AS e ON e.id_building = a.id_building ORDER BY seats DESC, classroom LIMIT 5",
+      "assert": {
+        "columns": [
+          "classroom",
+          "seats",
+          "building"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            "Central Library"
+          ],
+          [
+            "R-101",
+            70,
+            "Ramón y Cajal Building"
+          ],
+          [
+            "K-101",
+            60,
+            "Kepler Lecture Hall"
+          ],
+          [
+            "P-101",
+            55,
+            "Pythagoras Lecture Hall"
+          ],
+          [
+            "P-102",
+            55,
+            "Pythagoras Lecture Hall"
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B16 · Distinct teachers per degree (COUNT DISTINCT)",
+      "description": "COUNT(DISTINCT id_teacher) per degree: Computer Engineering is the one that spreads its teaching over more teachers.",
+      "sql": "SELECT e.code, COUNT(DISTINCT a.id_teacher) AS distinct_teachers, COUNT(*) AS subjects FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code GROUP BY e.code ORDER BY distinct_teachers DESC, e.code",
+      "assert": {
+        "columns": [
+          "code",
+          "distinct_teachers",
+          "subjects"
+        ],
+        "rows": [
+          [
+            "GINF",
+            4,
+            4
+          ],
+          [
+            "GEDU",
+            3,
+            3
+          ],
+          [
+            "GMED",
+            3,
+            3
+          ],
+          [
+            "MBD",
+            2,
+            2
+          ],
+          [
+            "MSW",
+            2,
+            2
+          ],
+          [
+            "TDER",
+            2,
+            2
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B17 · Teaching hours per category (MIN and MAX)",
+      "description": "GROUP BY category with a count and the extremes: senior lecturers are the most numerous.",
+      "sql": "SELECT category, COUNT(*) AS teachers, MIN(weekly_hours) AS min_hours, MAX(weekly_hours) AS max_hours FROM teachers GROUP BY category ORDER BY teachers DESC, category",
+      "assert": {
+        "columns": [
+          "category",
+          "teachers",
+          "min_hours",
+          "max_hours"
+        ],
+        "rows": [
+          [
+            "Senior lecturer",
+            4,
+            16,
+            20
+          ],
+          [
+            "Associate",
+            3,
+            6,
+            8
+          ],
+          [
+            "Full professor",
+            3,
+            14,
+            18
+          ],
+          [
+            "Assistant",
+            2,
+            10,
+            12
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B18 · Basic subjects of years one and two with their teacher",
+      "description": "Join teachers → subjects with BETWEEN, >= and a boolean in the WHERE: 8 subjects.",
+      "sql": "SELECT d.name, d.last_name, a.name AS subject, a.year FROM teachers AS d INNER JOIN subjects AS a ON a.id_teacher = d.id_teacher WHERE a.year BETWEEN 1 AND 2 AND a.credits >= 6 AND a.is_compulsory = true ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "subject",
+          "year"
+        ],
+        "rows": [
+          [
+            "Elena",
+            "Vargas Ruiz",
+            "Data Structures",
+            2
+          ],
+          [
+            "Marc",
+            "Oliver Pons",
+            "Databases",
+            2
+          ],
+          [
+            "Elena",
+            "Vargas Ruiz",
+            "Human Anatomy",
+            1
+          ],
+          [
+            "Carmen",
+            "Ibáñez Luna",
+            "Pharmacology",
+            2
+          ],
+          [
+            "Nieves",
+            "Salgado Ortiz",
+            "Developmental Psychology",
+            1
+          ],
+          [
+            "Marc",
+            "Oliver Pons",
+            "Software Architecture",
+            1
+          ],
+          [
+            "Carmen",
+            "Ibáñez Luna",
+            "Applied Statistics",
+            1
+          ],
+          [
+            "Paula",
+            "Ferrer Gil",
+            "Constitutional Law",
+            1
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B19 · Enrollments and average grade per level (Bachelor / Master)",
+      "description": "Four tables and ROUND(AVG()): masters raise the average of the bachelor (43 enrollments against 5).",
+      "sql": "SELECT e.level, COUNT(DISTINCT m.id_enrollment) AS enrollments, ROUND(AVG(m.grade), 2) AS average_grade FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code INNER JOIN enrollments AS m ON m.id_subject = a.id_subject GROUP BY e.level ORDER BY average_grade DESC",
+      "assert": {
+        "columns": [
+          "level",
+          "enrollments",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            "Master",
+            5,
+            8
+          ],
+          [
+            "Bachelor",
+            43,
+            7.19
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B20 · Optional subjects and their degree",
+      "description": "Boolean filter (is_compulsory = false) over the join degrees ↔ subjects: 5 optional subjects.",
+      "sql": "SELECT a.id_subject, a.name, e.name AS degree, a.language FROM subjects AS a INNER JOIN degrees AS e ON e.code = a.degree_code WHERE a.is_compulsory = false ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name",
+          "degree",
+          "language"
+        ],
+        "rows": [
+          [
+            3,
+            "Compilers",
+            "Computer Engineering",
+            "English"
+          ],
+          [
+            7,
+            "Public Health",
+            "Medicine",
+            null
+          ],
+          [
+            10,
+            "Inclusive Education",
+            "Primary Education",
+            "Spanish"
+          ],
+          [
+            14,
+            "Machine Learning",
+            "Data Science",
+            "English"
+          ],
+          [
+            16,
+            "Business Law",
+            "Law",
+            null
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B21 · Master students with their degree",
+      "description": "Join students → degrees by the text code, filtering by level Master: 4 students.",
+      "sql": "SELECT st.id_student, st.name, st.last_name, e.name AS degree, e.level FROM students AS st INNER JOIN degrees AS e ON e.code = st.degree_code WHERE e.level = 'Master' ORDER BY st.id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "name",
+          "last_name",
+          "degree",
+          "level"
+        ],
+        "rows": [
+          [
+            7,
+            "Lucía",
+            "Moreno Pascual",
+            "Software Engineering",
+            "Master"
+          ],
+          [
+            10,
+            "Álvaro",
+            "Domínguez Rey",
+            "Data Science",
+            "Master"
+          ],
+          [
+            15,
+            "Elena",
+            "Molina Ríos",
+            "Software Engineering",
+            "Master"
+          ],
+          [
+            18,
+            "Adrián",
+            "Cabrera Luna",
+            "Data Science",
+            "Master"
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "B22 · Daily schedule of the research staff",
+      "description": "Boolean filter and ROUND over a division, sorted by weekly hours: 6 researchers.",
+      "sql": "SELECT d.name, d.weekly_hours, ROUND(d.weekly_hours / 5, 1) AS hours_per_day FROM teachers AS d WHERE d.is_researcher = true ORDER BY d.weekly_hours DESC, d.id_teacher",
+      "assert": {
+        "columns": [
+          "name",
+          "weekly_hours",
+          "hours_per_day"
+        ],
+        "rows": [
+          [
+            "Marc",
+            20,
+            4
+          ],
+          [
+            "Elena",
+            18,
+            3.6
+          ],
+          [
+            "Lucía",
+            17,
+            3.4
+          ],
+          [
+            "Carmen",
+            15,
+            3
+          ],
+          [
+            "Sofía",
+            14,
+            2.8
+          ],
+          [
+            "Youssef",
+            12,
+            2.4
+          ]
+        ]
+      },
+      "folder": "B · Joins"
+    },
+    {
+      "name": "C01 · Full record of one student (M:M resolved)",
+      "description": "Three tables over the M:M: the 4 subjects of Ana, with grade and status.",
+      "sql": "SELECT m.id_enrollment, st.last_name AS student, a.name AS subject, m.grade, m.status FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.id_student = 1 ORDER BY m.id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "student",
+          "subject",
+          "grade",
+          "status"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            "Data Structures",
+            8.5,
+            "passed"
+          ],
+          [
+            2,
+            "García López",
+            "Databases",
+            7.5,
+            "passed"
+          ],
+          [
+            3,
+            "García López",
+            "Compilers",
+            null,
+            "active"
+          ],
+          [
+            4,
+            "García López",
+            "Computer Networks",
+            null,
+            "active"
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C02 · Subjects with four or more students (large group)",
+      "description": "It walks the M:M from subject → enrollments and groups with HAVING >= 4: 8 subjects.",
+      "sql": "SELECT a.id_subject, a.name AS subject, COUNT(DISTINCT m.id_student) AS students FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject GROUP BY a.id_subject, a.name HAVING COUNT(DISTINCT m.id_student) >= 4 ORDER BY students DESC, a.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "subject",
+          "students"
+        ],
+        "rows": [
+          [
+            1,
+            "Data Structures",
+            5
+          ],
+          [
+            2,
+            "Databases",
+            5
+          ],
+          [
+            7,
+            "Public Health",
+            5
+          ],
+          [
+            3,
+            "Compilers",
+            4
+          ],
+          [
+            4,
+            "Computer Networks",
+            4
+          ],
+          [
+            5,
+            "Human Anatomy",
+            4
+          ],
+          [
+            6,
+            "Pharmacology",
+            4
+          ],
+          [
+            8,
+            "Teaching Mathematics",
+            4
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C03 · Load of every student (subjects and credits)",
+      "description": "The other side of the M:M: 21 students with enrollments, sorted by credits and breaking ties by identifier.",
+      "sql": "SELECT st.id_student, st.name, st.last_name, COUNT(*) AS subjects, SUM(a.credits) AS credits FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY st.id_student, st.name, st.last_name ORDER BY credits DESC, st.id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "name",
+          "last_name",
+          "subjects",
+          "credits"
+        ],
+        "rows": [
+          [
+            1,
+            "Ana",
+            "García López",
+            4,
+            24
+          ],
+          [
+            4,
+            "Diego",
+            "Fernández Blanco",
+            3,
+            19
+          ],
+          [
+            9,
+            "Carmen",
+            "Santos Iglesias",
+            3,
+            19
+          ],
+          [
+            17,
+            "Irene",
+            "Suárez Nieto",
+            3,
+            19
+          ],
+          [
+            2,
+            "Luis",
+            "Martín Soto",
+            3,
+            18
+          ],
+          [
+            8,
+            "Pablo",
+            "Gómez Frías",
+            3,
+            18
+          ],
+          [
+            19,
+            "Claudia",
+            "Reyes Baena",
+            3,
+            18
+          ],
+          [
+            23,
+            "Sara",
+            "Guerrero Vidal",
+            3,
+            18
+          ],
+          [
+            5,
+            "Marta",
+            "Ruiz Navarro",
+            3,
+            15
+          ],
+          [
+            14,
+            "Hugo",
+            "Serrano Bravo",
+            3,
+            15
+          ],
+          [
+            13,
+            "Paula",
+            "Vega Salas",
+            2,
+            13
+          ],
+          [
+            3,
+            "Sofía",
+            "Hernández Ruiz",
+            2,
+            12
+          ],
+          [
+            10,
+            "Álvaro",
+            "Domínguez Rey",
+            2,
+            12
+          ],
+          [
+            11,
+            "Nerea",
+            "Castro Peña",
+            2,
+            11
+          ],
+          [
+            21,
+            "Julia",
+            "Bermúdez Soler",
+            2,
+            10
+          ],
+          [
+            20,
+            "Rubén",
+            "Parra Aguilar",
+            2,
+            9
+          ],
+          [
+            6,
+            "Javier",
+            "Ortega Díaz",
+            1,
+            6
+          ],
+          [
+            7,
+            "Lucía",
+            "Moreno Pascual",
+            1,
+            6
+          ],
+          [
+            15,
+            "Elena",
+            "Molina Ríos",
+            1,
+            6
+          ],
+          [
+            18,
+            "Adrián",
+            "Cabrera Luna",
+            1,
+            6
+          ],
+          [
+            24,
+            "Marc",
+            "Esteban Quiles",
+            1,
+            6
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C04 · Grades of one student with COALESCE",
+      "description": "COALESCE turns the null of the active subject into 0 instead of leaving it empty.",
+      "sql": "SELECT a.name AS subject, m.status, COALESCE(m.grade, 0) AS grade FROM enrollments AS m INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.id_student = 4 ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "subject",
+          "status",
+          "grade"
+        ],
+        "rows": [
+          [
+            "Human Anatomy",
+            "passed",
+            7
+          ],
+          [
+            "Pharmacology",
+            "passed",
+            6.5
+          ],
+          [
+            "Public Health",
+            "active",
+            0
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C05 · Enrollments not graded yet (IS NULL)",
+      "description": "The first six enrollments with no grade, with student and subject.",
+      "sql": "SELECT m.id_enrollment, st.last_name AS student, a.name AS subject, m.status FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.grade IS NULL ORDER BY m.id_enrollment LIMIT 6",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "student",
+          "subject",
+          "status"
+        ],
+        "rows": [
+          [
+            3,
+            "García López",
+            "Compilers",
+            "active"
+          ],
+          [
+            4,
+            "García López",
+            "Computer Networks",
+            "active"
+          ],
+          [
+            7,
+            "Martín Soto",
+            "Computer Networks",
+            "active"
+          ],
+          [
+            9,
+            "Hernández Ruiz",
+            "Databases",
+            "active"
+          ],
+          [
+            12,
+            "Gómez Frías",
+            "Computer Networks",
+            "active"
+          ],
+          [
+            14,
+            "Reyes Baena",
+            "Compilers",
+            "active"
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C06 · Enrollments with distinction (grade >= 9)",
+      "description": "Six enrollments of 9 or more, from the highest grade down and breaking ties by student.",
+      "sql": "SELECT st.last_name AS student, a.name AS subject, m.grade FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.grade >= 9 ORDER BY m.grade DESC, st.id_student",
+      "assert": {
+        "columns": [
+          "student",
+          "subject",
+          "grade"
+        ],
+        "rows": [
+          [
+            "Serrano Bravo",
+            "Teaching Mathematics",
+            10
+          ],
+          [
+            "Guerrero Vidal",
+            "Data Structures",
+            9.5
+          ],
+          [
+            "Hernández Ruiz",
+            "Data Structures",
+            9
+          ],
+          [
+            "Serrano Bravo",
+            "Inclusive Education",
+            9
+          ],
+          [
+            "Molina Ríos",
+            "Software Architecture",
+            9
+          ],
+          [
+            "Suárez Nieto",
+            "Human Anatomy",
+            9
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C07 · Students with no enrollment (LEFT JOIN and null average)",
+      "description": "Three students have no enrollments: COUNT is 0 and ROUND(AVG()) is null.",
+      "sql": "SELECT st.id_student, st.name, st.last_name, COUNT(m.id_enrollment) AS enrollments, ROUND(AVG(m.grade), 2) AS average_grade FROM students AS st LEFT JOIN enrollments AS m ON m.id_student = st.id_student GROUP BY st.id_student, st.name, st.last_name HAVING COUNT(m.id_enrollment) = 0 ORDER BY st.id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "name",
+          "last_name",
+          "enrollments",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            12,
+            "Iván",
+            "Ramírez Cortés",
+            0,
+            null
+          ],
+          [
+            16,
+            "Marcos",
+            "Delgado Cano",
+            0,
+            null
+          ],
+          [
+            22,
+            "Óscar",
+            "Lozano Prieto",
+            0,
+            null
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C08 · Subjects with no enrollment",
+      "description": "LEFT JOIN with IS NULL: Testing and Quality and Business Law are left with no students.",
+      "sql": "SELECT a.id_subject, a.name, a.degree_code FROM subjects AS a LEFT JOIN enrollments AS m ON m.id_subject = a.id_subject WHERE m.id_enrollment IS NULL ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name",
+          "degree_code"
+        ],
+        "rows": [
+          [
+            12,
+            "Testing and Quality",
+            "MSW"
+          ],
+          [
+            16,
+            "Business Law",
+            "TDER"
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C09 · Coverage: students with enrollments per degree",
+      "description": "Four tables (degrees → subjects → enrollments → students) to count the real students of every degree.",
+      "sql": "SELECT e.code, COUNT(DISTINCT st.id_student) AS students FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code INNER JOIN enrollments AS m ON m.id_subject = a.id_subject INNER JOIN students AS st ON st.id_student = m.id_student GROUP BY e.code ORDER BY students DESC, e.code",
+      "assert": {
+        "columns": [
+          "code",
+          "students"
+        ],
+        "rows": [
+          [
+            "GINF",
+            6
+          ],
+          [
+            "GMED",
+            5
+          ],
+          [
+            "GEDU",
+            4
+          ],
+          [
+            "MBD",
+            2
+          ],
+          [
+            "MSW",
+            2
+          ],
+          [
+            "TDER",
+            2
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C10 · Nobody takes subjects of two degrees (only rowCount)",
+      "description": "An assert with no expected rows: it is enough to check that the result is empty (rowCount 0).",
+      "sql": "SELECT st.id_student, COUNT(DISTINCT a.degree_code) AS degrees FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY st.id_student HAVING COUNT(DISTINCT a.degree_code) >= 2 ORDER BY st.id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "degrees"
+        ],
+        "rowCount": 0
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C11 · Recognised enrollments",
+      "description": "Boolean is_recognised = true over the M:M: 6 enrollments, one per student.",
+      "sql": "SELECT m.id_enrollment, st.last_name AS student, a.name AS subject, e.code AS degree FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject INNER JOIN degrees AS e ON e.code = a.degree_code WHERE m.is_recognised = true ORDER BY m.id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "student",
+          "subject",
+          "degree"
+        ],
+        "rows": [
+          [
+            6,
+            "Martín Soto",
+            "Databases",
+            "GINF"
+          ],
+          [
+            17,
+            "Guerrero Vidal",
+            "Databases",
+            "GINF"
+          ],
+          [
+            25,
+            "Vega Salas",
+            "Human Anatomy",
+            "GMED"
+          ],
+          [
+            35,
+            "Castro Peña",
+            "Teaching Mathematics",
+            "GEDU"
+          ],
+          [
+            43,
+            "Molina Ríos",
+            "Software Architecture",
+            "MSW"
+          ],
+          [
+            47,
+            "Ortega Díaz",
+            "Constitutional Law",
+            "TDER"
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C12 · Subjects of one student whatever the order (ignoreOrder)",
+      "description": "The assert does not sort: it checks that the set of rows matches, with ignoreOrder true.",
+      "sql": "SELECT a.name AS subject FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject WHERE m.id_student = 4",
+      "assert": {
+        "columns": [
+          "subject"
+        ],
+        "rows": [
+          [
+            "Human Anatomy"
+          ],
+          [
+            "Pharmacology"
+          ],
+          [
+            "Public Health"
+          ]
+        ],
+        "ignoreOrder": true
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C13 · Subjects with more enrollments (ORDER BY of an aggregate)",
+      "description": "It sorts by COUNT(*) descending and cuts the first five: three subjects tie at 5 enrollments.",
+      "sql": "SELECT a.name AS subject, COUNT(*) AS enrollments FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject GROUP BY a.name ORDER BY COUNT(*) DESC, a.name LIMIT 5",
+      "assert": {
+        "columns": [
+          "subject",
+          "enrollments"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            5
+          ],
+          [
+            "Databases",
+            5
+          ],
+          [
+            "Public Health",
+            5
+          ],
+          [
+            "Compilers",
+            4
+          ],
+          [
+            "Computer Networks",
+            4
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C14 · Longest subject names (ORDER BY of a function)",
+      "description": "It sorts by LENGTH(name) descending, not by the text: 5 rows.",
+      "sql": "SELECT a.name AS subject, LENGTH(a.name) AS letters FROM subjects AS a ORDER BY LENGTH(a.name) DESC, a.name LIMIT 5",
+      "assert": {
+        "columns": [
+          "subject",
+          "letters"
+        ],
+        "rows": [
+          [
+            "Developmental Psychology",
+            24
+          ],
+          [
+            "Software Architecture",
+            21
+          ],
+          [
+            "Teaching Mathematics",
+            20
+          ],
+          [
+            "Inclusive Education",
+            19
+          ],
+          [
+            "Testing and Quality",
+            19
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C15 · Students with more credits enrolled (ORDER BY alias + LIMIT)",
+      "description": "It sorts by the alias credits: Ana heads it with 24 credits and the rest tie at 19.",
+      "sql": "SELECT st.id_student, st.last_name, COUNT(*) AS subjects, SUM(a.credits) AS credits FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY st.id_student, st.last_name ORDER BY credits DESC, st.id_student LIMIT 4",
+      "assert": {
+        "columns": [
+          "id_student",
+          "last_name",
+          "subjects",
+          "credits"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            4,
+            24
+          ],
+          [
+            4,
+            "Fernández Blanco",
+            3,
+            19
+          ],
+          [
+            9,
+            "Santos Iglesias",
+            3,
+            19
+          ],
+          [
+            17,
+            "Suárez Nieto",
+            3,
+            19
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C16 · Average grade of the Computing subjects",
+      "description": "Filter by degree code, aggregates and NULLS LAST: the subject with no grade goes last.",
+      "sql": "SELECT a.name AS subject, COUNT(m.id_enrollment) AS enrollments, COUNT(m.grade) AS graded, ROUND(AVG(m.grade), 2) AS average_grade FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject WHERE a.degree_code = 'GINF' GROUP BY a.id_subject, a.name ORDER BY average_grade DESC NULLS LAST, a.id_subject",
+      "assert": {
+        "columns": [
+          "subject",
+          "enrollments",
+          "graded",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            5,
+            5,
+            8.2
+          ],
+          [
+            "Databases",
+            5,
+            4,
+            6.38
+          ],
+          [
+            "Compilers",
+            4,
+            2,
+            6
+          ],
+          [
+            "Computer Networks",
+            4,
+            0,
+            null
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C17 · Scholarship holders in Human Anatomy",
+      "description": "A student boolean and a subject filter over the M:M: 2 of the 4 enrolled have a scholarship.",
+      "sql": "SELECT st.last_name AS student, st.has_scholarship, a.name AS subject FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE st.has_scholarship = true AND m.id_subject = 5 ORDER BY st.id_student",
+      "assert": {
+        "columns": [
+          "student",
+          "has_scholarship",
+          "subject"
+        ],
+        "rows": [
+          [
+            "Santos Iglesias",
+            true,
+            "Human Anatomy"
+          ],
+          [
+            "Suárez Nieto",
+            true,
+            "Human Anatomy"
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C18 · Enrollments per degree and academic year",
+      "description": "GROUP BY with two text keys: 12 combinations, in degree + year order.",
+      "sql": "SELECT a.degree_code, m.academic_year, COUNT(*) AS enrollments FROM enrollments AS m INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY a.degree_code, m.academic_year ORDER BY a.degree_code, m.academic_year",
+      "assert": {
+        "columns": [
+          "degree_code",
+          "academic_year",
+          "enrollments"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "2024-2025",
+            7
+          ],
+          [
+            "GEDU",
+            "2025-2026",
+            3
+          ],
+          [
+            "GINF",
+            "2024-2025",
+            10
+          ],
+          [
+            "GINF",
+            "2025-2026",
+            8
+          ],
+          [
+            "GMED",
+            "2024-2025",
+            6
+          ],
+          [
+            "GMED",
+            "2025-2026",
+            7
+          ],
+          [
+            "MBD",
+            "2024-2025",
+            2
+          ],
+          [
+            "MBD",
+            "2025-2026",
+            1
+          ],
+          [
+            "MSW",
+            "2024-2025",
+            1
+          ],
+          [
+            "MSW",
+            "2025-2026",
+            1
+          ],
+          [
+            "TDER",
+            "2024-2025",
+            1
+          ],
+          [
+            "TDER",
+            "2025-2026",
+            1
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C19 · Subjects with distinctions",
+      "description": "Grade filter and GROUP BY: Data Structures is the only one with two distinctions.",
+      "sql": "SELECT a.name AS subject, COUNT(*) AS outstanding FROM enrollments AS m INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.grade >= 9 GROUP BY a.name ORDER BY outstanding DESC, a.name",
+      "assert": {
+        "columns": [
+          "subject",
+          "outstanding"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            2
+          ],
+          [
+            "Human Anatomy",
+            1
+          ],
+          [
+            "Inclusive Education",
+            1
+          ],
+          [
+            "Software Architecture",
+            1
+          ],
+          [
+            "Teaching Mathematics",
+            1
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "C20 · Average per Computing student with two or more grades",
+      "description": "Four tables, IS NOT NULL and HAVING COUNT >= 2: Ana and Sara go over 7.",
+      "sql": "SELECT st.id_student, st.last_name, ROUND(AVG(m.grade), 2) AS average_grade FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject INNER JOIN degrees AS e ON e.code = a.degree_code WHERE e.code = 'GINF' AND m.grade IS NOT NULL GROUP BY st.id_student, st.last_name HAVING COUNT(*) >= 2 ORDER BY average_grade DESC, st.id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "last_name",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            8
+          ],
+          [
+            23,
+            "Guerrero Vidal",
+            7
+          ],
+          [
+            8,
+            "Gómez Frías",
+            6.75
+          ],
+          [
+            2,
+            "Martín Soto",
+            5.5
+          ]
+        ]
+      },
+      "folder": "C · Related queries"
+    },
+    {
+      "name": "D01 · Enrollments with no student (integrity of the 1:M)",
+      "description": "Anti-join enrollments → students: no enrollment points to a student that does not exist.",
+      "sql": "SELECT m.id_enrollment, m.id_student FROM enrollments AS m LEFT JOIN students AS st ON st.id_student = m.id_student WHERE st.id_student IS NULL ORDER BY m.id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "id_student"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D02 · Enrollments with no subject (integrity of the other 1:M)",
+      "description": "Anti-join enrollments → subjects: the M:M has no dangling references.",
+      "sql": "SELECT m.id_enrollment, m.id_subject FROM enrollments AS m LEFT JOIN subjects AS a ON a.id_subject = m.id_subject WHERE a.id_subject IS NULL ORDER BY m.id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "id_subject"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D03 · Subjects with no degree (integrity of the text code)",
+      "description": "Anti-join subjects → degrees by degree_code = code: the 16 subjects have a degree.",
+      "sql": "SELECT a.id_subject, a.degree_code FROM subjects AS a LEFT JOIN degrees AS e ON e.code = a.degree_code WHERE e.id_degree IS NULL ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "degree_code"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D04 · Subjects with no teacher",
+      "description": "Anti-join subjects → teachers: every subject has a teacher.",
+      "sql": "SELECT a.id_subject, a.id_teacher FROM subjects AS a LEFT JOIN teachers AS d ON d.id_teacher = a.id_teacher WHERE d.id_teacher IS NULL ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "id_teacher"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D05 · Classrooms with no building",
+      "description": "Anti-join classrooms → buildings: no classroom is left outside a building.",
+      "sql": "SELECT a.id_classroom, a.id_building FROM classrooms AS a LEFT JOIN buildings AS e ON e.id_building = a.id_building WHERE e.id_building IS NULL ORDER BY a.id_classroom",
+      "assert": {
+        "columns": [
+          "id_classroom",
+          "id_building"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D06 · Buildings with no campus",
+      "description": "Anti-join buildings → campuses: the 8 buildings hang from an existing campus.",
+      "sql": "SELECT e.id_building, e.id_campus FROM buildings AS e LEFT JOIN campuses AS s ON s.id_campus = e.id_campus WHERE s.id_campus IS NULL ORDER BY e.id_building",
+      "assert": {
+        "columns": [
+          "id_building",
+          "id_campus"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D07 · Students with no campus or with no degree",
+      "description": "Two anti-joins at once with OR: all the students have a valid campus and degree.",
+      "sql": "SELECT st.id_student FROM students AS st LEFT JOIN campuses AS s ON s.id_campus = st.id_campus LEFT JOIN degrees AS e ON e.code = st.degree_code WHERE s.id_campus IS NULL OR e.id_degree IS NULL ORDER BY st.id_student",
+      "assert": {
+        "columns": [
+          "id_student"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D08 · Repeated enrollments of the same student/subject pair",
+      "description": "GROUP BY + HAVING over the M:M: there are no duplicated pairs, the natural key is unique.",
+      "sql": "SELECT m.id_student, m.id_subject, COUNT(*) AS times FROM enrollments AS m GROUP BY m.id_student, m.id_subject HAVING COUNT(*) > 1",
+      "assert": {
+        "columns": [
+          "id_student",
+          "id_subject",
+          "times"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D09 · Grades outside the 0–10 range",
+      "description": "Business rule over the grade range: none outside 0–10.",
+      "sql": "SELECT id_enrollment, grade FROM enrollments WHERE grade IS NOT NULL AND (grade < 0 OR grade > 10)",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D10 · Invented enrollment statuses",
+      "description": "NOT IN against the list of allowed statuses: only active, passed and cancelled exist.",
+      "sql": "SELECT id_enrollment, status FROM enrollments WHERE status NOT IN ('active', 'passed', 'cancelled') ORDER BY id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "status"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D11 · Passed enrollments with no grade",
+      "description": "The rule «passed ⇒ grade reported»: no passed enrollment is left without a grade.",
+      "sql": "SELECT id_enrollment, status, grade FROM enrollments WHERE status = 'passed' AND grade IS NULL ORDER BY id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "status",
+          "grade"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D12 · Graded enrollments that are not passed",
+      "description": "The other way round: if there is a grade, the enrollment is passed (active and cancelled are not graded).",
+      "sql": "SELECT id_enrollment, status, grade FROM enrollments WHERE grade IS NOT NULL AND status <> 'passed' ORDER BY id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "status",
+          "grade"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "D13 · Classrooms with no seats",
+      "description": "Business rule: every classroom offers at least one seat.",
+      "sql": "SELECT id_classroom, code, capacity FROM classrooms WHERE capacity <= 0 ORDER BY id_classroom",
+      "assert": {
+        "columns": [
+          "id_classroom",
+          "code",
+          "capacity"
+        ],
+        "rowCount": 0
+      },
+      "folder": "D · Integrity"
+    },
+    {
+      "name": "E01 · Simple view: SELECT * of another query",
+      "description": "The result of A03 is read as a table: the 5 large classrooms with their three columns (code, capacity, floor), sorted by capacity.",
+      "sql": "SELECT * FROM [A03 · Large classrooms (>= 55 seats)] ORDER BY capacity DESC, code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity",
+          "floor"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            3
+          ],
+          [
+            "R-101",
+            70,
+            1
+          ],
+          [
+            "K-101",
+            60,
+            1
+          ],
+          [
+            "P-101",
+            55,
+            1
+          ],
+          [
+            "P-102",
+            55,
+            1
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E02 · Arithmetic over the columns of a view",
+      "description": "The capacity is still a number after going through view A03: it can be divided by 10 and the remainder computed.",
+      "sql": "SELECT code AS classroom, capacity, capacity / 10 AS tens, capacity % 10 AS remainder FROM [A03 · Large classrooms (>= 55 seats)] ORDER BY capacity DESC, code",
+      "assert": {
+        "columns": [
+          "classroom",
+          "capacity",
+          "tens",
+          "remainder"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            8,
+            0
+          ],
+          [
+            "R-101",
+            70,
+            7,
+            0
+          ],
+          [
+            "K-101",
+            60,
+            6,
+            0
+          ],
+          [
+            "P-101",
+            55,
+            5.5,
+            5
+          ],
+          [
+            "P-102",
+            55,
+            5.5,
+            5
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E03 · WHERE and DISTINCT over a view",
+      "description": "It filters view A03 by capacity >= 60 and leaves the distinct floors: floors 1 and 3 are left.",
+      "sql": "SELECT DISTINCT floor FROM [A03 · Large classrooms (>= 55 seats)] WHERE capacity >= 60 ORDER BY floor",
+      "assert": {
+        "columns": [
+          "floor"
+        ],
+        "rows": [
+          [
+            1
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E04 · Aggregates over a view",
+      "description": "Five aggregates in one row over the result of A03: 5 classrooms, 320 seats, from 55 to 80 and an average of 64.",
+      "sql": "SELECT COUNT(*) AS classrooms, SUM(capacity) AS seats, MIN(capacity) AS min_grade, MAX(capacity) AS max_grade, ROUND(AVG(capacity), 2) AS average_grade FROM [A03 · Large classrooms (>= 55 seats)]",
+      "assert": {
+        "columns": [
+          "classrooms",
+          "seats",
+          "min_grade",
+          "max_grade",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            5,
+            320,
+            55,
+            80,
+            64
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E05 · Floors with two or more large classrooms",
+      "description": "It groups view A03 by floor and keeps the floors with two or more classrooms: only floor 1 (4 classrooms, 240 seats).",
+      "sql": "SELECT floor, COUNT(*) AS classrooms, SUM(capacity) AS seats FROM [A03 · Large classrooms (>= 55 seats)] GROUP BY floor HAVING COUNT(*) >= 2 ORDER BY floor",
+      "assert": {
+        "columns": [
+          "floor",
+          "classrooms",
+          "seats"
+        ],
+        "rows": [
+          [
+            1,
+            4,
+            240
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E06 · View joined to a base table (INNER JOIN)",
+      "description": "View C02 joined to the subjects table by id_subject: the 8 subjects with four or more students, with their year and credits.",
+      "sql": "SELECT c.subject, c.students, a.year, a.credits FROM [C02 · Subjects with four or more students (large group)] AS c INNER JOIN subjects AS a ON a.id_subject = c.id_subject ORDER BY c.students DESC, c.id_subject",
+      "assert": {
+        "columns": [
+          "subject",
+          "students",
+          "year",
+          "credits"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            5,
+            2,
+            6
+          ],
+          [
+            "Databases",
+            5,
+            2,
+            6
+          ],
+          [
+            "Public Health",
+            5,
+            5,
+            4
+          ],
+          [
+            "Compilers",
+            4,
+            3,
+            6
+          ],
+          [
+            "Computer Networks",
+            4,
+            3,
+            6
+          ],
+          [
+            "Human Anatomy",
+            4,
+            1,
+            9
+          ],
+          [
+            "Pharmacology",
+            4,
+            2,
+            6
+          ],
+          [
+            "Teaching Mathematics",
+            4,
+            2,
+            5
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E07 · Two views joined by subject",
+      "description": "Views C02 and A31 joined by id_subject: the 6 large subjects that also have an average grade.",
+      "sql": "SELECT c.subject, c.students, n.average_grade FROM [C02 · Subjects with four or more students (large group)] AS c INNER JOIN [A31 · Average grade per subject (HAVING and ORDER BY by alias)] AS n ON n.id_subject = c.id_subject ORDER BY c.students DESC, c.id_subject",
+      "assert": {
+        "columns": [
+          "subject",
+          "students",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            5,
+            8.2
+          ],
+          [
+            "Databases",
+            5,
+            6.38
+          ],
+          [
+            "Compilers",
+            4,
+            6
+          ],
+          [
+            "Human Anatomy",
+            4,
+            7.25
+          ],
+          [
+            "Pharmacology",
+            4,
+            7.5
+          ],
+          [
+            "Teaching Mathematics",
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E08 · Table LEFT JOIN view with IS NULL",
+      "description": "LEFT JOIN of the buildings table against view B08 plus IS NULL: the only building with no classrooms, the Sports Pavilion.",
+      "sql": "SELECT e.id_building, e.name AS building FROM buildings AS e LEFT JOIN [B08 · Classrooms and seats per building] AS v ON v.id_building = e.id_building WHERE v.classrooms IS NULL ORDER BY e.id_building",
+      "assert": {
+        "columns": [
+          "id_building",
+          "building"
+        ],
+        "rows": [
+          [
+            5,
+            "Sports Pavilion"
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E09 · View of a view (two levels of query)",
+      "description": "It reads view E05, which in turn reads view A03: three chained levels and a single row (floor 1, 240 seats).",
+      "sql": "SELECT floor, classrooms, seats FROM [E05 · Floors with two or more large classrooms] WHERE seats >= 100 ORDER BY seats DESC",
+      "assert": {
+        "columns": [
+          "floor",
+          "classrooms",
+          "seats"
+        ],
+        "rows": [
+          [
+            1,
+            4,
+            240
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E10 · The same view twice (self-join)",
+      "description": "View A03 appears twice with different aliases and joins itself by capacity: only P-101 and P-102 tie at 55 seats.",
+      "sql": "SELECT a.code AS classroom_1, b.code AS classroom_2, a.capacity FROM [A03 · Large classrooms (>= 55 seats)] AS a INNER JOIN [A03 · Large classrooms (>= 55 seats)] AS b ON b.capacity = a.capacity AND b.code > a.code ORDER BY a.capacity DESC, a.code, b.code",
+      "assert": {
+        "columns": [
+          "classroom_1",
+          "classroom_2",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "P-101",
+            "P-102",
+            55
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E11 · Implicit join with commas including a view",
+      "description": "Cartesian product of view B06 with the campuses table, filtered by campus 1: the 6 degrees with their credits, from most to least.",
+      "sql": "SELECT c.code, c.degree, c.credits, s.name AS campus FROM [B06 · Subjects and credits per degree (join by a text code)] AS c, campuses AS s WHERE s.id_campus = 1 ORDER BY c.credits DESC, c.code",
+      "assert": {
+        "columns": [
+          "code",
+          "degree",
+          "credits",
+          "campus"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Computer Engineering",
+            24,
+            "North Campus"
+          ],
+          [
+            "GMED",
+            "Medicine",
+            19,
+            "North Campus"
+          ],
+          [
+            "GEDU",
+            "Primary Education",
+            15,
+            "North Campus"
+          ],
+          [
+            "MBD",
+            "Data Science",
+            12,
+            "North Campus"
+          ],
+          [
+            "TDER",
+            "Law",
+            11,
+            "North Campus"
+          ],
+          [
+            "MSW",
+            "Software Engineering",
+            10,
+            "North Campus"
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E12 · ORDER BY by alias and LIMIT over a view",
+      "description": "It sorts by the alias subject and cuts view C02 to 3 rows: the three subjects with 5 students.",
+      "sql": "SELECT subject AS materia, students FROM [C02 · Subjects with four or more students (large group)] ORDER BY students DESC, subject LIMIT 3",
+      "assert": {
+        "columns": [
+          "materia",
+          "students"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            5
+          ],
+          [
+            "Databases",
+            5
+          ],
+          [
+            "Public Health",
+            5
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E13 · Boolean going through a view",
+      "description": "The boolean is_main travels untouched from the campuses table to view A01: only North Campus is the main one.",
+      "sql": "SELECT name AS campus, is_main FROM [A01 · All campuses] WHERE is_main = true ORDER BY id_campus",
+      "assert": {
+        "columns": [
+          "campus",
+          "is_main"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            true
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E14 · Nulls going through a view (COALESCE)",
+      "description": "The missing phone of campus 3 is still null after reading view A01, and COALESCE replaces it with «no phone».",
+      "sql": "SELECT name AS campus, COALESCE(phone, 'no phone') AS contact FROM [A01 · All campuses] ORDER BY id_campus",
+      "assert": {
+        "columns": [
+          "campus",
+          "contact"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            "910111222"
+          ],
+          [
+            "South Campus",
+            "954333444"
+          ],
+          [
+            "Seaside Campus",
+            "no phone"
+          ],
+          [
+            "Andean Campus",
+            "601555666"
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E15 · Aggregates over a view that is already aggregated",
+      "description": "It summarises the already aggregated view A32 (one row per campus): 4 campuses, 24 students and between 3 and 9 per campus.",
+      "sql": "SELECT COUNT(*) AS campuses, SUM(students) AS students, MIN(students) AS minimum, MAX(students) AS maximum FROM [A32 · Students and addresses per campus]",
+      "assert": {
+        "columns": [
+          "campuses",
+          "students",
+          "minimum",
+          "maximum"
+        ],
+        "rows": [
+          [
+            4,
+            24,
+            3,
+            9
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E16 · A view that reads a query with LIMIT",
+      "description": "View C13 carries LIMIT 5: reading it as a table brings only those 5 rows (23 enrollments in all).",
+      "sql": "SELECT COUNT(*) AS rows, SUM(enrollments) AS enrollments FROM [C13 · Subjects with more enrollments (ORDER BY of an aggregate)]",
+      "assert": {
+        "columns": [
+          "rows",
+          "enrollments"
+        ],
+        "rows": [
+          [
+            5,
+            23
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E17 · A view of an empty result",
+      "description": "View C10 returns no rows: reading it as a table gives an empty table, and COUNT(*) returns 0 instead of an error.",
+      "sql": "SELECT COUNT(*) AS rows FROM [C10 · Nobody takes subjects of two degrees (only rowCount)]",
+      "assert": {
+        "columns": [
+          "rows"
+        ],
+        "rows": [
+          [
+            0
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E18 · LIMIT and OFFSET over a view",
+      "description": "LIMIT 3 OFFSET 2 over the 5 rows of view A03: the third, fourth and fifth classrooms by capacity.",
+      "sql": "SELECT code, capacity FROM [A03 · Large classrooms (>= 55 seats)] ORDER BY capacity DESC, code LIMIT 3 OFFSET 2",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "P-102",
+            55
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E19 · LIKE filter over a view",
+      "description": "LIKE over a column of view A03: the only large classroom whose code starts with K.",
+      "sql": "SELECT code, capacity FROM [A03 · Large classrooms (>= 55 seats)] WHERE code LIKE 'K%' ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "K-101",
+            60
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E20 · A view of a view that joins two views",
+      "description": "It reads view E07 (which joins C02 and A31) and keeps the average grades of 7 or more: 4 subjects.",
+      "sql": "SELECT subject, students, average_grade FROM [E07 · Two views joined by subject] WHERE average_grade >= 7 ORDER BY average_grade DESC, subject",
+      "assert": {
+        "columns": [
+          "subject",
+          "students",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            5,
+            8.2
+          ],
+          [
+            "Pharmacology",
+            4,
+            7.5
+          ],
+          [
+            "Human Anatomy",
+            4,
+            7.25
+          ],
+          [
+            "Teaching Mathematics",
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E21 · LEFT JOIN between two views",
+      "description": "C02 LEFT JOIN A31: the large subjects that do not reach the HAVING of A31 (Computer Networks and Public Health) come with a null average_grade, the first ones.",
+      "sql": "SELECT c.subject, c.students, n.average_grade FROM [C02 · Subjects with four or more students (large group)] AS c LEFT JOIN [A31 · Average grade per subject (HAVING and ORDER BY by alias)] AS n ON n.id_subject = c.id_subject ORDER BY n.average_grade ASC NULLS FIRST, c.subject",
+      "assert": {
+        "columns": [
+          "subject",
+          "students",
+          "average_grade"
+        ],
+        "rows": [
+          [
+            "Computer Networks",
+            4,
+            null
+          ],
+          [
+            "Public Health",
+            5,
+            null
+          ],
+          [
+            "Compilers",
+            4,
+            6
+          ],
+          [
+            "Databases",
+            5,
+            6.38
+          ],
+          [
+            "Teaching Mathematics",
+            4,
+            7
+          ],
+          [
+            "Human Anatomy",
+            4,
+            7.25
+          ],
+          [
+            "Pharmacology",
+            4,
+            7.5
+          ],
+          [
+            "Data Structures",
+            5,
+            8.2
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E22 · Projection with an alias and an asterisk over a view",
+      "description": "The asterisk of the alias (v.*) over view A04: the 10 classrooms with a projector, with their two columns.",
+      "sql": "SELECT v.* FROM [A04 · Classrooms with a projector] AS v ORDER BY v.capacity DESC, v.code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ],
+          [
+            "R-101",
+            70
+          ],
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "L-301",
+            50
+          ],
+          [
+            "P-201",
+            40
+          ],
+          [
+            "K-201",
+            30
+          ],
+          [
+            "C-LAB1",
+            24
+          ],
+          [
+            "M-002",
+            22
+          ],
+          [
+            "C-LAB2",
+            20
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E23 · A view that reads a query with three tables",
+      "description": "View B02 joins three tables inside (campuses, buildings and classrooms): reading it as a table brings its 3 rows.",
+      "sql": "SELECT COUNT(*) AS rows FROM [B02 · Three tables: large classrooms of campus 1]",
+      "assert": {
+        "columns": [
+          "rows"
+        ],
+        "rows": [
+          [
+            3
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    },
+    {
+      "name": "E24 · Group by a boolean of a view",
+      "description": "GROUP BY over a boolean that comes from view A15: how many level/officialness combinations there are of each kind.",
+      "sql": "SELECT is_official, COUNT(*) AS combinations FROM [A15 · Level/officialness combinations (DISTINCT of two columns)] GROUP BY is_official ORDER BY is_official",
+      "assert": {
+        "columns": [
+          "is_official",
+          "combinations"
+        ],
+        "rows": [
+          [
+            false,
+            1
+          ],
+          [
+            true,
+            2
+          ]
+        ]
+      },
+      "folder": "E · Views"
+    }
+  ],
+  "settings": {
+    "language": "en",
+    "rowsPerPageTable": 200,
+    "rowsPerPageQuery": 100,
+    "importCsv": {
+      "delimiter": "tab",
+      "customDelimiter": "",
+      "header": true,
+      "infer": true,
+      "skipInvalid": false
+    },
+    "exportCsv": {
+      "delimiter": ";",
+      "customDelimiter": "",
+      "header": true,
+      "decimalComma": false
+    }
+  }
+}
