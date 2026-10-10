@@ -1481,6 +1481,7 @@
               <li><button data-i18n-title="markup.button.tablesRowsFieldsForeignKeys" data-i18n="markup.button.tablesRowsMetadata" class="help-item" type="button" data-help="tables" title="Tablas, filas, campos y claves ajenas">Tablas, filas y metadatos</button></li>
               <li><button data-i18n-title="markup.button.createRunExportQueries" data-i18n="markup.button.queries2" class="help-item" type="button" data-help="queries" title="Crear, ejecutar y exportar consultas">Consultas</button></li>
               <li><button data-i18n-title="markup.button.relationMatrixBetweenTablesQueries" data-i18n="markup.button.relations2" class="help-item" type="button" data-help="relations" title="Matriz de relaciones entre tablas y consultas que las citan">Relaciones</button></li>
+              <li><button data-i18n-title="markup.button.historyVisitedPlaces" data-i18n="markup.button.history" class="help-item" type="button" data-help="history" title="Enlaces a los lugares que has visitado">Histórico</button></li>
               <li class="help-grupo">
                 <span data-i18n="markup.span.sqlHelp" class="help-grupo-name">Ayuda SQL</span>
                 <ul>
@@ -1521,6 +1522,8 @@
                 <li data-i18n-html="markup.li.lastColumnThatWindowIs">La última columna de esa ventana, <b>Es clave ajena</b>, es la vista <b>inversa</b> y de <b>solo lectura</b>: qué campos de otras tablas apuntan a ese campo, uno por línea (o un guion si ninguno). Se edita desde la fila del campo que es la clave ajena. El destino de una clave ajena puede ser <b>la propia tabla</b> (aparece al final de la lista), para relaciones <b>autorreferenciadas</b>.</li>
                 <li data-i18n-html="markup.li.tableViewForeignKeysAre">En la vista de la tabla, las <b>claves ajenas</b> se leen al pasar el ratón por su celda: la pista dice a qué tabla y campo apuntan y enseña el <b>registro relacionado</b> de la otra tabla (o avisa de que no existe), y el enlace <b>↗</b> abre la <b>consulta</b> con ese registro. Y si la tabla es el <b>destino</b> de alguna clave ajena, lleva una <b>columna por cada una</b> (<code>← tabla.campo</code>) con el <b>número</b> de filas de la otra tabla que traen cada fila: el propio número es un enlace que genera y ejecuta la <b>consulta</b> que las lista.</li>
                 <li data-i18n-html="markup.li.findReplaceTheySearchReplace"><b>Buscar…</b> y <b>Reemplazar…</b>: buscan y reemplazan en toda la tabla o en una columna, con los comodines <code>*</code> y <code>?</code> (apartado «Buscar y reemplazar»).</li>
+                <li data-i18n-html="markup.li.updateTableImportsCSVJSON"><b>Actualizar tabla…</b> sustituye <b>todos los datos</b> de la tabla importando un CSV o JSON (fichero o pegado): funciona como <b>Importar datos</b> pero sin tocar la tabla, sus campos, sus claves ajenas ni las consultas que la usan. Antes de borrar los datos <b>avisa</b> y comprueba que coincidan el número de campos, la cabecera (si la primera fila es cabecera) y los tipos; si algo no coincide, no cambia nada y explica por qué.</li>
+                <li data-i18n-html="markup.li.exportTableDataAsCSV"><b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.</li>
                 <li data-i18n-html="markup.li.renamingFollowsQueriesWhenName"><b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>.</li>
                 <li data-i18n-html="markup.li.deletingWarnsYouBeforeRemoving"><b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.</li>
                 <li data-i18n-html="markup.li.typeIsInferredImportIt">El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.</li>
@@ -1557,10 +1560,20 @@
                 <li data-i18n-html="markup.li.sidebarLinkRelationsOpensMatrix">El enlace <b>Relaciones</b> de la barra lateral abre una <b>matriz</b> con las tablas del proyecto en <b>filas y columnas</b>. En cada casilla de cruce se ve lo que une la tabla de la fila con la de la columna.</li>
                 <li data-i18n-html="markup.li.insideCellGoForeignKeys">Dentro de la casilla van las <b>claves ajenas</b> de la tabla de la fila que apuntan a la de la columna, escritas como <code>campo → campo destino</code>. La <b>diagonal</b> recoge las <b>autorreferencias</b>: las claves ajenas de una tabla que apuntan a ella misma.</li>
                 <li data-i18n-html="markup.li.atEndCellGreyNumber">Al final de la casilla, en gris, el <b>número de consultas</b> que citan <b>las dos tablas</b> (con sus nombres en la pista del ratón). Se cuenta <b>una vez por pareja</b>, no en las dos casillas.</li>
-                <li data-i18n-html="markup.li.underEachForeignKeyGo">Bajo cada clave ajena van <b>cinco cifras</b> con las filas del cruce, contadas sobre las dos tablas y nombradas con ellas: las de la tabla de la fila <b>sin fila</b> en la de la columna y <b>con fila</b> en ella, y las de la tabla de la columna <b>sin ninguna</b>, <b>con alguna</b> o <b>con más de una</b> de la de la fila. El <b>orden</b> y qué significa cada una se explican en la <b>leyenda</b> de debajo de la matriz y en la pista de cada cifra.</li>
+                <li data-i18n-html="markup.li.underEachForeignKeyGo">Bajo cada clave ajena van <b>siete cifras</b> con las filas del cruce, contadas sobre las dos tablas y nombradas con ellas: las de la tabla de la fila <b>cuya clave es null</b>, <b>cuya clave no casa con ninguna fila</b> de la de la columna o que <b>encuentran su fila</b> en ella, y las de la tabla de la columna <b>sin ninguna</b>, <b>con alguna</b>, <b>con una exactamente</b> o <b>con más de una</b> de la de la fila. El <b>orden</b> y qué significa cada una se explican en la <b>leyenda</b> de debajo de la matriz y en la pista de cada cifra.</li>
                 <li data-i18n-html="markup.li.everyFigureGreaterThan0">Cada cifra <b>mayor que 0</b> es un <b>enlace</b>: genera (o reutiliza) la <b>consulta</b> que devuelve exactamente esas filas, la deja seleccionada y la ejecuta, para que la compruebes.</li>
+                <li data-i18n-html="markup.li.pressTableNameOpensTable">Pulsa el <b>nombre de una tabla</b> en una cabecera de fila o de columna para <b>abrir esa tabla</b>.</li>
                 <li data-i18n-html="markup.li.rowHeadersStayFixedWhen">Las cabeceras de fila quedan <b>fijas</b> al desplazar la matriz a lo ancho de la pantalla.</li>
                 <li data-i18n-html="markup.li.seeRelationsButtonQueryEditor">El botón <b>Ver relaciones</b> del editor de consultas abre la misma matriz en una <b>ventana</b>, como recordatorio mientras escribes: <b>sin</b> la columna de consultas ni los enlaces de las cifras. Se cierra con <b>Esc</b> o con <b>Cerrar</b>.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" data-help="history">
+              <h3 data-i18n="markup.h3.history">Historial de lugares visitados</h3>
+              <ul>
+                <li data-i18n-html="markup.li.historyBarUnderTop">Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación).</li>
+                <li data-i18n-html="markup.li.pressPlaceGoBackTo">Pulsa un enlace para <b>volver a ese lugar</b>; el que está en pantalla queda resaltado. Volver a un lugar no lo repite (se mueve al final) y los enlaces a tablas o consultas que ya no existen desaparecen solos.</li>
+                <li data-i18n-html="markup.li.historyIsNotSaved">El histórico es de la sesión: <b>no se guarda</b> en el proyecto.</li>
               </ul>
             </section>
 
@@ -1589,7 +1602,7 @@
                 <li data-i18n-html="markup.li.testsButtonTopBarLaunches">El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.extractor.runProjectTests()</code>.</li>
                 <li data-i18n-html="markup.li.selfTestsButtonTopBar">El botón <b>Auto-tests</b> de la barra superior comprueba <b>el propio programa</b> (motor SQL, utilidades, ficheros e interfaz), no tus datos: ejecuta la batería interna y abre el <b>Informe de auto-tests</b>.</li>
                 <li data-i18n-html="markup.li.thatReportCarriesCountOne">Ese informe lleva el <b>recuento</b>, una fila por caso —número, caso, resultado y detalle— y el bloque <b>Casos que fallan</b> con el motivo de cada uno. <b>Re-ejecutar</b> la lanza otra vez, <b>Copiar informe</b> lo deja como texto y <b>Esc</b> cierra la ventana.</li>
-                <li data-i18n-html="markup.li.batteryDoesNotTouchYour">La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Sin ventana: <code>window.extractor.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.</li>
+                <li data-i18n-html="markup.li.batteryDoesNotTouchYour">La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.extractor.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.</li>
                 <li data-i18n-html="markup.li.completeFormatAssertExampleAre">El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.</li>
               </ul>
             </section>
@@ -2491,6 +2504,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.goBackFactoryValues": "Go back to the factory values",
         "markup.button.goDataImportPanel": "Go to the data import panel",
         "markup.button.goHomePageSummaryEverything": "Go to the home page (a summary of everything you can do)",
+        "markup.button.history": "History",
+        "markup.button.historyVisitedPlaces": "Links to the places you have visited",
         "markup.button.howQueryIsWrittenWhat": "How a query is written and what the SQL dialect supports",
         "markup.button.importCSVJSONFilesPasted": "Import CSV and JSON files, or pasted text",
         "markup.button.importData": "Import data",
@@ -2637,6 +2652,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h3.queries": "Queries",
         "markup.h3.queriesAsTables": "Queries as tables",
         "markup.h3.relationsBetweenTablesQueries": "Relations between tables and queries",
+        "markup.h3.history": "History of visited places",
         "markup.h3.rowsPerPage": "Rows per page",
         "markup.h3.shortcuts": "Shortcuts",
         "markup.h3.sqlHelpFilterRows": "SQL help · Filter rows",
@@ -2696,7 +2712,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.assertIsExpectedResultThat": "The <code>\"assert\"</code> is the expected result of that query: <code>columns</code> (names and order of the columns), <code>rows</code> (the expected rows, value by value), <code>rowCount</code> (only how many rows) and <code>ignoreOrder: true</code> (same set of rows, whatever the order). One of the first three is enough for the query to be checked.",
         "markup.li.atEndCellGreyNumber": "At the end of the cell, in grey, the <b>number of queries</b> that cite <b>both tables</b> (with their names in the mouse hint). It is counted <b>once per pair</b>, not in both cells.",
         "markup.li.autoNumberedIDFieldIs": "The auto-numbered <b>ID field</b> is never changed: it can be searched in, but if you choose only that column it warns you that it is not replaced.",
-        "markup.li.batteryDoesNotTouchYour": "The battery <b>does not touch your project</b>: every case runs over test data and leaves everything as it was. Without a window: <code>window.extractor.selfTest()</code> returns the report with the total, the passes, the failures and the detail of every case.",
+        "markup.li.batteryDoesNotTouchYour": "The battery <b>does not touch your project</b>: every case runs over test data and leaves everything as it was. It runs with <b>no project loaded</b>: with a project open it warns and closes it (unsaved changes are lost). Without a window: <code>window.extractor.selfTest()</code> returns the report with the total, the passes, the failures and the detail of every case.",
         "markup.li.beforeResultYouWillSee": "Before the result you will see the <b>plan</b> with the time of each step; if something fails, the error tells you <b>line, column and what to check</b>.",
         "markup.li.comparisonIsStrictNullOnly": "The comparison is <b>strict</b>: <code>null</code> only matches <code>null</code>, a number is not a text and <code>1</code> is not <code>true</code>. Renaming a table or a field also adjusts the asserted names, but <b>never the values</b>.",
         "markup.li.completeFormatAssertExampleAre": "The complete format of the assert and an example are in the <b>SQL help</b> sections of this page.",
@@ -2712,12 +2728,15 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.enterTableNameRenamesIt": "<b>Enter</b> in the table name renames it; in the name of a new field it adds it.",
         "markup.li.escClosePopUpWindows": "<b>Esc</b>: close the pop-up windows.",
         "markup.li.everyFigureGreaterThan0": "Every figure <b>greater than 0</b> is a <b>link</b>: it builds (or reuses) the <b>query</b> that returns exactly those rows, leaves it selected and runs it, so that you can check it.",
+        "markup.li.pressTableNameOpensTable": "Press a <b>table name</b> in a row or column header to <b>open that table</b>.",
         "markup.li.everyQueryCanCarryIts": "Every query can carry its <b>asserted result</b> for <b>test mode</b>: when the project is opened it is run and compared with it (section «Test mode»). The editor's <b>Turn into a test</b> button saves the result you have on screen as that expected result.",
         "markup.li.exportCSVOpensResultCSV": "<b>Export CSV…</b> opens the <b>Result in CSV</b> window with the <b>preview</b> of the result: <b>Copy</b> takes it to the clipboard and <b>Download CSV</b> saves the file with the query name (asking for the folder, if the browser has a save dialog).",
         "markup.li.fieldsMetadataAddRenameDelete": "<b>Fields and metadata…</b>: add, rename and delete fields, with description and <b>type</b> (<code>string</code>, <code>number</code>, <code>boolean</code>); tick a checkbox to say which one is the table's <b>ID field</b> (only one) and which ones are <b>foreign keys</b>, choosing the target table and field. Everything is saved in the project.",
         "markup.li.filesCSVJSONSeveralAt": "<b>Files</b>: CSV and JSON, several at once and mixed. Each file creates a table with its name (lower case, with <code>_</code>) and leaves a report with what was read and the problems found.",
         "markup.li.findReplaceTableBarSame": "<b>Find…</b> and <b>Replace…</b> (table bar): the same window in two modes; the replace mode adds the field with the new text and the <b>Replace all</b> button.",
         "markup.li.findReplaceTheySearchReplace": "<b>Find…</b> and <b>Replace…</b>: they search and replace in the whole table or in one column, with the wildcards <code>*</code> and <code>?</code> (section «Find and replace»).",
+        "markup.li.updateTableImportsCSVJSON": "<b>Update table…</b> replaces <b>all the data</b> of the table by importing a CSV or JSON (file or pasted): it works like <b>Import data</b> but does not touch the table, its fields, its foreign keys or the queries that use it. Before deleting the data it <b>warns you</b> and checks that the number of fields matches, that the header matches (if the first row is a header) and that the types match; if something does not match, it changes nothing and says why.",
+        "markup.li.exportTableDataAsCSV": "<b>Export CSV…</b> opens the data of the table as <b>CSV text in a window</b>, with <b>Copy</b> and <b>Download CSV</b> and the same separator, header and decimal-comma options as the result of a query.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> and <b>→</b> with the handle focused: change the width of the left column; <b>Home</b> and <b>End</b> take it to the ends.",
         "markup.li.idFieldIsAutoNumbered": "The <b>ID field is auto-numbered</b>: every new row gets the <b>next number</b> and none is repeated or reused when rows are deleted. That is why it is not edited by hand: it can be searched in, but it is not replaced. With <b>Create auto-numbered ID field</b> you add a new one (the name is written next to it), at the start of the table, and it numbers the rows that were already there <b>1..N</b>. Marking any other field as ID also makes it auto-numbered.",
         "markup.li.insideCellGoForeignKeys": "Inside the cell go the <b>foreign keys</b> of the row's table that point to the column's, written as <code>field → target field</code>. The <b>diagonal</b> holds the <b>self-references</b>: the foreign keys of a table that point to itself.",
@@ -2743,6 +2762,9 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.renamingFollowsQueriesWhenName": "<b>Renaming follows the queries</b>: when the name of a table or of a field changes, the queries rewrite themselves (<code>FROM table</code>, <code>table.field</code>, the bare column and the asserted names), also in the editor that is open. <b>Aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected.",
         "markup.li.reportOpensItsOwnWhen": "The <b>report</b> opens on its own when loading: a summary (queries, passed, failed and without an assert), one row per query —its rows, whether it carries an assert and the result— and the <b>detail of the differences</b>, with what was expected and what was obtained in every row or column that does not add up. If a query does not compile, it is marked as failed with the error.",
         "markup.li.rowHeadersStayFixedWhen": "The row headers stay <b>fixed</b> when the matrix is scrolled across the width of the screen.",
+        "markup.li.historyBarUnderTop": "Under the top bar there is a <b>history bar</b>: a rounded link to every place you have passed through (home, a table, a query, a summary, the relations or the import panel).",
+        "markup.li.pressPlaceGoBackTo": "Press a link to <b>go back to that place</b>; the one on screen is highlighted. Going back to a place does not repeat it (it moves to the end) and the links to tables or queries that no longer exist disappear on their own.",
+        "markup.li.historyIsNotSaved": "The history belongs to the session: it is <b>not saved</b> in the project.",
         "markup.li.rowPagesTotalJumpFirst": "Row pages with the total and a jump to the first or the last one.",
         "markup.li.saveProjectCtrlSOverwrites": "<b>Save project</b> (Ctrl+S) overwrites its file; <b>Save project as</b> asks where; when <b>opening</b> another one, if there are unsaved changes it warns you before losing them.",
         "markup.li.scopeIsChosenSelectorAll": "The scope is chosen with the <b>In:</b> selector: <b>all the columns</b> or just one. <code>null</code> cells are not searched and, without a pattern, nothing is searched.",
@@ -2757,7 +2779,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.thatReportCarriesCountOne": "That report carries the <b>count</b>, one row per case —number, case, result and detail— and the <b>Failing cases</b> block with the reason of each one. <b>Run again</b> launches it once more, <b>Copy report</b> leaves it as text and <b>Esc</b> closes the window.",
         "markup.li.theyAreReadOnlyThey": "They are <b>read-only</b>: they never change the data. On screen there is a cap on rows; the exported CSV is complete.",
         "markup.li.typeIsInferredImportIt": "The type is <b>inferred on import</b>, it can be <b>changed by hand</b> and it is saved in the project. <code>null</code> is not a type: it is missing information. <code>number</code> accepts decimals.",
-        "markup.li.underEachForeignKeyGo": "Under each foreign key go <b>five figures</b> with the rows of the crossing, counted over the two tables and named after them: those of the row's table <b>with no row</b> in the column's and <b>with a row</b> in it, and those of the column's table <b>with none</b>, <b>with some</b> or <b>with more than one</b> of the row's. The <b>order</b> and what each one means are explained in the <b>legend</b> below the matrix and in the hint of every figure.",
+        "markup.li.underEachForeignKeyGo": "Under each foreign key go <b>seven figures</b> with the rows of the crossing, counted over the two tables and named after them: those of the row's table <b>whose key is null</b>, <b>whose key matches no row</b> of the column's or <b>that find their row</b> in it, and those of the column's table <b>with none</b>, <b>with some</b>, <b>with exactly one</b> or <b>with more than one</b> of the row's. The <b>order</b> and what each one means are explained in the <b>legend</b> below the matrix and in the hint of every figure.",
         "markup.li.whenReplacingItAsksYou": "When replacing, it asks you first with the <b>count</b> and the scope, and replaces <b>every occurrence</b>. The resulting value is interpreted as when editing a cell (number, <code>true</code>/<code>false</code>, <code>null</code> or text) and an empty replacement deletes what was found.",
         "markup.li.whileThereArePendingChanges": "While there are pending changes you will see <b>«Unsaved changes»</b> at the top right, and it also warns you if you try to close the tab.",
         "markup.li.widthLeftColumnIsVariable": "The width of the left column is <b>variable</b>: drag the <b>handle</b> between the sidebar and the view (from 140 to 480 px), double-click to go back to 195 px or use the arrows with the handle focused.",
@@ -2850,6 +2872,9 @@ ORDER BY edificios DESC, sede;</pre>
         "selfTests.okMark": "✔ passed",
         "selfTests.failMark": "✘ failed",
         "selfTests.summaryLine": "Self-tests · {summary}",
+        "selfTests.projectLoaded": "There is a project open. The self-tests run with no project loaded, so the current project will be closed. Continue?",
+        "selfTests.projectLoadedUnsaved": "There are unsaved changes in the project. The self-tests run with no project loaded, so those unsaved changes will be lost. Continue?",
+        "selfTests.runCancelled": "Self-tests cancelled: the project is kept.",
         "selfTests.failedMark": "FAIL",        "projectTests.queriesCount": {"one":"{count} query","other":"{count} queries"},
         "projectTests.selfTestsCount": {"one":"{count} self-test","other":"{count} self-tests"},
         "sqlFunctions.upper": "UPPER(text)",
@@ -3088,15 +3113,19 @@ ORDER BY edificios DESC, sede;</pre>
         "relations.figureManySourcesText": "of “{target}” with more than one from “{origin}”",
         "relations.figureNoSourceName": "rows of {table} with no source",
         "relations.figureNoSourceText": "of “{target}” with none from “{origin}”",
-        "relations.figureNoTargetName": "rows of {table} with no target",
-        "relations.figureNoTargetText": "of “{origin}” with no row in “{target}”",
+        "relations.figureNullTargetName": "rows of {table} with no target because the key is null",
+        "relations.figureNullTargetText": "of “{origin}” whose key is null (no row in “{target}”)",
+        "relations.figureOneSourceName": "rows of {table} with 1 source",
+        "relations.figureOneSourceText": "of “{target}” with one from “{origin}”",
+        "relations.figureOrphanTargetName": "rows of {table} with no target because the key does not match",
+        "relations.figureOrphanTargetText": "of “{origin}” whose key does not match any row of “{target}”",
         "relations.figureStatus": "Query “{name}” generated with the {rows} that prove that figure.",
         "relations.figureTip": "{rows} {figure}, through foreign key {source} → {target}. Click it to generate and run the query that returns those rows.",
         "relations.figureWithSourceName": "rows of {table} with 1 or more sources",
         "relations.figureWithSourceText": "of “{target}” with some from “{origin}”",
         "relations.figureWithTargetName": "rows of {table} with a target",
         "relations.figureWithTargetText": "of “{origin}” with a row in “{target}”",
-        "relations.figuresLegend": "The five figures of each foreign key count rows of the two tables at the crossing (the row’s table is the source and the column’s is the target), in this order: 1) rows of the row’s table with no row in the column’s table; 2) rows of the row’s table with a row in the column’s; 3) rows of the column’s table with none from the row’s; 4) rows of the column’s table with at least one from the row’s; 5) rows of the column’s table with more than one from the row’s.",
+        "relations.figuresLegend": "The seven figures of each foreign key count rows of the two tables at the crossing (the row’s table is the source and the column’s is the target), in this order: 1) rows of the row’s table whose key is null; 2) rows of the row’s table whose key does not match any row of the column’s; 3) rows of the row’s table with a row in the column’s; 4) rows of the column’s table with none from the row’s; 5) rows of the column’s table with at least one from the row’s; 6) rows of the column’s table with exactly one from the row’s; 7) rows of the column’s table with more than one from the row’s.",
         "relations.infoDialog": "{tables} table(s) · {keys} foreign key(s)",
         "relations.infoView": "{tables} table(s) · {keys} foreign key(s) · {queries} query(s)",
         "relations.legend": "Each cell first shows the foreign keys of the row’s table that point to the column’s (field → target field); the foreign key shows in the cell of the table that defines it (child → parent). Below it, the figures line of the crossing and, in grey, the number of queries that cite both tables: each pair counts once (in the foreign-key cell or, if there is none, in the first table’s) and the names appear when hovering. Every figure greater than 0 is a link: it generates and runs the query that returns the counted rows.",
@@ -3463,6 +3492,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.goBackFactoryValues": "Volver a los valores de fábrica",
         "markup.button.goDataImportPanel": "Ir al panel de importación de datos",
         "markup.button.goHomePageSummaryEverything": "Ir a la página de inicio (resumen de todo lo que puedes hacer)",
+        "markup.button.history": "Histórico",
+        "markup.button.historyVisitedPlaces": "Enlaces a los lugares que has visitado",
         "markup.button.howQueryIsWrittenWhat": "Cómo se escribe una consulta y qué admite el dialecto SQL",
         "markup.button.importCSVJSONFilesPasted": "Importar ficheros CSV y JSON, o texto pegado",
         "markup.button.importData": "Importar datos",
@@ -3609,6 +3640,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h3.queries": "Consultas",
         "markup.h3.queriesAsTables": "Consultas como tablas",
         "markup.h3.relationsBetweenTablesQueries": "Relaciones entre tablas y consultas",
+        "markup.h3.history": "Historial de lugares visitados",
         "markup.h3.rowsPerPage": "Filas por página",
         "markup.h3.shortcuts": "Atajos",
         "markup.h3.sqlHelpFilterRows": "Ayuda SQL · Filtrar filas",
@@ -3668,7 +3700,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.assertIsExpectedResultThat": "El <code>\"assert\"</code> es el resultado esperado de esa consulta: <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder: true</code> (mismo conjunto de filas, sin importar el orden). Basta con uno de los tres primeros para que la consulta se compruebe.",
         "markup.li.atEndCellGreyNumber": "Al final de la casilla, en gris, el <b>número de consultas</b> que citan <b>las dos tablas</b> (con sus nombres en la pista del ratón). Se cuenta <b>una vez por pareja</b>, no en las dos casillas.",
         "markup.li.autoNumberedIDFieldIs": "El <b>campo ID</b> autonumérico nunca se modifica: se puede buscar en él, pero si eliges solo esa columna te avisa de que no se reemplaza.",
-        "markup.li.batteryDoesNotTouchYour": "La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Sin ventana: <code>window.extractor.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.",
+        "markup.li.batteryDoesNotTouchYour": "La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.extractor.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.",
         "markup.li.beforeResultYouWillSee": "Antes del resultado verás el <b>plan</b> con el tiempo de cada paso; si algo falla, el error te dice <b>línea, columna y qué revisar</b>.",
         "markup.li.comparisonIsStrictNullOnly": "La comparación es <b>estricta</b>: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Renombrar una tabla o un campo ajusta también los nombres asertados, pero <b>nunca los valores</b>.",
         "markup.li.completeFormatAssertExampleAre": "El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.",
@@ -3684,12 +3716,15 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.enterTableNameRenamesIt": "<b>Enter</b> en el nombre de la tabla la renombra; en el nombre de un campo nuevo lo añade.",
         "markup.li.escClosePopUpWindows": "<b>Esc</b>: cerrar las ventanas emergentes.",
         "markup.li.everyFigureGreaterThan0": "Cada cifra <b>mayor que 0</b> es un <b>enlace</b>: genera (o reutiliza) la <b>consulta</b> que devuelve exactamente esas filas, la deja seleccionada y la ejecuta, para que la compruebes.",
+        "markup.li.pressTableNameOpensTable": "Pulsa el <b>nombre de una tabla</b> en una cabecera de fila o de columna para <b>abrir esa tabla</b>.",
         "markup.li.everyQueryCanCarryIts": "Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.",
         "markup.li.exportCSVOpensResultCSV": "<b>Exportar CSV…</b> abre la ventana <b>Resultado en CSV</b> con la <b>previsualización</b> del resultado: <b>Copiar</b> lo lleva al portapapeles y <b>Descargar CSV</b> guarda el fichero con el nombre de la consulta (preguntando la carpeta, si el navegador tiene ventana de guardado).",
         "markup.li.fieldsMetadataAddRenameDelete": "<b>Campos y metadatos…</b>: añadir, renombrar y borrar campos, con descripción y <b>tipo</b> (<code>string</code>, <code>number</code>, <code>boolean</code>); marca con una casilla cuál es el <b>campo ID</b> de la tabla (solo uno) y cuáles son <b>claves ajenas</b>, eligiendo la tabla y el campo de destino. Todo se guarda en el proyecto.",
         "markup.li.filesCSVJSONSeveralAt": "<b>Ficheros</b>: CSV y JSON, varios a la vez y mezclados. Cada fichero crea una tabla con su nombre (minúsculas, con <code>_</code>) y deja un informe con lo leído y los problemas encontrados.",
         "markup.li.findReplaceTableBarSame": "<b>Buscar…</b> y <b>Reemplazar…</b> (barra de la tabla): la misma ventana en dos modos; el modo reemplazo añade el campo con el texto nuevo y el botón <b>Reemplazar todo</b>.",
         "markup.li.findReplaceTheySearchReplace": "<b>Buscar…</b> y <b>Reemplazar…</b>: buscan y reemplazan en toda la tabla o en una columna, con los comodines <code>*</code> y <code>?</code> (apartado «Buscar y reemplazar»).",
+        "markup.li.updateTableImportsCSVJSON": "<b>Actualizar tabla…</b> sustituye <b>todos los datos</b> de la tabla importando un CSV o JSON (fichero o pegado): funciona como <b>Importar datos</b> pero sin tocar la tabla, sus campos, sus claves ajenas ni las consultas que la usan. Antes de borrar los datos <b>avisa</b> y comprueba que coincidan el número de campos, la cabecera (si la primera fila es cabecera) y los tipos; si algo no coincide, no cambia nada y explica por qué.",
+        "markup.li.exportTableDataAsCSV": "<b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.",
         "markup.li.idFieldIsAutoNumbered": "El <b>campo ID es autonumérico</b>: cada fila nueva recibe el <b>siguiente número</b> y ninguno se repite ni se reutiliza al borrar filas. Por eso no se edita a mano: se puede buscar en él, pero no se reemplaza. Con <b>Crear campo ID autonumérico</b> añades uno nuevo (el nombre se escribe a su lado), al principio de la tabla, y numera <b>1..N</b> las filas que ya había. Marcar cualquier otro campo como ID también lo vuelve autonumérico.",
         "markup.li.insideCellGoForeignKeys": "Dentro de la casilla van las <b>claves ajenas</b> de la tabla de la fila que apuntan a la de la columna, escritas como <code>campo → campo destino</code>. La <b>diagonal</b> recoge las <b>autorreferencias</b>: las claves ajenas de una tabla que apuntan a ella misma.",
@@ -3715,6 +3750,9 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.renamingFollowsQueriesWhenName": "<b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>.",
         "markup.li.reportOpensItsOwnWhen": "El <b>informe</b> se abre solo al cargar: resumen (consultas, correctas, fallidas y sin assert), una fila por consulta —sus filas, si lleva assert y el resultado— y el <b>detalle de las diferencias</b>, con lo esperado y lo obtenido en cada fila o columna que no cuadra. Si una consulta no compila, se marca como fallida con el error.",
         "markup.li.rowHeadersStayFixedWhen": "Las cabeceras de fila quedan <b>fijas</b> al desplazar la matriz a lo ancho de la pantalla.",
+        "markup.li.historyBarUnderTop": "Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación).",
+        "markup.li.pressPlaceGoBackTo": "Pulsa un enlace para <b>volver a ese lugar</b>; el que está en pantalla queda resaltado. Volver a un lugar no lo repite (se mueve al final) y los enlaces a tablas o consultas que ya no existen desaparecen solos.",
+        "markup.li.historyIsNotSaved": "El histórico es de la sesión: <b>no se guarda</b> en el proyecto.",
         "markup.li.rowPagesTotalJumpFirst": "Páginas de filas con el total y salto a la primera o a la última.",
         "markup.li.saveProjectCtrlSOverwrites": "<b>Guardar proyecto</b> (Ctrl+S) machaca su fichero; <b>Guardar proyecto como</b> pregunta dónde; al <b>abrir</b> otro, si hay cambios sin guardar te avisa antes de perderlos.",
         "markup.li.scopeIsChosenSelectorAll": "El alcance lo elige el selector <b>En:</b>: <b>todas las columnas</b> o una sola. Las celdas <code>null</code> no se buscan y, sin patrón, no se busca nada.",
@@ -3729,7 +3767,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.thatReportCarriesCountOne": "Ese informe lleva el <b>recuento</b>, una fila por caso —número, caso, resultado y detalle— y el bloque <b>Casos que fallan</b> con el motivo de cada uno. <b>Re-ejecutar</b> la lanza otra vez, <b>Copiar informe</b> lo deja como texto y <b>Esc</b> cierra la ventana.",
         "markup.li.theyAreReadOnlyThey": "Son <b>solo de lectura</b>: nunca cambian los datos. En pantalla hay un tope de filas; el CSV exportado va completo.",
         "markup.li.typeIsInferredImportIt": "El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.",
-        "markup.li.underEachForeignKeyGo": "Bajo cada clave ajena van <b>cinco cifras</b> con las filas del cruce, contadas sobre las dos tablas y nombradas con ellas: las de la tabla de la fila <b>sin fila</b> en la de la columna y <b>con fila</b> en ella, y las de la tabla de la columna <b>sin ninguna</b>, <b>con alguna</b> o <b>con más de una</b> de la de la fila. El <b>orden</b> y qué significa cada una se explican en la <b>leyenda</b> de debajo de la matriz y en la pista de cada cifra.",
+        "markup.li.underEachForeignKeyGo": "Bajo cada clave ajena van <b>siete cifras</b> con las filas del cruce, contadas sobre las dos tablas y nombradas con ellas: las de la tabla de la fila <b>cuya clave es null</b>, <b>cuya clave no casa con ninguna fila</b> de la de la columna o que <b>encuentran su fila</b> en ella, y las de la tabla de la columna <b>sin ninguna</b>, <b>con alguna</b>, <b>con una exactamente</b> o <b>con más de una</b> de la de la fila. El <b>orden</b> y qué significa cada una se explican en la <b>leyenda</b> de debajo de la matriz y en la pista de cada cifra.",
         "markup.li.whenReplacingItAsksYou": "Al reemplazar, te pregunta antes con el <b>recuento</b> y el alcance, y sustituye <b>todas las ocurrencias</b>. El valor resultante se interpreta como al editar una celda (número, <code>true</code>/<code>false</code>, <code>null</code> o texto) y un reemplazo vacío borra lo encontrado.",
         "markup.li.whileThereArePendingChanges": "Mientras haya cambios pendientes verás <b>«Cambios pendientes de guardar»</b> arriba a la derecha, y también te avisa si intentas cerrar la pestaña.",
         "markup.li.widthLeftColumnIsVariable": "El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 195 px o usa las flechas con el tirador enfocado.",
@@ -3822,6 +3860,9 @@ ORDER BY edificios DESC, sede;</pre>
         "selfTests.okMark": "✔ correcto",
         "selfTests.failMark": "✘ fallido",
         "selfTests.summaryLine": "Auto-tests · {summary}",
+        "selfTests.projectLoaded": "Hay un proyecto abierto. Los auto-tests se ejecutan sin ningún proyecto cargado, así que se cerrará el proyecto actual. ¿Continuar?",
+        "selfTests.projectLoadedUnsaved": "Hay cambios sin guardar en el proyecto. Los auto-tests se ejecutan sin ningún proyecto cargado, así que se perderán los cambios sin guardar. ¿Continuar?",
+        "selfTests.runCancelled": "Auto-tests cancelados: se conserva el proyecto.",
         "selfTests.failedMark": "FALLA",        "projectTests.queriesCount": {"one":"{count} consulta","other":"{count} consultas"},
         "projectTests.selfTestsCount": {"one":"{count} auto-test","other":"{count} auto-tests"},
         "sqlFunctions.upper": "UPPER(texto)",
@@ -4060,15 +4101,19 @@ ORDER BY edificios DESC, sede;</pre>
         "relations.figureManySourcesText": "de «{target}» con más de una de «{origin}»",
         "relations.figureNoSourceName": "filas de {table} sin origen",
         "relations.figureNoSourceText": "de «{target}» sin ninguna de «{origin}»",
-        "relations.figureNoTargetName": "filas de {table} sin destino",
-        "relations.figureNoTargetText": "de «{origin}» sin fila en «{target}»",
+        "relations.figureNullTargetName": "filas de {table} sin destino porque la clave es null",
+        "relations.figureNullTargetText": "de «{origin}» con la clave null (sin fila en «{target}»)",
+        "relations.figureOneSourceName": "filas de {table} con 1 origen",
+        "relations.figureOneSourceText": "de «{target}» con una de «{origin}»",
+        "relations.figureOrphanTargetName": "filas de {table} sin destino porque la clave no corresponde",
+        "relations.figureOrphanTargetText": "de «{origin}» cuya clave no corresponde a ninguna fila de «{target}»",
         "relations.figureStatus": "Consulta «{name}» generada con las {rows} que demuestran esa cifra.",
         "relations.figureTip": "{rows} {figure}, por la clave ajena {source} → {target}. Púlsalo para generar y ejecutar la consulta que devuelve esas filas.",
         "relations.figureWithSourceName": "filas de {table} con 1 o más orígenes",
         "relations.figureWithSourceText": "de «{target}» con alguna de «{origin}»",
         "relations.figureWithTargetName": "filas de {table} con destino",
         "relations.figureWithTargetText": "de «{origin}» con fila en «{target}»",
-        "relations.figuresLegend": "Las cinco cifras de cada clave ajena cuentan filas de las dos tablas del cruce (la de la fila es el origen y la de la columna el destino), en este orden: 1) filas de la tabla de la fila sin fila en la tabla de la columna; 2) filas de la tabla de la fila con fila en la de la columna; 3) filas de la tabla de la columna sin ninguna de la de la fila; 4) filas de la tabla de la columna con al menos una de la de la fila; 5) filas de la tabla de la columna con más de una de la de la fila.",
+        "relations.figuresLegend": "Las siete cifras de cada clave ajena cuentan filas de las dos tablas del cruce (la de la fila es el origen y la de la columna el destino), en este orden: 1) filas de la tabla de la fila cuya clave es null; 2) filas de la tabla de la fila cuya clave no corresponde a ninguna fila de la de la columna; 3) filas de la tabla de la fila con fila en la de la columna; 4) filas de la tabla de la columna sin ninguna de la de la fila; 5) filas de la tabla de la columna con al menos una de la de la fila; 6) filas de la tabla de la columna con una exactamente de la de la fila; 7) filas de la tabla de la columna con más de una de la de la fila.",
         "relations.infoDialog": "{tables} tabla(s) · {keys} clave(s) ajena(s)",
         "relations.infoView": "{tables} tabla(s) · {keys} clave(s) ajena(s) · {queries} consulta(s)",
         "relations.legend": "Cada casilla muestra primero las claves ajenas de la tabla de la fila que apuntan a la de la columna (campo → campo destino); la clave ajena se ve en la casilla de la tabla que la define (hijo → padre). Debajo, la línea de cifras del cruce y, en gris, el número de consultas que citan las dos tablas: se cuenta una sola vez por pareja (en la casilla de la clave ajena o, si no la hay, en la de la primera tabla) y los nombres salen al pasar el ratón por encima. Cada cifra mayor que 0 es un enlace: genera y ejecuta la consulta que devuelve las filas contadas.",
@@ -10505,12 +10550,13 @@ ORDER BY edificios DESC, sede;</pre>
         return Model.projectStats(Store.project).references;
       },
 
-      /** The five figures of a foreign key, counting **rows** of both tables:
-       *  rows of the source that find their target row or do not, and rows of
-       *  the target that no source points to, that one or more point to, or
+      /** The seven figures of a foreign key, counting **rows** of both tables:
+       *  rows of the source whose key is null, whose key finds no target row or
+       *  that find their target row, and rows of the target that no source
+       *  points to, that one or more point to, that exactly one points to or
        *  that several point to. */
       statsField(origin, fieldOrigin, target, fieldTarget) {
-        const total = { withoutTarget: 0, withTarget: 0, withoutOrigin: 0, withOrigin: 0, severalOrigins: 0 };
+        const total = { nullTarget: 0, orphanTarget: 0, withTarget: 0, withoutOrigin: 0, withOrigin: 0, oneOrigin: 0, severalOrigins: 0 };
         const values = new Set();
         target.rows.forEach((row) => {
           const value = row[fieldTarget];
@@ -10521,11 +10567,15 @@ ORDER BY edificios DESC, sede;</pre>
         const cuenta = new Map();
         origin.rows.forEach((row) => {
           const value = row[fieldOrigin];
-          if (value !== null && value !== undefined && values.has(value)) {
+          if (value === null || value === undefined) {
+            // The key is missing: it points nowhere.
+            total.nullTarget += 1;
+          } else if (values.has(value)) {
             total.withTarget += 1;
             cuenta.set(value, (cuenta.get(value) || 0) + 1);
           } else {
-            total.withoutTarget += 1;
+            // The key has a value but no row of the target carries it.
+            total.orphanTarget += 1;
           }
         });
         target.rows.forEach((row) => {
@@ -10535,6 +10585,9 @@ ORDER BY edificios DESC, sede;</pre>
           } else {
             total.withOrigin += 1;
           }
+          if (n === 1) {
+            total.oneOrigin += 1;
+          }
           if (n > 1) {
             total.severalOrigins += 1;
           }
@@ -10542,17 +10595,24 @@ ORDER BY edificios DESC, sede;</pre>
         return total;
       },
 
-      /** The five figures, in order. Each one knows how to name itself in short
+      /** The seven figures, in order. Each one knows how to name itself in short
        *  (for the generated query name) and how to explain itself with the
        *  names of the two tables of the crossing: source = row table,
-       *  target = column table. The first two count rows of the **source**
-       *  (those with or without their row in the target) and the last three
-       *  rows of the **target** (which some source points to or not). */
+       *  target = column table. The first three count rows of the **source**
+       *  (those whose key is null, whose key finds no target row, or that find
+       *  their target row) and the last four rows of the **target** (which some
+       *  source points to, which exactly one points to, or which several point
+       *  to). */
       Figures: [
         {
-          key: "withoutTarget",
-          name: (o) => I18n.t("relations.figureNoTargetName", { table: o }),
-          text: (o, d) => I18n.t("relations.figureNoTargetText", { origin: o, target: d }),
+          key: "nullTarget",
+          name: (o) => I18n.t("relations.figureNullTargetName", { table: o }),
+          text: (o, d) => I18n.t("relations.figureNullTargetText", { origin: o, target: d }),
+        },
+        {
+          key: "orphanTarget",
+          name: (o) => I18n.t("relations.figureOrphanTargetName", { table: o }),
+          text: (o, d) => I18n.t("relations.figureOrphanTargetText", { origin: o, target: d }),
         },
         {
           key: "withTarget",
@@ -10570,13 +10630,18 @@ ORDER BY edificios DESC, sede;</pre>
           text: (o, d) => I18n.t("relations.figureWithSourceText", { target: d, origin: o }),
         },
         {
+          key: "oneOrigin",
+          name: (o, d) => I18n.t("relations.figureOneSourceName", { table: d }),
+          text: (o, d) => I18n.t("relations.figureOneSourceText", { target: d, origin: o }),
+        },
+        {
           key: "severalOrigins",
           name: (o, d) => I18n.t("relations.figureManySourcesName", { table: d }),
           text: (o, d) => I18n.t("relations.figureManySourcesText", { target: d, origin: o }),
         },
       ],
 
-      /** SQL that proves one of the five figures of a foreign key: it returns
+      /** SQL that proves one of the seven figures of a foreign key: it returns
        *  exactly the rows that were counted. */
       proofSql(origin, fieldOrigin, target, fieldTarget, indice) {
         const ident = Utils.sqlIdentifier;
@@ -10584,10 +10649,12 @@ ORDER BY edificios DESC, sede;</pre>
         const hijo = `${ident(origin.name)} AS o`;
         const padre = `${ident(target.name)} AS d`;
         const queries = [
-          `SELECT o.* FROM ${hijo} LEFT JOIN ${padre} ON ${on} WHERE d.${ident(fieldTarget)} IS NULL`,
+          `SELECT o.* FROM ${hijo} LEFT JOIN ${padre} ON ${on} WHERE o.${ident(fieldOrigin)} IS NULL`,
+          `SELECT o.* FROM ${hijo} LEFT JOIN ${padre} ON ${on} WHERE o.${ident(fieldOrigin)} IS NOT NULL AND d.${ident(fieldTarget)} IS NULL`,
           `SELECT o.* FROM ${hijo} INNER JOIN ${padre} ON ${on}`,
           `SELECT d.* FROM ${padre} LEFT JOIN ${hijo} ON ${on} WHERE o.${ident(fieldOrigin)} IS NULL`,
           `SELECT DISTINCT d.* FROM ${padre} INNER JOIN ${hijo} ON ${on}`,
+          `SELECT d.* FROM ${padre} INNER JOIN ${hijo} ON ${on} GROUP BY d.${ident(fieldTarget)} HAVING COUNT(*) = 1`,
           `SELECT d.${ident(fieldTarget)}, COUNT(*) AS origins FROM ${padre} INNER JOIN ${hijo} ON ${on} GROUP BY d.${ident(fieldTarget)} HAVING COUNT(*) > 1`,
         ];
         return queries[indice];
@@ -10598,7 +10665,7 @@ ORDER BY edificios DESC, sede;</pre>
         return I18n.t("relations.figuresLegend");
       },
 
-      /** The figures line of a foreign key: the five numbers separated by «|»;
+      /** The figures line of a foreign key: the seven numbers separated by «|»;
        *  with links (the view), every number greater than 0 generates the query
        *  that returns those rows. */
       buildFigures(row, column, key, withEnlaces) {
@@ -12297,9 +12364,41 @@ ORDER BY edificios DESC, sede;</pre>
         });
       },
 
+      /** The self-tests run with no project loaded: with one open it warns and,
+       *  when accepted, leaves an empty project (with unsaved changes it says
+       *  they will be lost). Returns true when it is OK to run the battery. */
+      prepareForRun() {
+        const hasProject = Store.project.tables.length > 0 || Store.project.queries.length > 0;
+        if (!hasProject) {
+          return true;
+        }
+        const message = Store.dirty
+          ? I18n.t("selfTests.projectLoadedUnsaved")
+          : I18n.t("selfTests.projectLoaded");
+        if (!window.confirm(message)) {
+          setStatus(I18n.t("selfTests.runCancelled"));
+          return false;
+        }
+        Store.replaceProject({ name: I18n.t("misc.untitled"), tables: [], queries: [], settings: Utils.cloneJson(DEFAULT_SETTINGS) });
+        UiProject.fileHandle = null;
+        Settings.apply();
+        UiProject.discardSessionState();
+        UiProject.showName();
+        UiProject.markClean();
+        Ui.state.activeTable = null;
+        Ui.state.activeQuery = null;
+        Ui.showView("vacio");
+        App.refresh();
+        return true;
+      },
+
       /** Runs the internal battery, paints the report and opens it. Returns the
-       *  report. Do not call it from a case of the battery itself: it would loop. */
+       *  report. Do not call it from a case of the battery itself: it would loop.
+       *  With a project open it warns first (see prepareForRun). */
       run() {
+        if (!UiAutoTests.prepareForRun()) {
+          return null;
+        }
         const report = SelfTests.run();
         setStatus(`${SelfTests.summaryLine(report)}.`);
         return UiAutoTests.show(report);
@@ -16168,6 +16267,76 @@ ORDER BY edificios DESC, sede;</pre>
       UiAutoTests.clear();
     });
 
+    SelfTests.add("When_AutoTestsWithProject_Expect_WarnAndDiscard", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        confirm: window.confirm,
+      };
+      const proyecto = {
+        name: "con-proyecto",
+        testing: false,
+        tables: [{
+          name: "t",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "a", description: null, type: "number" }],
+          rows: [{ a: 1 }],
+        }],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+
+      // An empty project runs the battery with no question.
+      Store.replaceProject({ name: "vacio", testing: false, tables: [], queries: [], settings: Utils.cloneJson(DEFAULT_SETTINGS) });
+      Store.dirty = false;
+      assertEqual(UiAutoTests.prepareForRun(), true, "with no project it goes straight to the battery");
+
+      // A project with unsaved changes: it warns that they will be lost and,
+      // when cancelled, keeps the project.
+      let question = null;
+      window.confirm = (message) => {
+        question = message;
+        return false;
+      };
+      Store.replaceProject(proyecto);
+      Store.dirty = true;
+      assertEqual(UiAutoTests.prepareForRun(), false, "cancelling does not prepare the run");
+      assertEqual(question, I18n.t("selfTests.projectLoadedUnsaved"), "and it warns that the unsaved changes will be lost");
+      assertEqual(Store.project.tables.length, 1, "the project is kept when cancelling");
+      assertEqual(document.getElementById("status").textContent, I18n.t("selfTests.runCancelled"), "the status says it was cancelled");
+
+      // Accepted: the project is closed (empty) and marked clean.
+      window.confirm = () => true;
+      assertEqual(UiAutoTests.prepareForRun(), true, "accepting prepares the run");
+      assertEqual(Store.project.tables.length, 0, "the project is closed");
+      assertEqual(Store.project.queries.length, 0, "without queries");
+      assertEqual(Store.dirty, false, "and with no unsaved changes");
+
+      // A clean project (no unsaved changes): the warning does not talk about losing changes.
+      Store.replaceProject(proyecto);
+      Store.dirty = false;
+      window.confirm = (message) => {
+        question = message;
+        return false;
+      };
+      assertEqual(UiAutoTests.prepareForRun(), false, "a clean project also asks before closing");
+      assertEqual(question, I18n.t("selfTests.projectLoaded"), "without mentioning unsaved changes");
+
+      window.confirm = antes.confirm;
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
     SelfTests.add("When_OpenTestingProject_Expect_AutoReport", () => {
       const antes = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
       const text = JSON.stringify({
@@ -17640,8 +17809,8 @@ ORDER BY edificios DESC, sede;</pre>
       const buildingsCampuses = cell("buildings", "campuses");
       assertEqual([...buildingsCampuses.querySelectorAll("div.rel")].map((d) => d.textContent), ["id_campus → id_campus"], "the foreign key goes in the child → parent cell");
       assert(buildingsCampuses.classList.contains("with-relation"), "the cell with a foreign key is highlighted");
-      assertEqual(buildingsCampuses.querySelector("div.figures").textContent, "0|3|0|2|1", "the five figures of the crossing go inside the cell, counting the rows of that crossing");
-      assertEqual([...buildingsCampuses.querySelectorAll("button.figure")].map((b) => b.textContent), ["3", "2", "1"], "only the figures greater than 0 are links");
+      assertEqual(buildingsCampuses.querySelector("div.figures").textContent, "0|0|3|0|2|1|1", "the seven figures of the crossing go inside the cell, counting the rows of that crossing");
+      assertEqual([...buildingsCampuses.querySelectorAll("button.figure")].map((b) => b.textContent), ["3", "2", "1", "1"], "only the figures greater than 0 are links");
       assertEqual(buildingsCampuses.querySelector("button.figure").title, "3 rows of “buildings” with a row in “campuses”, through foreign key id_campus → id_campus. Click it to generate and run the query that returns those rows.", "the hint names the tables of the crossing");
       assertEqual(buildingsCampuses.querySelector("div.queries").textContent, "4 queries", "of the queries only the number is shown");
       assert(buildingsCampuses.querySelector("div.queries").title.includes("q4"), "the names stay in the hint of the cell");
@@ -17653,10 +17822,10 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(cell("classrooms", "campuses").querySelector("div.figures"), null, "and not in the symmetric cell of the same crossing");
 
       assertEqual([...cell("campuses", "campuses").querySelectorAll("div.rel")].map((d) => d.textContent), ["campus_padre → id_campus"], "the foreign keys of the table itself come out on the diagonal");
-      assertEqual(cell("campuses", "campuses").querySelector("div.figures").textContent, "1|1|1|1|0", "and the diagonal carries its own figures");
+      assertEqual(cell("campuses", "campuses").querySelector("div.figures").textContent, "1|0|1|1|1|1|0", "and the diagonal carries its own figures");
       assertEqual(cell("classrooms", "classrooms").textContent, "·", "a table without foreign keys of its own is left empty on the diagonal");
       assertEqual(document.getElementById("relations-info").textContent, "3 table(s) · 3 foreign key(s) · 5 query(s)", "the summary counts tables, foreign keys and queries");
-      assertEqual(cell("classrooms", "buildings").querySelector("div.figures").textContent, "1|1|2|1|0", "every crossing carries its own figures");
+      assertEqual(cell("classrooms", "buildings").querySelector("div.figures").textContent, "0|1|1|2|1|1|0", "every crossing carries its own figures");
       assert(document.getElementById("relations-leyenda-figures").textContent.includes("column’s table with more than one"), "with the legend of the figures below the matrix");
 
       Store.replaceProject(antes.project);
@@ -17717,7 +17886,7 @@ ORDER BY edificios DESC, sede;</pre>
       );
       const cruce = grid.querySelector("td.cell[data-row=\"buildings\"][data-column=\"campuses\"]");
       assertEqual([...cruce.querySelectorAll("div.rel")].map((d) => d.textContent), ["id_campus → id_campus"], "with the foreign key in the child → parent cell");
-      assertEqual(cruce.querySelector("div.figures").textContent, "1|1|1|1|0", "the five figures of the crossing go inside the cell of the reminder");
+      assertEqual(cruce.querySelector("div.figures").textContent, "1|0|1|1|1|1|0", "the seven figures of the crossing go inside the cell of the reminder");
       assertEqual(grid.querySelectorAll("button.figure").length, 0, "the reminder leaves the figures without links");
       assertEqual(grid.querySelectorAll("div.queries").length, 0, "without information about queries in any cell");
       assertEqual(document.getElementById("dlg-relations-info").textContent, "2 table(s) · 1 foreign key(s)", "the summary only talks about tables and foreign keys");
@@ -17732,7 +17901,7 @@ ORDER BY edificios DESC, sede;</pre>
         assert(recordatorio().includes("A target has 0, 1 or several related origins."), "also the target side: " + recordatorio());
       });
       assertEqual(grid.querySelector("td.cell[data-row=\"campuses\"][data-column=\"buildings\"]").querySelector("div.figures"), null, "the symmetric cell is left without figures");
-      assert(document.getElementById("dlg-relations-leyenda-figures").textContent.includes("row’s table with no row in the column’s table"), "with the legend of the figures below the matrix");
+      assert(document.getElementById("dlg-relations-leyenda-figures").textContent.includes("whose key is null"), "with the legend of the figures below the matrix");
       document.getElementById("btn-close-relations").click();
       assertEqual(dialog.open, false, "«Close» closes the window");
 
@@ -17863,13 +18032,13 @@ ORDER BY edificios DESC, sede;</pre>
       });
       UiRelations.show();
       const cell = document.querySelector("#table-relations td.cell[data-row=\"buildings\"][data-column=\"campuses\"]");
-      assertEqual(cell.querySelector("div.figures").textContent, "1|2|1|1|1", "the figures of the test crossing");
+      assertEqual(cell.querySelector("div.figures").textContent, "0|1|2|1|1|0|1", "the figures of the test crossing");
       const enlaces = [...cell.querySelectorAll("button.figure")];
       assertEqual(enlaces.map((b) => b.textContent), ["1", "2", "1", "1", "1"], "every figure greater than 0 is a link");
       assertEqual(
         enlaces.map((b) => b.title.split(", through foreign key ")[0]),
         [
-          "1 row of “buildings” with no row in “campuses”",
+          "1 row of “buildings” whose key does not match any row of “campuses”",
           "2 rows of “buildings” with a row in “campuses”",
           "1 row of “campuses” with none from “buildings”",
           "1 row of “campuses” with some from “buildings”",
@@ -18122,8 +18291,8 @@ ORDER BY edificios DESC, sede;</pre>
       const buildings = Model.createTable("buildings", [{ name: "id building" }, { name: "id campus" }]);
       buildings.rows = [{ "id building": 1, "id campus": 1 }, { "id building": 2, "id campus": 1 }, { "id building": 3, "id campus": 9 }];
       const project = { name: "spaces", tables: [campuses, buildings], queries: [] };
-      // Rows counted by each figure of the matrix: no target, with target, no source, with source, several.
-      const esperado = [1, 2, 1, 1, 1];
+      // Rows counted by each figure of the matrix: null key, no match, with target, no source, with source, exactly one, several.
+      const esperado = [0, 1, 2, 1, 1, 0, 1];
       esperado.forEach((rows, indice) => {
         const sql = UiRelations.proofSql(buildings, "id campus", campuses, "id campus", indice);
         const result = SqlEngine.runSafe(sql, project);
@@ -18131,10 +18300,27 @@ ORDER BY edificios DESC, sede;</pre>
         assertEqual(result.result.rows.length, rows, `rows of query ${indice + 1}`);
       });
       assertEqual(
-        UiRelations.proofSql(buildings, "id campus", campuses, "id campus", 1),
+        UiRelations.proofSql(buildings, "id campus", campuses, "id campus", 2),
         "SELECT o.* FROM buildings AS o INNER JOIN campuses AS d ON o.[id campus] = d.[id campus]",
         "the names with spaces go in brackets and the rest stays as it is",
       );
+    });
+
+    SelfTests.add("When_CountFigures_Expect_TargetWithExactlyOneOrigin", () => {
+      const campuses = Model.createTable("campuses", [{ name: "id" }]);
+      campuses.rows = [{ id: 1 }, { id: 2 }, { id: 3 }];
+      const buildings = Model.createTable("buildings", [{ name: "id" }, { name: "id_campus" }]);
+      buildings.rows = [{ id: 1, id_campus: 1 }, { id: 2, id_campus: 2 }, { id: 3, id_campus: 2 }];
+      const project = { name: "one", tables: [campuses, buildings], queries: [] };
+      const stats = UiRelations.statsField(buildings, "id_campus", campuses, "id");
+      assertEqual(stats.oneOrigin, 1, "one target has exactly one origin");
+      assertEqual(stats.severalOrigins, 1, "another one has several");
+      assertEqual(stats.withoutOrigin, 1, "and another one has none");
+      assertEqual(stats.withOrigin, 2, "two targets have some origin");
+      const sql = UiRelations.proofSql(buildings, "id_campus", campuses, "id", 5);
+      const result = SqlEngine.runSafe(sql, project);
+      assert(result.ok, "the query of the figure runs: " + (result.error && result.error.message));
+      assertEqual(result.result.rows, [[1]], "and returns the target with exactly one origin");
     });
 
     SelfTests.add("When_ValueIsNotScalar_Expect_KindNamed", () => {
