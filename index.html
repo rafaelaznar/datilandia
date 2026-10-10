@@ -716,6 +716,22 @@
       font-weight: normal;
     }
 
+    /*  Table names of the rows and columns are links: they open that table.  */
+    .matriz th button.link-table {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: #0b5ed7;
+      font: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .matriz th button.link-table:hover,
+    .matriz th button.link-table:focus-visible {
+      background: #d7e7ff;
+    }
+
     /*  Every cell: the row → column foreign keys and, in the view, the query count. It is allowed to wrap instead of stretching the matrix.  */
     .matriz td.cell {
       max-width: 30ch;
@@ -2883,6 +2899,7 @@ ORDER BY edificios DESC, sede;</pre>
         "relations.infoDialog": "{tables} table(s) · {keys} foreign key(s)",
         "relations.infoView": "{tables} table(s) · {keys} foreign key(s) · {queries} query(s)",
         "relations.legend": "Each cell first shows the foreign keys of the row’s table that point to the column’s (field → target field); the foreign key shows in the cell of the table that defines it (child → parent). Below it, the figures line of the crossing and, in grey, the number of queries that cite both tables: each pair counts once (in the foreign-key cell or, if there is none, in the first table’s) and the names appear when hovering. Every figure greater than 0 is a link: it generates and runs the query that returns the counted rows.",
+        "relations.openTableTip": "Open the table “{name}”.",
         "relations.queriesTip": "Queries that cite “{left}” and “{right}” ({count}):\n{names}",
         "relations.status": "Relations: {tables} table(s), {keys} foreign key(s) and {queries} query(s).",
         "relations.statusDialog": "Relations between tables: a foreign key shows in the cell of the table that defines it (row, child) pointing to the target one (column, parent). Close with Esc or “Close”.",
@@ -3809,6 +3826,7 @@ ORDER BY edificios DESC, sede;</pre>
         "relations.infoDialog": "{tables} tabla(s) · {keys} clave(s) ajena(s)",
         "relations.infoView": "{tables} tabla(s) · {keys} clave(s) ajena(s) · {queries} consulta(s)",
         "relations.legend": "Cada casilla muestra primero las claves ajenas de la tabla de la fila que apuntan a la de la columna (campo → campo destino); la clave ajena se ve en la casilla de la tabla que la define (hijo → padre). Debajo, la línea de cifras del cruce y, en gris, el número de consultas que citan las dos tablas: se cuenta una sola vez por pareja (en la casilla de la clave ajena o, si no la hay, en la de la primera tabla) y los nombres salen al pasar el ratón por encima. Cada cifra mayor que 0 es un enlace: genera y ejecuta la consulta que devuelve las filas contadas.",
+        "relations.openTableTip": "Abrir la tabla «{name}».",
         "relations.queriesTip": "Consultas que citan «{left}» y «{right}» ({count}):\n{names}",
         "relations.status": "Relaciones: {tables} tabla(s), {keys} clave(s) ajena(s) y {queries} consulta(s).",
         "relations.statusDialog": "Relaciones entre tablas: la clave ajena se ve en la casilla de la tabla que la define (fila, hijo) apuntando a la de destino (columna, padre). Cierra con Esc o con «Cerrar».",
@@ -10393,6 +10411,22 @@ ORDER BY edificios DESC, sede;</pre>
         document.getElementById("relations-leyenda").textContent = I18n.t("relations.legend");
       },
 
+      /** Table name as a link: closes the reminder window, if open, and opens
+       *  the table. */
+      tableLink(table) {
+        const link = document.createElement("button");
+        link.type = "button";
+        link.className = "link-table";
+        link.textContent = table.name;
+        link.title = I18n.t("relations.openTableTip", { name: table.name });
+        link.addEventListener("click", (event) => {
+          event.stopPropagation();
+          UiRelations.closeDialog();
+          Ui.selectTable(table.name);
+        });
+        return link;
+      },
+
       /** Paints the table matrix in a <table>. With withQueries it adds the
        *  query count of each pair; without it, it is the reminder of the
        *  foreign keys (the window of the query editor). */
@@ -10410,7 +10444,7 @@ ORDER BY edificios DESC, sede;</pre>
         headRow.appendChild(corner);
         tables.forEach((table) => {
           const th = document.createElement("th");
-          th.textContent = table.name;
+          th.appendChild(UiRelations.tableLink(table));
           headRow.appendChild(th);
         });
         head.appendChild(headRow);
@@ -10421,7 +10455,7 @@ ORDER BY edificios DESC, sede;</pre>
           const tr = document.createElement("tr");
           const rowHeader = document.createElement("th");
           rowHeader.className = "row";
-          rowHeader.textContent = row.name;
+          rowHeader.appendChild(UiRelations.tableLink(row));
           tr.appendChild(rowHeader);
           tables.forEach((column) => {
             tr.appendChild(UiRelations.buildCell(row, column, relations, usage, withQueries));
