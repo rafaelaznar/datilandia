@@ -161,6 +161,72 @@
       font-weight: bold;
     }
 
+    /* --- 2b. History bar of visited places ----------------------------- */
+
+    /*  The URL never changes, so this bar keeps a link to every place visited:
+       press one to go back to it. It scrolls horizontally when there are many. */
+    #history-bar {
+      display: flex;
+      flex: none;
+      gap: 4px;
+      align-items: center;
+      padding: 2px 6px;
+      overflow-x: auto;
+      border-bottom: 1px solid #bbb;
+      white-space: nowrap;
+    }
+
+    #history-bar .history-label {
+      flex: none;
+      color: #666;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .history-list {
+      display: flex;
+      flex: none;
+      gap: 3px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .history-list li {
+      flex: none;
+    }
+
+    /*  Each visited place is a small rounded link; a very long name is trimmed
+       with an ellipsis (the whole name stays in the hint). */
+    .history-list button {
+      max-width: 26ch;
+      overflow: hidden;
+      padding: 0 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f6f6f6;
+      color: #1a4f8a;
+      font: inherit;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .history-list button:hover,
+    .history-list button:focus-visible {
+      background: #dce9f9;
+    }
+
+    /* The place on screen is highlighted and cannot be pressed again. */
+    .history-list li.current button {
+      border-color: #1a4f8a;
+      background: #dce9f9;
+      color: #000;
+      font-weight: bold;
+      cursor: default;
+    }
+
     #cuerpo {
       display: flex;
       flex: 1;
@@ -1282,6 +1348,13 @@
       </label>
     </span>
   </header>
+
+  <!-- History bar: a link to every place visited, so you can go back to any
+       of them. The URL never changes, so the place on screen is saved inside. -->
+  <nav data-i18n-aria-label="history.aria" data-i18n-title="history.aria" id="history-bar" aria-label="Lugares visitados" title="Enlaces a los lugares que has visitado">
+    <span class="history-label" data-i18n="history.label">Histórico</span>
+    <ol id="history-list" class="history-list"></ol>
+  </nav>
 
   <div id="cuerpo">
     <aside id="sidebar">
@@ -2708,6 +2781,16 @@ ORDER BY edificios DESC, sede;</pre>
         "global.homeStatus": "Home: import data, open a project or read the help on this page.",
         "global.importStatus": "Import: choose the separator and press “Choose files…” (several CSV/JSON at once are accepted).",
         "help.status": "Help · {section}: press another item in the menu on the left.",
+        "history.aria": "Visited places: press one to go back to it.",
+        "history.label": "History",
+        "history.query": "Query: {name}",
+        "history.table": "Table: {name}",
+        "history.tip": "Go to: {name}",
+        "history.view.import": "Import data",
+        "history.view.queries": "Queries (summary)",
+        "history.view.relations": "Relations",
+        "history.view.tables": "Tables (summary)",
+        "history.view.vacio": "Home",
         "importPanel.emptyPaste": "The paste box is empty: paste the CSV or JSON data first.",
         "importPanel.finished": "Import finished: {tables} table(s) created, {rows} row(s) loaded, {issues} entry(ies) with problems.",
         "importPanel.formatSuffix": " — format {format}",
@@ -3635,6 +3718,16 @@ ORDER BY edificios DESC, sede;</pre>
         "global.homeStatus": "Inicio: importa datos, abre un proyecto o consulta la ayuda de la página.",
         "global.importStatus": "Importación: elige el separador y pulsa «Seleccionar ficheros…» (se aceptan varios CSV/JSON a la vez).",
         "help.status": "Ayuda · {section}: pulsa otro apartado del menú de la izquierda.",
+        "history.aria": "Lugares visitados: pulsa uno para volver a él.",
+        "history.label": "Histórico",
+        "history.query": "Consulta: {name}",
+        "history.table": "Tabla: {name}",
+        "history.tip": "Ir a: {name}",
+        "history.view.import": "Importar datos",
+        "history.view.queries": "Consultas (resumen)",
+        "history.view.relations": "Relaciones",
+        "history.view.tables": "Tablas (resumen)",
+        "history.view.vacio": "Inicio",
         "importPanel.emptyPaste": "El cuadro de pegado está vacío: pega primero los datos CSV o JSON.",
         "importPanel.finished": "Importación terminada: {tables} tabla(s) creada(s), {rows} fila(s) cargada(s), {issues} entrada(s) con problemas.",
         "importPanel.formatSuffix": " — formato {format}",
@@ -8602,6 +8695,7 @@ ORDER BY edificios DESC, sede;</pre>
         });
         UiSummary.renderIfVisible();
         UiRelations.renderIfVisible();
+        UiHistory.record();
       },
 
       /** Repaints the sidebar and the active view. */
@@ -8615,6 +8709,7 @@ ORDER BY edificios DESC, sede;</pre>
         UiDashboard.render();
         UiSummary.renderIfVisible();
         UiRelations.renderIfVisible();
+        UiHistory.render();
         const table = Ui.state.activeTable ? Model.findTable(Store.project, Ui.state.activeTable) : null;
         if (!table) {
           Ui.state.activeTable = null;
@@ -12978,6 +13073,149 @@ ORDER BY edificios DESC, sede;</pre>
     };
 
     /* =====================================================================
+       9d · HISTORY OF VISITED PLACES
+       The URL never changes, so the place on screen is saved internally:
+       a bar under the main one keeps a link to every place visited.
+       ===================================================================== */
+
+    const UiHistory = {
+      /** Visited places, oldest first; each one is
+       *  { key, view, table, query }. */
+      entries: [],
+
+      /** How many places the bar keeps at most. */
+      MAX: 30,
+
+      /** True while going back from the bar, so the visit is not recorded. */
+      navigating: false,
+
+      /** Place matching the state on screen, or null if it has none. */
+      place() {
+        const view = Ui.state.view;
+        if (view === "table") {
+          const table = Ui.state.activeTable;
+          return table ? { key: `table|${table}`, view, table, query: null } : null;
+        }
+        if (view === "query") {
+          const query = Ui.state.activeQuery;
+          return query ? { key: `query|${query}`, view, table: null, query } : null;
+        }
+        return { key: `view|${view}`, view, table: null, query: null };
+      },
+
+      /** Records the place on screen (called from Ui.showView). */
+      record() {
+        if (UiHistory.navigating) {
+          return;
+        }
+        const place = UiHistory.place();
+        if (!place) {
+          return;
+        }
+        const last = UiHistory.entries[UiHistory.entries.length - 1];
+        if (last && last.key === place.key) {
+          return;
+        }
+        UiHistory.remember(place);
+        UiHistory.render();
+      },
+
+      /** Puts a place at the end of the list (the most recent one). */
+      remember(place) {
+        const position = UiHistory.entries.findIndex((entry) => entry.key === place.key);
+        if (position >= 0) {
+          UiHistory.entries.splice(position, 1);
+        }
+        UiHistory.entries.push(place);
+        if (UiHistory.entries.length > UiHistory.MAX) {
+          UiHistory.entries.shift();
+        }
+      },
+
+      /** Does the place still point at something that exists? */
+      exists(place) {
+        if (place.view === "table") {
+          return Boolean(Model.findTable(Store.project, place.table));
+        }
+        if (place.view === "query") {
+          return Store.project.queries.some((query) => query.name === place.query);
+        }
+        return true;
+      },
+
+      /** Brief name of a place for the bar. */
+      describe(place) {
+        if (place.view === "table") {
+          return I18n.t("history.table", { name: place.table });
+        }
+        if (place.view === "query") {
+          return I18n.t("history.query", { name: place.query });
+        }
+        return I18n.t(`history.view.${place.view}`);
+      },
+
+      /** Repaints the bar with the visited places (dropping the dead links). */
+      render() {
+        const list = document.getElementById("history-list");
+        if (!list) {
+          return;
+        }
+        UiHistory.entries = UiHistory.entries.filter((place) => UiHistory.exists(place));
+        const current = UiHistory.place();
+        const currentKey = current ? current.key : null;
+        list.textContent = "";
+        UiHistory.entries.forEach((place) => {
+          const item = document.createElement("li");
+          if (place.key === currentKey) {
+            item.className = "current";
+          }
+          const link = document.createElement("button");
+          link.type = "button";
+          link.textContent = UiHistory.describe(place);
+          link.title = I18n.t("history.tip", { name: UiHistory.describe(place) });
+          link.addEventListener("click", () => UiHistory.go(place));
+          item.appendChild(link);
+          list.appendChild(item);
+        });
+        const bar = document.getElementById("history-bar");
+        if (bar) {
+          bar.scrollLeft = bar.scrollWidth;
+        }
+      },
+
+      /** Goes back to a visited place without recording it again. */
+      go(place) {
+        if (!UiHistory.exists(place)) {
+          return;
+        }
+        UiHistory.remember(place);
+        UiHistory.navigating = true;
+        try {
+          if (place.view === "table") {
+            Ui.selectTable(place.table);
+          } else if (place.view === "query") {
+            UiQueries.select(place.query);
+          } else if (place.view === "tables" || place.view === "queries") {
+            UiSummary.show(place.view);
+          } else if (place.view === "relations") {
+            UiRelations.show();
+          } else if (place.view === "import") {
+            Ui.showView("import");
+            setStatus(I18n.t("global.importStatus"));
+          } else {
+            Ui.state.activeTable = null;
+            Ui.state.activeQuery = null;
+            Ui.showView("vacio");
+            setStatus(I18n.t("global.homeStatus"));
+          }
+        } finally {
+          UiHistory.navigating = false;
+        }
+        UiHistory.render();
+      },
+    };
+
+    /* =====================================================================
        10 · GLOBAL EVENTS AND SHORTCUTS
        View navigation, Ctrl+S to save and Ctrl+Enter to run.
        ===================================================================== */
@@ -13048,29 +13286,38 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       run() {
+        // Some cases measure widths and positions: the size of the window of
+        // whoever runs the battery would change the result, so the whole run is
+        // measured over a stable, wide page and the real width is put back.
+        const ancho = document.body.style.minWidth;
+        document.body.style.minWidth = "1440px";
         const language = I18n.current;
         // The language also travels in the settings: a case that fails halfway
         // (before restoring what it changed) must not leave the following run
         // in the other language, so the whole state is put back here.
         const settingsLanguage = Settings.current.language;
-        const results = this.cases.map(({ name, fn }) => {
-          try {
-            fn();
-            return { name, ok: true, detail: "" };
-          } catch (err) {
-            return { name, ok: false, detail: String((err && err.message) || err) };
-          }
-        });
-        Settings.current.language = settingsLanguage;
-        I18n.setLanguage(language);
-        UiLanguage.sync();
-        const failed = results.filter((r) => !r.ok);
-        return {
-          total: results.length,
-          passed: results.length - failed.length,
-          failed: failed.length,
-          results,
-        };
+        try {
+          const results = this.cases.map(({ name, fn }) => {
+            try {
+              fn();
+              return { name, ok: true, detail: "" };
+            } catch (err) {
+              return { name, ok: false, detail: String((err && err.message) || err) };
+            }
+          });
+          Settings.current.language = settingsLanguage;
+          I18n.setLanguage(language);
+          UiLanguage.sync();
+          const failed = results.filter((r) => !r.ok);
+          return {
+            total: results.length,
+            passed: results.length - failed.length,
+            failed: failed.length,
+            results,
+          };
+        } finally {
+          document.body.style.minWidth = ancho;
+        }
       },
 
       /** Report summary in one line (for the status bar). */
@@ -14558,7 +14805,12 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_OpenWithUnsavedChanges_Expect_WarningAndCancel", () => {
-      const antes = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, confirm: window.confirm };
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        confirm: window.confirm,
+        openFilePicker: window.showOpenFilePicker,
+      };
       const messages = [];
       let respuesta = false;
       window.confirm = (message) => {
@@ -14586,6 +14838,13 @@ ORDER BY edificios DESC, sede;</pre>
       UiProject.open();
       assertEqual(messages.length, 2, "no question when there are no changes");
       window.confirm = antes.confirm;
+      // The system picker is put back: leaving the stub behind would break the
+      // «Open JSON» button (it would always cancel) after the battery.
+      if (antes.openFilePicker === undefined) {
+        delete window.showOpenFilePicker;
+      } else {
+        window.showOpenFilePicker = antes.openFilePicker;
+      }
       Store.replaceProject(antes.project);
       UiProject.showName();
       Store.dirty = antes.dirty;
@@ -16808,6 +17067,83 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.state.activeTable = antes.table;
       Ui.showView(antes.view);
       Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_VisitPlaces_Expect_HistoryBarWithLinks", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        view: Ui.state.view,
+        history: UiHistory.entries.slice(),
+      };
+      UiHistory.entries = [];
+      Store.replaceProject({
+        name: "historial",
+        testing: false,
+        tables: [{
+          name: "t1",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "id", description: null, type: "number" }],
+          rows: [],
+        }],
+        queries: [{ name: "q1", description: "", sql: "SELECT * FROM t1", assert: null }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+
+      const texts = () => [...document.querySelectorAll("#history-list li button")].map((b) => b.textContent);
+      const label = (key, params) => I18n.t(key, params);
+
+      Ui.showView("vacio");
+      Ui.selectTable("t1");
+      UiQueries.select("q1");
+      Ui.showView("import");
+      assertEqual(
+        texts(),
+        [label("history.view.vacio"), label("history.table", { name: "t1" }), label("history.query", { name: "q1" }), label("history.view.import")],
+        "every visited place is kept in the bar, in visit order",
+      );
+
+      // Revisiting a place does not duplicate it: it moves to the end.
+      Ui.selectTable("t1");
+      assertEqual(
+        texts(),
+        [label("history.view.vacio"), label("history.query", { name: "q1" }), label("history.view.import"), label("history.table", { name: "t1" })],
+        "revisiting a place moves it to the end",
+      );
+      assertEqual(document.querySelectorAll("#history-list li.current").length, 1, "the place on screen is highlighted");
+
+      // Clicking a past place goes back to it without adding a new entry.
+      const home = [...document.querySelectorAll("#history-list li button")].find((b) => b.textContent === label("history.view.vacio"));
+      home.click();
+      assertEqual(Ui.state.view, "vacio", "the link opens the visited place");
+      assertEqual(UiHistory.entries.filter((entry) => entry.view === "vacio").length, 1, "without duplicating it");
+      assertEqual(UiHistory.entries[UiHistory.entries.length - 1].view, "vacio", "and it becomes the most recent place");
+
+      // Going back to the table restores the table view and its selection.
+      const tableLink = [...document.querySelectorAll("#history-list li button")].find((b) => b.textContent === label("history.table", { name: "t1" }));
+      tableLink.click();
+      assertEqual(Ui.state.view, "table", "the table is opened again");
+      assertEqual(Ui.state.activeTable, "t1", "with its table selected");
+
+      // The links to something that no longer exists are dropped.
+      Store.project.tables = [];
+      Store.project.queries = [];
+      UiHistory.render();
+      assertEqual(texts(), [label("history.view.import"), label("history.view.vacio")], "the dead links of the deleted table and query are dropped, keeping the generic places");
+
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      UiHistory.entries = antes.history.filter((place) => UiHistory.exists(place));
+      UiHistory.render();
       Store.dirty = antes.dirty;
       UiProject.updateDirtyIndicator();
     });
