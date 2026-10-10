@@ -1021,7 +1021,8 @@
       margin: 2px 0;
     }
 
-    #dlg-csv {
+    #dlg-csv,
+    #dlg-table-csv {
       width: min(760px, 94vw);
       padding: 8px 10px;
       border: 1px solid #999;
@@ -1029,12 +1030,50 @@
       color: #000;
     }
 
-    #dlg-csv::backdrop {
+    #dlg-csv::backdrop,
+    #dlg-table-csv::backdrop {
       background: rgb(0 0 0 / 0.25);
     }
 
-    #dlg-csv #query-csv-text {
+    #dlg-csv #query-csv-text,
+    #dlg-table-csv #table-csv-text {
       min-height: 40vh;
+    }
+
+    /* Update-table window: import controls + paste box + report. */
+    #dlg-update-table {
+      width: min(860px, 94vw);
+      padding: 8px 10px;
+      border: 1px solid #999;
+      background: #fff;
+      color: #000;
+    }
+
+    #dlg-update-table::backdrop {
+      background: rgb(0 0 0 / 0.25);
+    }
+
+    #dlg-update-table #update-pasted {
+      width: 100%;
+      min-height: 22vh;
+    }
+
+    #dlg-update-table #update-log:empty {
+      display: none;
+    }
+
+    #dlg-update-table #update-log {
+      margin-top: 6px;
+    }
+
+    #dlg-update-table .row-log {
+      padding: 1px 0;
+    }
+
+    #dlg-update-table .detail-err {
+      margin: 0 0 2px 14px;
+      color: #a00;
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
     }
 
     #dlg-structure {
@@ -1275,7 +1314,8 @@
 
     #query-sql,
     #query-csv-text,
-    #import-pasted {
+    #import-pasted,
+    #table-csv-text {
       display: block;
       width: 100%;
       min-height: 8em;
@@ -1959,6 +1999,8 @@ ORDER BY edificios DESC, sede;</pre>
           <span class="sep"></span>
           <button data-i18n-title="markup.button.seeEditFieldsMetadataPop" data-i18n="markup.button.fieldsMetadata" id="btn-fields" type="button" title="Ver y editar los campos y metadatos en una ventana emergente">Campos y metadatos…</button>
           <button data-i18n-title="markup.button.seeStructureJsonPop" data-i18n="markup.button.structureJson" id="btn-structure" type="button" title="Ver la estructura de la tabla en JSON en una ventana emergente">Estructura JSON…</button>
+          <button data-i18n-title="markup.button.updateTableDataFromImport" data-i18n="markup.button.updateTable" id="btn-update-table" type="button" title="Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)">Actualizar tabla…</button>
+          <button data-i18n-title="markup.button.openTableAsCSVText" data-i18n="markup.button.exportCSV" id="btn-export-csv-table" type="button" title="Abrir los datos de la tabla como texto CSV en una ventana, para copiarlo o descargarlo como fichero">Exportar CSV…</button>
           <span class="sep"></span>
           <button data-i18n-title="markup.button.addRowAtEnd" data-i18n="markup.button.addRow" id="btn-add-row" type="button" title="Añadir una fila al final">Añadir fila</button>
           <span class="sep"></span>
@@ -2177,6 +2219,66 @@ ORDER BY edificios DESC, sede;</pre>
     </div>
   </dialog>
 
+  <!-- Modal window: table data as CSV -->
+  <dialog id="dlg-table-csv" aria-labelledby="dlg-table-csv-titulo">
+    <div class="dlg-header">
+      <b data-i18n="markup.b.tableCSV" id="dlg-table-csv-titulo">Tabla en CSV</b>
+      <span id="dlg-table-csv-table" class="muted"></span>
+      <button data-i18n-title="markup.button.closeWindowEsc10" data-i18n="markup.button.close10" class="derecha" id="btn-close-table-csv" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+    </div>
+    <textarea data-i18n-aria-label="markup.textarea.tableAsCSVText" data-i18n-title="markup.textarea.csvTextTableSelectIt" id="table-csv-text" readonly spellcheck="false" aria-label="Tabla en texto CSV" title="Texto CSV de la tabla (selecciónalo o usa «Copiar»)"></textarea>
+    <div class="toolbar">
+      <button data-i18n-title="markup.button.copyCSVTextClipboard" data-i18n="markup.button.copy" id="btn-copiar-table-csv" type="button" title="Copiar el texto CSV al portapapeles">Copiar</button>
+      <button data-i18n-title="markup.button.downloadWholeTableAsCSV" data-i18n="markup.button.downloadCSV" id="btn-descargar-table-csv" type="button" title="Descargar toda la tabla como fichero CSV (con BOM para que Excel lo abra bien)">Descargar CSV</button>
+      <span class="sep"></span>
+      <label data-i18n="markup.label.delimiter" for="table-csv-separador">Separador:</label>
+      <select data-i18n-title="markup.select.csvDelimiter" id="table-csv-separador" title="Separador del CSV">
+        <option value=",">, (coma)</option>
+        <option value=";" selected>; (punto y coma)</option>
+        <option value="tab">Tab</option>
+        <option value="space">espacio</option>
+        <option value="otro">otro…</option>
+      </select>
+      <input id="table-csv-separador-otro" type="text" size="2" maxlength="1" placeholder="×" disabled title="Carácter separador personalizado">
+      <label><input id="table-csv-header" type="checkbox" checked> cabecera</label>
+      <label><input id="table-csv-decimal-comma" type="checkbox" title="Escribir los decimales de los campos numéricos con coma (3,14) en vez de con punto (3.14)"> coma decimal</label>
+      <span id="table-csv-warning" class="muted"></span>
+    </div>
+  </dialog>
+
+  <!-- Modal window: update the data of a table from an import (CSV / JSON) -->
+  <dialog id="dlg-update-table" aria-labelledby="dlg-update-titulo">
+    <div class="dlg-header">
+      <b data-i18n="markup.b.updateTable" id="dlg-update-titulo">Actualizar tabla</b>
+      <span id="update-table-name" class="muted"></span>
+      <button data-i18n-title="markup.button.closeWindowEsc9" data-i18n="markup.button.close9" class="derecha" id="btn-close-update" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+    </div>
+    <p data-i18n-html="markup.p.updateTableWarning" class="warning">Al actualizar se <b>sustituirán todos los datos</b> de la tabla. La tabla, sus campos, sus claves ajenas y las consultas que la usan se conservan. Los datos nuevos deben tener el <b>mismo número de campos</b>, los <b>mismos nombres</b> (si la primera fila es cabecera) y los <b>mismos tipos</b>.</p>
+    <div class="toolbar">
+      <label data-i18n="markup.label.csvDelimiter" for="update-separador">Separador CSV:</label>
+      <select data-i18n-title="markup.select.fieldDelimiterCSVFiles" id="update-separador" title="Separador de campos para ficheros CSV">
+        <option value="auto">Auto</option>
+        <option value=",">,</option>
+        <option value=";">;</option>
+        <option value="tab" selected>Tab</option>
+        <option value="space">espacio</option>
+        <option value="otro">otro…</option>
+      </select>
+      <input id="update-separador-otro" type="text" size="2" maxlength="1" placeholder="×" disabled title="Carácter separador personalizado">
+      <label><input id="update-header" type="checkbox" checked> 1ª fila = cabecera</label>
+      <label><input id="update-inferir" type="checkbox" checked> inferir tipos</label>
+      <label><input id="update-omitir" type="checkbox"> omitir filas inválidas</label>
+      <button data-i18n-title="markup.button.selectCSVJSONFileToUpdate" data-i18n="markup.button.selectFile" id="btn-update-files" type="button" title="Seleccionar el fichero CSV/JSON con los datos nuevos">Seleccionar fichero…</button>
+      <input id="update-files" type="file" accept=".csv,.tsv,.txt,.json" title="Fichero a importar" hidden>
+    </div>
+    <h3 data-i18n="markup.h3.pasteDataCSVJSON">O pegar datos (CSV o JSON)</h3>
+    <textarea data-i18n-aria-label="markup.textarea.dataPasteCSVJSON" data-i18n-placeholder="markup.textarea.pasteCSVJSONDataHere" id="update-pasted" rows="6" spellcheck="false" aria-label="Datos para pegar (CSV o JSON)" placeholder="Pega aquí los datos CSV o JSON…"></textarea>
+    <div class="toolbar">
+      <button data-i18n-title="markup.button.replaceTableDataWithPasted" data-i18n="markup.button.updateTable" id="btn-update-apply" type="button" title="Sustituir los datos de la tabla por los pegados (también con Ctrl+Enter en el cuadro)">Actualizar tabla</button>
+    </div>
+    <div id="update-log"></div>
+  </dialog>
+
   <!-- Modal window: default settings -->
   <dialog id="dlg-settings" aria-labelledby="dlg-settings-titulo">
     <div class="dlg-header">
@@ -2326,8 +2428,10 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.b.resultCSV": "Result in CSV",
         "markup.b.searchTable": "Search in the table",
         "markup.b.selfTestReport": "Self-test report",
+        "markup.b.tableCSV": "Table in CSV",
         "markup.b.tableStructureJson": "Table structure (JSON)",
         "markup.b.testReport": "Test report",
+        "markup.b.updateTable": "Update table",
         "markup.button.addField": "Add field",
         "markup.button.addFieldNullValues": "Add a field (null values)",
         "markup.button.addRow": "Add row",
@@ -2343,6 +2447,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.close6": "Close",
         "markup.button.close7": "Close",
         "markup.button.close8": "Close",
+        "markup.button.close9": "Close",
+        "markup.button.close10": "Close",
         "markup.button.closeWindowEsc": "Close the window (Esc)",
         "markup.button.closeWindowEsc2": "Close the window (Esc)",
         "markup.button.closeWindowEsc3": "Close the window (Esc)",
@@ -2351,6 +2457,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.closeWindowEsc6": "Close the window (Esc)",
         "markup.button.closeWindowEsc7": "Close the window (Esc)",
         "markup.button.closeWindowEsc8": "Close the window (Esc)",
+        "markup.button.closeWindowEsc9": "Close the window (Esc)",
+        "markup.button.closeWindowEsc10": "Close the window (Esc)",
         "markup.button.copy": "Copy",
         "markup.button.copyCSVTextClipboard": "Copy the CSV text to the clipboard",
         "markup.button.copyCompleteReportAsText": "Copy the complete report as text",
@@ -2369,6 +2477,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.deleteThisQuery": "Delete this query",
         "markup.button.downloadCSV": "Download CSV",
         "markup.button.downloadCompleteResultAsCSV": "Download the complete result as a CSV file (with BOM so that Excel opens it well)",
+        "markup.button.downloadWholeTableAsCSV": "Download the whole table as a CSV file (with BOM so that Excel opens it well)",
         "markup.button.errorsPlanRenamesQueriesAsserted": "Errors, plan, renames and queries with an asserted result",
         "markup.button.exportCSV": "Export CSV…",
         "markup.button.fieldsMetadata": "Fields and metadata…",
@@ -2400,6 +2509,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.openJSON": "Open JSON",
         "markup.button.openProjectFromJSONFile": "Open a project from a JSON file",
         "markup.button.openResultAsCSVText": "Open the result as CSV text in a window, to copy it or download it as a file",
+        "markup.button.openTableAsCSVText": "Open the data of the table as CSV text in a window, to copy it or download it as a file",
         "markup.button.previousPage": "Previous page",
         "markup.button.previousPageResult": "Previous page of the result",
         "markup.button.projectSettings": "Project and settings",
@@ -2418,6 +2528,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.replace": "Replace…",
         "markup.button.replaceAll": "Replace all",
         "markup.button.replaceEveryMatchTableColumn": "Replace every match of the table or of the column",
+        "markup.button.replaceTableDataWithPasted": "Replace the data of the table with the pasted ones (also with Ctrl+Enter in the box)",
         "markup.button.reset": "Reset",
         "markup.button.run": "▶ Run",
         "markup.button.runAgain": "Run again",
@@ -2439,6 +2550,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.seeRelations": "See relations",
         "markup.button.seeStructureJsonPop": "See the structure of the table in JSON in a pop-up window",
         "markup.button.selectFiles": "Select files…",
+        "markup.button.selectFile": "Select file…",
+        "markup.button.selectCSVJSONFileToUpdate": "Select the CSV/JSON file with the new data",
         "markup.button.selectSeveralCSVJSONFiles": "Select several CSV/JSON files",
         "markup.button.selfTests": "Self-tests",
         "markup.button.selfTestsRunsProgramS": "Self-tests: runs the program's internal test battery (SQL engine, utilities and interface) and shows the report",
@@ -2455,6 +2568,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.tests": "Tests",
         "markup.button.testsRunsEveryQueryCompares": "Tests: runs every query and compares each result with the project's asserted result (shown when some query is a test)",
         "markup.button.turnIntoTest": "Turn into a test",
+        "markup.button.updateTable": "Update table",
+        "markup.button.updateTableDataFromImport": "Replace the data of the table importing a CSV or JSON (keeps fields, foreign keys and queries)",
         "markup.button.valuesFunctions": "Values and functions",
         "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparisons, text and combined conditions",
         "markup.button.whereRowsComeFromTables": "Where the rows come from: tables, queries read as tables and joins",
@@ -2700,6 +2815,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>is only shown if the project has some test</b>. To launch it without opening windows, with any project: <code>window.extractor.runProjectTests()</code> returns the complete report.",
         "markup.p.theyCanBeNestedInside": "They can be nested inside each other and used both in the <code>SELECT</code> and in the <code>WHERE</code>, <code>GROUP BY</code> or <code>ORDER BY</code>. If the argument is <code>null</code>, the result is usually <code>null</code>.",
         "markup.p.typesAreKeptNumberField": "The <b>types are kept</b>: a <code>number</code> field is still a number when read from outside (it can be added, divided or compared with <code>= 31</code>), a <code>boolean</code> responds to <code>= true</code> and a <code>null</code> is still <code>null</code> (that is why <code>COALESCE</code>, <code>IS NULL</code> and <code>ORDER BY … NULLS FIRST</code> work). The columns are named as the <b>output aliases</b> of the view.",
+        "markup.p.updateTableWarning": "Updating will <b>replace all the data</b> of the table. The table, its fields, its foreign keys and the queries that use it are kept. The new data must have the <b>same number of fields</b>, the <b>same names</b> (when the first row is a header) and the <b>same types</b>.",
         "markup.p.whereMissingValuesGoIs": "Where the missing values go is decided by <code>NULLS FIRST</code>/<code>NULLS LAST</code> and <code>DESC</code> does not flip it: without saying it, in <code>ASC</code> they go first and in <code>DESC</code> at the end.",
         "markup.p.youOnlyHaveWriteParts": "You only have to write the parts you need, but the order is that one. Keywords are not case-sensitive. <code>FROM</code> is compulsory: there is no <code>SELECT</code> without a table.",
         "markup.pre.detailSelfTestsThatFail": "Detail of the self-tests that fail",
@@ -2719,9 +2835,11 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.span.sqlHelp": "SQL help",
         "markup.span.theyAreSavedProjectFile": "They are saved in the project file",
         "markup.textarea.csvTextResultSelectIt": "CSV text of the result (select it or use «Copy»)",
+        "markup.textarea.csvTextTableSelectIt": "CSV text of the table (select it or use «Copy»)",
         "markup.textarea.dataPasteCSVJSON": "Data to paste (CSV or JSON)",
         "markup.textarea.pasteCSVJSONDataHere": "Paste the CSV or JSON data here…",
         "markup.textarea.resultAsCSVText": "Result as CSV text",
+        "markup.textarea.tableAsCSVText": "Table as CSV text",
         "markup.textarea.sqlQuery": "SQL query",
         "markup.textarea.sqlQuerySELECTOnly": "SQL query (SELECT only)",
         "markup.textarea.structureJsonReadOnly": "Table structure in JSON (read-only)",
@@ -3106,6 +3224,12 @@ ORDER BY edificios DESC, sede;</pre>
         "summary.reads": "reads: {names}",
         "summary.tablesInfo": "{count} table(s) · click a row to open it",
         "summary.tablesStatus": "Project tables: {count}. Click a row to open it.",
+        "tableCsv.downloaded": "Table exported as “{name}” (download, {rows} row(s)).",
+        "tableCsv.nothingToCopy": "There is no CSV to copy: the table has no data.",
+        "tableCsv.savedAs": "Table exported to “{name}” ({rows} row(s)).",
+        "tableCsv.status": "Table as CSV: change the separator, press “Copy” or “Download CSV”, or close with Esc.",
+        "tableCsv.tableGone": "The table is no longer in the project.",
+        "tableCsv.title": "Table “{name}” · {rows} row(s)",
         "testsReport.copied": "Test report copied to the clipboard.",
         "testsReport.copyManual": "It could not be copied on its own: the report is selected, press Ctrl+C.",
         "testsReport.matchesAssert": "matches the assert",
@@ -3212,6 +3336,19 @@ ORDER BY edificios DESC, sede;</pre>
         "ui.viewCount": "view ×{count}",
         "ui.viewMark": {"one":"view","other":"view ×{count}"},
         "ui.viewReaders": {"one":"Read as a table by: {names}","other":"Read as a table by: {names}"},
+        "updateTable.cancelled": "Update cancelled: the table keeps its data.",
+        "updateTable.confirm": "Replace the {rows} row(s) of “{name}” with the {newRows} row(s) read? The current data will be lost.",
+        "updateTable.done": "Table “{name}” updated with {rows} row(s).",
+        "updateTable.failed": "The table “{name}” was not updated: fix the problems and try again.",
+        "updateTable.fieldCountMismatch": "The data has {found} field(s) and the table has {expected}.",
+        "updateTable.fieldsExtra": "The data has fields that the table does not have: {fields}.",
+        "updateTable.fieldsMissing": "The data is missing fields of the table: {fields}.",
+        "updateTable.headerMismatch": "The header does not match the fields of the table: {fields}.",
+        "updateTable.namePair": "column {position}: expected “{expected}”, found “{found}”",
+        "updateTable.reportFail": "“{file}” was not applied: {count} problem(s).",
+        "updateTable.status": "Updating the table “{name}”: choose a CSV/JSON file or paste the data.",
+        "updateTable.typeMismatch": "The types do not match: {fields}.",
+        "updateTable.typePair": "“{field}”: expected {expected}, found {found}",
         "utils.rowsPageInfo": "Rows {start}–{end} of {total} · page {page}/{pages} · {perPage} per page",
         "utils.zeroRowsPerPage": "0 rows · {perPage} per page",
       },
@@ -3263,7 +3400,9 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.b.resultCSV": "Resultado en CSV",
         "markup.b.searchTable": "Buscar en la tabla",
         "markup.b.selfTestReport": "Informe de auto-tests",
+        "markup.b.tableCSV": "Tabla en CSV",
         "markup.b.tableStructureJson": "Estructura de la tabla (JSON)",
+        "markup.b.updateTable": "Actualizar tabla",
         "markup.b.testReport": "Informe de pruebas",
         "markup.button.addField": "Añadir campo",
         "markup.button.addFieldNullValues": "Añadir un campo (valores nulos)",
@@ -3280,6 +3419,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.close6": "Cerrar",
         "markup.button.close7": "Cerrar",
         "markup.button.close8": "Cerrar",
+        "markup.button.close9": "Cerrar",
+        "markup.button.close10": "Cerrar",
         "markup.button.closeWindowEsc": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc2": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc3": "Cerrar la ventana (Esc)",
@@ -3288,6 +3429,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.closeWindowEsc6": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc7": "Cerrar la ventana (Esc)",
         "markup.button.closeWindowEsc8": "Cerrar la ventana (Esc)",
+        "markup.button.closeWindowEsc9": "Cerrar la ventana (Esc)",
+        "markup.button.closeWindowEsc10": "Cerrar la ventana (Esc)",
         "markup.button.copy": "Copiar",
         "markup.button.copyCSVTextClipboard": "Copiar el texto CSV al portapapeles",
         "markup.button.copyCompleteReportAsText": "Copiar el informe completo como texto",
@@ -3306,6 +3449,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.deleteThisQuery": "Eliminar esta consulta",
         "markup.button.downloadCSV": "Descargar CSV",
         "markup.button.downloadCompleteResultAsCSV": "Descargar el resultado completo como fichero CSV (con BOM para que Excel lo abra bien)",
+        "markup.button.downloadWholeTableAsCSV": "Descargar toda la tabla como fichero CSV (con BOM para que Excel lo abra bien)",
         "markup.button.errorsPlanRenamesQueriesAsserted": "Errores, plan, renombrados y consultas con resultado asertado",
         "markup.button.exportCSV": "Exportar CSV…",
         "markup.button.fieldsMetadata": "Campos y metadatos…",
@@ -3337,6 +3481,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.openJSON": "Abrir JSON",
         "markup.button.openProjectFromJSONFile": "Abrir un proyecto desde fichero JSON",
         "markup.button.openResultAsCSVText": "Abrir el resultado como texto CSV en una ventana, para copiarlo o descargarlo como fichero",
+        "markup.button.openTableAsCSVText": "Abrir los datos de la tabla como texto CSV en una ventana, para copiarlo o descargarlo como fichero",
         "markup.button.previousPage": "Página anterior",
         "markup.button.previousPageResult": "Página anterior del resultado",
         "markup.button.projectSettings": "Proyecto y ajustes",
@@ -3355,6 +3500,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.replace": "Reemplazar…",
         "markup.button.replaceAll": "Reemplazar todo",
         "markup.button.replaceEveryMatchTableColumn": "Reemplazar todas las coincidencias de la tabla o de la columna",
+        "markup.button.replaceTableDataWithPasted": "Sustituir los datos de la tabla por los pegados (también con Ctrl+Enter en el cuadro)",
         "markup.button.reset": "Restablecer",
         "markup.button.run": "▶ Ejecutar",
         "markup.button.runAgain": "Re-ejecutar",
@@ -3376,6 +3522,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.seeRelations": "Ver relaciones",
         "markup.button.seeStructureJsonPop": "Ver la estructura de la tabla en JSON en una ventana emergente",
         "markup.button.selectFiles": "Seleccionar ficheros…",
+        "markup.button.selectFile": "Seleccionar fichero…",
+        "markup.button.selectCSVJSONFileToUpdate": "Seleccionar el fichero CSV/JSON con los datos nuevos",
         "markup.button.selectSeveralCSVJSONFiles": "Seleccionar varios ficheros CSV/JSON",
         "markup.button.selfTests": "Auto-tests",
         "markup.button.selfTestsRunsProgramS": "Auto-tests: ejecuta la batería interna de pruebas del programa (motor SQL, utilidades e interfaz) y muestra el informe",
@@ -3392,6 +3540,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.tests": "Pruebas",
         "markup.button.testsRunsEveryQueryCompares": "Pruebas: ejecuta todas las consultas y compara cada resultado con el resultado asertado (assert) del proyecto (aparece cuando alguna consulta es un test)",
         "markup.button.turnIntoTest": "Convertir en test",
+        "markup.button.updateTable": "Actualizar tabla",
+        "markup.button.updateTableDataFromImport": "Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)",
         "markup.button.valuesFunctions": "Valores y funciones",
         "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparaciones, texto y condiciones combinadas",
         "markup.button.whereRowsComeFromTables": "De dónde salen las filas: tablas, consultas leídas como tablas y joins",
@@ -3637,6 +3787,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.extractor.runProjectTests()</code> devuelve el informe completo.",
         "markup.p.theyCanBeNestedInside": "Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.",
         "markup.p.typesAreKeptNumberField": "Los <b>tipos se conservan</b>: un campo <code>number</code> sigue siendo número al leerlo desde fuera (se puede sumar, dividir o comparar con <code>= 31</code>), un <code>boolean</code> responde a <code>= true</code> y un <code>null</code> sigue siendo <code>null</code> (por eso valen <code>COALESCE</code>, <code>IS NULL</code> y <code>ORDER BY … NULLS FIRST</code>). Las columnas se llaman como los <b>alias de salida</b> de la vista.",
+        "markup.p.updateTableWarning": "Al actualizar se <b>sustituirán todos los datos</b> de la tabla. La tabla, sus campos, sus claves ajenas y las consultas que la usan se conservan. Los datos nuevos deben tener el <b>mismo número de campos</b>, los <b>mismos nombres</b> (si la primera fila es cabecera) y los <b>mismos tipos</b>.",
         "markup.p.whereMissingValuesGoIs": "El sitio de los valores que faltan lo manda <code>NULLS FIRST</code>/<code>NULLS LAST</code> y no lo invierte <code>DESC</code>: sin decirlo, en <code>ASC</code> van primero y en <code>DESC</code> al final.",
         "markup.p.youOnlyHaveWriteParts": "Solo hay que escribir las partes que necesites, pero el orden es ese. Las palabras clave no distinguen mayúsculas de minúsculas. <code>FROM</code> es obligatorio: no hay <code>SELECT</code> sin tabla.",
         "markup.pre.detailSelfTestsThatFail": "Detalle de los auto-tests que fallan",
@@ -3656,9 +3807,11 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.span.sqlHelp": "Ayuda SQL",
         "markup.span.theyAreSavedProjectFile": "Se guardan en el fichero del proyecto",
         "markup.textarea.csvTextResultSelectIt": "Texto CSV del resultado (selecciónalo o usa «Copiar»)",
+        "markup.textarea.csvTextTableSelectIt": "Texto CSV de la tabla (selecciónalo o usa «Copiar»)",
         "markup.textarea.dataPasteCSVJSON": "Datos para pegar (CSV o JSON)",
         "markup.textarea.pasteCSVJSONDataHere": "Pega aquí los datos CSV o JSON…",
         "markup.textarea.resultAsCSVText": "Resultado en texto CSV",
+        "markup.textarea.tableAsCSVText": "Tabla en texto CSV",
         "markup.textarea.sqlQuery": "Consulta SQL",
         "markup.textarea.sqlQuerySELECTOnly": "Consulta SQL (solo SELECT)",
         "markup.textarea.structureJsonReadOnly": "Estructura de la tabla en JSON (solo lectura)",
@@ -4043,6 +4196,12 @@ ORDER BY edificios DESC, sede;</pre>
         "summary.reads": "lee: {names}",
         "summary.tablesInfo": "{count} tabla(s) · pulsa una fila para abrirla",
         "summary.tablesStatus": "Tablas del proyecto: {count}. Pulsa una fila para abrirla.",
+        "tableCsv.downloaded": "Tabla exportada en «{name}» (descarga, {rows} fila(s)).",
+        "tableCsv.nothingToCopy": "No hay CSV que copiar: la tabla no tiene datos.",
+        "tableCsv.savedAs": "Tabla exportada a «{name}» ({rows} fila(s)).",
+        "tableCsv.status": "Tabla en CSV: ajusta el separador, pulsa «Copiar» o «Descargar CSV», o cierra con Esc.",
+        "tableCsv.tableGone": "La tabla ya no está en el proyecto.",
+        "tableCsv.title": "Tabla «{name}» · {rows} fila(s)",
         "testsReport.copied": "Informe de pruebas copiado al portapapeles.",
         "testsReport.copyManual": "No se pudo copiar solo: el informe queda seleccionado, pulsa Ctrl+C.",
         "testsReport.matchesAssert": "coincide con el assert",
@@ -4150,6 +4309,19 @@ ORDER BY edificios DESC, sede;</pre>
         "ui.viewMark": {"one":"vista","other":"vista ×{count}"},
         "ui.viewMark": {"one":"vista","other":"vista ×{count}"},
         "ui.viewReaders": {"one":"La lee como tabla: {names}","other":"La leen como tabla: {names}"},
+        "updateTable.cancelled": "Actualización cancelada: la tabla conserva sus datos.",
+        "updateTable.confirm": "¿Sustituir las {rows} fila(s) de «{name}» por las {newRows} fila(s) leídas? Se perderán los datos actuales.",
+        "updateTable.done": "Tabla «{name}» actualizada con {rows} fila(s).",
+        "updateTable.failed": "No se actualizó la tabla «{name}»: corrige los problemas e inténtalo de nuevo.",
+        "updateTable.fieldCountMismatch": "Los datos traen {found} campo(s) y la tabla tiene {expected}.",
+        "updateTable.fieldsExtra": "Los datos traen campos que la tabla no tiene: {fields}.",
+        "updateTable.fieldsMissing": "A los datos les faltan campos de la tabla: {fields}.",
+        "updateTable.headerMismatch": "La cabecera no coincide con los campos de la tabla: {fields}.",
+        "updateTable.namePair": "columna {position}: se esperaba «{expected}», se encontró «{found}»",
+        "updateTable.reportFail": "No se aplicó «{file}»: {count} problema(s).",
+        "updateTable.status": "Actualizando la tabla «{name}»: elige un fichero CSV/JSON o pega los datos.",
+        "updateTable.typeMismatch": "Los tipos no coinciden: {fields}.",
+        "updateTable.typePair": "«{field}»: se esperaba {expected}, se encontró {found}",
         "utils.rowsPageInfo": "Filas {start}–{end} de {total} · página {page}/{pages} · {perPage} por página",
         "utils.zeroRowsPerPage": "0 filas · {perPage} por página",
       },
@@ -5968,11 +6140,11 @@ ORDER BY edificios DESC, sede;</pre>
         return { ok: true, fields, rows, errors: [], skipped: [] };
       },
 
-      /** Imports a text at hand (pasted or from a file) and creates its table.
-       *  Options: { fileName, baseName, config, format }, where format is
-       *  "csv", "json" or "auto" (JSON when the text starts with «[» or «{»).
-       *  Returns a report { fileName, table, rows, ok, errors, skipped, format }. */
-      importText(project, text, options) {
+      /** Reads a text at hand (pasted or from a file) into fields and rows,
+       *  without touching the project. Options: { config, format }, where format
+       *  is "csv", "json" or "auto" (JSON when the text starts with «[» or «{»).
+       *  Returns { ok, fields, rows, errors, skipped, format }. */
+      parseText(text, options) {
         const isJson = options.format === "json"
           || (options.format === "auto" && /^\s*[\[{]/.test(text));
         const result = isJson
@@ -5983,22 +6155,37 @@ ORDER BY edificios DESC, sede;</pre>
             infer: options.config.infer,
             skipInvalid: options.config.skipInvalid,
           });
-        const format = isJson ? "JSON" : "CSV";
-        if (!result.ok) {
+        return {
+          ok: result.ok,
+          fields: result.fields,
+          rows: result.rows,
+          errors: result.errors,
+          skipped: result.skipped,
+          format: isJson ? "JSON" : "CSV",
+        };
+      },
+
+      /** Imports a text at hand (pasted or from a file) and creates its table.
+       *  Options: { fileName, baseName, config, format }, where format is
+       *  "csv", "json" or "auto" (JSON when the text starts with «[» or «{»).
+       *  Returns a report { fileName, table, rows, ok, errors, skipped, format }. */
+      importText(project, text, options) {
+        const parsed = Importer.parseText(text, options);
+        if (!parsed.ok) {
           return {
             fileName: options.fileName,
             table: null,
             rows: 0,
             ok: false,
-            errors: result.errors,
-            skipped: result.skipped,
-            format,
+            errors: parsed.errors,
+            skipped: parsed.skipped,
+            format: parsed.format,
           };
         }
         const baseName = Utils.slugify(options.baseName) || "pasted";
         const tableName = Model.uniqueTableName(project, baseName);
-        const table = Model.createTable(tableName, result.fields);
-        result.rows.forEach((values) => {
+        const table = Model.createTable(tableName, parsed.fields);
+        parsed.rows.forEach((values) => {
           const source = {};
           if (Array.isArray(values)) {
             table.fields.forEach((field, index) => {
@@ -6019,8 +6206,8 @@ ORDER BY edificios DESC, sede;</pre>
           rows: table.rows.length,
           ok: true,
           errors: [],
-          skipped: result.skipped,
-          format,
+          skipped: parsed.skipped,
+          format: parsed.format,
         };
       },
 
@@ -11553,6 +11740,169 @@ ORDER BY edificios DESC, sede;</pre>
     };
 
     /* =====================================================================
+       7c · TABLE DATA AS CSV
+       The «Export CSV…» button of a table opens its data as CSV text, to copy
+       or download it, just like the result of a query.
+       ===================================================================== */
+
+    const UiTableCsv = {
+      /** Cap of rows painted in the preview (the downloaded file carries them all). */
+      MAX_ROWS: 1000,
+
+      /** Wires the button of the table view and the window controls. */
+      bind() {
+        document.getElementById("btn-export-csv-table").addEventListener("click", () => UiTableCsv.open());
+        document.getElementById("btn-close-table-csv").addEventListener("click", () => UiTableCsv.close());
+        document.getElementById("dlg-table-csv").addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            UiTableCsv.close();
+          }
+        });
+        document.getElementById("btn-copiar-table-csv").addEventListener("click", () => UiTableCsv.copy());
+        document.getElementById("btn-descargar-table-csv").addEventListener("click", () => UiTableCsv.download());
+        document.getElementById("table-csv-separador").addEventListener("change", () => UiTableCsv.syncDelimiter());
+        document.getElementById("table-csv-separador-otro").addEventListener("input", () => UiTableCsv.render());
+      },
+
+      /** Data of the active table as { name, columns, rows }. */
+      tableResult() {
+        const table = Model.findTable(Store.project, Ui.state.activeTable);
+        if (!table) {
+          return null;
+        }
+        const columns = table.fields.map((field) => field.name);
+        return {
+          name: table.name,
+          columns,
+          rows: table.rows.map((row) => columns.map((column) => row[column])),
+        };
+      },
+
+      /** Opens the window with the data of the active table as CSV. */
+      open() {
+        const result = UiTableCsv.tableResult();
+        if (!result) {
+          return;
+        }
+        const exp = Settings.current.exportCsv;
+        document.getElementById("table-csv-separador").value = exp.delimiter;
+        document.getElementById("table-csv-separador-otro").value = exp.customDelimiter;
+        document.getElementById("table-csv-header").checked = exp.header;
+        document.getElementById("table-csv-decimal-comma").checked = exp.decimalComma;
+        UiTableCsv.syncDelimiter();
+        document.getElementById("dlg-table-csv-table").textContent = I18n.t("tableCsv.title", { name: result.name, rows: result.rows.length });
+        const dialog = document.getElementById("dlg-table-csv");
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        setStatus(I18n.t("tableCsv.status"));
+      },
+
+      /** Closes the window when it is open. */
+      close() {
+        const dialog = document.getElementById("dlg-table-csv");
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Enables the custom delimiter only with the «other» option. */
+      syncDelimiter() {
+        const select = document.getElementById("table-csv-separador");
+        document.getElementById("table-csv-separador-otro").disabled = select.value !== "otro";
+        UiTableCsv.render();
+      },
+
+      /** Delimiter, header and decimal comma chosen to build the CSV. */
+      readConfig() {
+        let delimiter = document.getElementById("table-csv-separador").value;
+        if (delimiter === "tab") {
+          delimiter = "\t";
+        } else if (delimiter === "space") {
+          delimiter = " ";
+        } else if (delimiter === "otro") {
+          delimiter = document.getElementById("table-csv-separador-otro").value.slice(0, 1) || ",";
+        }
+        return {
+          delimiter,
+          header: document.getElementById("table-csv-header").checked,
+          decimalComma: document.getElementById("table-csv-decimal-comma").checked,
+        };
+      },
+
+      /** Paints the CSV text of the table in the box (capped). */
+      render() {
+        const text = document.getElementById("table-csv-text");
+        const warning = document.getElementById("table-csv-warning");
+        const result = UiTableCsv.tableResult();
+        if (!result) {
+          text.value = "";
+          warning.textContent = I18n.t("tableCsv.tableGone");
+          return;
+        }
+        const max = UiTableCsv.MAX_ROWS;
+        text.value = Utils.resultToCsv(
+          { columns: result.columns, rows: result.rows.slice(0, max) },
+          UiTableCsv.readConfig(),
+        );
+        warning.textContent = result.rows.length > max
+          ? I18n.t("queries.csvTruncated", { max: max, total: result.rows.length })
+          : I18n.t("misc.rowsCountDot", { count: result.rows.length });
+      },
+
+      /** Copies the CSV text to the clipboard (or leaves it selected). */
+      async copy() {
+        const text = document.getElementById("table-csv-text");
+        if (text.value === "") {
+          setStatus(I18n.t("tableCsv.nothingToCopy"));
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(text.value);
+          setStatus(I18n.t("queries.csvCopied"));
+          return;
+        } catch (err) {
+          // Without clipboard permission: it is selected so it can be copied with Ctrl+C.
+        }
+        text.focus();
+        text.select();
+        setStatus(I18n.t("queries.csvCopyManual"));
+      },
+
+      /** Downloads the whole table to a CSV file (the system window when
+       *  available; otherwise a download) with the settings of the window. */
+      async download() {
+        const result = UiTableCsv.tableResult();
+        if (!result) {
+          setStatus(I18n.t("tableCsv.tableGone"));
+          return;
+        }
+        const csv = "\uFEFF" + Utils.resultToCsv(result, UiTableCsv.readConfig());
+        const fileName = `${Utils.slugify(result.name) || "tabla"}.csv`;
+        if (typeof window.showSaveFilePicker === "function") {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: fileName,
+              types: [{ description: I18n.t("queries.csvFileType"), accept: { "text/csv": [".csv"] } }],
+            });
+            const writable = await handle.createWritable();
+            await writable.write(csv);
+            await writable.close();
+            setStatus(I18n.t("tableCsv.savedAs", { name: handle.name, rows: result.rows.length }));
+            return;
+          } catch (err) {
+            if (err && err.name === "AbortError") {
+              setStatus(I18n.t("misc.downloadCancelled"));
+              return;
+            }
+          }
+        }
+        Utils.downloadText(fileName, csv, "text/csv");
+        setStatus(I18n.t("tableCsv.downloaded", { name: fileName, rows: result.rows.length }));
+      },
+    };
+
+    /* =====================================================================
        7b · PROJECT TESTS (TEST MODE)
        Runs every query and compares each result with the one the file brings
        as its asserted result ("assert"), query by query.
@@ -12158,6 +12508,266 @@ ORDER BY edificios DESC, sede;</pre>
             more.textContent = I18n.t("misc.moreIssues", { count: details.length - MAX_DETAILS });
             log.appendChild(more);
           }
+        });
+      },
+    };
+
+    /* =====================================================================
+       8b · UPDATE TABLE (replace its data from an import)
+       Like importing data, but the rows read replace every row of the active
+       table. The table, its fields, its foreign keys and the queries that use
+       it are kept; the number of fields, their names (with a header) and the
+       types must match. The existing data is warned about before deleting it.
+       ===================================================================== */
+
+    const UiUpdateTable = {
+      /** Name of the table being updated (null when the window is closed). */
+      tableName: null,
+
+      /** Wires the window controls. */
+      bind() {
+        document.getElementById("btn-update-table").addEventListener("click", () => UiUpdateTable.open());
+        document.getElementById("btn-close-update").addEventListener("click", () => UiUpdateTable.close());
+        document.getElementById("dlg-update-table").addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            UiUpdateTable.close();
+          }
+        });
+        document.getElementById("btn-update-files").addEventListener("click", () => {
+          document.getElementById("update-files").click();
+        });
+        document.getElementById("update-files").addEventListener("change", (event) => {
+          UiUpdateTable.handleFiles(event.target.files);
+        });
+        document.getElementById("update-separador").addEventListener("change", () => UiUpdateTable.syncCustomDelimiter());
+        document.getElementById("btn-update-apply").addEventListener("click", () => UiUpdateTable.applyPasted());
+        document.getElementById("update-pasted").addEventListener("keydown", (event) => {
+          if (event.ctrlKey && event.key === "Enter") {
+            event.preventDefault();
+            UiUpdateTable.applyPasted();
+          }
+        });
+      },
+
+      /** Opens the window for the active table. */
+      open() {
+        const table = Model.findTable(Store.project, Ui.state.activeTable);
+        if (!table) {
+          return;
+        }
+        UiUpdateTable.tableName = table.name;
+        document.getElementById("update-table-name").textContent = table.name;
+        const imp = Settings.current.importCsv;
+        document.getElementById("update-separador").value = imp.delimiter;
+        document.getElementById("update-separador-otro").value = imp.customDelimiter;
+        document.getElementById("update-header").checked = imp.header;
+        document.getElementById("update-inferir").checked = imp.infer;
+        document.getElementById("update-omitir").checked = imp.skipInvalid;
+        UiUpdateTable.syncCustomDelimiter();
+        document.getElementById("update-pasted").value = "";
+        document.getElementById("update-log").textContent = "";
+        const dialog = document.getElementById("dlg-update-table");
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        document.getElementById("update-pasted").focus();
+        setStatus(I18n.t("updateTable.status", { name: table.name }));
+      },
+
+      /** Closes the window. */
+      close() {
+        const dialog = document.getElementById("dlg-update-table");
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Enables the custom delimiter field only with the «other» option. */
+      syncCustomDelimiter() {
+        const select = document.getElementById("update-separador");
+        document.getElementById("update-separador-otro").disabled = select.value !== "otro";
+      },
+
+      /** Reads the import settings chosen in the window. */
+      readConfig() {
+        return {
+          delimiter: document.getElementById("update-separador").value,
+          customDelimiter: document.getElementById("update-separador-otro").value,
+          header: document.getElementById("update-header").checked,
+          infer: document.getElementById("update-inferir").checked,
+          skipInvalid: document.getElementById("update-omitir").checked,
+        };
+      },
+
+      /** Reads the chosen file and updates the table from it. */
+      async handleFiles(files) {
+        const input = document.getElementById("update-files");
+        if (!files || files.length === 0) {
+          return;
+        }
+        const file = files[0];
+        input.value = "";
+        let text;
+        try {
+          text = await file.text();
+        } catch (err) {
+          UiUpdateTable.showLog([I18n.t("importer.readFailed", { message: err.message })], [], file.name);
+          return;
+        }
+        UiUpdateTable.applyText(text, file.name, /\.json$/i.test(file.name) ? "json" : "csv");
+      },
+
+      /** Updates the table from the text pasted in the box. */
+      applyPasted() {
+        const textarea = document.getElementById("update-pasted");
+        const text = textarea.value.trim();
+        if (text === "") {
+          window.alert(I18n.t("importPanel.emptyPaste"));
+          textarea.focus();
+          return;
+        }
+        if (UiUpdateTable.applyText(text, I18n.t("importPanel.pastedData"), "auto")) {
+          textarea.value = "";
+        }
+      },
+
+      /** Parses the text, checks it against the table and, after confirming,
+       *  replaces every row. Returns true only when the data was replaced. */
+      applyText(text, fileName, format) {
+        const table = Model.findTable(Store.project, UiUpdateTable.tableName);
+        if (!table) {
+          UiUpdateTable.close();
+          return false;
+        }
+        const config = UiUpdateTable.readConfig();
+        const parsed = Importer.parseText(text, { config, format });
+        if (!parsed.ok) {
+          UiUpdateTable.showLog(parsed.errors, parsed.skipped, fileName);
+          setStatus(I18n.t("updateTable.failed", { name: table.name }));
+          return false;
+        }
+        const check = UiUpdateTable.check(table, parsed, config);
+        if (!check.ok) {
+          UiUpdateTable.showLog(check.errors, parsed.skipped, fileName);
+          setStatus(I18n.t("updateTable.failed", { name: table.name }));
+          return false;
+        }
+        // Warning before removing the data that is already there.
+        if (!window.confirm(I18n.t("updateTable.confirm", { name: table.name, rows: table.rows.length, newRows: check.rows.length }))) {
+          setStatus(I18n.t("updateTable.cancelled"));
+          return false;
+        }
+        table.rows = check.rows;
+        if (table.idField) {
+          table.nextId = computeNextId(table.rows, table.idField);
+        }
+        UiProject.markDirty();
+        UiUpdateTable.close();
+        Ui.renderAll();
+        setStatus(I18n.t("updateTable.done", { name: table.name, rows: table.rows.length }));
+        return true;
+      },
+
+      /** Type that a column of the incoming rows has (null when it only has
+       *  missing values, in which case there is nothing to check). */
+      columnType(rows, name) {
+        let best = null;
+        let bestRank = 0;
+        let found = false;
+        rows.forEach((row) => {
+          const value = row[name];
+          if (value === null || value === undefined) {
+            return;
+          }
+          found = true;
+          const type = typeof value;
+          const rank = Model.TYPE_RANK[type] || 0;
+          if (rank > bestRank) {
+            best = type;
+            bestRank = rank;
+          }
+        });
+        return found ? best : null;
+      },
+
+      /** Checks the read data against the table: number of fields, their names
+       *  (with a header, or the JSON keys) and their types. Returns
+       *  { ok, errors, rows } with the rows ready to store. */
+      check(table, parsed, config) {
+        const fields = table.fields;
+        const errors = [];
+        if (parsed.fields.length !== fields.length) {
+          errors.push(I18n.t("updateTable.fieldCountMismatch", { expected: fields.length, found: parsed.fields.length }));
+        } else if (parsed.format === "JSON") {
+          const missing = fields.filter((field) => !parsed.fields.some((item) => item.name === field.name));
+          const extra = parsed.fields.filter((item) => !fields.some((field) => field.name === item.name));
+          if (missing.length > 0) {
+            errors.push(I18n.t("updateTable.fieldsMissing", { fields: missing.map((field) => field.name).join(", ") }));
+          }
+          if (extra.length > 0) {
+            errors.push(I18n.t("updateTable.fieldsExtra", { fields: extra.map((item) => item.name).join(", ") }));
+          }
+        } else if (config.header) {
+          const pairs = [];
+          parsed.fields.forEach((item, index) => {
+            const expected = fields[index];
+            if (expected && item.name !== expected.name) {
+              pairs.push(I18n.t("updateTable.namePair", { position: index + 1, expected: expected.name, found: item.name }));
+            }
+          });
+          if (pairs.length > 0) {
+            errors.push(I18n.t("updateTable.headerMismatch", { fields: pairs.join(", ") }));
+          }
+        }
+        if (errors.length > 0) {
+          return { ok: false, errors, rows: [] };
+        }
+        const rows = parsed.rows.map((values) => {
+          const row = {};
+          if (Array.isArray(values)) {
+            fields.forEach((field, index) => {
+              row[field.name] = values[index];
+            });
+          } else {
+            fields.forEach((field) => {
+              row[field.name] = values[field.name];
+            });
+          }
+          return row;
+        });
+        const mismatches = [];
+        fields.forEach((field) => {
+          const incoming = UiUpdateTable.columnType(rows, field.name);
+          if (incoming !== null && incoming !== field.type) {
+            mismatches.push(I18n.t("updateTable.typePair", { field: field.name, expected: field.type, found: incoming }));
+          }
+        });
+        if (mismatches.length > 0) {
+          errors.push(I18n.t("updateTable.typeMismatch", { fields: mismatches.join(", ") }));
+          return { ok: false, errors, rows: [] };
+        }
+        return { ok: true, errors: [], rows };
+      },
+
+      /** Paints the report of a failed update (or a read error). */
+      showLog(errors, skipped, fileName) {
+        const log = document.getElementById("update-log");
+        log.textContent = "";
+        const head = document.createElement("div");
+        head.className = "row-log log-err";
+        head.textContent = I18n.t("updateTable.reportFail", { file: fileName, count: errors.length });
+        log.appendChild(head);
+        errors.forEach((message) => {
+          const detail = document.createElement("div");
+          detail.className = "detail-err";
+          detail.textContent = `• ${message}`;
+          log.appendChild(detail);
+        });
+        (skipped || []).forEach((message) => {
+          const detail = document.createElement("div");
+          detail.className = "detail-err";
+          detail.textContent = `• ${message}`;
+          log.appendChild(detail);
         });
       },
     };
@@ -13580,6 +14190,69 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(dialogo.open, false, "it closes with “Close”");
       UiQueries.lastResult = null;
       UiQueries.renderCsv();
+    });
+
+    SelfTests.add("When_ExportTableAsCSV_Expect_DataWithChosenOptions", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+      };
+      Store.replaceProject({
+        name: "table-csv",
+        tables: [{
+          name: "classrooms",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [
+            { name: "code", description: null, type: "string" },
+            { name: "capacity", description: null, type: "number" },
+          ],
+          rows: [{ code: "K-101", capacity: 60.5 }, { code: "K-102", capacity: 45 }],
+        }],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      Ui.selectTable("classrooms");
+      document.getElementById("btn-export-csv-table").click();
+      const dialog = document.getElementById("dlg-table-csv");
+      assertEqual(dialog.open, true, "the button opens the window");
+      assertEqual(
+        document.getElementById("dlg-table-csv-table").textContent,
+        I18n.t("tableCsv.title", { name: "classrooms", rows: 2 }),
+        "with the table and its row count",
+      );
+      const textarea = document.getElementById("table-csv-text");
+      document.getElementById("table-csv-separador").value = ";";
+      document.getElementById("table-csv-header").checked = true;
+      document.getElementById("table-csv-decimal-comma").checked = false;
+      UiTableCsv.render();
+      assertEqual(textarea.value, "code;capacity\nK-101;60.5\nK-102;45", "the data with header and ;");
+
+      document.getElementById("table-csv-separador").value = ",";
+      document.getElementById("table-csv-header").checked = false;
+      UiTableCsv.render();
+      assertEqual(textarea.value, "K-101,60.5\nK-102,45", "without header and with ,");
+
+      document.getElementById("table-csv-separador").value = ";";
+      document.getElementById("table-csv-header").checked = true;
+      document.getElementById("table-csv-decimal-comma").checked = true;
+      UiTableCsv.render();
+      assertEqual(textarea.value, "code;capacity\nK-101;60,5\nK-102;45", "the decimal comma changes the numbers of the preview");
+
+      UiTableCsv.close();
+      assertEqual(dialog.open, false, "it closes with “Close”");
+
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
     });
 
     SelfTests.add("When_NewTableWithIdField_Expect_RowsNumbered", () => {
@@ -18633,6 +19306,148 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.queriesInFolder(project, "2026").length, 1, "one query in the other folder");
     });
 
+    /* --- Cases T13: updating the data of a table ------------------------ */
+
+    /** Project with a table of buildings (with an ID) referenced by classrooms,
+     *  and a query that cites it. */
+    function updateTableProject() {
+      return {
+        name: "update",
+        tables: [
+          {
+            name: "buildings",
+            description: "edificios",
+            idField: "id",
+            nextId: 3,
+            fields: [
+              { name: "id", description: null, type: "number" },
+              { name: "name", description: null, type: "string" },
+            ],
+            rows: [{ id: 1, name: "A" }, { id: 2, name: "B" }],
+          },
+          {
+            name: "classrooms",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [
+              { name: "code", description: null, type: "string" },
+              { name: "id_building", description: null, type: "number", references: { table: "buildings", field: "id" } },
+            ],
+            rows: [],
+          },
+        ],
+        queries: [{ name: "q", description: "", sql: "SELECT name FROM buildings", assert: null }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+    }
+
+    SelfTests.add("When_UpdateTableWithMatchingData_Expect_DataReplacedKeepingStructure", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        confirm: window.confirm,
+      };
+      window.confirm = () => true;
+      Store.replaceProject(updateTableProject());
+      Ui.selectTable("buildings");
+      UiUpdateTable.open();
+      document.getElementById("update-separador").value = ";";
+      document.getElementById("update-header").checked = true;
+      document.getElementById("update-inferir").checked = true;
+      document.getElementById("update-pasted").value = "id;name\n1;Casa\n2;Torre\n3;Casa2";
+      UiUpdateTable.applyPasted();
+
+      const table = Model.findTable(Store.project, "buildings");
+      assertEqual(table.rows, [{ id: 1, name: "Casa" }, { id: 2, name: "Torre" }, { id: 3, name: "Casa2" }], "the rows are replaced with the read ones");
+      assertEqual(table.name, "buildings", "the table is kept");
+      assertEqual(table.description, "edificios", "with its description");
+      assertEqual(table.fields.map((field) => field.name), ["id", "name"], "and its fields");
+      assertEqual(table.nextId, 4, "the auto-numbered ID counter follows the new data");
+      const target = Model.findTable(Store.project, "classrooms").fields[1];
+      assertEqual(target.references, { table: "buildings", field: "id" }, "the foreign keys that point to it are kept");
+      assertEqual(Store.project.queries[0].sql, "SELECT name FROM buildings", "and the queries that use it too");
+      assertEqual(document.getElementById("dlg-update-table").open, false, "the window closes after updating");
+      assertEqual(Store.dirty, true, "the project is marked as modified");
+
+      UiUpdateTable.close();
+      window.confirm = antes.confirm;
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_UpdateTableWithMismatchedData_Expect_RejectedKeepingData", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        confirm: window.confirm,
+      };
+      let confirmCalls = 0;
+      window.confirm = () => {
+        confirmCalls += 1;
+        return true;
+      };
+      Store.replaceProject({
+        name: "update-mismatch",
+        tables: [{
+          name: "t",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [
+            { name: "a", description: null, type: "number" },
+            { name: "b", description: null, type: "string" },
+          ],
+          rows: [{ a: 1, b: "x" }],
+        }],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      Ui.selectTable("t");
+      UiUpdateTable.open();
+      document.getElementById("update-separador").value = ",";
+      document.getElementById("update-header").checked = true;
+      document.getElementById("update-inferir").checked = true;
+      const rows = () => Model.findTable(Store.project, "t").rows;
+      const log = () => document.getElementById("update-log").textContent;
+
+      document.getElementById("update-pasted").value = "a,b,c\n1,x,3";
+      UiUpdateTable.applyPasted();
+      assertEqual(rows(), [{ a: 1, b: "x" }], "a different number of fields is rejected");
+      assert(log() !== "", "and the reason is shown");
+
+      document.getElementById("update-pasted").value = "x,y\n1,2";
+      UiUpdateTable.applyPasted();
+      assertEqual(rows(), [{ a: 1, b: "x" }], "a different header is rejected");
+
+      document.getElementById("update-pasted").value = "a,b\n1,2";
+      UiUpdateTable.applyPasted();
+      assertEqual(rows(), [{ a: 1, b: "x" }], "different types are rejected");
+
+      assertEqual(confirmCalls, 0, "no confirmation is asked when the data does not match");
+
+      UiUpdateTable.close();
+      window.confirm = antes.confirm;
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
     /* =====================================================================
        12 · INITIALISATION
        ===================================================================== */
@@ -18646,7 +19461,9 @@ ORDER BY edificios DESC, sede;</pre>
         UiSidebar.bind();
         UiFolders.bind();
         UiQueries.bind();
+        UiTableCsv.bind();
         UiImport.bind();
+        UiUpdateTable.bind();
         UiGlobal.bind();
         Settings.bind();
         UiHelp.bind();
