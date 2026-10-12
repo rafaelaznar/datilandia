@@ -1,13 +1,14 @@
 {
   "format": "extractor",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 169 consultas)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 190 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
     "C · Consultas relacionadas",
     "D · Integridad",
-    "E · Vistas"
+    "E · Vistas",
+    "F · Subconsultas"
   ],
   "tables": [
     {
@@ -19299,6 +19300,891 @@
         ]
       },
       "folder": "E · Vistas"
+    },
+    {
+      "name": "F01 · Seguros de los pacientes de Madrid (IN con subconsulta)",
+      "description": "IN con subconsulta: los seguros cuyo identificador usa algún paciente de Madrid.",
+      "sql": "SELECT id_seguro, nombre FROM seguros WHERE id_seguro IN (SELECT id_seguro FROM pacientes WHERE ciudad = 'Madrid') ORDER BY id_seguro",
+      "assert": {
+        "columns": [
+          "id_seguro",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Salud Pública"
+          ],
+          [
+            2,
+            "Seguros Médicos del Norte"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F02 · Medicamentos sin ninguna prescripción (NOT IN con subconsulta)",
+      "description": "NOT IN con subconsulta: los medicamentos que no usa ninguna prescripción.",
+      "sql": "SELECT id_medicamento, nombre FROM medicamentos WHERE id_medicamento NOT IN (SELECT id_medicamento FROM prescripciones) ORDER BY id_medicamento",
+      "assert": {
+        "columns": [
+          "id_medicamento",
+          "nombre"
+        ],
+        "rows": [
+          [
+            9,
+            "Metformina"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F03 · Especialidades sin ningún diagnóstico (NOT IN con subconsulta)",
+      "description": "Las especialidades a las que no está ligado ningún diagnóstico.",
+      "sql": "SELECT id_especialidad, nombre FROM especialidades WHERE id_especialidad NOT IN (SELECT id_especialidad FROM diagnosticos) ORDER BY id_especialidad",
+      "assert": {
+        "columns": [
+          "id_especialidad",
+          "nombre"
+        ],
+        "rows": [
+          [
+            3,
+            "Pediatría"
+          ],
+          [
+            8,
+            "Urgencias"
+          ],
+          [
+            11,
+            "Rehabilitación"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F04 · Hospitales con una habitación UCI (EXISTS)",
+      "description": "EXISTS con subconsulta correlacionada: se comprueba otra vez para cada hospital.",
+      "sql": "SELECT h.id_hospital, h.nombre FROM hospitales AS h WHERE EXISTS (SELECT 1 FROM habitaciones AS r WHERE r.id_hospital = h.id_hospital AND r.tipo = 'UCI') ORDER BY h.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Hospital Universitario La Paz"
+          ],
+          [
+            2,
+            "Hospital Clínic de Barcelona"
+          ],
+          [
+            3,
+            "Hospital Virgen del Rocío"
+          ],
+          [
+            4,
+            "Hospital General de Valencia"
+          ],
+          [
+            5,
+            "Clínica Santa Elena"
+          ],
+          [
+            6,
+            "Hospital Metropolitano de Quito"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F05 · Hospitales sin ninguna habitación UCI (NOT EXISTS)",
+      "description": "La otra cara del ejemplo anterior: NOT EXISTS se queda con los hospitales sin coincidencia.",
+      "sql": "SELECT h.id_hospital, h.nombre FROM hospitales AS h WHERE NOT EXISTS (SELECT 1 FROM habitaciones AS r WHERE r.id_hospital = h.id_hospital AND r.tipo = 'UCI') ORDER BY h.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "nombre"
+        ],
+        "rows": [
+          [
+            7,
+            "Hospital San José"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F06 · Pacientes con una intervención de riesgo alto (EXISTS correlacionada)",
+      "description": "La subconsulta apunta al paciente de fuera (p.id_paciente): una EXISTS correlacionada.",
+      "sql": "SELECT p.id_paciente, p.apellidos FROM pacientes AS p WHERE EXISTS (SELECT 1 FROM intervenciones AS i WHERE i.id_paciente = p.id_paciente AND i.riesgo = 'Alto') ORDER BY p.id_paciente",
+      "assert": {
+        "columns": [
+          "id_paciente",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            8,
+            "Sanz Alonso"
+          ],
+          [
+            11,
+            "Ortiz Gómez"
+          ],
+          [
+            14,
+            "Castro Moreno"
+          ],
+          [
+            19,
+            "Marín Iglesias"
+          ],
+          [
+            21,
+            "Jiménez Romero"
+          ],
+          [
+            22,
+            "Delgado Gómez"
+          ],
+          [
+            33,
+            "Romero Molina"
+          ],
+          [
+            36,
+            "Martínez Blanco"
+          ],
+          [
+            37,
+            "Muñoz Ortega"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F07 · Médicos de Dermatología con más experiencia que algún médico de Cardiología (> ANY)",
+      "description": "x > ANY (…) es cierto cuando la experiencia supera al menos uno de los valores internos.",
+      "sql": "SELECT id_medico, apellidos, anios_experiencia FROM medicos WHERE id_especialidad = 6 AND anios_experiencia > ANY (SELECT anios_experiencia FROM medicos WHERE id_especialidad = 1) ORDER BY id_medico",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "apellidos",
+          "anios_experiencia"
+        ],
+        "rows": [
+          [
+            18,
+            "Gutiérrez Sánchez",
+            27
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F08 · El médico con más experiencia de cada especialidad (>= ALL correlacionada)",
+      "description": "x >= ALL (…) exige que la comparación se cumpla con todos los valores internos: solo pasa el máximo de cada especialidad.",
+      "sql": "SELECT m.id_medico, m.apellidos, m.anios_experiencia FROM medicos AS m WHERE m.anios_experiencia >= ALL (SELECT m2.anios_experiencia FROM medicos AS m2 WHERE m2.id_especialidad = m.id_especialidad) ORDER BY m.id_especialidad, m.id_medico",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "apellidos",
+          "anios_experiencia"
+        ],
+        "rows": [
+          [
+            8,
+            "Romero Blanco",
+            23
+          ],
+          [
+            22,
+            "López Fernández",
+            27
+          ],
+          [
+            5,
+            "Fernández Torres",
+            27
+          ],
+          [
+            15,
+            "Rodríguez Martínez",
+            27
+          ],
+          [
+            17,
+            "Rubio Muñoz",
+            25
+          ],
+          [
+            21,
+            "Ruiz Alonso",
+            16
+          ],
+          [
+            3,
+            "Torres Gómez",
+            31
+          ],
+          [
+            18,
+            "Gutiérrez Sánchez",
+            27
+          ],
+          [
+            28,
+            "Moreno Alonso",
+            29
+          ],
+          [
+            25,
+            "García López",
+            20
+          ],
+          [
+            26,
+            "Martín Torres",
+            25
+          ],
+          [
+            4,
+            "Hernández Torres",
+            7
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F09 · Crónicos de una ciudad con seguro privado (<> ALL)",
+      "description": "x <> ALL (…) es lo mismo que x NOT IN (…): deja los valores distintos de todos ellos.",
+      "sql": "SELECT id_paciente, apellidos FROM pacientes WHERE es_cronico = TRUE AND id_seguro <> ALL (SELECT id_seguro FROM seguros WHERE tipo = 'Público') ORDER BY id_paciente",
+      "assert": {
+        "columns": [
+          "id_paciente",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            4,
+            "López Martín"
+          ],
+          [
+            7,
+            "Díaz Ruiz"
+          ],
+          [
+            15,
+            "Iglesias Navarro"
+          ],
+          [
+            28,
+            "Molina Morales"
+          ],
+          [
+            29,
+            "Muñoz Gómez"
+          ],
+          [
+            32,
+            "Jiménez Hernández"
+          ],
+          [
+            37,
+            "Muñoz Ortega"
+          ],
+          [
+            39,
+            "Martín Delgado"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F10 · Hospitales universitarios",
+      "description": "Esta consulta no es un test por sí sola: es la vista que leen las subconsultas siguientes.",
+      "sql": "SELECT id_hospital, nombre, ciudad FROM hospitales WHERE es_universitario = TRUE",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "nombre",
+          "ciudad"
+        ],
+        "rows": [
+          [
+            1,
+            "Hospital Universitario La Paz",
+            "Madrid"
+          ],
+          [
+            2,
+            "Hospital Clínic de Barcelona",
+            "Barcelona"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F11 · Habitaciones de los hospitales universitarios leídas desde la vista (subconsulta sobre una vista)",
+      "description": "La subconsulta lee la vista F10 como si fuera una tabla: [F10 · …] dentro del IN.",
+      "sql": "SELECT r.id_habitacion, r.codigo FROM habitaciones AS r WHERE r.id_hospital IN (SELECT id_hospital FROM [F10 · Hospitales universitarios]) ORDER BY r.id_habitacion",
+      "assert": {
+        "columns": [
+          "id_habitacion",
+          "codigo"
+        ],
+        "rows": [
+          [
+            1,
+            "H1-100"
+          ],
+          [
+            2,
+            "H1-101"
+          ],
+          [
+            3,
+            "H1-102"
+          ],
+          [
+            4,
+            "H1-103"
+          ],
+          [
+            5,
+            "H1-104"
+          ],
+          [
+            6,
+            "H1-105"
+          ],
+          [
+            7,
+            "H2-100"
+          ],
+          [
+            8,
+            "H2-101"
+          ],
+          [
+            9,
+            "H2-102"
+          ],
+          [
+            10,
+            "H2-103"
+          ],
+          [
+            11,
+            "H2-104"
+          ],
+          [
+            12,
+            "H2-105"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F12 · Coste medio por día de los ingresos de 700 o más (tabla derivada)",
+      "description": "Una subconsulta en el FROM con alias (t) es una tabla derivada: se consulta como cualquier otra.",
+      "sql": "SELECT t.id_hospital, t.coste_medio FROM (SELECT r.id_hospital, AVG(i.coste_dia) AS coste_medio FROM ingresos AS i INNER JOIN habitaciones AS r ON r.id_habitacion = i.id_habitacion GROUP BY r.id_hospital) AS t WHERE t.coste_medio >= 700 ORDER BY t.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "coste_medio"
+        ],
+        "rows": [
+          [
+            6,
+            707.75
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F13 · Hospitales con diez ingresos o más (tabla derivada y JOIN)",
+      "description": "La tabla derivada se une a la tabla hospitales y se filtra por su columna total.",
+      "sql": "SELECT t.id_hospital, h.nombre, t.total FROM (SELECT r.id_hospital, COUNT(*) AS total FROM ingresos AS i INNER JOIN habitaciones AS r ON r.id_habitacion = i.id_habitacion GROUP BY r.id_hospital) AS t INNER JOIN hospitales AS h ON h.id_hospital = t.id_hospital WHERE t.total >= 10 ORDER BY t.total DESC, t.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "nombre",
+          "total"
+        ],
+        "rows": [
+          [
+            1,
+            "Hospital Universitario La Paz",
+            10
+          ],
+          [
+            3,
+            "Hospital Virgen del Rocío",
+            10
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F14 · Visitas de cada paciente de una ciudad (subconsulta escalar en el SELECT)",
+      "description": "La subconsulta de la lista de columnas devuelve un valor por fila: las visitas de ese paciente.",
+      "sql": "SELECT p.id_paciente, p.apellidos, (SELECT COUNT(*) FROM visitas AS v WHERE v.id_paciente = p.id_paciente) AS visitas FROM pacientes AS p WHERE p.ciudad = 'Bilbao' ORDER BY p.id_paciente",
+      "assert": {
+        "columns": [
+          "id_paciente",
+          "apellidos",
+          "visitas"
+        ],
+        "rows": [
+          [
+            5,
+            "Díaz Domínguez",
+            2
+          ],
+          [
+            7,
+            "Díaz Ruiz",
+            3
+          ],
+          [
+            8,
+            "Sanz Alonso",
+            1
+          ],
+          [
+            11,
+            "Ortiz Gómez",
+            1
+          ],
+          [
+            18,
+            "Sánchez Romero",
+            3
+          ],
+          [
+            33,
+            "Romero Molina",
+            1
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F15 · Ingresos más caros que la media (subconsulta escalar en el WHERE)",
+      "description": "La subconsulta devuelve un solo valor (la media) con el que compara el WHERE.",
+      "sql": "SELECT id_ingreso, coste_dia FROM ingresos WHERE coste_dia > (SELECT AVG(coste_dia) FROM ingresos) ORDER BY id_ingreso",
+      "assert": {
+        "columns": [
+          "id_ingreso",
+          "coste_dia"
+        ],
+        "rows": [
+          [
+            2,
+            831
+          ],
+          [
+            3,
+            674
+          ],
+          [
+            5,
+            639
+          ],
+          [
+            6,
+            749
+          ],
+          [
+            8,
+            879
+          ],
+          [
+            10,
+            631
+          ],
+          [
+            11,
+            663
+          ],
+          [
+            12,
+            783
+          ],
+          [
+            14,
+            775
+          ],
+          [
+            15,
+            822
+          ],
+          [
+            16,
+            736
+          ],
+          [
+            20,
+            790
+          ],
+          [
+            21,
+            844
+          ],
+          [
+            22,
+            864
+          ],
+          [
+            24,
+            671
+          ],
+          [
+            25,
+            884
+          ],
+          [
+            32,
+            681
+          ],
+          [
+            33,
+            818
+          ],
+          [
+            35,
+            813
+          ],
+          [
+            38,
+            717
+          ],
+          [
+            42,
+            834
+          ],
+          [
+            43,
+            634
+          ],
+          [
+            45,
+            950
+          ],
+          [
+            46,
+            926
+          ],
+          [
+            48,
+            830
+          ],
+          [
+            49,
+            611
+          ],
+          [
+            50,
+            632
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F16 · Especialidades con tres o más diagnósticos",
+      "description": "Una consulta con subconsulta también sirve de vista: esta usa una EXISTS correlacionada con HAVING.",
+      "sql": "SELECT s.id_especialidad, s.nombre FROM especialidades AS s WHERE EXISTS (SELECT 1 FROM diagnosticos AS d WHERE d.id_especialidad = s.id_especialidad HAVING COUNT(*) >= 3) ORDER BY s.id_especialidad",
+      "assert": {
+        "columns": [
+          "id_especialidad",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Cardiología"
+          ],
+          [
+            7,
+            "Medicina Interna"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F17 · La vista anterior leída como tabla",
+      "description": "F16 se lee desde el FROM como una tabla, aunque por dentro lleve una subconsulta.",
+      "sql": "SELECT id_especialidad, nombre FROM [F16 · Especialidades con tres o más diagnósticos] ORDER BY id_especialidad",
+      "assert": {
+        "columns": [
+          "id_especialidad",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Cardiología"
+          ],
+          [
+            7,
+            "Medicina Interna"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F18 · Médicos de las especialidades con algún diagnóstico grave (subconsultas anidadas)",
+      "description": "Una subconsulta dentro de otra: la interna elige las especialidades y la externa los médicos.",
+      "sql": "SELECT DISTINCT m.id_medico, m.apellidos FROM medicos AS m WHERE m.id_especialidad IN (SELECT id_especialidad FROM diagnosticos WHERE gravedad = 'Grave') ORDER BY m.id_medico",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            3,
+            "Torres Gómez"
+          ],
+          [
+            5,
+            "Fernández Torres"
+          ],
+          [
+            6,
+            "Ortega Gómez"
+          ],
+          [
+            10,
+            "Vázquez López"
+          ],
+          [
+            11,
+            "Torres Díaz"
+          ],
+          [
+            12,
+            "Moreno Rodríguez"
+          ],
+          [
+            13,
+            "Díaz Romero"
+          ],
+          [
+            14,
+            "Moreno Gil"
+          ],
+          [
+            15,
+            "Rodríguez Martínez"
+          ],
+          [
+            16,
+            "Gómez Romero"
+          ],
+          [
+            19,
+            "Romero López"
+          ],
+          [
+            21,
+            "Ruiz Alonso"
+          ],
+          [
+            24,
+            "Rodríguez Rubio"
+          ],
+          [
+            26,
+            "Martín Torres"
+          ],
+          [
+            27,
+            "Muñoz Ruiz"
+          ],
+          [
+            28,
+            "Moreno Alonso"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F19 · Médicos de Oncología menos el más experto (NOT con ALL)",
+      "description": "NOT (… >= ALL (…)) es la negación del predicado ALL: toda la especialidad menos su médico más experto.",
+      "sql": "SELECT m.id_medico, m.apellidos, m.anios_experiencia FROM medicos AS m WHERE m.id_especialidad = 5 AND NOT (m.anios_experiencia >= ALL (SELECT m2.anios_experiencia FROM medicos AS m2 WHERE m2.id_especialidad = 5)) ORDER BY m.id_medico",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "apellidos",
+          "anios_experiencia"
+        ],
+        "rows": [
+          [
+            12,
+            "Moreno Rodríguez",
+            25
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F20 · Habitaciones de los hospitales universitarios (= ANY)",
+      "description": "x = ANY (…) es lo mismo que x IN (…): se incluye para completar los cuantificadores.",
+      "sql": "SELECT DISTINCT r.id_hospital FROM habitaciones AS r WHERE r.id_hospital = ANY (SELECT id_hospital FROM hospitales WHERE es_universitario = TRUE) ORDER BY r.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital"
+        ],
+        "rows": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F21 · Médicos con más experiencia que algún médico de Cardiología (> SOME)",
+      "description": "SOME es sinónimo de ANY: la comparación debe cumplirse al menos con un valor interno.",
+      "sql": "SELECT id_medico, apellidos FROM medicos WHERE anios_experiencia > SOME (SELECT anios_experiencia FROM medicos WHERE id_especialidad = 1) ORDER BY id_medico",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            1,
+            "Ruiz Jiménez"
+          ],
+          [
+            3,
+            "Torres Gómez"
+          ],
+          [
+            4,
+            "Hernández Torres"
+          ],
+          [
+            5,
+            "Fernández Torres"
+          ],
+          [
+            6,
+            "Ortega Gómez"
+          ],
+          [
+            7,
+            "González Ortega"
+          ],
+          [
+            8,
+            "Romero Blanco"
+          ],
+          [
+            9,
+            "Gil Serrano"
+          ],
+          [
+            11,
+            "Torres Díaz"
+          ],
+          [
+            12,
+            "Moreno Rodríguez"
+          ],
+          [
+            14,
+            "Moreno Gil"
+          ],
+          [
+            15,
+            "Rodríguez Martínez"
+          ],
+          [
+            16,
+            "Gómez Romero"
+          ],
+          [
+            17,
+            "Rubio Muñoz"
+          ],
+          [
+            18,
+            "Gutiérrez Sánchez"
+          ],
+          [
+            19,
+            "Romero López"
+          ],
+          [
+            21,
+            "Ruiz Alonso"
+          ],
+          [
+            22,
+            "López Fernández"
+          ],
+          [
+            23,
+            "Castro Ramírez"
+          ],
+          [
+            24,
+            "Rodríguez Rubio"
+          ],
+          [
+            25,
+            "García López"
+          ],
+          [
+            26,
+            "Martín Torres"
+          ],
+          [
+            28,
+            "Moreno Alonso"
+          ],
+          [
+            29,
+            "Delgado Gil"
+          ],
+          [
+            30,
+            "Sánchez Blanco"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
     }
   ],
   "settings": {

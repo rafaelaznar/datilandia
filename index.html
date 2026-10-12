@@ -1487,7 +1487,7 @@
                 <ul>
                   <li><button data-i18n-title="markup.button.howQueryIsWrittenWhat" data-i18n="markup.button.generalShapeDialect" class="help-item" type="button" data-help="sql-forma" title="Cómo se escribe una consulta y qué admite el dialecto SQL">Forma general y dialecto</button></li>
                   <li><button data-i18n-title="markup.button.whereRowsComeFromTables" data-i18n="markup.button.tablesAliasesViews" class="help-item" type="button" data-help="sql-tables" title="De dónde salen las filas: tablas, consultas leídas como tablas y joins">Tablas, alias y vistas</button></li>
-                  <li><button data-i18n-title="markup.button.whereComparisonsTextCombinedConditions" data-i18n="markup.button.filterRows" class="help-item" type="button" data-help="sql-filtrar" title="WHERE: comparaciones, texto y condiciones combinadas">Filtrar filas</button></li>
+                  <li><button data-i18n-title="markup.button.whereComparisonsTextCombinedConditions" data-i18n="markup.button.filterRows" class="help-item" type="button" data-help="sql-filtrar" title="WHERE: comparaciones, texto, condiciones combinadas y subconsultas">Filtrar filas</button></li>
                   <li><button data-i18n-title="markup.button.aggregatesGROUPBYHAVINGORDER" data-i18n="markup.button.summariseSort" class="help-item" type="button" data-help="sql-resumir" title="Agregados, GROUP BY, HAVING, ORDER BY y paginación">Resumir y ordenar</button></li>
                   <li><button data-i18n-title="markup.button.numbersTextNullOperatorsFunctions" data-i18n="markup.button.valuesFunctions" class="help-item" type="button" data-help="sql-values" title="Números, texto, null, operadores y funciones">Valores y funciones</button></li>
                   <li><button data-i18n-title="markup.button.errorsPlanRenamesQueriesAsserted" data-i18n="markup.button.limitsTests" class="help-item" type="button" data-help="sql-limites" title="Errores, plan, renombrados y consultas con resultado asertado">Límites y pruebas</button></li>
@@ -1679,7 +1679,9 @@ ORDER BY curso;</pre>
                 <dt>JOIN</dt>
                 <dd data-i18n-html="markup.dd.innerJOINLEFTOUTERJOIN"><code>INNER JOIN</code> y <code>LEFT [OUTER] JOIN</code> con <code>ON</code>. Las igualdades entre tablas se resuelven con <b>hash join</b>, así que también va fino con tablas grandes.</dd>
                 <dt>WHERE</dt>
-                <dd><code>=</code> <code>==</code> <code>&lt;&gt;</code> <code>!=</code> <code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code>, <code>AND</code>, <code>OR</code>, <code>NOT</code>; <code>IS [NOT] NULL</code>; <code>[NOT] LIKE … [ESCAPE …]</code>; <code>[NOT] IN (…)</code>; <code>[NOT] BETWEEN … AND …</code>.</dd>
+                <dd><code>=</code> <code>==</code> <code>&lt;&gt;</code> <code>!=</code> <code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code>, <code>AND</code>, <code>OR</code>, <code>NOT</code>; <code>IS [NOT] NULL</code>; <code>[NOT] LIKE … [ESCAPE …]</code>; <code>[NOT] IN (…)</code>; <code>[NOT] BETWEEN … AND …</code>; <code>[NOT] IN (SELECT …)</code>, <code>[NOT] EXISTS (SELECT …)</code>, <code>= ANY (SELECT …)</code>, <code>&gt;= ALL (SELECT …)</code>.</dd>
+                <dt data-i18n="markup.dt.subqueries">Subconsultas</dt>
+                <dd data-i18n-html="markup.dd.subqueryIsSELECTInsideAnother">Un <code>SELECT</code> entre paréntesis dentro de otro: con <code>IN</code> y <code>NOT IN</code>, con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM otra)</code>). La subconsulta puede leer una <b>consulta como tabla</b>, y también va en el <code>FROM</code> con alias (<b>tabla derivada</b>): <code>FROM (SELECT …) AS t</code>. Si por dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Como valor (en el <code>SELECT</code> o comparada) tiene que devolver <b>una sola columna</b> y una sola fila.</dd>
                 <dt>GROUP BY / HAVING</dt>
                 <dd data-i18n-html="markup.dd.aggregatesCOUNTSUMAVGMIN">Agregados <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>, con <code>DISTINCT</code> dentro: <code>COUNT(DISTINCT puesto)</code>. <code>HAVING</code> filtra los grupos ya calculados.</dd>
                 <dt>ORDER BY</dt>
@@ -1715,6 +1717,7 @@ ORDER BY curso;</pre>
                     <p data-i18n-html="markup.p.namesSpacesGoBracketsFROM">Los nombres con espacios van entre corchetes: <code>FROM [resumen de ventas] AS r</code>. Si un nombre coincide con una tabla y con una consulta, gana la <b>tabla</b>. Las consultas se pueden encadenar (una que lee otra que lee otra), pero no en círculo: ninguna puede leer su propio resultado, ni directa ni indirectamente; si lo intentas, el error te enseña la cadena completa.</p>
                     <p data-i18n-html="markup.p.ifResultThatQueryRepeats">Si el resultado de esa consulta repite el nombre de una columna (por ejemplo <code>SELECT a.x, b.x FROM …</code>), al leerla como tabla <b>solo se ve el último valor</b>: dales alias distintos con <code>AS</code>.</p>
                     <p data-i18n-html="markup.p.queryIsMaterialisedBeforeBeing">La consulta se <b>materializa</b> antes de leerla: se ejecuta entera —su <code>WHERE</code>, sus <code>JOIN</code>, su <code>GROUP BY</code>/<code>HAVING</code>, su <code>DISTINCT</code>, su <code>ORDER BY</code> y su <code>LIMIT</code>/<code>OFFSET</code>— y lo que ve la consulta de fuera es <b>su resultado ya hecho</b>. Por eso el <code>LIMIT</code> de una vista llega ya recortado, y una vista que agrupa se puede volver a agregar (doble agregación).</p>
+                    <p data-i18n-html="markup.p.queriesUsedAsTablesCanBeRead">Las consultas se pueden leer también <b>dentro de una subconsulta</b> y como <b>tabla derivada</b>: <code>WHERE id IN (SELECT id FROM [resumen de ventas])</code> y <code>FROM (SELECT …) AS t</code>. Y una consulta cuyo SQL lleva una subconsulta sigue valiendo como vista: se ejecuta entera, subconsulta incluida (apartado <b>Subconsultas</b>).</p>
                     <p data-i18n-html="markup.p.typesAreKeptNumberField">Los <b>tipos se conservan</b>: un campo <code>number</code> sigue siendo número al leerlo desde fuera (se puede sumar, dividir o comparar con <code>= 31</code>), un <code>boolean</code> responde a <code>= true</code> y un <code>null</code> sigue siendo <code>null</code> (por eso valen <code>COALESCE</code>, <code>IS NULL</code> y <code>ORDER BY … NULLS FIRST</code>). Las columnas se llaman como los <b>alias de salida</b> de la vista.</p>
                     <p data-i18n-html="markup.p.fromItIsValidAny">En el <code>FROM</code> vale <b>en cualquier posición</b>: sola, con alias, unida a una tabla o a otra consulta (<code>INNER JOIN</code> y <code>LEFT JOIN</code>, incluida la anti-unión <code>IS NULL</code>), separada por comas, y también con la proyección <code>alias.*</code>. La <b>misma vista dos veces</b> en la misma consulta son dos fuentes independientes (y se calcula una sola vez por ejecución). Una vista que no devuelve filas es una <b>tabla vacía</b>, no un error: <code>COUNT(*)</code> da 0.</p>
                     <p data-i18n-html="markup.p.chainingThemIsWhatGives">Encadenarlas es lo que da la <b>vista de vista</b>: una consulta que lee a otra que lee a otra, tantos niveles como quieras. La marca <b>«vista»</b> de la barra lateral y la columna <b>Vistas</b> del resumen de consultas te dicen quién lee a quién.</p>
@@ -1755,6 +1758,14 @@ ORDER BY r.edificios DESC;</pre>
 FROM [Niveles con dos o más hospitales]   -- esta, a su vez, lee otra consulta
 WHERE camas &gt;= 2000
 ORDER BY camas DESC;</pre>
+                  <h4 data-i18n="markup.h4.subqueryInFromDerivedTable">Subconsulta en el FROM: tabla derivada</h4>
+                  <pre class="sql-ejemplo mono">SELECT t.sede, t.edificios
+FROM (SELECT s.nombre AS sede, COUNT(e.id_edificio) AS edificios
+      FROM sedes AS s
+      INNER JOIN edificios AS e ON e.id_sede = s.id_sede
+      GROUP BY s.nombre) AS t
+WHERE t.edificios &gt;= 2
+ORDER BY t.edificios DESC;</pre>
                   <h4 data-i18n="markup.h4.sameViewTwiceTwoAliases">La misma vista dos veces, con dos alias</h4>
                   <pre class="sql-ejemplo mono">SELECT a.codigo AS aula_1, b.codigo AS aula_2, a.capacidad
 FROM [Aulas grandes] AS a
@@ -1794,6 +1805,10 @@ ORDER BY v.capacidad DESC;</pre>
                     <h3 data-i18n="markup.h3.combiningConditions">Combinar condiciones</h3>
                     <p data-i18n-html="markup.p.notParenthesesMakeClearWhat"><code>AND</code>, <code>OR</code> y <code>NOT</code>, con paréntesis para dejar claro qué va con qué: <code>(curso = 'A' OR curso = 'B') AND edad &gt;= 18</code>. Sin paréntesis, <code>AND</code> ata más fuerte que <code>OR</code>.</p>
                   </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.subqueries">Subconsultas</h3>
+                    <p data-i18n-html="markup.p.subqueryIsSELECTInsideAnother"><b>Una subconsulta</b> es un <code>SELECT</code> dentro de otro. Se usa con <code>IN</code> (y <code>NOT IN</code>), con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>EXISTS</code> (y <code>NOT EXISTS</code>). Puede leer una <b>consulta usada como tabla</b> y también ponerse en el <code>FROM</code> con un alias (tabla derivada). Si dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Usada como valor, tiene que devolver una sola columna y una sola fila.</p>
+                  </section>
                 </div>
                 <div class="help-sql-code">
                   <h4 data-i18n="markup.h4.compareFilter">Comparar y filtrar</h4>
@@ -1819,6 +1834,18 @@ WHERE edad IS NULL OR telefono IS NOT NULL;</pre>
        nombre
 FROM alumnos
 WHERE NULLIF(TRIM(IFNULL(curso, '')), '') IS NOT NULL;</pre>
+                  <h4 data-i18n="markup.h4.subqueries">Subconsultas</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre
+FROM alumnos
+WHERE curso IN (SELECT nombre FROM cursos WHERE activo = TRUE)
+  AND EXISTS (SELECT 1 FROM matriculas
+              WHERE matriculas.id_alumno = alumnos.id);
+
+SELECT t.curso, t.total
+FROM (SELECT curso, COUNT(*) AS total
+      FROM alumnos
+      GROUP BY curso) AS t
+WHERE t.total &gt; ALL (SELECT 1 FROM cursos);</pre>
                 </div>
               </div>
             </section>
@@ -1944,7 +1971,7 @@ ORDER BY fecha DESC;</pre>
                   <section>
                     <h3 data-i18n="markup.h3.errorsPlanLimits">Errores, plan y límites</h3>
                     <p data-i18n-html="markup.p.ifSomethingIsBadlyWritten">Si algo está mal escrito, el mensaje indica <b>línea y columna</b>, enseña el fragmento y sugiere el nombre más parecido. Al ejecutar, el <b>plan</b> muestra cada paso con su tiempo.</p>
-                    <p data-i18n-html="markup.p.queriesAreReadOnlyThere">Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco subconsultas, <code>UNION</code> o <code>CASE</code>. Para cruzar tablas se usan joins.</p>
+                    <p data-i18n-html="markup.p.queriesAreReadOnlyThere">Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>UNION</code> o <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas.</p>
                     <p data-i18n-html="markup.p.oneSingleStatementRunsFinal">Se ejecuta <b>una sola sentencia</b>: el <code>;</code> final se acepta, pero no encadenes varias consultas separadas por <code>;</code> (todo lo que vaya después se considera un error de sobra).</p>
                   </section>
                   <section>
@@ -2586,7 +2613,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.updateTable": "Update table",
         "markup.button.updateTableDataFromImport": "Replace the data of the table importing a CSV or JSON (keeps fields, foreign keys and queries)",
         "markup.button.valuesFunctions": "Values and functions",
-        "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparisons, text and combined conditions",
+        "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparisons, text, combined conditions and subqueries",
         "markup.button.whereRowsComeFromTables": "Where the rows come from: tables, queries read as tables and joins",
         "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (the half moves away from zero: 2.5 → 3 and −2.5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, start[, length])</code> (1 = first character; negative ones count from the end), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
         "markup.dd.aggregatesCOUNTSUMAVGMIN": "Aggregates <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code>, with <code>DISTINCT</code> inside: <code>COUNT(DISTINCT position)</code>. <code>HAVING</code> filters the groups already computed.",
@@ -2598,6 +2625,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dd.limit20OFFSET40MySQL": "<code>LIMIT 20 OFFSET 40</code> or MySQL style <code>LIMIT 40, 20</code> (first the skip, then the rows).",
         "markup.dd.oneTableSeveralSeparatedBy": "One table, or several separated by commas (implicit join) with aliases: <code>FROM cycles AS c, families AS f</code>.",
         "markup.dd.onlySELECTThereIsNo": "Only <code>SELECT</code>: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>.",
+        "markup.dd.subqueryIsSELECTInsideAnother": "A <code>SELECT</code> in brackets inside another one: with <code>IN</code> and <code>NOT IN</code>, with a comparison and <code>ANY</code>/<code>SOME</code> or <code>ALL</code>, and with <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM another)</code>). The subquery can read a <b>query as a table</b>, and it can also go in the <code>FROM</code> with an alias (<b>derived table</b>): <code>FROM (SELECT …) AS t</code>. If it names outer columns inside it is <b>correlated</b> and runs row by row. Used as a value (in the <code>SELECT</code> or compared) it must return <b>a single column</b> and a single row.",
         "markup.dd.severalColumnsASCDESCNULLS": "Several columns, <code>ASC</code>/<code>DESC</code> and <code>NULLS FIRST</code>/<code>NULLS LAST</code>. A number is the position of a column of the result: <code>ORDER BY 2 DESC</code>. Numeric texts are sorted and compared <b>by value</b>, and where the missing values go is decided by <code>NULLS FIRST/LAST</code> even if the key is <code>DESC</code> (without saying it: first in <code>ASC</code>, at the end in <code>DESC</code>).",
         "markup.dd.textTextAreBothText": "<code>'text'</code> and <code>\"text\"</code> are <b>both text</b> (to include the quote, double it); <code>[Name with spaces]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
         "markup.div.dragChangeWidthMinimum140": "Drag to change the width (minimum 140 px, maximum 480 px); double-click to go back to 195 px; when it has the focus, the keyboard arrows",
@@ -2623,6 +2651,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dt.rowsEveryTable": "Rows in every table",
         "markup.dt.tables": "Tables",
         "markup.dt.tablesProject": "Tables in the project",
+        "markup.dt.subqueries": "Subqueries",
         "markup.dt.typesConversion": "Types and conversion",
         "markup.footer.applicationMessages": "Application messages",
         "markup.h2.importDataCSVJSON": "Import data (CSV / JSON)",
@@ -2661,6 +2690,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h3.sqlHelpSummariseSort": "SQL help · Summarise and sort",
         "markup.h3.sqlHelpTablesAliasesViews": "SQL help · Tables, aliases and views",
         "markup.h3.sqlHelpValuesFunctions": "SQL help · Values and functions",
+        "markup.h3.subqueries": "Subqueries",
         "markup.h3.tablesRowsMetadata": "Tables, rows and metadata",
         "markup.h3.testModeQueriesAssertedResult": "Test mode: queries with an asserted result",
         "markup.h3.testQueriesTestMode": "Test queries (test mode)",
@@ -2690,6 +2720,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h4.searchWildcardAsText": "Search for the wildcard as text",
         "markup.h4.sortPaginate": "Sort and paginate",
         "markup.h4.subtractionNullValuesSafeComparisons": "Subtraction of null values and safe comparisons",
+        "markup.h4.subqueries": "Subqueries",
+        "markup.h4.subqueryInFromDerivedTable": "Subquery in the FROM: derived table",
         "markup.h4.textFunctionsSELECTWHERE": "Text functions in the SELECT and in the WHERE",
         "markup.h4.textWildcardsListsRanges": "Text: wildcards, lists and ranges",
         "markup.h4.viewViewQueryThatReads": "View of a view: a query that reads another that reads another",
@@ -2827,10 +2859,12 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.originHas01Related": "An <b>origin</b> has 0 or 1 related targets.",
         "markup.p.otherSectionsThisSQLHelp": "The other sections of this <b>SQL help</b> explain every part with examples; errors and limits, in <b>Limits and tests</b>.",
         "markup.p.projectIsTestOneWhen": "A project is a <b>test</b> one when some of its queries checks a result: when it is opened all the queries run and are compared with their <code>\"assert\"</code>, and the report opens on its own. The <code>\"testing\"</code> property of old files is no longer needed (it is ignored): test mode is worked out from the queries. Every <code>assert</code> takes <code>columns</code> (names and order of the columns), <code>rows</code> (the expected rows, value by value), <code>rowCount</code> (only how many rows) and <code>ignoreOrder</code> (compare whatever the order).",
-        "markup.p.queriesAreReadOnlyThere": "Queries are read-only: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and neither subqueries, <code>UNION</code> nor <code>CASE</code>. Joins are used to cross tables.",
+        "markup.p.queriesAreReadOnlyThere": "Queries are read-only: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and neither <code>UNION</code> nor <code>CASE</code>. Joins and subqueries are used to cross tables.",
+        "markup.p.queriesUsedAsTablesCanBeRead": "Queries can also be read <b>inside a subquery</b> and as a <b>derived table</b>: <code>WHERE id IN (SELECT id FROM [sales summary])</code> and <code>FROM (SELECT …) AS t</code>. And a query whose SQL carries a subquery still works as a view: it runs whole, subquery included (section <b>Subqueries</b>).",
         "markup.p.queryIsMaterialisedBeforeBeing": "The query is <b>materialised</b> before being read: it runs entirely —its <code>WHERE</code>, its <code>JOIN</code>, its <code>GROUP BY</code>/<code>HAVING</code>, its <code>DISTINCT</code>, its <code>ORDER BY</code> and its <code>LIMIT</code>/<code>OFFSET</code>— and what the outer query sees is <b>its finished result</b>. That is why the <code>LIMIT</code> of a view arrives already trimmed, and a view that groups can be aggregated again (double aggregation).",
         "markup.p.renamingTableFieldRewritesQueries": "Renaming a <b>table</b> or a <b>field</b> rewrites the queries of the project that use it: the <code>FROM</code>/<code>JOIN</code>, the qualified columns (<code>table.field</code>) and the bare column. <b>Output aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected; an <code>ORDER BY</code> pointing at an alias stays as it is.",
         "markup.p.selfTestsButtonLaunchesProgram": "The <b>Self-tests</b> button launches the program's internal battery and opens its report; without a window, <code>window.extractor.selfTest()</code> returns the count and the detail of every case.",
+        "markup.p.subqueryIsSELECTInsideAnother": "A <b>subquery</b> is a <code>SELECT</code> inside another one. It is used with <code>IN</code> (and <code>NOT IN</code>), with a comparison and <code>ANY</code>/<code>SOME</code> or <code>ALL</code>, and with <code>EXISTS</code> (and <code>NOT EXISTS</code>). It can read a <b>query used as a table</b> and it can also go in the <code>FROM</code> with an alias (derived table). If it names outer columns inside it is <b>correlated</b> and runs row by row. Used as a value it must return a single column and a single row.",
         "markup.p.severalKeysSeparatedByCommas": "Several keys separated by commas, from the most important to the least. Each one takes <code>ASC</code> (by default) or <code>DESC</code>, and <code>NULLS FIRST</code> / <code>NULLS LAST</code> to decide where the missing values go.",
         "markup.p.severalTablesSeparatedByCommas": "Several tables separated by commas are equivalent to an <b>implicit join</b>: if you also compare fields of both in the <code>WHERE</code>, the engine turns it into a real join.",
         "markup.p.targetHas01Several": "A <b>target</b> has 0, 1 or several related origins.",
@@ -3153,6 +3187,8 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlExecutor.numericColumnHint": "Check the column: it must contain only numbers (or NULL).",
         "sqlExecutor.operatorPlain": "The operator {operator}",
         "sqlExecutor.operatorQuoted": "The operator “{operator}”",
+        "sqlExecutor.scalarSubqueryManyRows": "The subquery returns {count} rows: used as a value it can only return one.",
+        "sqlExecutor.scalarSubqueryManyRowsHint": "Narrow the subquery with WHERE, or aggregate it (for example with MAX) so it returns a single row.",
         "sqlExecutor.textValue": "the text “{value}”",
         "sqlExecutor.unknownPlanOp": "Unknown plan operation: “{operation}”.",
         "sqlExecutor.unsupportedFunction": "Unsupported function: “{func}”.",
@@ -3175,12 +3211,11 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlParser.didYouMean": "Did you mean “{suggestion}”?",
         "sqlParser.endOfQuery": "the end of the query",
         "sqlParser.escapeChar": "the escape character as text, for example ESCAPE '\\'",
+        "sqlParser.derivedTableAlias": "the alias of the subquery of the FROM",
         "sqlParser.expectedButFound": "Expected {expected}, but found {found} (line {line}, column {column}).",
         "sqlParser.expression": "an expression (column, number, text or function)",
         "sqlParser.integerAfter": "an integer after {what}",
         "sqlParser.ofJoin": "of the JOIN",
-        "sqlParser.subqueriesHint": "Rewrite the query with JOIN and WHERE in a single SELECT, or run the inner query first.",
-        "sqlParser.subqueriesUnsupported": "SELECT subqueries are not supported in this dialect.",
         "sqlParser.tableAlias": "the table alias",
         "sqlParser.tableName": "the table name {context}",
         "sqlPlanner.filterHaving": "HAVING filter",
@@ -3193,7 +3228,9 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlPlanner.projection": "Projection of {count} column(s)",
         "sqlPlanner.scan": "Scan “{alias}”",
         "sqlPlanner.scanQuery": "Scan “{alias}” (query “{queryName}”)",
+        "sqlPlanner.scanSubquery": "Scan “{alias}” (subquery of the FROM)",
         "sqlPlanner.sortKeys": "Sort by {count} key(s)",
+        "sqlPlanner.subqueryColumn": "(subquery)",
         "sqlRename.andMore": "{visibles} and {remaining} more",
         "sqlValidator.aggregateInGroupBy": "The aggregate function “{functionName}” cannot be used in GROUP BY.",
         "sqlValidator.aggregateInGroupByHint": "Group by columns and use the aggregate in the column list or in HAVING.",
@@ -3227,6 +3264,8 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlValidator.orderByPositionOutOfRange": "ORDER BY {position} does not match any column: the result has {columnCount} column(s).",
         "sqlValidator.queriesAsTablesHint": " Any query in the project can also be used as a table: just write its name in the FROM.",
         "sqlValidator.sourceNotFound": "Table or alias “{alias}” does not exist in the query. Available sources: {sources}.",
+        "sqlValidator.subqueryOneColumn": "The subquery used here must return a single column.",
+        "sqlValidator.subqueryOneColumnHint": "Write one expression in the SELECT of the subquery, or pick one of its columns.",
         "sqlValidator.tableNotFoundNoTables": "Table “{tableName}” does not exist in the project, which has no tables yet.",
         "sqlValidator.tableNotFoundWithList": "Table “{tableName}” does not exist in the project. Available tables: {tables}.",
         "sqlValidator.unsupportedExpression": "Unsupported expression: “{type}”.",
@@ -3574,7 +3613,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.updateTable": "Actualizar tabla",
         "markup.button.updateTableDataFromImport": "Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)",
         "markup.button.valuesFunctions": "Valores y funciones",
-        "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparaciones, texto y condiciones combinadas",
+        "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparaciones, texto, condiciones combinadas y subconsultas",
         "markup.button.whereRowsComeFromTables": "De dónde salen las filas: tablas, consultas leídas como tablas y joins",
         "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
         "markup.dd.aggregatesCOUNTSUMAVGMIN": "Agregados <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>, con <code>DISTINCT</code> dentro: <code>COUNT(DISTINCT puesto)</code>. <code>HAVING</code> filtra los grupos ya calculados.",
@@ -3586,6 +3625,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dd.limit20OFFSET40MySQL": "<code>LIMIT 20 OFFSET 40</code> o al estilo MySQL <code>LIMIT 40, 20</code> (primero el salto, después las filas).",
         "markup.dd.oneTableSeveralSeparatedBy": "Una tabla, o varias separadas por comas (join implícito) con alias: <code>FROM ciclos AS c, familias AS f</code>.",
         "markup.dd.onlySELECTThereIsNo": "Únicamente <code>SELECT</code>: no hay <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>.",
+        "markup.dd.subqueryIsSELECTInsideAnother": "Un <code>SELECT</code> entre paréntesis dentro de otro: con <code>IN</code> y <code>NOT IN</code>, con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM otra)</code>). La subconsulta puede leer una <b>consulta como tabla</b>, y también va en el <code>FROM</code> con alias (<b>tabla derivada</b>): <code>FROM (SELECT …) AS t</code>. Si por dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Como valor (en el <code>SELECT</code> o comparada) tiene que devolver <b>una sola columna</b> y una sola fila.",
         "markup.dd.severalColumnsASCDESCNULLS": "Varias columnas, <code>ASC</code>/<code>DESC</code> y <code>NULLS FIRST</code>/<code>NULLS LAST</code>. Un número es la posición de una columna del resultado: <code>ORDER BY 2 DESC</code>. Los textos numéricos se ordenan y comparan <b>por valor</b>, y el sitio de los valores que faltan lo manda <code>NULLS FIRST/LAST</code> aunque la clave sea <code>DESC</code> (sin indicarlo: primero en <code>ASC</code>, al final en <code>DESC</code>).",
         "markup.dd.textTextAreBothText": "<code>'texto'</code> y <code>\"texto\"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
         "markup.div.dragChangeWidthMinimum140": "Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 195 px; con el foco, las flechas del teclado",
@@ -3611,6 +3651,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dt.rowsEveryTable": "Filas de todas las tablas",
         "markup.dt.tables": "Tablas",
         "markup.dt.tablesProject": "Tablas del proyecto",
+        "markup.dt.subqueries": "Subconsultas",
         "markup.dt.typesConversion": "Tipos y conversión",
         "markup.footer.applicationMessages": "Mensajes de la aplicación",
         "markup.h2.importDataCSVJSON": "Importar datos (CSV / JSON)",
@@ -3649,6 +3690,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h3.sqlHelpSummariseSort": "Ayuda SQL · Resumir y ordenar",
         "markup.h3.sqlHelpTablesAliasesViews": "Ayuda SQL · Tablas, alias y vistas",
         "markup.h3.sqlHelpValuesFunctions": "Ayuda SQL · Valores y funciones",
+        "markup.h3.subqueries": "Subconsultas",
         "markup.h3.tablesRowsMetadata": "Tablas, filas y metadatos",
         "markup.h3.testModeQueriesAssertedResult": "Modo test: consultas con resultado asertado",
         "markup.h3.testQueriesTestMode": "Consultas de prueba (modo test)",
@@ -3678,6 +3720,8 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h4.searchWildcardAsText": "Buscar el comodín como texto",
         "markup.h4.sortPaginate": "Ordenar y paginar",
         "markup.h4.subtractionNullValuesSafeComparisons": "Resta de valores nulos y comparaciones seguras",
+        "markup.h4.subqueries": "Subconsultas",
+        "markup.h4.subqueryInFromDerivedTable": "Subconsulta en el FROM: tabla derivada",
         "markup.h4.textFunctionsSELECTWHERE": "Funciones de texto en el SELECT y en el WHERE",
         "markup.h4.textWildcardsListsRanges": "Texto: comodines, listas y rangos",
         "markup.h4.viewViewQueryThatReads": "Vista de vista: una consulta que lee a otra que lee a otra",
@@ -3815,10 +3859,12 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.originHas01Related": "Un <b>origen</b> tiene 0 o 1 destinos relacionados.",
         "markup.p.otherSectionsThisSQLHelp": "Los demás apartados de esta <b>Ayuda SQL</b> explican cada parte con ejemplos; los errores y los límites, en <b>Límites y pruebas</b>.",
         "markup.p.projectIsTestOneWhen": "Un proyecto es de <b>test</b> cuando alguna de sus consultas comprueba un resultado: al abrirlo se ejecutan todas las consultas y se comparan con su <code>\"assert\"</code>, y el informe se abre solo. La propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta (se ignora): el modo test se deduce de las consultas. Cada <code>assert</code> admite <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder</code> (comparar sin importar el orden).",
-        "markup.p.queriesAreReadOnlyThere": "Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco subconsultas, <code>UNION</code> o <code>CASE</code>. Para cruzar tablas se usan joins.",
+        "markup.p.queriesAreReadOnlyThere": "Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>UNION</code> o <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas.",
+        "markup.p.queriesUsedAsTablesCanBeRead": "Las consultas se pueden leer también <b>dentro de una subconsulta</b> y como <b>tabla derivada</b>: <code>WHERE id IN (SELECT id FROM [resumen de ventas])</code> y <code>FROM (SELECT …) AS t</code>. Y una consulta cuyo SQL lleva una subconsulta sigue valiendo como vista: se ejecuta entera, subconsulta incluida (apartado <b>Subconsultas</b>).",
         "markup.p.queryIsMaterialisedBeforeBeing": "La consulta se <b>materializa</b> antes de leerla: se ejecuta entera —su <code>WHERE</code>, sus <code>JOIN</code>, su <code>GROUP BY</code>/<code>HAVING</code>, su <code>DISTINCT</code>, su <code>ORDER BY</code> y su <code>LIMIT</code>/<code>OFFSET</code>— y lo que ve la consulta de fuera es <b>su resultado ya hecho</b>. Por eso el <code>LIMIT</code> de una vista llega ya recortado, y una vista que agrupa se puede volver a agregar (doble agregación).",
         "markup.p.renamingTableFieldRewritesQueries": "Renombrar una <b>tabla</b> o un <b>campo</b> reescribe las consultas del proyecto que lo usan: el <code>FROM</code>/<code>JOIN</code>, las columnas cualificadas (<code>tabla.campo</code>) y la columna suelta. Se respetan los <b>alias de salida</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>; un <code>ORDER BY</code> que apunta a un alias se queda como está.",
         "markup.p.selfTestsButtonLaunchesProgram": "El botón <b>Auto-tests</b> lanza la batería interna del programa y abre su informe; sin ventana, <code>window.extractor.selfTest()</code> devuelve el recuento y el detalle de cada caso.",
+        "markup.p.subqueryIsSELECTInsideAnother": "Una <b>subconsulta</b> es un <code>SELECT</code> dentro de otro. Se usa con <code>IN</code> (y <code>NOT IN</code>), con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>EXISTS</code> (y <code>NOT EXISTS</code>). Puede leer una <b>consulta usada como tabla</b> y también ponerse en el <code>FROM</code> con un alias (tabla derivada). Si dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Usada como valor, tiene que devolver una sola columna y una sola fila.",
         "markup.p.severalKeysSeparatedByCommas": "Varias claves separadas por comas, de la más importante a la menos. Cada una admite <code>ASC</code> (por defecto) o <code>DESC</code>, y <code>NULLS FIRST</code> / <code>NULLS LAST</code> para decidir dónde van los valores que faltan.",
         "markup.p.severalTablesSeparatedByCommas": "Varias tablas por comas equivalen a un <b>join implícito</b>: si además comparas campos de las dos en el <code>WHERE</code>, el motor lo convierte en un join de verdad.",
         "markup.p.targetHas01Several": "Un <b>destino</b> tiene 0, 1 o varios orígenes relacionados.",
@@ -4141,6 +4187,8 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlExecutor.numericColumnHint": "Revisa la columna: solo debe contener números (o NULL).",
         "sqlExecutor.operatorPlain": "El operador {operator}",
         "sqlExecutor.operatorQuoted": "El operador «{operator}»",
+        "sqlExecutor.scalarSubqueryManyRows": "La subconsulta devuelve {count} filas: usada como valor solo puede devolver una.",
+        "sqlExecutor.scalarSubqueryManyRowsHint": "Acota la subconsulta con WHERE, o agrégala (por ejemplo con MAX) para que devuelva una sola fila.",
         "sqlExecutor.textValue": "el texto «{value}»",
         "sqlExecutor.unknownPlanOp": "Operación de plan desconocida: «{operation}».",
         "sqlExecutor.unsupportedFunction": "Función no soportada: «{func}».",
@@ -4163,12 +4211,11 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlParser.didYouMean": "¿Quisiste decir «{suggestion}»?",
         "sqlParser.endOfQuery": "el final de la consulta",
         "sqlParser.escapeChar": "el carácter de escape como texto, por ejemplo ESCAPE '\\'",
+        "sqlParser.derivedTableAlias": "el alias de la subconsulta del FROM",
         "sqlParser.expectedButFound": "Se esperaba {expected}, pero se encontró {found} (línea {line}, columna {column}).",
         "sqlParser.expression": "una expresión (columna, número, texto o función)",
         "sqlParser.integerAfter": "un número entero después de {what}",
         "sqlParser.ofJoin": "del JOIN",
-        "sqlParser.subqueriesHint": "Reescribe la consulta con JOIN y WHERE en un solo SELECT, o ejecuta primero la consulta interna.",
-        "sqlParser.subqueriesUnsupported": "Las subconsultas SELECT no están soportadas en este dialecto.",
         "sqlParser.tableAlias": "el alias de la tabla",
         "sqlParser.tableName": "el nombre de la tabla {context}",
         "sqlPlanner.filterHaving": "Filtro HAVING",
@@ -4181,7 +4228,9 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlPlanner.projection": "Proyección de {count} columna(s)",
         "sqlPlanner.scan": "Escaneo «{alias}»",
         "sqlPlanner.scanQuery": "Escaneo «{alias}» (consulta «{queryName}»)",
+        "sqlPlanner.scanSubquery": "Escaneo «{alias}» (subconsulta del FROM)",
         "sqlPlanner.sortKeys": "Orden por {count} clave(s)",
+        "sqlPlanner.subqueryColumn": "(subconsulta)",
         "sqlRename.andMore": "{visibles} y {remaining} más",
         "sqlValidator.aggregateInGroupBy": "La función de agregado «{functionName}» no se puede usar en GROUP BY.",
         "sqlValidator.aggregateInGroupByHint": "Agrupa por columnas y usa el agregado en la lista de columnas o en HAVING.",
@@ -4215,6 +4264,8 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlValidator.orderByPositionOutOfRange": "ORDER BY {position} no corresponde a ninguna columna: el resultado tiene {columnCount} columna(s).",
         "sqlValidator.queriesAsTablesHint": " Cualquier consulta del proyecto también se puede usar como tabla: basta con escribir su nombre en el FROM.",
         "sqlValidator.sourceNotFound": "La tabla o alias «{alias}» no existe en la consulta. Fuentes disponibles: {sources}.",
+        "sqlValidator.subqueryOneColumn": "La subconsulta usada aquí debe devolver una sola columna.",
+        "sqlValidator.subqueryOneColumnHint": "Escribe una única expresión en el SELECT de la subconsulta, o elige una de sus columnas.",
         "sqlValidator.tableNotFoundNoTables": "La tabla «{tableName}» no existe en el proyecto, que todavía no tiene tablas.",
         "sqlValidator.tableNotFoundWithList": "La tabla «{tableName}» no existe en el proyecto. Tablas disponibles: {tables}.",
         "sqlValidator.unsupportedExpression": "Expresión no soportada: «{type}».",
@@ -6370,7 +6421,7 @@ ORDER BY edificios DESC, sede;</pre>
       "SELECT", "DISTINCT", "FROM", "AS", "INNER", "LEFT", "OUTER", "JOIN", "ON",
       "WHERE", "GROUP", "BY", "HAVING", "ORDER", "ASC", "DESC", "NULLS", "FIRST",
       "LAST", "LIMIT", "OFFSET", "AND", "OR", "NOT", "NULL", "TRUE", "FALSE",
-      "IS", "IN", "BETWEEN", "LIKE", "ESCAPE",
+      "IS", "IN", "BETWEEN", "LIKE", "ESCAPE", "EXISTS", "ANY", "SOME", "ALL",
     ];
 
     /** Turns the SQL text into tokens with line and column. */
@@ -6625,6 +6676,13 @@ ORDER BY edificios DESC, sede;</pre>
             return;
           }
           if (token.type !== "identifier") {
+            if (enTables && token.type === "punct" && token.value === "(") {
+              // A parenthesised source is a derived table: its own FROM will
+              // set the table position again; the name that follows now is not
+              // a table of this level.
+              esperandoTable = false;
+              esperandoAlias = false;
+            }
             if (enTables && token.type === "punct" && token.value === ",") {
               esperandoTable = true;
               esperandoAlias = false;
@@ -6926,7 +6984,12 @@ ORDER BY edificios DESC, sede;</pre>
       /** Table reference with an optional alias: «table» or «table AS alias». */
       parseTableRef(contexto) {
         if (this.peek().type === "punct" && this.peek().value === "(") {
-          throw this.subqueryError(this.peek());
+          const subquery = this.parseSubquery();
+          if (!this.matchKeyword("AS")) {
+            throw this.expectedError(this.peek(), I18n.t("sqlParser.derivedTableAlias"));
+          }
+          const alias = this.expectIdentifierName(I18n.t("sqlParser.tableAlias"));
+          return { table: null, subquery, alias };
         }
         const table = this.expectIdentifierName(I18n.t("sqlParser.tableName", { context: contexto }));
         let alias = null;
@@ -6934,6 +6997,30 @@ ORDER BY edificios DESC, sede;</pre>
           alias = this.expectIdentifierName(I18n.t("sqlParser.tableAlias"));
         }
         return { table, alias };
+      }
+
+      /** Quantifier after a comparison: ANY, SOME (both «any») or ALL. */
+      matchQuantifier() {
+        const token = this.peek();
+        if (token.type === "keyword" && ["ANY", "SOME", "ALL"].includes(token.value)) {
+          this.next();
+          return token.value === "ALL" ? "all" : "any";
+        }
+        return null;
+      }
+
+      /** «(SELECT …)» read as a subquery: returns the AST of the inner SELECT.
+       *  It is used for the derived tables of the FROM, the predicates
+       *  (IN, ANY/ALL, EXISTS) and the scalar subqueries. */
+      parseSubquery() {
+        this.expectPunct("(");
+        const token = this.peek();
+        if (!(token.type === "keyword" && token.value === "SELECT")) {
+          throw this.expectedError(token, "SELECT");
+        }
+        const ast = this.parseSelect();
+        this.expectPunct(")");
+        return ast;
       }
 
       tryParseJoin() {
@@ -7010,6 +7097,10 @@ ORDER BY edificios DESC, sede;</pre>
 
       parseNot() {
         if (this.matchKeyword("NOT")) {
+          if (this.peek().type === "keyword" && this.peek().value === "EXISTS") {
+            this.next();
+            return { type: "exists", query: this.parseSubquery(), not: true };
+          }
           return { type: "unary", op: "not", operand: this.parseNot() };
         }
         return this.parseComparison();
@@ -7022,6 +7113,11 @@ ORDER BY edificios DESC, sede;</pre>
           if (token.type === "punct" && ["=", "==", "!=", "<>", "<", "<=", ">", ">="].includes(token.value)) {
             this.next();
             const op = token.value === "==" ? "=" : (token.value === "!=" ? "<>" : token.value);
+            const quantifier = this.matchQuantifier();
+            if (quantifier) {
+              left = { type: "quantified", op, quantifier, expr: left, query: this.parseSubquery() };
+              continue;
+            }
             left = { type: "binary", op, left, right: this.parseAdditive() };
             continue;
           }
@@ -7069,6 +7165,12 @@ ORDER BY edificios DESC, sede;</pre>
             }
             this.next();
             this.expectPunct("(");
+            if (this.peek().type === "keyword" && this.peek().value === "SELECT") {
+              const query = this.parseSelect();
+              this.expectPunct(")");
+              left = { type: "in", expr: left, query, values: null, not: negated };
+              continue;
+            }
             const values = [];
             do {
               values.push(this.parseExpression());
@@ -7143,13 +7245,22 @@ ORDER BY edificios DESC, sede;</pre>
             this.next();
             return { type: "literal", value: false };
           }
+          if (token.value === "EXISTS") {
+            this.next();
+            return { type: "exists", query: this.parseSubquery(), not: false };
+          }
           if (token.value === "SELECT") {
-            throw this.subqueryError(token);
+            throw this.expectedError(token, I18n.t("sqlParser.expression"));
           }
           throw this.expectedError(token, I18n.t("sqlParser.expression"));
         }
         if (token.type === "punct" && token.value === "(") {
           this.next();
+          if (this.peek().type === "keyword" && this.peek().value === "SELECT") {
+            const ast = this.parseSelect();
+            this.expectPunct(")");
+            return { type: "subquery", ast };
+          }
           const expr = this.parseExpression();
           this.expectPunct(")");
           return expr;
@@ -7262,19 +7373,6 @@ ORDER BY edificios DESC, sede;</pre>
         throw this.expectedError(token, what);
       }
 
-      /** Specific error for subqueries, not supported in the dialect. */
-      subqueryError(token) {
-        return new SqlParseError(
-          I18n.t("sqlParser.subqueriesUnsupported"),
-          {
-            line: token.line,
-            col: token.col,
-            snippet: sqlSnippet(this.sql, token.line, token.col),
-            hint: I18n.t("sqlParser.subqueriesHint"),
-          },
-        );
-      }
-
       /** Syntax error with position, snippet and keyword suggestion. */
       expectedError(token, expected) {
         const found = token.type === "eof" ? I18n.t("sqlParser.endOfQuery") : `«${token.raw}»`;
@@ -7362,6 +7460,18 @@ ORDER BY edificios DESC, sede;</pre>
         const table = SqlViews.resultTable(query, result);
         ejecucion.cache.set(key, table);
         return table;
+      },
+
+      /** Runs the AST of an inline subquery (a derived table of the FROM) and
+       *  returns its result as a table: the same columns and rows, with the
+       *  type of each column deduced from its values. Unlike a view, it is not
+       *  cached or named: it belongs to the query that writes it. */
+      materializeAst(ast, project, state, label) {
+        const ejecucion = state || SqlViews.newState();
+        const resolved = SqlValidator.validateSelect(ast, project, ejecucion, []);
+        const result = SqlExecutor.execute(SqlPlanner.build(ast, resolved));
+        ejecucion.ms += result.ms;
+        return SqlViews.resultTable({ name: label || "", description: "" }, result);
       },
 
       /** Synthetic table with the query result: the columns of the plan (alias
@@ -7520,9 +7630,19 @@ ORDER BY edificios DESC, sede;</pre>
        *  without falling into circles. Returns { sources, hasAggregates } or
        *  throws SqlValidationError. */
       validate(ast, project, state) {
+        return SqlValidator.validateSelect(ast, project, state, []);
+      },
+
+      /** Validates and annotates one SELECT. `outerSources` are the sources of
+       *  the enclosing queries, so a correlated subquery can point at them.
+       *  Returns { sources, outer, hasAggregates } or throws. */
+      validateSelect(ast, project, state, outerSources) {
         const sources = SqlValidator.resolveSources(ast, project, state);
         const context = {
           sources,
+          outer: outerSources || [],
+          project,
+          state: state || SqlViews.newState(),
           groupKeys: new Set(),
           requiresGrouping: false,
           outputAliases: ast.columns.filter((col) => col.alias).map((col) => col.alias),
@@ -7543,23 +7663,30 @@ ORDER BY edificios DESC, sede;</pre>
           }
         });
         ast.orderBy.forEach((item) => SqlValidator.validateOrderItem(item, context, SqlValidator.outputColumnCount(ast, sources)));
-        return { sources, hasAggregates: context.requiresGrouping };
+        return { sources, outer: context.outer, hasAggregates: context.requiresGrouping };
       },
 
       /** Resolves the sources of the FROM and the JOINs against the project: a
        *  table or a query used as a table (SqlViews). */
       resolveSources(ast, project, state) {
         const ejecucion = state || SqlViews.newState();
-        const refs = [{ name: ast.from.table, alias: ast.from.alias }];
-        ast.joins.forEach((join) => refs.push({ name: join.table, alias: join.alias }));
+        const refs = [{ name: ast.from.table, alias: ast.from.alias, subquery: ast.from.subquery }];
+        ast.joins.forEach((join) => refs.push({ name: join.table, alias: join.alias, subquery: join.subquery }));
         const sources = [];
         const used = new Set();
         refs.forEach((ref) => {
-          const encontrada = SqlViews.findSource(ref.name, project, ejecucion);
-          if (!encontrada) {
-            throw SqlValidator.unknownSource(ref.name, project);
+          let table;
+          let fromQuery = null;
+          if (ref.subquery) {
+            table = SqlViews.materializeAst(ref.subquery, project, ejecucion, ref.alias);
+          } else {
+            const encontrada = SqlViews.findSource(ref.name, project, ejecucion);
+            if (!encontrada) {
+              throw SqlValidator.unknownSource(ref.name, project);
+            }
+            table = encontrada.table;
+            fromQuery = encontrada.query ? encontrada.query.name : null;
           }
-          const table = encontrada.table;
           const alias = ref.alias || table.name;
           const key = alias.toLowerCase();
           if (used.has(key)) {
@@ -7572,11 +7699,29 @@ ORDER BY edificios DESC, sede;</pre>
           sources.push({
             alias,
             table,
-            fromQuery: encontrada.query ? encontrada.query.name : null,
+            fromQuery,
+            fromSubquery: Boolean(ref.subquery),
             fields: new Map(table.fields.map((field) => [field.name.toLowerCase(), field.name])),
           });
         });
         return sources;
+      },
+
+      /** Validates the inner SELECT of a subquery node against the project and
+       *  the enclosing sources (so it can be correlated). The resolved data is
+       *  kept in the node for the planner. When `singleColumn` is true the
+       *  subquery must return exactly one column (IN, ANY/ALL and scalar). */
+      validateSubquery(node, context, singleColumn) {
+        const inner = node.query || node.ast;
+        const outer = context.sources.concat(context.outer || []);
+        const resolved = SqlValidator.validateSelect(inner, context.project, context.state, outer);
+        node.resolved = resolved;
+        if (singleColumn && SqlValidator.outputColumnCount(inner, resolved.sources) !== 1) {
+          throw new SqlValidationError(
+            I18n.t("sqlValidator.subqueryOneColumn"),
+            { hint: I18n.t("sqlValidator.subqueryOneColumnHint") },
+          );
+        }
       },
 
       /** Unknown source error: it lists the tables and reminds that any query
@@ -7617,17 +7762,21 @@ ORDER BY edificios DESC, sede;</pre>
         return found;
       },
 
-      /** Direct subexpressions of a node (for generic walks). */
+      /** Direct subexpressions of a node (for generic walks). The AST of a
+       *  subquery (a whole SELECT) is not an expression: it is left out so
+       *  walks do not reach into another query. */
       childExpressions(expr) {
         const children = [];
+        const isExpression = (value) => value && typeof value === "object"
+          && typeof value.type === "string" && value.type !== "select";
         Object.values(expr).forEach((value) => {
           if (Array.isArray(value)) {
             value.forEach((item) => {
-              if (item && typeof item === "object" && typeof item.type === "string") {
+              if (isExpression(item)) {
                 children.push(item);
               }
             });
-          } else if (value && typeof value === "object" && typeof value.type === "string") {
+          } else if (isExpression(value)) {
             children.push(value);
           }
         });
@@ -7688,7 +7837,21 @@ ORDER BY edificios DESC, sede;</pre>
             return;
           case "in":
             SqlValidator.walk(expr.expr, contextName, context, insideAggregate);
-            expr.values.forEach((value) => SqlValidator.walk(value, contextName, context, insideAggregate));
+            if (expr.query) {
+              SqlValidator.validateSubquery(expr, context, true);
+            } else {
+              expr.values.forEach((value) => SqlValidator.walk(value, contextName, context, insideAggregate));
+            }
+            return;
+          case "exists":
+            SqlValidator.validateSubquery(expr, context, false);
+            return;
+          case "quantified":
+            SqlValidator.walk(expr.expr, contextName, context, insideAggregate);
+            SqlValidator.validateSubquery(expr, context, true);
+            return;
+          case "subquery":
+            SqlValidator.validateSubquery(expr, context, true);
             return;
           case "call":
             SqlValidator.validateCall(expr, contextName, context, insideAggregate);
@@ -7705,24 +7868,50 @@ ORDER BY edificios DESC, sede;</pre>
           source = context.sources.find(
             (candidate) => candidate.alias.toLowerCase() === node.table.toLowerCase(),
           );
-          if (!source) {
-            const names = context.sources.map((candidate) => candidate.alias);
+          const outerSource = source ? null : (context.outer || []).find(
+            (candidate) => candidate.alias.toLowerCase() === node.table.toLowerCase(),
+          );
+          if (!source && !outerSource) {
+            const names = context.sources.concat(context.outer || []).map((candidate) => candidate.alias);
             const suggestion = suggestFrom(node.table, names);
             throw new SqlValidationError(
               I18n.t("sqlValidator.sourceNotFound", { alias: node.table, sources: names.join(", ") }),
               { hint: suggestion && suggestion !== node.table ? I18n.t("sqlParser.didYouMean", { suggestion: suggestion }) : "" },
             );
           }
-          const canonical = source.fields.get(node.name.toLowerCase());
+          const target = source || outerSource;
+          const canonical = target.fields.get(node.name.toLowerCase());
           if (!canonical) {
-            throw SqlValidator.columnNotFound(source, node.name);
+            throw SqlValidator.columnNotFound(target, node.name);
           }
-          node.source = source.alias;
+          node.source = target.alias;
           node.field = canonical;
-          node.meta = source.table.fields.find((field) => field.name === canonical) || null;
+          node.meta = target.table.fields.find((field) => field.name === canonical) || null;
+          if (outerSource) {
+            node.outer = true;
+            return;
+          }
         } else {
           const matches = context.sources.filter((candidate) => candidate.fields.has(node.name.toLowerCase()));
           if (matches.length === 0) {
+            const outerMatches = (context.outer || []).filter(
+              (candidate) => candidate.fields.has(node.name.toLowerCase()),
+            );
+            if (outerMatches.length > 1) {
+              const options = outerMatches.map((candidate) => `${candidate.alias}.${candidate.fields.get(node.name.toLowerCase())}`);
+              throw new SqlValidationError(
+                I18n.t("sqlValidator.columnAmbiguous", { columnName: node.name, tables: outerMatches.map((candidate) => `«${candidate.alias}»`).join(I18n.t("misc.and")) }),
+                { hint: I18n.t("sqlValidator.ambiguousColumnHint", { options: options.join(I18n.t("misc.or")) }) },
+              );
+            }
+            if (outerMatches.length === 1) {
+              const source = outerMatches[0];
+              node.source = source.alias;
+              node.field = source.fields.get(node.name.toLowerCase());
+              node.meta = source.table.fields.find((field) => field.name === node.field) || null;
+              node.outer = true;
+              return;
+            }
             throw SqlValidator.columnNotFoundAny(context.sources, node.name);
           }
           if (matches.length > 1) {
@@ -7944,9 +8133,13 @@ ORDER BY edificios DESC, sede;</pre>
       /** Label of the scan step: it warns when the source is not a project
        *  table but a query read as a table. */
       sourceLabel(source) {
-        return source.fromQuery
-          ? I18n.t("sqlPlanner.scanQuery", { alias: source.alias, queryName: source.fromQuery })
-          : I18n.t("sqlPlanner.scan", { alias: source.alias });
+        if (source.fromQuery) {
+          return I18n.t("sqlPlanner.scanQuery", { alias: source.alias, queryName: source.fromQuery });
+        }
+        if (source.fromSubquery) {
+          return I18n.t("sqlPlanner.scanSubquery", { alias: source.alias });
+        }
+        return I18n.t("sqlPlanner.scan", { alias: source.alias });
       },
 
       /** When the condition is a column-to-column equality between the tables
@@ -7973,6 +8166,7 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Returns { root, columns } from the validated AST. */
       build(ast, resolved) {
+        SqlPlanner.prepareSubqueries(ast);
         const fromSource = resolved.sources[0];
         let op = { op: "scan", source: fromSource, label: SqlPlanner.sourceLabel(fromSource) };
 
@@ -8038,6 +8232,29 @@ ORDER BY edificios DESC, sede;</pre>
         }
 
         return { root: op, columns: items.map((item) => item.label) };
+      },
+
+      /** Builds, once, the plan of every subquery the query carries (predicates
+       *  and scalar subqueries). The node keeps it and the executor runs it,
+       *  row by row, with the outer row at hand (correlation). */
+      prepareSubqueries(ast) {
+        const visit = (expr) => {
+          if (!expr || typeof expr.type !== "string") {
+            return;
+          }
+          if (expr.type === "subquery" || expr.type === "exists" || expr.type === "quantified"
+            || (expr.type === "in" && expr.query)) {
+            expr.plan = SqlPlanner.build(expr.query || expr.ast, expr.resolved);
+            return;
+          }
+          SqlValidator.childExpressions(expr).forEach(visit);
+        };
+        ast.columns.forEach((col) => visit(col.expr));
+        ast.groupBy.forEach((expr) => visit(expr));
+        visit(ast.where);
+        ast.joins.forEach((join) => visit(join.on));
+        visit(ast.having);
+        ast.orderBy.forEach((item) => visit(item.expr));
       },
 
       /** Join step of `input` with `rightSource`. With ON, the equalities
@@ -8189,7 +8406,15 @@ ORDER BY edificios DESC, sede;</pre>
           case "like":
             return `${SqlPlanner.expressionLabel(expr.expr)} ${expr.not ? "NOT " : ""}LIKE ${SqlPlanner.expressionLabel(expr.pattern)}`;
           case "in":
-            return `${SqlPlanner.expressionLabel(expr.expr)} ${expr.not ? "NOT " : ""}IN (${expr.values.map(SqlPlanner.expressionLabel).join(", ")})`;
+            return expr.query
+              ? `${SqlPlanner.expressionLabel(expr.expr)} ${expr.not ? "NOT " : ""}IN (…)`
+              : `${SqlPlanner.expressionLabel(expr.expr)} ${expr.not ? "NOT " : ""}IN (${expr.values.map(SqlPlanner.expressionLabel).join(", ")})`;
+          case "exists":
+            return `${expr.not ? "NOT " : ""}EXISTS (…)`;
+          case "quantified":
+            return `${SqlPlanner.expressionLabel(expr.expr)} ${expr.op.toUpperCase()} ${expr.quantifier.toUpperCase()} (…)`;
+          case "subquery":
+            return I18n.t("sqlPlanner.subqueryColumn");
           default:
             return "?";
         }
@@ -8202,34 +8427,35 @@ ORDER BY edificios DESC, sede;</pre>
       likeCache: new Map(),
       LIKE_CACHE_MAX: 200,
 
-      /** Returns { columns, rows, steps, ms }. */
-      execute(plan) {
+      /** Returns { columns, rows, steps, ms }. `outer` is the row context of the
+       *  enclosing query when this plan is a subquery (null at the top). */
+      execute(plan, outer) {
         const steps = [];
-        const items = SqlExecutor.evalOp(plan.root, steps);
+        const items = SqlExecutor.evalOp(plan.root, steps, outer || null);
         const rows = items.map((item) => item.values);
         const ms = steps.reduce((total, step) => total + step.ms, 0);
         return { columns: plan.columns, rows, steps, ms };
       },
 
-      evalOp(op, steps) {
+      evalOp(op, steps, outer) {
         switch (op.op) {
           case "scan":
-            return SqlExecutor.evalScan(op, steps);
+            return SqlExecutor.evalScan(op, steps, outer);
           case "filter":
-            return SqlExecutor.evalFilter(op, steps);
+            return SqlExecutor.evalFilter(op, steps, outer);
           case "hashJoin":
           case "nestedLoopJoin":
-            return SqlExecutor.evalJoin(op, steps);
+            return SqlExecutor.evalJoin(op, steps, outer);
           case "aggregate":
-            return SqlExecutor.evalAggregate(op, steps);
+            return SqlExecutor.evalAggregate(op, steps, outer);
           case "project":
-            return SqlExecutor.evalProject(op, steps);
+            return SqlExecutor.evalProject(op, steps, outer);
           case "distinct":
-            return SqlExecutor.evalDistinct(op, steps);
+            return SqlExecutor.evalDistinct(op, steps, outer);
           case "sort":
-            return SqlExecutor.evalSort(op, steps);
+            return SqlExecutor.evalSort(op, steps, outer);
           case "limit":
-            return SqlExecutor.evalLimit(op, steps);
+            return SqlExecutor.evalLimit(op, steps, outer);
           default:
             throw new SqlRuntimeError(I18n.t("sqlExecutor.unknownPlanOp", { operation: op.op }), {});
         }
@@ -8239,27 +8465,28 @@ ORDER BY edificios DESC, sede;</pre>
         steps.push({ label, rows, ms: Math.round((performance.now() - startedAt) * 1000) / 1000 });
       },
 
-      evalScan(op, steps) {
+      evalScan(op, steps, outer) {
         const startedAt = performance.now();
         const rows = op.source.table.rows.map((row) => ({
           sources: { [op.source.alias]: row },
           aggregates: null,
+          outer: outer || null,
         }));
         SqlExecutor.recordStep(steps, op.label, rows.length, startedAt);
         return rows;
       },
 
-      evalFilter(op, steps) {
-        const input = SqlExecutor.evalOp(op.input, steps);
+      evalFilter(op, steps, outer) {
+        const input = SqlExecutor.evalOp(op.input, steps, outer);
         const startedAt = performance.now();
         const output = input.filter((context) => SqlExecutor.evalCondition(op.condition, context) === true);
         SqlExecutor.recordStep(steps, op.label, output.length, startedAt);
         return output;
       },
 
-      evalJoin(op, steps) {
-        const left = SqlExecutor.evalOp(op.input, steps);
-        const right = SqlExecutor.evalOp(op.right, steps);
+      evalJoin(op, steps, outer) {
+        const left = SqlExecutor.evalOp(op.input, steps, outer);
+        const right = SqlExecutor.evalOp(op.right, steps, outer);
         const startedAt = performance.now();
         const output = op.op === "hashJoin"
           ? SqlExecutor.hashJoin(op, left, right)
@@ -8272,6 +8499,7 @@ ORDER BY edificios DESC, sede;</pre>
         return {
           sources: Object.assign({}, leftContext.sources, rightContext.sources),
           aggregates: null,
+          outer: leftContext.outer || null,
         };
       },
 
@@ -8279,6 +8507,7 @@ ORDER BY edificios DESC, sede;</pre>
         return {
           sources: Object.assign({}, leftContext.sources, { [rightAlias]: null }),
           aggregates: null,
+          outer: leftContext.outer || null,
         };
       },
 
@@ -8349,8 +8578,8 @@ ORDER BY edificios DESC, sede;</pre>
         return SqlExecutor.evalCondition(op.condition, context) === true;
       },
 
-      evalAggregate(op, steps) {
-        const input = SqlExecutor.evalOp(op.input, steps);
+      evalAggregate(op, steps, outer) {
+        const input = SqlExecutor.evalOp(op.input, steps, outer);
         const startedAt = performance.now();
         const groups = new Map();
         input.forEach((context) => {
@@ -8363,7 +8592,7 @@ ORDER BY edificios DESC, sede;</pre>
         });
         if (op.groupExprs.length === 0 && groups.size === 0) {
           groups.set("()", {
-            representative: { sources: {}, aggregates: null },
+            representative: { sources: {}, aggregates: null, outer: outer || null },
             contexts: [],
           });
         }
@@ -8375,7 +8604,11 @@ ORDER BY edificios DESC, sede;</pre>
           op.aggregates.forEach((node) => {
             aggregates.set(node, SqlExecutor.computeAggregate(node, group.contexts));
           });
-          output.push({ sources: group.representative.sources, aggregates });
+          output.push({
+            sources: group.representative.sources,
+            aggregates,
+            outer: group.representative.outer || null,
+          });
         });
         SqlExecutor.recordStep(steps, op.label, output.length, startedAt);
         return output;
@@ -8422,8 +8655,8 @@ ORDER BY edificios DESC, sede;</pre>
         return func === "SUM" ? total : total / numbers.length;
       },
 
-      evalProject(op, steps) {
-        const input = SqlExecutor.evalOp(op.input, steps);
+      evalProject(op, steps, outer) {
+        const input = SqlExecutor.evalOp(op.input, steps, outer);
         const startedAt = performance.now();
         const output = input.map((context) => ({
           values: op.items.map((item) => SqlExecutor.evalExpr(item.expr, context)),
@@ -8433,8 +8666,8 @@ ORDER BY edificios DESC, sede;</pre>
         return output;
       },
 
-      evalDistinct(op, steps) {
-        const input = SqlExecutor.evalOp(op.input, steps);
+      evalDistinct(op, steps, outer) {
+        const input = SqlExecutor.evalOp(op.input, steps, outer);
         const startedAt = performance.now();
         const seen = new Set();
         const output = input.filter((item) => {
@@ -8449,8 +8682,8 @@ ORDER BY edificios DESC, sede;</pre>
         return output;
       },
 
-      evalSort(op, steps) {
-        const input = SqlExecutor.evalOp(op.input, steps);
+      evalSort(op, steps, outer) {
+        const input = SqlExecutor.evalOp(op.input, steps, outer);
         const startedAt = performance.now();
         const output = input.slice().sort((a, b) => SqlExecutor.compareByKeys(op.keys, a, b));
         SqlExecutor.recordStep(steps, op.label, output.length, startedAt);
@@ -8519,8 +8752,8 @@ ORDER BY edificios DESC, sede;</pre>
         return rank[typeof a] - rank[typeof b];
       },
 
-      evalLimit(op, steps) {
-        const input = SqlExecutor.evalOp(op.input, steps);
+      evalLimit(op, steps, outer) {
+        const input = SqlExecutor.evalOp(op.input, steps, outer);
         const startedAt = performance.now();
         const output = input.slice(op.offset, op.offset + op.limit);
         SqlExecutor.recordStep(steps, op.label, output.length, startedAt);
@@ -8542,14 +8775,26 @@ ORDER BY edificios DESC, sede;</pre>
         );
       },
 
-      /** Evaluation of an expression against a row context. */
+      /** Evaluation of an expression against a row context. A column that is
+       *  not in the sources of the row comes from an enclosing query (a
+       *  correlated subquery): the chain of contexts is walked outwards. */
       evalExpr(expr, context) {
         switch (expr.type) {
           case "literal":
             return expr.value;
           case "column": {
-            const row = context.sources[expr.source];
-            const value = row ? row[expr.field] : null;
+            let scope = context;
+            let row = null;
+            let found = false;
+            while (scope) {
+              if (Object.prototype.hasOwnProperty.call(scope.sources, expr.source)) {
+                row = scope.sources[expr.source];
+                found = true;
+                break;
+              }
+              scope = scope.outer || null;
+            }
+            const value = found && row ? row[expr.field] : null;
             return expr.meta ? Model.convertValue(value, expr.meta.type) : value;
           }
           case "unary":
@@ -8566,6 +8811,12 @@ ORDER BY edificios DESC, sede;</pre>
             return SqlExecutor.evalLike(expr, context);
           case "in":
             return SqlExecutor.evalIn(expr, context);
+          case "exists":
+            return SqlExecutor.evalExists(expr, context);
+          case "quantified":
+            return SqlExecutor.evalQuantified(expr, context);
+          case "subquery":
+            return SqlExecutor.evalScalarSubquery(expr, context);
           case "call":
             if (expr.isAggregate) {
               return context.aggregates ? context.aggregates.get(expr) : null;
@@ -8778,10 +9029,12 @@ ORDER BY edificios DESC, sede;</pre>
         if (value === null) {
           return null;
         }
+        const candidates = expr.query
+          ? SqlExecutor.subqueryColumn(expr, context)
+          : expr.values.map((item) => SqlExecutor.evalExpr(item, context));
         let sawNull = false;
         let match = false;
-        expr.values.forEach((item) => {
-          const candidate = SqlExecutor.evalExpr(item, context);
+        candidates.forEach((candidate) => {
           if (candidate === null) {
             sawNull = true;
             return;
@@ -8797,6 +9050,87 @@ ORDER BY edificios DESC, sede;</pre>
           return null;
         }
         return expr.not ? true : false;
+      },
+
+      /** Runs the plan of a subquery with the outer row at hand and returns the
+       *  projected items (each one carries its `values`). */
+      subqueryItems(node, context) {
+        return SqlExecutor.evalOp(node.plan.root, [], context);
+      },
+
+      /** First column of every row of a subquery, in row order. */
+      subqueryColumn(node, context) {
+        return SqlExecutor.subqueryItems(node, context).map((item) => item.values[0]);
+      },
+
+      /** Scalar subquery: the single value of its only row, null when it has no
+       *  rows. More than one row is an error, as in SQL. */
+      evalScalarSubquery(expr, context) {
+        const items = SqlExecutor.subqueryItems(expr, context);
+        if (items.length > 1) {
+          throw new SqlRuntimeError(
+            I18n.t("sqlExecutor.scalarSubqueryManyRows", { count: items.length }),
+            { hint: I18n.t("sqlExecutor.scalarSubqueryManyRowsHint") },
+          );
+        }
+        return items.length === 0 ? null : items[0].values[0];
+      },
+
+      evalExists(expr, context) {
+        const any = SqlExecutor.subqueryItems(expr, context).length > 0;
+        return expr.not ? !any : any;
+      },
+
+      /** Comparison against the values of a subquery: x op ANY (…) is true when
+       *  the comparison holds for at least one value; x op ALL (…) is true when
+       *  it holds for every value. A null value leaves the answer unknown when
+       *  no other value decides it. */
+      evalQuantified(expr, context) {
+        const value = SqlExecutor.evalExpr(expr.expr, context);
+        const candidates = SqlExecutor.subqueryColumn(expr, context);
+        let sawNull = false;
+        for (const candidate of candidates) {
+          const outcome = SqlExecutor.compareWith(expr.op, value, candidate);
+          if (expr.quantifier === "all") {
+            if (outcome === false) {
+              return false;
+            }
+          } else if (outcome === true) {
+            return true;
+          }
+          if (outcome === null) {
+            sawNull = true;
+          }
+        }
+        if (sawNull) {
+          return null;
+        }
+        return expr.quantifier === "all";
+      },
+
+      /** Comparison of two values with a comparison operator, with SQL's three
+       *  values: null when either side is null. */
+      compareWith(op, left, right) {
+        if (left === null || right === null) {
+          return null;
+        }
+        if (op === "=") {
+          return SqlExecutor.strictEquals(left, right);
+        }
+        if (op === "<>") {
+          return !SqlExecutor.strictEquals(left, right);
+        }
+        const comparison = SqlExecutor.compareValues(left, right);
+        if (op === "<") {
+          return comparison < 0;
+        }
+        if (op === "<=") {
+          return comparison <= 0;
+        }
+        if (op === ">") {
+          return comparison > 0;
+        }
+        return comparison >= 0;
       },
 
       evalScalarFunction(expr, context) {
@@ -15258,23 +15592,130 @@ ORDER BY edificios DESC, sede;</pre>
       );
     });
 
-    SelfTests.add("When_SubqueryDetected_Expect_NotSupported", () => {
-      const casos = [
-        "SELECT * FROM (SELECT 1 AS x)",
-        "SELECT * FROM employees WHERE department IN (SELECT name FROM departments)",
-      ];
-      casos.forEach((sql) => {
-        let error = null;
-        try {
-          new SqlParser(sql).parse();
-        } catch (err) {
-          error = err;
-        }
-        assert(
-          error && error.message.toLowerCase().includes("subquer"),
-          "subquery not supported in «" + sql + "» → " + (error && error.message),
-        );
+    /* --- Cases T6b: subqueries ------------------------------------------ */
+
+    /** Project for the subquery tests: the SQL data plus a query used as a
+     *  table, so the subqueries can also read a view. */
+    function buildSubqueryTestProject() {
+      const project = buildSqlTestProject();
+      project.queries = [{
+        name: "sales staff",
+        description: "People of the Sales department",
+        sql: "SELECT name FROM employees WHERE department = 'Sales'",
+        assert: null,
+        folder: null,
+      }];
+      return project;
+    }
+
+    /** Runs a query and returns its result rows, with the name of the error
+     *  when the query does not run. */
+    function runSubquerySql(project, sql) {
+      const outcome = SqlEngine.runSafe(sql, project);
+      assert(outcome.ok, "valid query «" + sql + "»: " + (outcome.error && outcome.error.message));
+      return outcome.result.rows.map((row) => row[0]);
+    }
+
+    SelfTests.add("When_InSubquery_Expect_MatchingRows", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT name FROM employees WHERE department IN (SELECT name FROM departments) ORDER BY name"),
+        ["Ana", "Luis", "Marta"],
+        "IN with a subquery",
+      );
+    });
+
+    SelfTests.add("When_NotInSubquery_Expect_ThreeValuedLogic", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT name FROM employees WHERE department NOT IN (SELECT name FROM departments) ORDER BY name"),
+        [],
+        "NULL NOT IN (…) is unknown, so that row is left out",
+      );
+    });
+
+    SelfTests.add("When_CompareAnySubquery_Expect_OneValueIsEnough", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT name FROM employees WHERE age > ANY (SELECT age FROM employees WHERE department = 'Sales') ORDER BY name"),
+        ["Ana", "Luis", "Pep"],
+        "> ANY is true when the comparison holds for at least one value",
+      );
+    });
+
+    SelfTests.add("When_CompareAllSubquery_Expect_EveryValueNeeded", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT name FROM employees WHERE age > ALL (SELECT age FROM employees WHERE department = 'Sales') ORDER BY name"),
+        ["Luis", "Pep"],
+        "> ALL is true only when the comparison holds for every value",
+      );
+    });
+
+    SelfTests.add("When_ExistsCorrelated_Expect_OuterRowMatch", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT e.name FROM employees AS e WHERE EXISTS (SELECT 1 FROM departments AS d WHERE d.name = e.department) ORDER BY e.name"),
+        ["Ana", "Luis", "Marta"],
+        "EXISTS reads the outer row (correlated subquery)",
+      );
+    });
+
+    SelfTests.add("When_NotExistsCorrelated_Expect_MissingOuterRow", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT e.name FROM employees AS e WHERE NOT EXISTS (SELECT 1 FROM departments AS d WHERE d.name = e.department) ORDER BY e.name"),
+        ["Pep"],
+        "NOT EXISTS keeps the rows with no match",
+      );
+    });
+
+    SelfTests.add("When_ScalarSubquery_Expect_SingleValue", () => {
+      const project = buildSubqueryTestProject();
+      const outcome = SqlEngine.runSafe("SELECT name, (SELECT COUNT(*) FROM departments) AS n FROM employees ORDER BY name", project);
+      assert(outcome.ok, "valid query: " + (outcome.error && outcome.error.message));
+      assertEqual(outcome.result.rows, [["Ana", 2], ["Luis", 2], ["Marta", 2], ["Pep", 2]], "a scalar subquery gives one value per row");
+    });
+
+    SelfTests.add("When_ScalarSubqueryWithManyRows_Expect_Error", () => {
+      const project = buildSubqueryTestProject();
+      const outcome = SqlEngine.runSafe("SELECT name FROM employees WHERE age = (SELECT age FROM employees)", project);
+      assert(!outcome.ok, "a scalar subquery with several rows must fail");
+      assert(outcome.error instanceof SqlRuntimeError, "it is a runtime error: " + outcome.error.name);
+    });
+
+    SelfTests.add("When_DerivedTableInFrom_Expect_TableLikeResult", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT t.name FROM (SELECT name, age FROM employees WHERE age > 30) AS t ORDER BY t.name"),
+        ["Ana", "Luis", "Pep"],
+        "a subquery of the FROM is read as a table (derived table)",
+      );
+    });
+
+    SelfTests.add("When_SubqueryReadsView_Expect_ViewValues", () => {
+      const project = buildSubqueryTestProject();
+      assertEqual(
+        runSubquerySql(project, "SELECT name FROM employees WHERE name IN (SELECT name FROM [sales staff]) ORDER BY name"),
+        ["Ana", "Marta"],
+        "a subquery can read a query used as a table",
+      );
+    });
+
+    SelfTests.add("When_ViewWithSubquery_Expect_ReadableAsTable", () => {
+      const project = buildSubqueryTestProject();
+      project.queries.push({
+        name: "staffed departments",
+        description: "",
+        sql: "SELECT d.name FROM departments AS d WHERE EXISTS (SELECT 1 FROM employees AS e WHERE e.department = d.name)",
+        assert: null,
+        folder: null,
       });
+      assertEqual(
+        runSubquerySql(project, "SELECT name FROM [staffed departments] ORDER BY name"),
+        ["IT", "Sales"],
+        "a query whose SQL uses a subquery still works as a view",
+      );
     });
 
     /* --- Cases T7: planner and executor --------------------------------- */
@@ -15812,8 +16253,8 @@ ORDER BY edificios DESC, sede;</pre>
       const text = view.textContent;
       ["SELECT", "DISTINCT", "FROM", "JOIN", "WHERE", "GROUP BY", "HAVING",
         "ORDER BY", "NULLS LAST", "LIMIT", "OFFSET", "LIKE", "BETWEEN",
-        "SUBSTR", "COALESCE", "hash join", "testing", "assert", "rowCount",
-        "ignoreOrder", "alias", "runProjectTests"].forEach((key) => {
+        "SUBSTR", "COALESCE", "EXISTS", "ANY", "ALL", "hash join", "testing",
+        "assert", "rowCount", "ignoreOrder", "alias", "runProjectTests"].forEach((key) => {
         assert(text.includes(key), `the help mentions ${key}`);
       });
       assert(view.querySelectorAll("pre.sql-ejemplo").length >= 14, "the SQL examples live in the home page");
@@ -15822,13 +16263,13 @@ ORDER BY edificios DESC, sede;</pre>
         ["es", ["Es clave ajena", "Crear campo ID autonumérico", "autonumérico",
           "autorreferencias", "Nuevo", "división por cero", "leyenda",
           "Ver relaciones", "Consultas como tablas", "vista ×N",
-          "Lee como tabla (", "la leen: «", "Ayuda SQL",
+          "Lee como tabla (", "la leen: «", "Subconsultas", "Ayuda SQL",
           "propiedades", "tirador", "140 a 480", "resumen",
           "Carpetas", "+C", "añadir carpeta", "Sin carpeta", "arrastra", "pliega", "despliega"]],
         ["en", ["Is a foreign key", "Create auto-numbered ID field", "auto-numbered",
           "self-references", "New", "division by zero", "legend",
           "See relations", "Queries as tables", "view ×N",
-          "Reads as a table (", "read by: «", "SQL help",
+          "Reads as a table (", "read by: «", "Subqueries", "SQL help",
           "properties", "handle", "140 to 480", "summary",
           "Folders", "+F", "add folder", "No folder", "drag", "fold", "unfold"]],
       ].forEach(([language, words]) => {

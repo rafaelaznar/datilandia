@@ -1,13 +1,14 @@
 {
   "format": "extractor",
   "version": 1,
-  "name": "SQL tests · Health and hospitals (20 tables, 169 queries)",
+  "name": "SQL tests · Health and hospitals (20 tables, 190 queries)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
     "C · Related queries",
     "D · Integrity",
-    "E · Views"
+    "E · Views",
+    "F · Subqueries"
   ],
   "tables": [
     {
@@ -19299,6 +19300,891 @@
         ]
       },
       "folder": "E · Views"
+    },
+    {
+      "name": "F01 · Insurers of the patients of Madrid (IN with a subquery)",
+      "description": "IN with a subquery: the insurers whose identifier is used by a patient of Madrid.",
+      "sql": "SELECT id_insurer, name FROM insurers WHERE id_insurer IN (SELECT id_insurer FROM patients WHERE city = 'Madrid') ORDER BY id_insurer",
+      "assert": {
+        "columns": [
+          "id_insurer",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "Public Health"
+          ],
+          [
+            2,
+            "Northern Medical Insurance"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F02 · Drugs with no prescription (NOT IN with a subquery)",
+      "description": "NOT IN with a subquery: the drugs that no prescription uses.",
+      "sql": "SELECT id_drug, name FROM drugs WHERE id_drug NOT IN (SELECT id_drug FROM prescriptions) ORDER BY id_drug",
+      "assert": {
+        "columns": [
+          "id_drug",
+          "name"
+        ],
+        "rows": [
+          [
+            9,
+            "Metformin"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F03 · Specialties with no diagnosis (NOT IN with a subquery)",
+      "description": "The specialties that no diagnosis is linked to.",
+      "sql": "SELECT id_specialty, name FROM specialties WHERE id_specialty NOT IN (SELECT id_specialty FROM diagnoses) ORDER BY id_specialty",
+      "assert": {
+        "columns": [
+          "id_specialty",
+          "name"
+        ],
+        "rows": [
+          [
+            3,
+            "Paediatrics"
+          ],
+          [
+            8,
+            "Emergency"
+          ],
+          [
+            11,
+            "Rehabilitation"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F04 · Hospitals with an ICU room (EXISTS)",
+      "description": "EXISTS with a correlated subquery: it is checked again for every hospital.",
+      "sql": "SELECT h.id_hospital, h.name FROM hospitals AS h WHERE EXISTS (SELECT 1 FROM rooms AS r WHERE r.id_hospital = h.id_hospital AND r.type = 'ICU') ORDER BY h.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "La Paz University Hospital"
+          ],
+          [
+            2,
+            "Barcelona Clínic Hospital"
+          ],
+          [
+            3,
+            "Virgen del Rocío Hospital"
+          ],
+          [
+            4,
+            "Valencia General Hospital"
+          ],
+          [
+            5,
+            "Santa Elena Clinic"
+          ],
+          [
+            6,
+            "Quito Metropolitan Hospital"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F05 · Hospitals with no ICU room (NOT EXISTS)",
+      "description": "The other side of the previous example: NOT EXISTS keeps the hospitals with no match.",
+      "sql": "SELECT h.id_hospital, h.name FROM hospitals AS h WHERE NOT EXISTS (SELECT 1 FROM rooms AS r WHERE r.id_hospital = h.id_hospital AND r.type = 'ICU') ORDER BY h.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "name"
+        ],
+        "rows": [
+          [
+            7,
+            "San José Hospital"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F06 · Patients with a high-risk surgery (EXISTS, correlated)",
+      "description": "The subquery points at the outer patient (p.id_patient): a correlated EXISTS.",
+      "sql": "SELECT p.id_patient, p.last_name FROM patients AS p WHERE EXISTS (SELECT 1 FROM surgeries AS s WHERE s.id_patient = p.id_patient AND s.risk = 'high') ORDER BY p.id_patient",
+      "assert": {
+        "columns": [
+          "id_patient",
+          "last_name"
+        ],
+        "rows": [
+          [
+            8,
+            "Sanz Alonso"
+          ],
+          [
+            11,
+            "Ortiz Gómez"
+          ],
+          [
+            14,
+            "Castro Moreno"
+          ],
+          [
+            19,
+            "Marín Iglesias"
+          ],
+          [
+            21,
+            "Jiménez Romero"
+          ],
+          [
+            22,
+            "Delgado Gómez"
+          ],
+          [
+            33,
+            "Romero Molina"
+          ],
+          [
+            36,
+            "Martínez Blanco"
+          ],
+          [
+            37,
+            "Muñoz Ortega"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F07 · Dermatology doctors with more experience than some Cardiology doctor (> ANY)",
+      "description": "x > ANY (…) is true when the years beat at least one of the inner values.",
+      "sql": "SELECT id_doctor, last_name, years_experience FROM doctors WHERE id_specialty = 6 AND years_experience > ANY (SELECT years_experience FROM doctors WHERE id_specialty = 1) ORDER BY id_doctor",
+      "assert": {
+        "columns": [
+          "id_doctor",
+          "last_name",
+          "years_experience"
+        ],
+        "rows": [
+          [
+            18,
+            "Gutiérrez Sánchez",
+            27
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F08 · The most experienced doctor of each specialty (>= ALL, correlated)",
+      "description": "x >= ALL (…) needs the comparison to hold for every inner value: only the top of each specialty passes.",
+      "sql": "SELECT d.id_doctor, d.last_name, d.years_experience FROM doctors AS d WHERE d.years_experience >= ALL (SELECT d2.years_experience FROM doctors AS d2 WHERE d2.id_specialty = d.id_specialty) ORDER BY d.id_specialty, d.id_doctor",
+      "assert": {
+        "columns": [
+          "id_doctor",
+          "last_name",
+          "years_experience"
+        ],
+        "rows": [
+          [
+            8,
+            "Romero Blanco",
+            23
+          ],
+          [
+            22,
+            "López Fernández",
+            27
+          ],
+          [
+            5,
+            "Fernández Torres",
+            27
+          ],
+          [
+            15,
+            "Rodríguez Martínez",
+            27
+          ],
+          [
+            17,
+            "Rubio Muñoz",
+            25
+          ],
+          [
+            21,
+            "Ruiz Alonso",
+            16
+          ],
+          [
+            3,
+            "Torres Gómez",
+            31
+          ],
+          [
+            18,
+            "Gutiérrez Sánchez",
+            27
+          ],
+          [
+            28,
+            "Moreno Alonso",
+            29
+          ],
+          [
+            25,
+            "García López",
+            20
+          ],
+          [
+            26,
+            "Martín Torres",
+            25
+          ],
+          [
+            4,
+            "Hernández Torres",
+            7
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F09 · Chronic patients of a city with a private insurer (<> ALL)",
+      "description": "x <> ALL (…) is the same as x NOT IN (…): it keeps the values that differ from every one of them.",
+      "sql": "SELECT id_patient, last_name FROM patients WHERE is_chronic = TRUE AND id_insurer <> ALL (SELECT id_insurer FROM insurers WHERE type = 'public') ORDER BY id_patient",
+      "assert": {
+        "columns": [
+          "id_patient",
+          "last_name"
+        ],
+        "rows": [
+          [
+            4,
+            "López Martín"
+          ],
+          [
+            7,
+            "Díaz Ruiz"
+          ],
+          [
+            15,
+            "Iglesias Navarro"
+          ],
+          [
+            28,
+            "Molina Morales"
+          ],
+          [
+            29,
+            "Muñoz Gómez"
+          ],
+          [
+            32,
+            "Jiménez Hernández"
+          ],
+          [
+            37,
+            "Muñoz Ortega"
+          ],
+          [
+            39,
+            "Martín Delgado"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F10 · University hospitals",
+      "description": "This query is not a test by itself: it is the view the next examples read inside a subquery.",
+      "sql": "SELECT id_hospital, name, city FROM hospitals WHERE is_university = TRUE",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "name",
+          "city"
+        ],
+        "rows": [
+          [
+            1,
+            "La Paz University Hospital",
+            "Madrid"
+          ],
+          [
+            2,
+            "Barcelona Clínic Hospital",
+            "Barcelona"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F11 · Rooms of the university hospitals read from the view (subquery over a view)",
+      "description": "The subquery reads the view F10 as if it were a table: [F10 · …] inside the IN.",
+      "sql": "SELECT r.id_room, r.code FROM rooms AS r WHERE r.id_hospital IN (SELECT id_hospital FROM [F10 · University hospitals]) ORDER BY r.id_room",
+      "assert": {
+        "columns": [
+          "id_room",
+          "code"
+        ],
+        "rows": [
+          [
+            1,
+            "H1-100"
+          ],
+          [
+            2,
+            "H1-101"
+          ],
+          [
+            3,
+            "H1-102"
+          ],
+          [
+            4,
+            "H1-103"
+          ],
+          [
+            5,
+            "H1-104"
+          ],
+          [
+            6,
+            "H1-105"
+          ],
+          [
+            7,
+            "H2-100"
+          ],
+          [
+            8,
+            "H2-101"
+          ],
+          [
+            9,
+            "H2-102"
+          ],
+          [
+            10,
+            "H2-103"
+          ],
+          [
+            11,
+            "H2-104"
+          ],
+          [
+            12,
+            "H2-105"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F12 · Average cost per day of admissions of 700 or more (derived table)",
+      "description": "A subquery in the FROM with an alias (t) is a derived table: it is queried like any other table.",
+      "sql": "SELECT t.id_hospital, t.avg_cost FROM (SELECT r.id_hospital, AVG(a.cost_per_day) AS avg_cost FROM admissions AS a INNER JOIN rooms AS r ON r.id_room = a.id_room GROUP BY r.id_hospital) AS t WHERE t.avg_cost >= 700 ORDER BY t.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "avg_cost"
+        ],
+        "rows": [
+          [
+            6,
+            707.75
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F13 · Hospitals with ten or more admissions (derived table and JOIN)",
+      "description": "The derived table is joined to the hospitals table and its column total is filtered.",
+      "sql": "SELECT t.id_hospital, h.name, t.total FROM (SELECT r.id_hospital, COUNT(*) AS total FROM admissions AS a INNER JOIN rooms AS r ON r.id_room = a.id_room GROUP BY r.id_hospital) AS t INNER JOIN hospitals AS h ON h.id_hospital = t.id_hospital WHERE t.total >= 10 ORDER BY t.total DESC, t.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "name",
+          "total"
+        ],
+        "rows": [
+          [
+            1,
+            "La Paz University Hospital",
+            10
+          ],
+          [
+            3,
+            "Virgen del Rocío Hospital",
+            10
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F14 · Visits of every patient of a city (scalar subquery in SELECT)",
+      "description": "The subquery in the column list returns one value per row: the visits of that patient.",
+      "sql": "SELECT p.id_patient, p.last_name, (SELECT COUNT(*) FROM visits AS v WHERE v.id_patient = p.id_patient) AS visits FROM patients AS p WHERE p.city = 'Bilbao' ORDER BY p.id_patient",
+      "assert": {
+        "columns": [
+          "id_patient",
+          "last_name",
+          "visits"
+        ],
+        "rows": [
+          [
+            5,
+            "Díaz Domínguez",
+            2
+          ],
+          [
+            7,
+            "Díaz Ruiz",
+            3
+          ],
+          [
+            8,
+            "Sanz Alonso",
+            1
+          ],
+          [
+            11,
+            "Ortiz Gómez",
+            1
+          ],
+          [
+            18,
+            "Sánchez Romero",
+            3
+          ],
+          [
+            33,
+            "Romero Molina",
+            1
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F15 · Admissions more expensive than the average (scalar subquery in WHERE)",
+      "description": "The subquery returns a single value (the average) that the WHERE compares with.",
+      "sql": "SELECT id_admission, cost_per_day FROM admissions WHERE cost_per_day > (SELECT AVG(cost_per_day) FROM admissions) ORDER BY id_admission",
+      "assert": {
+        "columns": [
+          "id_admission",
+          "cost_per_day"
+        ],
+        "rows": [
+          [
+            2,
+            831
+          ],
+          [
+            3,
+            674
+          ],
+          [
+            5,
+            639
+          ],
+          [
+            6,
+            749
+          ],
+          [
+            8,
+            879
+          ],
+          [
+            10,
+            631
+          ],
+          [
+            11,
+            663
+          ],
+          [
+            12,
+            783
+          ],
+          [
+            14,
+            775
+          ],
+          [
+            15,
+            822
+          ],
+          [
+            16,
+            736
+          ],
+          [
+            20,
+            790
+          ],
+          [
+            21,
+            844
+          ],
+          [
+            22,
+            864
+          ],
+          [
+            24,
+            671
+          ],
+          [
+            25,
+            884
+          ],
+          [
+            32,
+            681
+          ],
+          [
+            33,
+            818
+          ],
+          [
+            35,
+            813
+          ],
+          [
+            38,
+            717
+          ],
+          [
+            42,
+            834
+          ],
+          [
+            43,
+            634
+          ],
+          [
+            45,
+            950
+          ],
+          [
+            46,
+            926
+          ],
+          [
+            48,
+            830
+          ],
+          [
+            49,
+            611
+          ],
+          [
+            50,
+            632
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F16 · Specialties with three or more diagnoses",
+      "description": "A query whose SQL carries a subquery also works as a view: this one uses a correlated EXISTS with HAVING.",
+      "sql": "SELECT s.id_specialty, s.name FROM specialties AS s WHERE EXISTS (SELECT 1 FROM diagnoses AS d WHERE d.id_specialty = s.id_specialty HAVING COUNT(*) >= 3) ORDER BY s.id_specialty",
+      "assert": {
+        "columns": [
+          "id_specialty",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "Cardiology"
+          ],
+          [
+            7,
+            "Internal Medicine"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F17 · The previous view read as a table",
+      "description": "F16 is read from the FROM like a table, even though inside it there is a subquery.",
+      "sql": "SELECT id_specialty, name FROM [F16 · Specialties with three or more diagnoses] ORDER BY id_specialty",
+      "assert": {
+        "columns": [
+          "id_specialty",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "Cardiology"
+          ],
+          [
+            7,
+            "Internal Medicine"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F18 · Doctors of the specialties with a severe diagnosis (nested subqueries)",
+      "description": "One subquery inside another: the inner one picks the specialties and the outer one the doctors.",
+      "sql": "SELECT DISTINCT d.id_doctor, d.last_name FROM doctors AS d WHERE d.id_specialty IN (SELECT id_specialty FROM diagnoses WHERE severity = 'severe') ORDER BY d.id_doctor",
+      "assert": {
+        "columns": [
+          "id_doctor",
+          "last_name"
+        ],
+        "rows": [
+          [
+            3,
+            "Torres Gómez"
+          ],
+          [
+            5,
+            "Fernández Torres"
+          ],
+          [
+            6,
+            "Ortega Gómez"
+          ],
+          [
+            10,
+            "Vázquez López"
+          ],
+          [
+            11,
+            "Torres Díaz"
+          ],
+          [
+            12,
+            "Moreno Rodríguez"
+          ],
+          [
+            13,
+            "Díaz Romero"
+          ],
+          [
+            14,
+            "Moreno Gil"
+          ],
+          [
+            15,
+            "Rodríguez Martínez"
+          ],
+          [
+            16,
+            "Gómez Romero"
+          ],
+          [
+            19,
+            "Romero López"
+          ],
+          [
+            21,
+            "Ruiz Alonso"
+          ],
+          [
+            24,
+            "Rodríguez Rubio"
+          ],
+          [
+            26,
+            "Martín Torres"
+          ],
+          [
+            27,
+            "Muñoz Ruiz"
+          ],
+          [
+            28,
+            "Moreno Alonso"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F19 · Oncology doctors but the most experienced (NOT with ALL)",
+      "description": "NOT (… >= ALL (…)) is the negation of the ALL predicate: the whole specialty but its top doctor.",
+      "sql": "SELECT d.id_doctor, d.last_name, d.years_experience FROM doctors AS d WHERE d.id_specialty = 5 AND NOT (d.years_experience >= ALL (SELECT d2.years_experience FROM doctors AS d2 WHERE d2.id_specialty = 5)) ORDER BY d.id_doctor",
+      "assert": {
+        "columns": [
+          "id_doctor",
+          "last_name",
+          "years_experience"
+        ],
+        "rows": [
+          [
+            12,
+            "Moreno Rodríguez",
+            25
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F20 · Rooms of the university hospitals (= ANY)",
+      "description": "x = ANY (…) is the same as x IN (…): it is kept for completeness of the quantifiers.",
+      "sql": "SELECT DISTINCT r.id_hospital FROM rooms AS r WHERE r.id_hospital = ANY (SELECT id_hospital FROM hospitals WHERE is_university = TRUE) ORDER BY r.id_hospital",
+      "assert": {
+        "columns": [
+          "id_hospital"
+        ],
+        "rows": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F21 · Doctors with more experience than some Cardiology doctor (> SOME)",
+      "description": "SOME is a synonym of ANY: the comparison has to hold for at least one inner value.",
+      "sql": "SELECT id_doctor, last_name FROM doctors WHERE years_experience > SOME (SELECT years_experience FROM doctors WHERE id_specialty = 1) ORDER BY id_doctor",
+      "assert": {
+        "columns": [
+          "id_doctor",
+          "last_name"
+        ],
+        "rows": [
+          [
+            1,
+            "Ruiz Jiménez"
+          ],
+          [
+            3,
+            "Torres Gómez"
+          ],
+          [
+            4,
+            "Hernández Torres"
+          ],
+          [
+            5,
+            "Fernández Torres"
+          ],
+          [
+            6,
+            "Ortega Gómez"
+          ],
+          [
+            7,
+            "González Ortega"
+          ],
+          [
+            8,
+            "Romero Blanco"
+          ],
+          [
+            9,
+            "Gil Serrano"
+          ],
+          [
+            11,
+            "Torres Díaz"
+          ],
+          [
+            12,
+            "Moreno Rodríguez"
+          ],
+          [
+            14,
+            "Moreno Gil"
+          ],
+          [
+            15,
+            "Rodríguez Martínez"
+          ],
+          [
+            16,
+            "Gómez Romero"
+          ],
+          [
+            17,
+            "Rubio Muñoz"
+          ],
+          [
+            18,
+            "Gutiérrez Sánchez"
+          ],
+          [
+            19,
+            "Romero López"
+          ],
+          [
+            21,
+            "Ruiz Alonso"
+          ],
+          [
+            22,
+            "López Fernández"
+          ],
+          [
+            23,
+            "Castro Ramírez"
+          ],
+          [
+            24,
+            "Rodríguez Rubio"
+          ],
+          [
+            25,
+            "García López"
+          ],
+          [
+            26,
+            "Martín Torres"
+          ],
+          [
+            28,
+            "Moreno Alonso"
+          ],
+          [
+            29,
+            "Delgado Gil"
+          ],
+          [
+            30,
+            "Sánchez Blanco"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
     }
   ],
   "settings": {

@@ -1,13 +1,14 @@
 {
   "format": "extractor",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 112 queries)",
+  "name": "SQL tests · Education (8 tables, 133 queries)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
     "C · Related queries",
     "D · Integrity",
-    "E · Views"
+    "E · Views",
+    "F · Subqueries"
   ],
   "tables": [
     {
@@ -5840,6 +5841,819 @@
         ]
       },
       "folder": "E · Views"
+    },
+    {
+      "name": "F01 · Students with an active enrollment (IN with a subquery)",
+      "description": "IN with a subquery: the students whose identifier shows up in the inner SELECT.",
+      "sql": "SELECT id_student, last_name FROM students WHERE id_student IN (SELECT id_student FROM enrollments WHERE status = 'active') ORDER BY id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "last_name"
+        ],
+        "rows": [
+          [
+            1,
+            "García López"
+          ],
+          [
+            2,
+            "Martín Soto"
+          ],
+          [
+            3,
+            "Hernández Ruiz"
+          ],
+          [
+            4,
+            "Fernández Blanco"
+          ],
+          [
+            8,
+            "Gómez Frías"
+          ],
+          [
+            9,
+            "Santos Iglesias"
+          ],
+          [
+            11,
+            "Castro Peña"
+          ],
+          [
+            13,
+            "Vega Salas"
+          ],
+          [
+            17,
+            "Suárez Nieto"
+          ],
+          [
+            19,
+            "Reyes Baena"
+          ],
+          [
+            21,
+            "Bermúdez Soler"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F02 · Students with no enrollment (NOT IN with a subquery)",
+      "description": "NOT IN with a subquery: only the students nobody enrolled anywhere.",
+      "sql": "SELECT id_student, last_name FROM students WHERE id_student NOT IN (SELECT id_student FROM enrollments) ORDER BY id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "last_name"
+        ],
+        "rows": [
+          [
+            12,
+            "Ramírez Cortés"
+          ],
+          [
+            16,
+            "Delgado Cano"
+          ],
+          [
+            22,
+            "Lozano Prieto"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F03 · Subjects with no enrollment (NOT IN with a subquery)",
+      "description": "The subjects that do not appear in any enrollment.",
+      "sql": "SELECT id_subject, name FROM subjects WHERE id_subject NOT IN (SELECT id_subject FROM enrollments) ORDER BY id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name"
+        ],
+        "rows": [
+          [
+            12,
+            "Testing and Quality"
+          ],
+          [
+            16,
+            "Business Law"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F04 · Campuses with a building of more than four floors (EXISTS)",
+      "description": "EXISTS with a correlated subquery: it is checked again for every campus.",
+      "sql": "SELECT c.id_campus, c.name FROM campuses AS c WHERE EXISTS (SELECT 1 FROM buildings AS b WHERE b.id_campus = c.id_campus AND b.floors > 4) ORDER BY c.id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "North Campus"
+          ],
+          [
+            3,
+            "Seaside Campus"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F05 · Campuses with no building of more than four floors (NOT EXISTS)",
+      "description": "The other side of the previous example: NOT EXISTS keeps the campuses with no match.",
+      "sql": "SELECT c.id_campus, c.name FROM campuses AS c WHERE NOT EXISTS (SELECT 1 FROM buildings AS b WHERE b.id_campus = c.id_campus AND b.floors > 4) ORDER BY c.id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "name"
+        ],
+        "rows": [
+          [
+            2,
+            "South Campus"
+          ],
+          [
+            4,
+            "Andean Campus"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F06 · Degrees with a scholarship student (EXISTS, correlated)",
+      "description": "The subquery points at the outer degree (d.code): a correlated EXISTS.",
+      "sql": "SELECT d.code, d.name FROM degrees AS d WHERE EXISTS (SELECT 1 FROM students AS s WHERE s.degree_code = d.code AND s.has_scholarship = TRUE) ORDER BY d.code",
+      "assert": {
+        "columns": [
+          "code",
+          "name"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "Primary Education"
+          ],
+          [
+            "GINF",
+            "Computer Engineering"
+          ],
+          [
+            "GMED",
+            "Medicine"
+          ],
+          [
+            "MSW",
+            "Software Engineering"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F07 · Databases enrollments better than some Data Structures grade (> ANY)",
+      "description": "x > ANY (…) is true when the grade beats at least one of the inner values.",
+      "sql": "SELECT id_enrollment, grade FROM enrollments WHERE id_subject = 2 AND grade > ANY (SELECT grade FROM enrollments WHERE id_subject = 1) ORDER BY id_enrollment",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade"
+        ],
+        "rows": [
+          [
+            2,
+            7.5
+          ],
+          [
+            10,
+            7
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F08 · The highest credits of the first year (>= ALL)",
+      "description": "x >= ALL (…) needs the comparison to hold for every inner value: only the top credits pass.",
+      "sql": "SELECT id_subject, name, credits FROM subjects WHERE credits >= ALL (SELECT credits FROM subjects WHERE year = 1) ORDER BY id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name",
+          "credits"
+        ],
+        "rows": [
+          [
+            5,
+            "Human Anatomy",
+            9
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F09 · Subjects with no researcher teacher (<> ALL)",
+      "description": "x <> ALL (…) is the same as x NOT IN (…): it keeps the values that differ from every one of them.",
+      "sql": "SELECT id_subject, name FROM subjects WHERE id_teacher <> ALL (SELECT id_teacher FROM teachers WHERE is_researcher = TRUE) ORDER BY id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name"
+        ],
+        "rows": [
+          [
+            8,
+            "Teaching Mathematics"
+          ],
+          [
+            9,
+            "Developmental Psychology"
+          ],
+          [
+            10,
+            "Inclusive Education"
+          ],
+          [
+            15,
+            "Constitutional Law"
+          ],
+          [
+            16,
+            "Business Law"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F10 · Students with a scholarship",
+      "description": "This query is not a test by itself: it is the view the next examples read inside a subquery.",
+      "sql": "SELECT id_student, last_name, degree_code FROM students WHERE has_scholarship = TRUE",
+      "assert": {
+        "columns": [
+          "id_student",
+          "last_name",
+          "degree_code"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            "GINF"
+          ],
+          [
+            3,
+            "Hernández Ruiz",
+            "GINF"
+          ],
+          [
+            7,
+            "Moreno Pascual",
+            "MSW"
+          ],
+          [
+            9,
+            "Santos Iglesias",
+            "GMED"
+          ],
+          [
+            11,
+            "Castro Peña",
+            "GEDU"
+          ],
+          [
+            14,
+            "Serrano Bravo",
+            "GEDU"
+          ],
+          [
+            17,
+            "Suárez Nieto",
+            "GMED"
+          ],
+          [
+            20,
+            "Parra Aguilar",
+            "GEDU"
+          ],
+          [
+            23,
+            "Guerrero Vidal",
+            "GINF"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F11 · Scholarship students read from the view (subquery over a view)",
+      "description": "The subquery reads the view F10 as if it were a table: [F10 · …] inside the IN.",
+      "sql": "SELECT s.id_student, s.last_name FROM students AS s WHERE s.id_student IN (SELECT id_student FROM [F10 · Students with a scholarship]) ORDER BY s.id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "last_name"
+        ],
+        "rows": [
+          [
+            1,
+            "García López"
+          ],
+          [
+            3,
+            "Hernández Ruiz"
+          ],
+          [
+            7,
+            "Moreno Pascual"
+          ],
+          [
+            9,
+            "Santos Iglesias"
+          ],
+          [
+            11,
+            "Castro Peña"
+          ],
+          [
+            14,
+            "Serrano Bravo"
+          ],
+          [
+            17,
+            "Suárez Nieto"
+          ],
+          [
+            20,
+            "Parra Aguilar"
+          ],
+          [
+            23,
+            "Guerrero Vidal"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F12 · Average grade per subject of 8 or more (derived table)",
+      "description": "A subquery in the FROM with an alias (t) is a derived table: it is queried like any other table.",
+      "sql": "SELECT t.id_subject, t.avg_grade FROM (SELECT id_subject, AVG(grade) AS avg_grade FROM enrollments WHERE grade IS NOT NULL GROUP BY id_subject) AS t WHERE t.avg_grade >= 8 ORDER BY t.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "avg_grade"
+        ],
+        "rows": [
+          [
+            1,
+            8.2
+          ],
+          [
+            10,
+            8
+          ],
+          [
+            11,
+            8.5
+          ],
+          [
+            14,
+            8
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F13 · Subjects with four or more enrollments (derived table and JOIN)",
+      "description": "The derived table is joined to the subjects table and its column total is filtered.",
+      "sql": "SELECT t.id_subject, a.name, t.total FROM (SELECT id_subject, COUNT(*) AS total FROM enrollments GROUP BY id_subject) AS t INNER JOIN subjects AS a ON a.id_subject = t.id_subject WHERE t.total >= 4 ORDER BY t.total DESC, t.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name",
+          "total"
+        ],
+        "rows": [
+          [
+            1,
+            "Data Structures",
+            5
+          ],
+          [
+            2,
+            "Databases",
+            5
+          ],
+          [
+            7,
+            "Public Health",
+            5
+          ],
+          [
+            3,
+            "Compilers",
+            4
+          ],
+          [
+            4,
+            "Computer Networks",
+            4
+          ],
+          [
+            5,
+            "Human Anatomy",
+            4
+          ],
+          [
+            6,
+            "Pharmacology",
+            4
+          ],
+          [
+            8,
+            "Teaching Mathematics",
+            4
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F14 · Enrollments of every student of a campus (scalar subquery in SELECT)",
+      "description": "The subquery in the column list returns one value per row: the enrollments of that student.",
+      "sql": "SELECT s.id_student, s.last_name, (SELECT COUNT(*) FROM enrollments AS m WHERE m.id_student = s.id_student) AS enrollments FROM students AS s WHERE s.id_campus = 4 ORDER BY s.id_student",
+      "assert": {
+        "columns": [
+          "id_student",
+          "last_name",
+          "enrollments"
+        ],
+        "rows": [
+          [
+            10,
+            "Domínguez Rey",
+            2
+          ],
+          [
+            16,
+            "Delgado Cano",
+            0
+          ],
+          [
+            22,
+            "Lozano Prieto",
+            0
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F15 · Subjects above the average credits (scalar subquery in WHERE)",
+      "description": "The subquery returns a single value (the average) that the WHERE compares with.",
+      "sql": "SELECT id_subject, name, credits FROM subjects WHERE credits > (SELECT AVG(credits) FROM subjects) ORDER BY id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name",
+          "credits"
+        ],
+        "rows": [
+          [
+            1,
+            "Data Structures",
+            6
+          ],
+          [
+            2,
+            "Databases",
+            6
+          ],
+          [
+            3,
+            "Compilers",
+            6
+          ],
+          [
+            4,
+            "Computer Networks",
+            6
+          ],
+          [
+            5,
+            "Human Anatomy",
+            9
+          ],
+          [
+            6,
+            "Pharmacology",
+            6
+          ],
+          [
+            9,
+            "Developmental Psychology",
+            6
+          ],
+          [
+            11,
+            "Software Architecture",
+            6
+          ],
+          [
+            13,
+            "Applied Statistics",
+            6
+          ],
+          [
+            14,
+            "Machine Learning",
+            6
+          ],
+          [
+            15,
+            "Constitutional Law",
+            6
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F16 · Degrees with five or more students",
+      "description": "A query whose SQL carries a subquery also works as a view: this one uses a correlated EXISTS with HAVING.",
+      "sql": "SELECT d.code, d.name FROM degrees AS d WHERE EXISTS (SELECT 1 FROM students AS s WHERE s.degree_code = d.code HAVING COUNT(*) >= 5) ORDER BY d.code",
+      "assert": {
+        "columns": [
+          "code",
+          "name"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Computer Engineering"
+          ],
+          [
+            "GMED",
+            "Medicine"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F17 · The previous view read as a table",
+      "description": "F16 is read from the FROM like a table, even though inside it there is a subquery.",
+      "sql": "SELECT code, name FROM [F16 · Degrees with five or more students] ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "name"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Computer Engineering"
+          ],
+          [
+            "GMED",
+            "Medicine"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F18 · Subjects of degrees with a scholarship student (nested subqueries)",
+      "description": "One subquery inside another: the inner one picks the degrees and the outer one the subjects.",
+      "sql": "SELECT DISTINCT a.id_subject, a.name FROM subjects AS a WHERE a.degree_code IN (SELECT s.degree_code FROM students AS s WHERE s.has_scholarship = TRUE) ORDER BY a.id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "Data Structures"
+          ],
+          [
+            2,
+            "Databases"
+          ],
+          [
+            3,
+            "Compilers"
+          ],
+          [
+            4,
+            "Computer Networks"
+          ],
+          [
+            5,
+            "Human Anatomy"
+          ],
+          [
+            6,
+            "Pharmacology"
+          ],
+          [
+            7,
+            "Public Health"
+          ],
+          [
+            8,
+            "Teaching Mathematics"
+          ],
+          [
+            9,
+            "Developmental Psychology"
+          ],
+          [
+            10,
+            "Inclusive Education"
+          ],
+          [
+            11,
+            "Software Architecture"
+          ],
+          [
+            12,
+            "Testing and Quality"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F19 · Subjects that do not reach the top credits (NOT with ALL)",
+      "description": "NOT (… >= ALL (…)) is the negation of the ALL predicate: everything but the top ones.",
+      "sql": "SELECT id_subject, name FROM subjects WHERE NOT (credits >= ALL (SELECT credits FROM subjects WHERE year = 1)) ORDER BY id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "Data Structures"
+          ],
+          [
+            2,
+            "Databases"
+          ],
+          [
+            3,
+            "Compilers"
+          ],
+          [
+            4,
+            "Computer Networks"
+          ],
+          [
+            6,
+            "Pharmacology"
+          ],
+          [
+            7,
+            "Public Health"
+          ],
+          [
+            8,
+            "Teaching Mathematics"
+          ],
+          [
+            9,
+            "Developmental Psychology"
+          ],
+          [
+            10,
+            "Inclusive Education"
+          ],
+          [
+            11,
+            "Software Architecture"
+          ],
+          [
+            12,
+            "Testing and Quality"
+          ],
+          [
+            13,
+            "Applied Statistics"
+          ],
+          [
+            14,
+            "Machine Learning"
+          ],
+          [
+            15,
+            "Constitutional Law"
+          ],
+          [
+            16,
+            "Business Law"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F20 · Buildings of the main campus (= ANY)",
+      "description": "x = ANY (…) is the same as x IN (…): it is kept for completeness of the quantifiers.",
+      "sql": "SELECT DISTINCT b.id_campus FROM buildings AS b WHERE b.id_campus = ANY (SELECT id_campus FROM campuses WHERE is_main = TRUE) ORDER BY b.id_campus",
+      "assert": {
+        "columns": [
+          "id_campus"
+        ],
+        "rows": [
+          [
+            1
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
+    },
+    {
+      "name": "F21 · Subjects with more credits than some Primary Education one (> SOME)",
+      "description": "SOME is a synonym of ANY: the comparison has to hold for at least one inner value.",
+      "sql": "SELECT id_subject, name FROM subjects WHERE credits > SOME (SELECT credits FROM subjects WHERE degree_code = 'GEDU') ORDER BY id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "Data Structures"
+          ],
+          [
+            2,
+            "Databases"
+          ],
+          [
+            3,
+            "Compilers"
+          ],
+          [
+            4,
+            "Computer Networks"
+          ],
+          [
+            5,
+            "Human Anatomy"
+          ],
+          [
+            6,
+            "Pharmacology"
+          ],
+          [
+            8,
+            "Teaching Mathematics"
+          ],
+          [
+            9,
+            "Developmental Psychology"
+          ],
+          [
+            11,
+            "Software Architecture"
+          ],
+          [
+            13,
+            "Applied Statistics"
+          ],
+          [
+            14,
+            "Machine Learning"
+          ],
+          [
+            15,
+            "Constitutional Law"
+          ],
+          [
+            16,
+            "Business Law"
+          ]
+        ]
+      },
+      "folder": "F · Subqueries"
     }
   ],
   "settings": {

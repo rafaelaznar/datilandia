@@ -1,13 +1,14 @@
 {
   "format": "extractor",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 112 consultas)",
+  "name": "Pruebas SQL · Educación (8 tablas, 133 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
     "C · Consultas relacionadas",
     "D · Integridad",
-    "E · Vistas"
+    "E · Vistas",
+    "F · Subconsultas"
   ],
   "tables": [
     {
@@ -5840,6 +5841,819 @@
         ]
       },
       "folder": "E · Vistas"
+    },
+    {
+      "name": "F01 · Estudiantes con matrícula activa (IN con subconsulta)",
+      "description": "IN con subconsulta: los estudiantes cuyo identificador aparece en el SELECT interno.",
+      "sql": "SELECT id_estudiante, apellidos FROM estudiantes WHERE id_estudiante IN (SELECT id_estudiante FROM matriculas WHERE estado = 'activa') ORDER BY id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            1,
+            "García López"
+          ],
+          [
+            2,
+            "Martín Soto"
+          ],
+          [
+            3,
+            "Hernández Ruiz"
+          ],
+          [
+            4,
+            "Fernández Blanco"
+          ],
+          [
+            8,
+            "Gómez Frías"
+          ],
+          [
+            9,
+            "Santos Iglesias"
+          ],
+          [
+            11,
+            "Castro Peña"
+          ],
+          [
+            13,
+            "Vega Salas"
+          ],
+          [
+            17,
+            "Suárez Nieto"
+          ],
+          [
+            19,
+            "Reyes Baena"
+          ],
+          [
+            21,
+            "Bermúdez Soler"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F02 · Estudiantes sin ninguna matrícula (NOT IN con subconsulta)",
+      "description": "NOT IN con subconsulta: solo los estudiantes que no están matriculados en nada.",
+      "sql": "SELECT id_estudiante, apellidos FROM estudiantes WHERE id_estudiante NOT IN (SELECT id_estudiante FROM matriculas) ORDER BY id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            12,
+            "Ramírez Cortés"
+          ],
+          [
+            16,
+            "Delgado Cano"
+          ],
+          [
+            22,
+            "Lozano Prieto"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F03 · Asignaturas sin ninguna matrícula (NOT IN con subconsulta)",
+      "description": "Las asignaturas que no aparecen en ninguna matrícula.",
+      "sql": "SELECT id_asignatura, nombre FROM asignaturas WHERE id_asignatura NOT IN (SELECT id_asignatura FROM matriculas) ORDER BY id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre"
+        ],
+        "rows": [
+          [
+            12,
+            "Pruebas y Calidad"
+          ],
+          [
+            16,
+            "Derecho Mercantil"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F04 · Sedes con un edificio de más de cuatro plantas (EXISTS)",
+      "description": "EXISTS con subconsulta correlacionada: se comprueba otra vez para cada sede.",
+      "sql": "SELECT s.id_sede, s.nombre FROM sedes AS s WHERE EXISTS (SELECT 1 FROM edificios AS e WHERE e.id_sede = s.id_sede AND e.plantas > 4) ORDER BY s.id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Campus Norte"
+          ],
+          [
+            3,
+            "Campus del Mar"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F05 · Sedes sin edificios de más de cuatro plantas (NOT EXISTS)",
+      "description": "La otra cara del ejemplo anterior: NOT EXISTS se queda con las sedes sin coincidencia.",
+      "sql": "SELECT s.id_sede, s.nombre FROM sedes AS s WHERE NOT EXISTS (SELECT 1 FROM edificios AS e WHERE e.id_sede = s.id_sede AND e.plantas > 4) ORDER BY s.id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "nombre"
+        ],
+        "rows": [
+          [
+            2,
+            "Campus Sur"
+          ],
+          [
+            4,
+            "Campus Andino"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F06 · Estudios con algún estudiante becado (EXISTS correlacionada)",
+      "description": "La subconsulta apunta al estudio de fuera (e.codigo): una EXISTS correlacionada.",
+      "sql": "SELECT e.codigo, e.nombre FROM estudios AS e WHERE EXISTS (SELECT 1 FROM estudiantes AS es WHERE es.codigo_estudio = e.codigo AND es.es_becado = TRUE) ORDER BY e.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "nombre"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "Educación Primaria"
+          ],
+          [
+            "GINF",
+            "Ingeniería Informática"
+          ],
+          [
+            "GMED",
+            "Medicina"
+          ],
+          [
+            "MSW",
+            "Ingeniería del Software"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F07 · Matrículas de Bases de Datos mejores que alguna nota de Estructuras (> ANY)",
+      "description": "x > ANY (…) es cierto cuando la nota supera al menos uno de los valores internos.",
+      "sql": "SELECT id_matricula, nota FROM matriculas WHERE id_asignatura = 2 AND nota > ANY (SELECT nota FROM matriculas WHERE id_asignatura = 1) ORDER BY id_matricula",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota"
+        ],
+        "rows": [
+          [
+            2,
+            7.5
+          ],
+          [
+            10,
+            7
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F08 · Los créditos más altos del primer curso (>= ALL)",
+      "description": "x >= ALL (…) exige que la comparación se cumpla con todos los valores internos: solo pasa el máximo.",
+      "sql": "SELECT id_asignatura, nombre, creditos FROM asignaturas WHERE creditos >= ALL (SELECT creditos FROM asignaturas WHERE curso = 1) ORDER BY id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre",
+          "creditos"
+        ],
+        "rows": [
+          [
+            5,
+            "Anatomía Humana",
+            9
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F09 · Asignaturas sin docente investigador (<> ALL)",
+      "description": "x <> ALL (…) es lo mismo que x NOT IN (…): deja los valores distintos de todos ellos.",
+      "sql": "SELECT id_asignatura, nombre FROM asignaturas WHERE id_docente <> ALL (SELECT id_docente FROM docentes WHERE es_investigador = TRUE) ORDER BY id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre"
+        ],
+        "rows": [
+          [
+            8,
+            "Didáctica de las Matemáticas"
+          ],
+          [
+            9,
+            "Psicología del Desarrollo"
+          ],
+          [
+            10,
+            "Educación Inclusiva"
+          ],
+          [
+            15,
+            "Derecho Constitucional"
+          ],
+          [
+            16,
+            "Derecho Mercantil"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F10 · Estudiantes becados",
+      "description": "Esta consulta no es un test por sí sola: es la vista que leen las subconsultas siguientes.",
+      "sql": "SELECT id_estudiante, apellidos, codigo_estudio FROM estudiantes WHERE es_becado = TRUE",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "apellidos",
+          "codigo_estudio"
+        ],
+        "rows": [
+          [
+            1,
+            "García López",
+            "GINF"
+          ],
+          [
+            3,
+            "Hernández Ruiz",
+            "GINF"
+          ],
+          [
+            7,
+            "Moreno Pascual",
+            "MSW"
+          ],
+          [
+            9,
+            "Santos Iglesias",
+            "GMED"
+          ],
+          [
+            11,
+            "Castro Peña",
+            "GEDU"
+          ],
+          [
+            14,
+            "Serrano Bravo",
+            "GEDU"
+          ],
+          [
+            17,
+            "Suárez Nieto",
+            "GMED"
+          ],
+          [
+            20,
+            "Parra Aguilar",
+            "GEDU"
+          ],
+          [
+            23,
+            "Guerrero Vidal",
+            "GINF"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F11 · Becados leídos desde la vista (subconsulta sobre una vista)",
+      "description": "La subconsulta lee la vista F10 como si fuera una tabla: [F10 · …] dentro del IN.",
+      "sql": "SELECT es.id_estudiante, es.apellidos FROM estudiantes AS es WHERE es.id_estudiante IN (SELECT id_estudiante FROM [F10 · Estudiantes becados]) ORDER BY es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            1,
+            "García López"
+          ],
+          [
+            3,
+            "Hernández Ruiz"
+          ],
+          [
+            7,
+            "Moreno Pascual"
+          ],
+          [
+            9,
+            "Santos Iglesias"
+          ],
+          [
+            11,
+            "Castro Peña"
+          ],
+          [
+            14,
+            "Serrano Bravo"
+          ],
+          [
+            17,
+            "Suárez Nieto"
+          ],
+          [
+            20,
+            "Parra Aguilar"
+          ],
+          [
+            23,
+            "Guerrero Vidal"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F12 · Nota media por asignatura de 8 o más (tabla derivada)",
+      "description": "Una subconsulta en el FROM con alias (t) es una tabla derivada: se consulta como cualquier otra.",
+      "sql": "SELECT t.id_asignatura, t.nota_media FROM (SELECT id_asignatura, AVG(nota) AS nota_media FROM matriculas WHERE nota IS NOT NULL GROUP BY id_asignatura) AS t WHERE t.nota_media >= 8 ORDER BY t.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nota_media"
+        ],
+        "rows": [
+          [
+            1,
+            8.2
+          ],
+          [
+            10,
+            8
+          ],
+          [
+            11,
+            8.5
+          ],
+          [
+            14,
+            8
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F13 · Asignaturas con cuatro o más matrículas (tabla derivada y JOIN)",
+      "description": "La tabla derivada se une a la tabla asignaturas y se filtra por su columna total.",
+      "sql": "SELECT t.id_asignatura, a.nombre, t.total FROM (SELECT id_asignatura, COUNT(*) AS total FROM matriculas GROUP BY id_asignatura) AS t INNER JOIN asignaturas AS a ON a.id_asignatura = t.id_asignatura WHERE t.total >= 4 ORDER BY t.total DESC, t.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre",
+          "total"
+        ],
+        "rows": [
+          [
+            1,
+            "Estructuras de Datos",
+            5
+          ],
+          [
+            2,
+            "Bases de Datos",
+            5
+          ],
+          [
+            7,
+            "Salud Pública",
+            5
+          ],
+          [
+            3,
+            "Compiladores",
+            4
+          ],
+          [
+            4,
+            "Redes de Computadores",
+            4
+          ],
+          [
+            5,
+            "Anatomía Humana",
+            4
+          ],
+          [
+            6,
+            "Farmacología",
+            4
+          ],
+          [
+            8,
+            "Didáctica de las Matemáticas",
+            4
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F14 · Matrículas de cada estudiante de una sede (subconsulta escalar en el SELECT)",
+      "description": "La subconsulta de la lista de columnas devuelve un valor por fila: las matrículas de ese estudiante.",
+      "sql": "SELECT es.id_estudiante, es.apellidos, (SELECT COUNT(*) FROM matriculas AS m WHERE m.id_estudiante = es.id_estudiante) AS matriculas FROM estudiantes AS es WHERE es.id_sede = 4 ORDER BY es.id_estudiante",
+      "assert": {
+        "columns": [
+          "id_estudiante",
+          "apellidos",
+          "matriculas"
+        ],
+        "rows": [
+          [
+            10,
+            "Domínguez Rey",
+            2
+          ],
+          [
+            16,
+            "Delgado Cano",
+            0
+          ],
+          [
+            22,
+            "Lozano Prieto",
+            0
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F15 · Asignaturas por encima de la media de créditos (subconsulta escalar en el WHERE)",
+      "description": "La subconsulta devuelve un solo valor (la media) con el que compara el WHERE.",
+      "sql": "SELECT id_asignatura, nombre, creditos FROM asignaturas WHERE creditos > (SELECT AVG(creditos) FROM asignaturas) ORDER BY id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre",
+          "creditos"
+        ],
+        "rows": [
+          [
+            1,
+            "Estructuras de Datos",
+            6
+          ],
+          [
+            2,
+            "Bases de Datos",
+            6
+          ],
+          [
+            3,
+            "Compiladores",
+            6
+          ],
+          [
+            4,
+            "Redes de Computadores",
+            6
+          ],
+          [
+            5,
+            "Anatomía Humana",
+            9
+          ],
+          [
+            6,
+            "Farmacología",
+            6
+          ],
+          [
+            9,
+            "Psicología del Desarrollo",
+            6
+          ],
+          [
+            11,
+            "Arquitectura de Software",
+            6
+          ],
+          [
+            13,
+            "Estadística Aplicada",
+            6
+          ],
+          [
+            14,
+            "Aprendizaje Automático",
+            6
+          ],
+          [
+            15,
+            "Derecho Constitucional",
+            6
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F16 · Estudios con cinco estudiantes o más",
+      "description": "Una consulta con subconsulta también sirve de vista: esta usa una EXISTS correlacionada con HAVING.",
+      "sql": "SELECT e.codigo, e.nombre FROM estudios AS e WHERE EXISTS (SELECT 1 FROM estudiantes AS es WHERE es.codigo_estudio = e.codigo HAVING COUNT(*) >= 5) ORDER BY e.codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "nombre"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Ingeniería Informática"
+          ],
+          [
+            "GMED",
+            "Medicina"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F17 · La vista anterior leída como tabla",
+      "description": "F16 se lee desde el FROM como una tabla, aunque por dentro lleve una subconsulta.",
+      "sql": "SELECT codigo, nombre FROM [F16 · Estudios con cinco estudiantes o más] ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "nombre"
+        ],
+        "rows": [
+          [
+            "GINF",
+            "Ingeniería Informática"
+          ],
+          [
+            "GMED",
+            "Medicina"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F18 · Asignaturas de estudios con algún becado (subconsultas anidadas)",
+      "description": "Una subconsulta dentro de otra: la interna elige los estudios y la externa las asignaturas.",
+      "sql": "SELECT DISTINCT a.id_asignatura, a.nombre FROM asignaturas AS a WHERE a.codigo_estudio IN (SELECT es.codigo_estudio FROM estudiantes AS es WHERE es.es_becado = TRUE) ORDER BY a.id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Estructuras de Datos"
+          ],
+          [
+            2,
+            "Bases de Datos"
+          ],
+          [
+            3,
+            "Compiladores"
+          ],
+          [
+            4,
+            "Redes de Computadores"
+          ],
+          [
+            5,
+            "Anatomía Humana"
+          ],
+          [
+            6,
+            "Farmacología"
+          ],
+          [
+            7,
+            "Salud Pública"
+          ],
+          [
+            8,
+            "Didáctica de las Matemáticas"
+          ],
+          [
+            9,
+            "Psicología del Desarrollo"
+          ],
+          [
+            10,
+            "Educación Inclusiva"
+          ],
+          [
+            11,
+            "Arquitectura de Software"
+          ],
+          [
+            12,
+            "Pruebas y Calidad"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F19 · Asignaturas que no llegan a los créditos máximos (NOT con ALL)",
+      "description": "NOT (… >= ALL (…)) es la negación del predicado ALL: todo menos los máximos.",
+      "sql": "SELECT id_asignatura, nombre FROM asignaturas WHERE NOT (creditos >= ALL (SELECT creditos FROM asignaturas WHERE curso = 1)) ORDER BY id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Estructuras de Datos"
+          ],
+          [
+            2,
+            "Bases de Datos"
+          ],
+          [
+            3,
+            "Compiladores"
+          ],
+          [
+            4,
+            "Redes de Computadores"
+          ],
+          [
+            6,
+            "Farmacología"
+          ],
+          [
+            7,
+            "Salud Pública"
+          ],
+          [
+            8,
+            "Didáctica de las Matemáticas"
+          ],
+          [
+            9,
+            "Psicología del Desarrollo"
+          ],
+          [
+            10,
+            "Educación Inclusiva"
+          ],
+          [
+            11,
+            "Arquitectura de Software"
+          ],
+          [
+            12,
+            "Pruebas y Calidad"
+          ],
+          [
+            13,
+            "Estadística Aplicada"
+          ],
+          [
+            14,
+            "Aprendizaje Automático"
+          ],
+          [
+            15,
+            "Derecho Constitucional"
+          ],
+          [
+            16,
+            "Derecho Mercantil"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F20 · Edificios de la sede principal (= ANY)",
+      "description": "x = ANY (…) es lo mismo que x IN (…): se incluye para completar los cuantificadores.",
+      "sql": "SELECT DISTINCT e.id_sede FROM edificios AS e WHERE e.id_sede = ANY (SELECT id_sede FROM sedes WHERE es_principal = TRUE) ORDER BY e.id_sede",
+      "assert": {
+        "columns": [
+          "id_sede"
+        ],
+        "rows": [
+          [
+            1
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
+    },
+    {
+      "name": "F21 · Asignaturas con más créditos que alguna de Educación Primaria (> SOME)",
+      "description": "SOME es sinónimo de ANY: la comparación debe cumplirse al menos con un valor interno.",
+      "sql": "SELECT id_asignatura, nombre FROM asignaturas WHERE creditos > SOME (SELECT creditos FROM asignaturas WHERE codigo_estudio = 'GEDU') ORDER BY id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Estructuras de Datos"
+          ],
+          [
+            2,
+            "Bases de Datos"
+          ],
+          [
+            3,
+            "Compiladores"
+          ],
+          [
+            4,
+            "Redes de Computadores"
+          ],
+          [
+            5,
+            "Anatomía Humana"
+          ],
+          [
+            6,
+            "Farmacología"
+          ],
+          [
+            8,
+            "Didáctica de las Matemáticas"
+          ],
+          [
+            9,
+            "Psicología del Desarrollo"
+          ],
+          [
+            11,
+            "Arquitectura de Software"
+          ],
+          [
+            13,
+            "Estadística Aplicada"
+          ],
+          [
+            14,
+            "Aprendizaje Automático"
+          ],
+          [
+            15,
+            "Derecho Constitucional"
+          ],
+          [
+            16,
+            "Derecho Mercantil"
+          ]
+        ]
+      },
+      "folder": "F · Subconsultas"
     }
   ],
   "settings": {
