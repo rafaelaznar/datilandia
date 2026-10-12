@@ -10,6 +10,13 @@
     "E · Vistas",
     "F · Subconsultas"
   ],
+  "tableFolders": [
+    "Centro",
+    "Catálogos",
+    "Personas",
+    "Asistencial",
+    "Facturación"
+  ],
   "tables": [
     {
       "name": "hospitales",
@@ -141,7 +148,8 @@
           "telefono": "944001600",
           "anio_fundacion": 2003
         }
-      ]
+      ],
+      "folder": "Centro"
     },
     {
       "name": "especialidades",
@@ -253,7 +261,8 @@
           "requiere_uci": false,
           "anios_residencia": 4
         }
-      ]
+      ],
+      "folder": "Catálogos"
     },
     {
       "name": "servicios",
@@ -414,7 +423,8 @@
           "capacidad_camas": 16,
           "es_ambulatorio": false
         }
-      ]
+      ],
+      "folder": "Centro"
     },
     {
       "name": "medicos",
@@ -912,7 +922,8 @@
           "telefono": null,
           "fecha_alta": "2010-12-22"
         }
-      ]
+      ],
+      "folder": "Personas"
     },
     {
       "name": "enfermeros",
@@ -1206,7 +1217,8 @@
           "es_supervisor": true,
           "telefono": "646843982"
         }
-      ]
+      ],
+      "folder": "Personas"
     },
     {
       "name": "seguros",
@@ -1294,7 +1306,8 @@
           "telefono": "960600600",
           "cubre_cirugia": false
         }
-      ]
+      ],
+      "folder": "Catálogos"
     },
     {
       "name": "pacientes",
@@ -1928,7 +1941,8 @@
           "es_cronico": false,
           "fecha_registro": "2020-07-17"
         }
-      ]
+      ],
+      "folder": "Personas"
     },
     {
       "name": "habitaciones",
@@ -2302,7 +2316,8 @@
           "tiene_bano": false,
           "ocupada": true
         }
-      ]
+      ],
+      "folder": "Centro"
     },
     {
       "name": "ingresos",
@@ -2974,7 +2989,8 @@
           "es_urgente": true,
           "dias_previstos": 15
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "citas",
@@ -3807,7 +3823,8 @@
           "sala": "C4",
           "duracion_min": 60
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "visitas",
@@ -4469,7 +4486,8 @@
           "requiere_seguimiento": false,
           "coste": 154
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "diagnosticos",
@@ -4665,7 +4683,8 @@
           "es_cronico": false,
           "id_especialidad": 99
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "visita_diagnosticos",
@@ -5548,7 +5567,8 @@
           "es_principal": true,
           "observaciones": null
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "medicamentos",
@@ -5838,7 +5858,8 @@
           "requiere_receta": false,
           "stock": 2000
         }
-      ]
+      ],
+      "folder": "Catálogos"
     },
     {
       "name": "tratamientos",
@@ -6576,7 +6597,8 @@
           "activo": true,
           "coste": 140
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "prescripciones",
@@ -7745,7 +7767,8 @@
           "duracion_dias": 90,
           "cantidad": 1
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "intervenciones",
@@ -8342,7 +8365,8 @@
           "exitosa": true,
           "coste": 5786
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "alergias",
@@ -8750,7 +8774,8 @@
           "severidad": "Leve",
           "fecha_deteccion": "2013-09-26"
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "analiticas",
@@ -9473,7 +9498,8 @@
           "hemoglobina": 14.7,
           "es_anormal": true
         }
-      ]
+      ],
+      "folder": "Asistencial"
     },
     {
       "name": "facturas",
@@ -10200,7 +10226,8 @@
           "metodo_pago": "Efectivo",
           "descuento": 0
         }
-      ]
+      ],
+      "folder": "Facturación"
     }
   ],
   "queries": [

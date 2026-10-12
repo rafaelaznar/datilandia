@@ -10,6 +10,13 @@
     "E · Views",
     "F · Subqueries"
   ],
+  "tableFolders": [
+    "Hospital",
+    "Catalogues",
+    "People",
+    "Care",
+    "Billing"
+  ],
   "tables": [
     {
       "name": "hospitals",
@@ -141,7 +148,8 @@
           "phone": "944001600",
           "founded_year": 2003
         }
-      ]
+      ],
+      "folder": "Hospital"
     },
     {
       "name": "specialties",
@@ -253,7 +261,8 @@
           "needs_icu": false,
           "residency_years": 4
         }
-      ]
+      ],
+      "folder": "Catalogues"
     },
     {
       "name": "services",
@@ -414,7 +423,8 @@
           "bed_capacity": 16,
           "is_outpatient": false
         }
-      ]
+      ],
+      "folder": "Hospital"
     },
     {
       "name": "doctors",
@@ -912,7 +922,8 @@
           "phone": null,
           "hired_date": "2010-12-22"
         }
-      ]
+      ],
+      "folder": "People"
     },
     {
       "name": "nurses",
@@ -1206,7 +1217,8 @@
           "is_supervisor": true,
           "phone": "646843982"
         }
-      ]
+      ],
+      "folder": "People"
     },
     {
       "name": "insurers",
@@ -1294,7 +1306,8 @@
           "phone": "960600600",
           "covers_surgery": false
         }
-      ]
+      ],
+      "folder": "Catalogues"
     },
     {
       "name": "patients",
@@ -1928,7 +1941,8 @@
           "is_chronic": false,
           "registered_date": "2020-07-17"
         }
-      ]
+      ],
+      "folder": "People"
     },
     {
       "name": "rooms",
@@ -2302,7 +2316,8 @@
           "has_bathroom": false,
           "occupied": true
         }
-      ]
+      ],
+      "folder": "Hospital"
     },
     {
       "name": "admissions",
@@ -2974,7 +2989,8 @@
           "is_emergency": true,
           "expected_days": 15
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "appointments",
@@ -3807,7 +3823,8 @@
           "room": "C4",
           "duration_min": 60
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "visits",
@@ -4469,7 +4486,8 @@
           "needs_follow_up": false,
           "cost": 154
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "diagnoses",
@@ -4665,7 +4683,8 @@
           "is_chronic": false,
           "id_specialty": 99
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "visit_diagnoses",
@@ -5548,7 +5567,8 @@
           "is_main": true,
           "notes": null
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "drugs",
@@ -5838,7 +5858,8 @@
           "needs_prescription": false,
           "stock": 2000
         }
-      ]
+      ],
+      "folder": "Catalogues"
     },
     {
       "name": "treatments",
@@ -6576,7 +6597,8 @@
           "active": true,
           "cost": 140
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "prescriptions",
@@ -7745,7 +7767,8 @@
           "duration_days": 90,
           "amount": 1
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "surgeries",
@@ -8342,7 +8365,8 @@
           "successful": true,
           "cost": 5786
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "allergies",
@@ -8750,7 +8774,8 @@
           "severity": "mild",
           "detected_date": "2013-09-26"
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "labs",
@@ -9473,7 +9498,8 @@
           "haemoglobin": 14.7,
           "is_abnormal": true
         }
-      ]
+      ],
+      "folder": "Care"
     },
     {
       "name": "invoices",
@@ -10200,7 +10226,8 @@
           "payment_method": "cash",
           "discount": 0
         }
-      ]
+      ],
+      "folder": "Billing"
     }
   ],
   "queries": [

@@ -10,6 +10,12 @@
     "E · Views",
     "F · Subqueries"
   ],
+  "tableFolders": [
+    "Structure",
+    "People",
+    "Academic",
+    "Enrollments"
+  ],
   "tables": [
     {
       "name": "campuses",
@@ -99,7 +105,8 @@
           "phone": "601555666",
           "founded_year": 2004
         }
-      ]
+      ],
+      "folder": "Structure"
     },
     {
       "name": "buildings",
@@ -220,7 +227,8 @@
           "has_lift": false,
           "notes": "Modular classrooms"
         }
-      ]
+      ],
+      "folder": "Structure"
     },
     {
       "name": "classrooms",
@@ -413,7 +421,8 @@
           "board_type": "digital",
           "floor": 1
         }
-      ]
+      ],
+      "folder": "Structure"
     },
     {
       "name": "teachers",
@@ -583,7 +592,8 @@
           "email": "andres.cano@uni.es",
           "office": null
         }
-      ]
+      ],
+      "folder": "People"
     },
     {
       "name": "degrees",
@@ -693,7 +703,8 @@
           "is_official": true,
           "accreditation_date": null
         }
-      ]
+      ],
+      "folder": "Academic"
     },
     {
       "name": "subjects",
@@ -932,7 +943,8 @@
           "is_compulsory": false,
           "language": null
         }
-      ]
+      ],
+      "folder": "Academic"
     },
     {
       "name": "students",
@@ -1259,7 +1271,8 @@
           "has_scholarship": false,
           "id_campus": 3
         }
-      ]
+      ],
+      "folder": "People"
     },
     {
       "name": "enrollments",
@@ -1797,7 +1810,8 @@
           "is_recognised": false,
           "enrollment_date": "2025-09-18"
         }
-      ]
+      ],
+      "folder": "Enrollments"
     }
   ],
   "queries": [

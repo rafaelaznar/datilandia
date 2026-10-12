@@ -10,6 +10,12 @@
     "E · Vistas",
     "F · Subconsultas"
   ],
+  "tableFolders": [
+    "Estructura",
+    "Personas",
+    "Académico",
+    "Matrículas"
+  ],
   "tables": [
     {
       "name": "sedes",
@@ -99,7 +105,8 @@
           "telefono": "601555666",
           "anio_fundacion": 2004
         }
-      ]
+      ],
+      "folder": "Estructura"
     },
     {
       "name": "edificios",
@@ -220,7 +227,8 @@
           "tiene_ascensor": false,
           "notas": "Aulas modulares"
         }
-      ]
+      ],
+      "folder": "Estructura"
     },
     {
       "name": "aulas",
@@ -413,7 +421,8 @@
           "tipo_pizarra": "digital",
           "planta": 1
         }
-      ]
+      ],
+      "folder": "Estructura"
     },
     {
       "name": "docentes",
@@ -583,7 +592,8 @@
           "email": "andres.cano@uni.es",
           "despacho": null
         }
-      ]
+      ],
+      "folder": "Personas"
     },
     {
       "name": "estudios",
@@ -693,7 +703,8 @@
           "es_oficial": true,
           "fecha_acreditacion": null
         }
-      ]
+      ],
+      "folder": "Académico"
     },
     {
       "name": "asignaturas",
@@ -932,7 +943,8 @@
           "es_obligatoria": false,
           "idioma": null
         }
-      ]
+      ],
+      "folder": "Académico"
     },
     {
       "name": "estudiantes",
@@ -1259,7 +1271,8 @@
           "es_becado": false,
           "id_sede": 3
         }
-      ]
+      ],
+      "folder": "Personas"
     },
     {
       "name": "matriculas",
@@ -1797,7 +1810,8 @@
           "es_convalidada": false,
           "fecha_matricula": "2025-09-18"
         }
-      ]
+      ],
+      "folder": "Matrículas"
     }
   ],
   "queries": [

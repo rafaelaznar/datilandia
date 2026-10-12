@@ -394,16 +394,16 @@
       color: #000;
     }
 
-    #list-queries li.folder.drop-target {
+    .list li.folder.drop-target {
       background: #e6eef8;
       outline: 2px solid #1a4f8a;
     }
 
-    #list-queries li[data-name] {
+    .list li[data-name] {
       padding-left: 12px;
     }
 
-    #list-queries li[data-name].dragging {
+    .list li[data-name].dragging {
       opacity: 0.5;
     }
 
@@ -1401,7 +1401,11 @@
       <section class="panel">
         <h2>
           <button class="titulo-panel" data-i18n-title="markup.button.seeEveryTableItsProperties" data-i18n="markup.button.tables" id="btn-summary-tables" type="button" title="Ver todas las tablas con sus propiedades">Tablas</button>
-          <button class="panel-action" data-i18n-title="markup.button.createEmptyTable" id="btn-new-table" type="button" title="Crear una tabla vacía">+</button>
+          <span class="panel-actions">
+            <button class="panel-action" id="btn-fold-all-tables" type="button" hidden></button>
+            <button class="panel-action" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" data-i18n="markup.button.newFolder" id="btn-new-table-folder" type="button" title="Añadir una carpeta vacía de tablas (+C)">+C</button>
+            <button class="panel-action" data-i18n-title="markup.button.createEmptyTable" id="btn-new-table" type="button" title="Crear una tabla vacía">+</button>
+          </span>
         </h2>
         <ul id="list-tables" class="list"></ul>
       </section>
@@ -1528,6 +1532,7 @@
                 <li data-i18n-html="markup.li.deletingWarnsYouBeforeRemoving"><b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.</li>
                 <li data-i18n-html="markup.li.typeIsInferredImportIt">El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.</li>
                 <li data-i18n="markup.li.rowPagesTotalJumpFirst">Páginas de filas con el total y salto a la primera o a la última.</li>
+                <li data-i18n-html="markup.li.tableFoldersGroupTablesInOneLevel"><b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.</li>
                 <li data-i18n-html="markup.li.pressTablesQueriesTitleSidebar">Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.</li>
                 <li data-i18n-html="markup.li.linkRelationsBetweenTablesQueries">El enlace <b>Relaciones entre tablas y consultas</b> abre la <b>matriz</b> de relaciones del proyecto: quién apunta a quién y qué consultas citan cada pareja de tablas. El detalle está en el apartado <b>Relaciones</b>.</li>
                 <li data-i18n-html="markup.li.widthLeftColumnIsVariable">El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 195 px o usa las flechas con el tirador enfocado.</li>
@@ -2051,6 +2056,8 @@ ORDER BY edificios DESC, sede;</pre>
         <div class="toolbar">
           <label data-i18n="markup.label.description" for="table-description">Descripción:</label>
           <input id="table-description" type="text" size="60" title="Descripción de la tabla (se guarda en los metadatos del proyecto)">
+          <label data-i18n="markup.label.folder" for="table-folder">Carpeta:</label>
+          <select data-i18n-title="ui.tableFolderTip" id="table-folder" title="Carpeta de la tabla; elige una de la lista (+C crea una nueva)"></select>
           <button data-i18n-title="markup.button.firstPage" class="derecha" id="btn-pag-first" type="button" title="Primera página">|«</button>
           <button data-i18n-title="markup.button.previousPage" id="btn-pag-prev" type="button" title="Página anterior">«</button>
           <span id="pag-info" class="muted"></span>
@@ -2422,6 +2429,7 @@ ORDER BY edificios DESC, sede;</pre>
     window.extractor.messages = {
       en: {
         "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename or delete it from its header; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by typing the name (it is created when it does not exist). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>.",
+        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header renames, deletes and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
         "folders.collapse": "Fold “{name}”",
@@ -2445,13 +2453,19 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.confirmDelete": "Delete the folder “{name}”? Its queries are kept, without a folder.",
         "folders.nameRequired": "The folder needs a name.",
         "folders.nameDuplicate": "There is already a folder called “{name}”.",
-        "folders.queryMoved": "“{query}” moved to “{folder}”.",
-        "folders.queryUnfoldered": "“{query}” left without a folder.",
+        "folders.queryMoved": "“{name}” moved to “{folder}”.",
+        "folders.queryUnfoldered": "“{name}” left without a folder.",
+        "folders.tableMoved": "“{name}” moved to “{folder}”.",
+        "folders.tableUnfoldered": "“{name}” left without a folder.",
+        "folders.deletedTables": "Folder “{name}” deleted; its {count} tables are left without a folder.",
+        "folders.confirmDeleteTables": "Delete the folder “{name}”? Its tables are kept, without a folder.",
+        "folders.tablesCount": {"one":"{count} table","other":"{count} tables"},
         "folders.unknown": "There is no folder called “{name}”.",
         "folders.queriesCount": {"one":"{count} query","other":"{count} queries"},
         "ui.folder": "Folder",
         "ui.folderNone": "No folder",
         "ui.folderTip": "Folder of the query; type a new name to create it",
+        "ui.tableFolderTip": "Folder of the table; choose one from the list (+F creates a new one)",
         "summary.folder": "Folder",
         "markup.button.newFolder": "+F",
         "markup.button.newFolderTip": "Add an empty folder (+F)",
@@ -2461,6 +2475,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.folderNameInvalid": "{label}: every folder name must be a non-empty text.",
         "persistence.duplicateFolder": "{label}: the folder “{name}” appears twice.",
         "persistence.queryFolderInvalid": "{queryLabel}: the folder must be a non-empty text.",
+        "persistence.tableFolderInvalid": "{tableLabel}: the folder must be a non-empty text.",
         "markup.b.alwaysAS": "always with <code>AS</code>",
         "markup.b.defaultSettings": "Default settings",
         "markup.b.fieldsMetadata": "Fields and metadata",
@@ -3422,6 +3437,7 @@ ORDER BY edificios DESC, sede;</pre>
       },
       es: {
         "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo escribiendo el nombre (si no existe, se crea). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.",
+        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
         "folders.collapse": "Plegar «{name}»",
@@ -3445,13 +3461,19 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.confirmDelete": "¿Borrar la carpeta «{name}»? Sus consultas se quedan sin carpeta.",
         "folders.nameRequired": "La carpeta necesita un nombre.",
         "folders.nameDuplicate": "Ya hay una carpeta llamada «{name}».",
-        "folders.queryMoved": "«{query}» movida a «{folder}».",
-        "folders.queryUnfoldered": "«{query}» se queda sin carpeta.",
+        "folders.queryMoved": "«{name}» movida a «{folder}».",
+        "folders.queryUnfoldered": "«{name}» se queda sin carpeta.",
+        "folders.tableMoved": "«{name}» movida a «{folder}».",
+        "folders.tableUnfoldered": "«{name}» se queda sin carpeta.",
+        "folders.deletedTables": "Carpeta «{name}» borrada; sus {count} tablas se quedan sin carpeta.",
+        "folders.confirmDeleteTables": "¿Borrar la carpeta «{name}»? Sus tablas se quedan sin carpeta.",
+        "folders.tablesCount": {"one":"{count} tabla","other":"{count} tablas"},
         "folders.unknown": "No hay ninguna carpeta llamada «{name}».",
         "folders.queriesCount": {"one":"{count} consulta","other":"{count} consultas"},
         "ui.folder": "Carpeta",
         "ui.folderNone": "Sin carpeta",
         "ui.folderTip": "Carpeta de la consulta; escribe un nombre nuevo para crearla",
+        "ui.tableFolderTip": "Carpeta de la tabla; elige una de la lista (+C crea una nueva)",
         "summary.folder": "Carpeta",
         "markup.button.newFolder": "+C",
         "markup.button.newFolderTip": "Añadir una carpeta vacía (+C)",
@@ -3461,6 +3483,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.folderNameInvalid": "{label}: cada nombre de carpeta debe ser un texto no vacío.",
         "persistence.duplicateFolder": "{label}: la carpeta «{name}» aparece dos veces.",
         "persistence.queryFolderInvalid": "{queryLabel}: la carpeta debe ser un texto no vacío.",
+        "persistence.tableFolderInvalid": "{tableLabel}: la carpeta debe ser un texto no vacío.",
         "markup.b.alwaysAS": "siempre con <code>AS</code>",
         "markup.b.defaultSettings": "Ajustes por defecto",
         "markup.b.fieldsMetadata": "Campos y metadatos",
@@ -4689,7 +4712,9 @@ ORDER BY edificios DESC, sede;</pre>
         name: "",           // named on start-up, in the language in use then
         folders: [],        // folders of the queries, in display order
         foldedFolders: [],  // of those folders, the ones that are folded
-        tablesFolded: false, // is the list of tables folded?
+        tableFolders: [],   // folders of the tables, in display order
+        foldedTableFolders: [], // of those folders, the ones that are folded
+        tablesFolded: false, // is the list of tables folded? (without folders)
         tables: [],
         queries: [],
         settings: Utils.cloneJson(DEFAULT_SETTINGS),
@@ -4701,8 +4726,10 @@ ORDER BY edificios DESC, sede;</pre>
       /** Replaces the project content keeping the same reference. */
       replaceProject(source) {
         Store.project.name = source.name;
-        Store.project.folders = Model.foldersOf(source);
-        Store.project.foldedFolders = Model.foldedOf(source);
+        Store.project.folders = Model.foldersOf(source, "queries");
+        Store.project.foldedFolders = Model.foldedOf(source, "queries");
+        Store.project.tableFolders = Model.foldersOf(source, "tables");
+        Store.project.foldedTableFolders = Model.foldedOf(source, "tables");
         Store.project.tablesFolded = Model.tablesFolded(source);
         Store.project.tables = source.tables;
         Store.project.queries = source.queries;
@@ -4764,26 +4791,42 @@ ORDER BY edificios DESC, sede;</pre>
         };
       },
 
-      /* --- Folders of the queries ---------------------------------------- */
+      /* --- Folders of the lists (tables and queries) --------------------- */
 
-      /** Folder list of the project: always an array, in display order. */
-      foldersOf(project) {
-        return Array.isArray(project.folders) ? project.folders : [];
+      /** Kinds of list that are grouped in folders, with the keys of the project
+       *  that hold their state. */
+      GROUP_KINDS: {
+        tables: { folders: "tableFolders", folded: "foldedTableFolders", items: "tables" },
+        queries: { folders: "folders", folded: "foldedFolders", items: "queries" },
       },
 
-      /** Queries of a folder, in project order; null (or "") is «no folder». */
-      queriesInFolder(project, folder) {
+      /** Spec of a kind of list. The kind is the last argument everywhere and,
+       *  with no kind, it answers for the queries: the list that had folders
+       *  first, so the calls that were already written keep working. */
+      groupOf(kind) {
+        return Model.GROUP_KINDS[kind || "queries"];
+      },
+
+      /** Folder list of a kind of list: always an array, in display order. */
+      foldersOf(project, kind) {
+        const raw = project[Model.groupOf(kind).folders];
+        return Array.isArray(raw) ? raw : [];
+      },
+
+      /** Items of a folder of a kind of list, in project order; null (or "") is
+       *  «no folder». */
+      itemsInFolder(project, folder, kind) {
         const wanted = folder || null;
-        return project.queries.filter((query) => (query.folder || null) === wanted);
+        return project[Model.groupOf(kind).items].filter((item) => (item.folder || null) === wanted);
       },
 
-      /** Queries of every folder, plus how many are left without one. */
-      folderCounts(project) {
-        const counts = new Map(Model.foldersOf(project).map((name) => [name, 0]));
+      /** Items of every folder of that kind, plus how many are left without one. */
+      folderCounts(project, kind) {
+        const counts = new Map(Model.foldersOf(project, kind).map((name) => [name, 0]));
         let none = 0;
-        project.queries.forEach((query) => {
-          if (query.folder && counts.has(query.folder)) {
-            counts.set(query.folder, counts.get(query.folder) + 1);
+        project[Model.groupOf(kind).items].forEach((item) => {
+          if (item.folder && counts.has(item.folder)) {
+            counts.set(item.folder, counts.get(item.folder) + 1);
           } else {
             none += 1;
           }
@@ -4791,36 +4834,40 @@ ORDER BY edificios DESC, sede;</pre>
         return { counts, none };
       },
 
-      /** Folded folders of the project: always an array. The empty name is the
+      /** Folded folders of that kind: always an array. The empty name is the
        *  «no folder» group of the sidebar, which is folded like the rest. */
-      foldedOf(project) {
-        return Array.isArray(project.foldedFolders) ? project.foldedFolders : [];
+      foldedOf(project, kind) {
+        const raw = project[Model.groupOf(kind).folded];
+        return Array.isArray(raw) ? raw : [];
       },
 
-      /** Is that folder folded? */
-      isFolded(project, name) {
-        return Model.foldedOf(project).includes(name);
+      /** Is that folder of that kind folded? */
+      isFolded(project, name, kind) {
+        return Model.foldedOf(project, kind).includes(name);
       },
 
-      /** Folds a folder of the project (the «no folder» group counts as one).
+      /** Folds a folder of that kind (the «no folder» group counts as one).
        *  Folding a folder that is already folded changes nothing. */
-      foldFolder(project, name) {
-        if (name !== "" && !Model.foldersOf(project).includes(name)) {
+      foldFolder(project, name, kind) {
+        const key = Model.groupOf(kind).folded;
+        if (name !== "" && !Model.foldersOf(project, kind).includes(name)) {
           return { ok: false, error: I18n.t("folders.unknown", { name: name }) };
         }
-        if (!Array.isArray(project.foldedFolders)) {
-          project.foldedFolders = [];
+        if (!Array.isArray(project[key])) {
+          project[key] = [];
         }
-        if (!project.foldedFolders.includes(name)) {
-          project.foldedFolders.push(name);
+        if (!project[key].includes(name)) {
+          project[key].push(name);
         }
         return { ok: true, error: "" };
       },
 
-      /** Unfolds a folder. A folder that is not folded is left as it is. */
-      unfoldFolder(project, name) {
-        if (Array.isArray(project.foldedFolders)) {
-          project.foldedFolders = project.foldedFolders.filter((item) => item !== name);
+      /** Unfolds a folder of that kind. A folder that is not folded is left as
+       *  it is. */
+      unfoldFolder(project, name, kind) {
+        const key = Model.groupOf(kind).folded;
+        if (Array.isArray(project[key])) {
+          project[key] = project[key].filter((item) => item !== name);
         }
         return { ok: true, error: "" };
       },
@@ -4841,26 +4888,35 @@ ORDER BY edificios DESC, sede;</pre>
         delete project.tablesFolded;
       },
 
-      /** Creates a folder. The name is trimmed; empty and repeated names fail. */
-      addFolder(project, name) {
+      /** Creates a folder of that kind. The name is trimmed; empty and repeated
+       *  names fail. */
+      addFolder(project, name, kind) {
+        const key = Model.groupOf(kind).folders;
         const clean = String(name === undefined || name === null ? "" : name).trim();
         if (clean === "") {
           return { ok: false, error: I18n.t("folders.nameRequired") };
         }
-        if (Model.foldersOf(project).includes(clean)) {
+        if (Model.foldersOf(project, kind).includes(clean)) {
           return { ok: false, error: I18n.t("folders.nameDuplicate", { name: clean }) };
         }
-        if (!Array.isArray(project.folders)) {
-          project.folders = [];
+        if (!Array.isArray(project[key])) {
+          project[key] = [];
         }
-        project.folders.push(clean);
+        project[key].push(clean);
+        // The whole-list fold of the tables only means something while the list
+        // is flat: as soon as the first folder of tables appears it steps aside
+        // for good, so deleting it later cannot bring the old fold back.
+        if (kind === "tables") {
+          delete project.tablesFolded;
+        }
         return { ok: true, error: "" };
       },
 
-      /** Renames a folder and takes its queries with it. Renaming to the name it
-       *  already has is a no-op, not an error. */
-      renameFolder(project, from, to) {
-        const folders = Model.foldersOf(project);
+      /** Renames a folder of that kind and takes its items with it. Renaming to
+       *  the name it already has is a no-op, not an error. */
+      renameFolder(project, from, to, kind) {
+        const spec = Model.groupOf(kind);
+        const folders = Model.foldersOf(project, kind);
         if (!folders.includes(from)) {
           return { ok: false, error: I18n.t("folders.unknown", { name: from }) };
         }
@@ -4874,52 +4930,66 @@ ORDER BY edificios DESC, sede;</pre>
         if (folders.includes(clean)) {
           return { ok: false, error: I18n.t("folders.nameDuplicate", { name: clean }) };
         }
-        project.folders = folders.map((name) => (name === from ? clean : name));
-        project.queries.forEach((query) => {
-          if (query.folder === from) {
-            query.folder = clean;
+        project[spec.folders] = folders.map((name) => (name === from ? clean : name));
+        project[spec.items].forEach((item) => {
+          if (item.folder === from) {
+            item.folder = clean;
           }
         });
-        if (Array.isArray(project.foldedFolders)) {
-          project.foldedFolders = project.foldedFolders.map((name) => (name === from ? clean : name));
+        if (Array.isArray(project[spec.folded])) {
+          project[spec.folded] = project[spec.folded].map((name) => (name === from ? clean : name));
         }
         return { ok: true, error: "" };
       },
 
-      /** Deletes a folder: its queries are kept, without a folder. */
-      deleteFolder(project, name) {
-        const folders = Model.foldersOf(project);
+      /** Deletes a folder of that kind: its items are kept, without a folder. */
+      deleteFolder(project, name, kind) {
+        const spec = Model.groupOf(kind);
+        const folders = Model.foldersOf(project, kind);
         if (!folders.includes(name)) {
           return { ok: false, error: I18n.t("folders.unknown", { name: name }) };
         }
-        project.folders = folders.filter((candidate) => candidate !== name);
-        project.queries.forEach((query) => {
-          if (query.folder === name) {
-            delete query.folder;
+        project[spec.folders] = folders.filter((candidate) => candidate !== name);
+        project[spec.items].forEach((item) => {
+          if (item.folder === name) {
+            delete item.folder;
           }
         });
-        if (Array.isArray(project.foldedFolders)) {
-          project.foldedFolders = project.foldedFolders.filter((item) => item !== name);
+        if (Array.isArray(project[spec.folded])) {
+          project[spec.folded] = project[spec.folded].filter((item) => item !== name);
         }
         return { ok: true, error: "" };
       },
 
-      /** Puts a query in a folder (null or "" takes it out of every folder). */
-      moveQueryToFolder(project, queryName, folder) {
-        const query = project.queries.find((candidate) => candidate.name === queryName);
-        if (!query) {
-          return { ok: false, error: I18n.t("folders.unknown", { name: queryName }) };
+      /** Puts an item of a kind of list in a folder (null or "" takes it out of
+       *  every folder). */
+      moveToFolder(project, itemName, folder, kind) {
+        const item = project[Model.groupOf(kind).items].find((candidate) => candidate.name === itemName);
+        if (!item) {
+          return { ok: false, error: I18n.t("folders.unknown", { name: itemName }) };
         }
         const clean = String(folder === undefined || folder === null ? "" : folder).trim();
         if (clean === "") {
-          delete query.folder;
+          delete item.folder;
           return { ok: true, error: "" };
         }
-        if (!Model.foldersOf(project).includes(clean)) {
+        if (!Model.foldersOf(project, kind).includes(clean)) {
           return { ok: false, error: I18n.t("folders.unknown", { name: clean }) };
         }
-        query.folder = clean;
+        item.folder = clean;
         return { ok: true, error: "" };
+      },
+
+      /* --- Old names of the folders of the queries ----------------------- */
+
+      /** Queries of a folder: `itemsInFolder` for the list of the queries. */
+      queriesInFolder(project, folder) {
+        return Model.itemsInFolder(project, folder, "queries");
+      },
+
+      /** Puts a query in a folder: `moveToFolder` for the list of the queries. */
+      moveQueryToFolder(project, queryName, folder) {
+        return Model.moveToFolder(project, queryName, folder, "queries");
       },
 
       /** Finds a table by name inside the project (null when it does not exist). */
@@ -5399,7 +5469,8 @@ ORDER BY edificios DESC, sede;</pre>
             }
           });
         });
-        const folders = Model.foldersOf(project).filter((name) => name);
+        const folders = Model.foldersOf(project, "queries").filter((name) => name);
+        const tableFolders = Model.foldersOf(project, "tables").filter((name) => name);
         const content = {
           format: Persistence.FORMAT,
           version: Persistence.VERSION,
@@ -5411,16 +5482,26 @@ ORDER BY edificios DESC, sede;</pre>
         // Which folders are folded, by name; the «no folder» group is written
         // with an empty name.
         const folded = folders.length > 0
-          ? Model.foldedOf(project).filter((name) => name === "" || folders.includes(name))
+          ? Model.foldedOf(project, "queries").filter((name) => name === "" || folders.includes(name))
           : [];
         if (folded.length > 0) {
           content.foldedFolders = folded;
         }
-        // The list of tables is one group: it is folded or it is not.
-        if (project.tablesFolded === true && project.tables.length > 0) {
+        // Folders of the tables, with which ones are folded, the same way.
+        if (tableFolders.length > 0) {
+          content.tableFolders = tableFolders;
+          const foldedTables = Model.foldedOf(project, "tables")
+            .filter((name) => name === "" || tableFolders.includes(name));
+          if (foldedTables.length > 0) {
+            content.foldedTableFolders = foldedTables;
+          }
+        }
+        // The whole list of tables is one group: it is folded or it is not.
+        // With folders of tables that group steps aside, so it is not written.
+        if (project.tablesFolded === true && project.tables.length > 0 && tableFolders.length === 0) {
           content.tablesFolded = true;
         }
-        content.tables = project.tables;
+        content.tables = project.tables.map((table) => Persistence.tableToJson(table));
         content.queries = project.queries.map((query) => Persistence.queryToJson(query));
         content.settings = project.settings || Utils.cloneJson(DEFAULT_SETTINGS);
         return JSON.stringify(
@@ -5499,8 +5580,10 @@ ORDER BY edificios DESC, sede;</pre>
           }
           seen.add(table.name);
         });
-        const folders = Persistence.parseFolders(root.folders, errors);
-        const foldedFolders = Persistence.parseFoldedFolders(root.foldedFolders, folders, errors);
+        const folders = Persistence.parseFolders(root.folders, "folders", errors);
+        const foldedFolders = Persistence.parseFoldedFolders(root.foldedFolders, folders, "foldedFolders", errors);
+        const tableFolders = Persistence.parseFolders(root.tableFolders, "tableFolders", errors);
+        const foldedTableFolders = Persistence.parseFoldedFolders(root.foldedTableFolders, tableFolders, "foldedTableFolders", errors);
         const tablesFolded = Persistence.parseTablesFolded(root.tablesFolded, errors);
         const queries = Persistence.parseQueries(root.queries, errors);
         const seenQueries = new Set();
@@ -5521,6 +5604,12 @@ ORDER BY edificios DESC, sede;</pre>
             folders.push(query.folder);
           }
         });
+        // The same with the tables and their folders.
+        tables.forEach((table) => {
+          if (table.folder && !tableFolders.includes(table.folder)) {
+            tableFolders.push(table.folder);
+          }
+        });
         const name = typeof root.name === "string" && root.name.trim() !== "" ? root.name : I18n.t("misc.untitled");
         const project = { name, tables, queries, settings };
         if (folders.length > 0) {
@@ -5529,7 +5618,15 @@ ORDER BY edificios DESC, sede;</pre>
         if (foldedFolders.length > 0) {
           project.foldedFolders = foldedFolders;
         }
-        if (tablesFolded && tables.length > 0) {
+        if (tableFolders.length > 0) {
+          project.tableFolders = tableFolders;
+        }
+        if (foldedTableFolders.length > 0) {
+          project.foldedTableFolders = foldedTableFolders;
+        }
+        // With folders of tables the whole list is painted by its folders, so
+        // the flag of the folded list of tables is left out.
+        if (tablesFolded && tables.length > 0 && tableFolders.length === 0) {
           project.tablesFolded = true;
         }
         return { ok: true, project };
@@ -5626,12 +5723,21 @@ ORDER BY edificios DESC, sede;</pre>
           errors.push(I18n.t("persistence.tableDescriptionInvalid", { tableLabel: nameLabel }));
           description = "";
         }
+        let folder = raw.folder === undefined || raw.folder === null ? null : raw.folder;
+        if (folder !== null && (typeof folder !== "string" || folder.trim() === "")) {
+          errors.push(I18n.t("persistence.tableFolderInvalid", { tableLabel: nameLabel }));
+          folder = null;
+        }
         fields.forEach((field) => {
           if (!Model.FIELD_TYPES.includes(field.type)) {
             field.type = Model.fieldTypeFromRows(rows, field.name);
           }
         });
-        return { name: raw.name, description, idField, nextId, fields, rows };
+        const table = { name: raw.name, description, idField, nextId, fields, rows };
+        if (folder !== null) {
+          table.folder = folder.trim();
+        }
+        return table;
       },
 
       /** Validates and normalises a row: the same fields as the table and scalar
@@ -5666,6 +5772,16 @@ ORDER BY edificios DESC, sede;</pre>
         rows.push(row);
       },
 
+      /** Table as it is written to the file: the folder key only when the table
+       *  has one. */
+      tableToJson(table) {
+        const copy = { ...table };
+        if (!copy.folder) {
+          delete copy.folder;
+        }
+        return copy;
+      },
+
       /** Query as it is written to the file: the asserted result in its compact
        *  form and the folder key only when the query has one. */
       queryToJson(query) {
@@ -5678,18 +5794,18 @@ ORDER BY edificios DESC, sede;</pre>
         return copy;
       },
 
-      /** Validates the folder list of the file: unique, non-empty names. */
-      parseFolders(rawFolders, errors) {
+      /** Validates a folder list of the file: unique, non-empty names. */
+      parseFolders(rawFolders, key, errors) {
         if (rawFolders === undefined) {
           return [];
         }
         if (!Array.isArray(rawFolders)) {
-          errors.push(I18n.t("persistence.foldersNotList", { label: "folders" }));
+          errors.push(I18n.t("persistence.foldersNotList", { label: key }));
           return [];
         }
         const folders = [];
         rawFolders.forEach((raw, index) => {
-          const label = `folders[${index}]`;
+          const label = `${key}[${index}]`;
           if (typeof raw !== "string" || raw.trim() === "") {
             errors.push(I18n.t("persistence.folderNameInvalid", { label: label }));
             return;
@@ -5707,12 +5823,12 @@ ORDER BY edificios DESC, sede;</pre>
       /** Validates the list of folded folders of the file. Names that are not
        *  a folder of the project any more are dropped (the list of folders is
        *  the source of truth); the empty name is the «no folder» group. */
-      parseFoldedFolders(raw, folders, errors) {
+      parseFoldedFolders(raw, folders, key, errors) {
         if (raw === undefined) {
           return [];
         }
         if (!Array.isArray(raw)) {
-          errors.push(I18n.t("persistence.foldersNotList", { label: "foldedFolders" }));
+          errors.push(I18n.t("persistence.foldersNotList", { label: key }));
           return [];
         }
         if (folders.length === 0) {
@@ -5720,7 +5836,7 @@ ORDER BY edificios DESC, sede;</pre>
         }
         const folded = [];
         raw.forEach((item, index) => {
-          const label = `foldedFolders[${index}]`;
+          const label = `${key}[${index}]`;
           if (typeof item !== "string") {
             errors.push(I18n.t("persistence.folderNameInvalid", { label: label }));
             return;
@@ -9291,12 +9407,11 @@ ORDER BY edificios DESC, sede;</pre>
       /** Wires the events of the table view (delegation). */
       bind() {
         document.getElementById("list-tables").addEventListener("click", (event) => {
-          if (event.target.closest("button.folder-toggle")) {
-            Ui.toggleTablesFold();
-            return;
-          }
-          const header = event.target.closest("li.folder");
-          if (header) {
+          // The folders of the tables fold, rename and delete with the generic
+          // module, which binds this list as it does with the ones of the
+          // queries; here only the «all tables» group is left, which folds the
+          // whole list, and picking a table.
+          if (event.target.closest("li.folder[data-group=\"tables\"]")) {
             Ui.toggleTablesFold();
             return;
           }
@@ -9427,31 +9542,52 @@ ORDER BY edificios DESC, sede;</pre>
       renderSidebarTables() {
         const list = document.getElementById("list-tables");
         list.textContent = "";
-        if (Store.project.tables.length > 0) {
+        const withFolders = Model.foldersOf(Store.project, "tables").length > 0;
+        // Without folders of tables the list keeps the group it always had,
+        // which folds every table at once.
+        if (Store.project.tables.length > 0 && !withFolders) {
           list.appendChild(Ui.tableListHeader());
         }
+        if (withFolders) {
+          UiFolders.render("tables", list, (table, folder) => Ui.tableItem(table, folder));
+          return;
+        }
         Store.project.tables.forEach((table) => {
-          const item = document.createElement("li");
-          item.dataset.name = table.name;
-          item.title = Ui.fieldsTip(
-            table.description,
-            I18n.t("ui.fields"),
-            table.fields.map((field) => Ui.fieldLabel(Store.project, table, field)),
-          );
-          if (table.name === Ui.state.activeTable) {
-            item.classList.add("selected");
-          }
-          const name = document.createElement("span");
-          name.textContent = table.name;
-          const detail = document.createElement("span");
-          detail.className = "detail";
-          detail.textContent = `${table.rows.length}`;
-          detail.title = I18n.t("ui.rows");
-          item.appendChild(name);
-          item.appendChild(detail);
-          list.appendChild(item);
+          list.appendChild(Ui.tableItem(table, ""));
         });
+        // With no folders of tables there is nothing to fold all: the button of
+        // the panel has to hide itself here too, or deleting the last folder
+        // would leave it on screen doing nothing.
+        UiFolders.applyCollapsed("tables");
         Ui.applyTablesFold();
+      },
+
+      /** One table of the sidebar list: its name and how many rows it has.
+       *  `folder` is the folder it is shown under ("" = none). */
+      tableItem(table, folder) {
+        const item = document.createElement("li");
+        item.dataset.name = table.name;
+        item.dataset.folder = folder;
+        item.title = Ui.fieldsTip(
+          table.description,
+          I18n.t("ui.fields"),
+          table.fields.map((field) => Ui.fieldLabel(Store.project, table, field)),
+        );
+        if (folder) {
+          item.classList.add("folder-open");
+        }
+        if (table.name === Ui.state.activeTable) {
+          item.classList.add("selected");
+        }
+        const name = document.createElement("span");
+        name.textContent = table.name;
+        const detail = document.createElement("span");
+        detail.className = "detail";
+        detail.textContent = `${table.rows.length}`;
+        detail.title = I18n.t("ui.rows");
+        item.appendChild(name);
+        item.appendChild(detail);
+        return item;
       },
 
       /** Header of the table list: every table of the project hangs from it, as
@@ -9513,7 +9649,9 @@ ORDER BY edificios DESC, sede;</pre>
       renderSidebarQueries() {
         const list = document.getElementById("list-queries");
         list.textContent = "";
-        UiFolders.render(list, SqlViews.usage(Store.project), Ui.projectShape(Store.project));
+        const usage = SqlViews.usage(Store.project);
+        const shape = Ui.projectShape(Store.project);
+        UiFolders.render("queries", list, (query, folder) => Ui.queryItem(query, usage, shape, folder));
       },
 
       /** One query of the sidebar list: its name, its test mark and its view
@@ -9603,6 +9741,7 @@ ORDER BY edificios DESC, sede;</pre>
       renderTable(table) {
         document.getElementById("table-name").value = table.name;
         document.getElementById("table-description").value = table.description || "";
+        UiFolders.fillEditorOptions("tables");
         Ui.renderGrid(table);
         Ui.renderFields(table);
       },
@@ -10764,6 +10903,7 @@ ORDER BY edificios DESC, sede;</pre>
           cells: [
             { text: table.name },
             { text: table.description || "—", className: "long" },
+            { text: table.folder || "—" },
             { text: I18n.t("misc.rowsCount", { count: table.rows.length }) },
             { text: UiSummary.idFieldText(table) },
             { text: UiSummary.fieldList(table), className: "long fields" },
@@ -10771,7 +10911,8 @@ ORDER BY edificios DESC, sede;</pre>
         }));
         UiSummary.fillGrid(
           document.getElementById("table-summary-tables"),
-          [I18n.t("summary.columnTable"), I18n.t("misc.description"), I18n.t("summary.columnRecords"), I18n.t("summary.columnIdField"), I18n.t("misc.fields")],
+          [I18n.t("summary.columnTable"), I18n.t("misc.description"), I18n.t("summary.folder"),
+            I18n.t("summary.columnRecords"), I18n.t("summary.columnIdField"), I18n.t("misc.fields")],
           rows,
         );
         document.getElementById("summary-tables-info").textContent = tables.length === 0
@@ -11659,7 +11800,7 @@ ORDER BY edificios DESC, sede;</pre>
         Ui.showView("query");
         document.getElementById("query-name").value = query.name;
         document.getElementById("query-description").value = query.description || "";
-        UiFolders.fillEditorOptions();
+        UiFolders.fillEditorOptions("queries");
         document.getElementById("query-sql").value = query.sql;
         UiQueries.clearOutput();
         UiQueries.updateTestControls();
@@ -13716,92 +13857,171 @@ ORDER BY edificios DESC, sede;</pre>
     };
 
     /* =====================================================================
-       9e · QUERY FOLDERS
-       Groups the queries of the sidebar in folders, creates, renames and
-       deletes them and moves a query into one of them with the pointer.
+       9e · FOLDERS OF THE LISTS
+       Groups the items of the sidebar (the tables and the queries) in folders
+       of one level, creates, renames and deletes them and moves an item into
+       one of them with the pointer. Each list keeps its own folders in the
+       project: the queries in `folders` and the tables in `tableFolders`.
        ===================================================================== */
     const UiFolders = {
+      /** The two lists that are grouped in folders, with the element of the
+       *  sidebar, the buttons and the texts that change from one to the other. */
+      KIND: {
+        tables: {
+          list: "list-tables",
+          foldAll: "btn-fold-all-tables",
+          newFolder: "btn-new-table-folder",
+          field: "table-folder",
+          options: null, // the tables choose their folder from a drop-down
+          active: "activeTable",
+          items: "tables",
+          count: "folders.tablesCount",
+          moved: "folders.tableMoved",
+          unfolder: "folders.tableUnfoldered",
+          deleted: "folders.deletedTables",
+          confirmDelete: "folders.confirmDeleteTables",
+        },
+        queries: {
+          list: "list-queries",
+          foldAll: "btn-fold-all",
+          newFolder: "btn-new-folder",
+          field: "query-folder",
+          options: "folder-list",
+          active: "activeQuery",
+          items: "queries",
+          count: "folders.queriesCount",
+          moved: "folders.queryMoved",
+          unfolder: "folders.queryUnfoldered",
+          deleted: "folders.deleted",
+          confirmDelete: "folders.confirmDelete",
+        },
+      },
+
+      /** The kinds of list, so the loops over both are short. */
+      KINDS: ["tables", "queries"],
+
+      /** Element of the sidebar of that kind. */
+      listOf(kind) {
+        return document.getElementById(UiFolders.KIND[kind].list);
+      },
+
+      /** Repaints the list of that kind. */
+      repaint(kind) {
+        if (kind === "tables") {
+          Ui.renderSidebarTables();
+          return;
+        }
+        Ui.renderSidebarQueries();
+      },
+
+      /** Item of that kind that is open in its editor (null when there is none). */
+      activeItem(kind) {
+        const spec = UiFolders.KIND[kind];
+        const name = Ui.state[spec.active];
+        return Store.project[spec.items].find((item) => item.name === name) || null;
+      },
+
       bind() {
-        document.getElementById("btn-new-folder").addEventListener("click", () => UiFolders.add());
-        document.getElementById("btn-fold-all").addEventListener("click", () => UiFolders.toggleAll());
-        UiFolders.bindDrag();
-        const field = document.getElementById("query-folder");
-        field.addEventListener("change", () => UiFolders.commitEditorFolder());
-        field.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            UiFolders.commitEditorFolder();
-          }
-        });
-        document.getElementById("list-queries").addEventListener("click", (event) => {
-          const toggle = event.target.closest("button.folder-toggle");
-          if (toggle) {
-            UiFolders.toggle(toggle.dataset.folder);
-            return;
-          }
-          const rename = event.target.closest("button.rename-folder");
-          if (rename) {
-            UiFolders.rename(rename.dataset.folder);
-            return;
-          }
-          const remove = event.target.closest("button.delete-folder");
-          if (remove) {
-            UiFolders.remove(remove.dataset.folder);
-            return;
-          }
-          // Anywhere else in the header folds (or unfolds) the folder, but
-          // never while renaming it: the name is an input then.
-          const header = event.target.closest("li.folder");
-          if (header && !event.target.closest("input")) {
-            UiFolders.toggle(header.dataset.folder);
-          }
+        UiFolders.KINDS.forEach((kind) => {
+          const spec = UiFolders.KIND[kind];
+          document.getElementById(spec.newFolder).addEventListener("click", () => UiFolders.add(kind));
+          document.getElementById(spec.foldAll).addEventListener("click", () => UiFolders.toggleAll(kind));
+          UiFolders.listOf(kind).addEventListener("click", (event) => UiFolders.headerClick(kind, event));
+          UiFolders.bindDrag(kind);
+          const field = document.getElementById(spec.field);
+          field.addEventListener("change", () => UiFolders.commitEditorFolder(kind));
+          field.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              UiFolders.commitEditorFolder(kind);
+            }
+          });
         });
       },
 
-      toggleAll() {
-        const names = Model.foldersOf(Store.project);
+      /** Handles a click on a header of that list: the arrow folds it, the two
+       *  buttons rename and delete it and anywhere else in the header folds it
+       *  as well. Returns true when the click belonged to a folder (the «all
+       *  tables» group, which has no name of its own, is left to the list). */
+      headerClick(kind, event) {
+        const header = event.target.closest("li.folder");
+        if (!header || header.dataset.folder === undefined) {
+          return false;
+        }
+        const toggle = event.target.closest("button.folder-toggle");
+        if (toggle) {
+          UiFolders.toggle(kind, toggle.dataset.folder);
+          return true;
+        }
+        const rename = event.target.closest("button.rename-folder");
+        if (rename) {
+          UiFolders.rename(kind, rename.dataset.folder);
+          return true;
+        }
+        const remove = event.target.closest("button.delete-folder");
+        if (remove) {
+          UiFolders.remove(kind, remove.dataset.folder);
+          return true;
+        }
+        // Anywhere else in the header folds (or unfolds) the folder, but never
+        // while renaming it: the name is an input then.
+        if (!event.target.closest("input")) {
+          UiFolders.toggle(kind, header.dataset.folder);
+          return true;
+        }
+        return false;
+      },
+
+      /** Folds every folder of that kind, or unfolds them all when they are
+       *  every one folded already. */
+      toggleAll(kind) {
+        const names = Model.foldersOf(Store.project, kind);
         if (names.length === 0) {
           return;
         }
         const all = names.concat([""]);
-        const everythingFolded = all.every((name) => Model.isFolded(Store.project, name));
+        const everythingFolded = all.every((name) => Model.isFolded(Store.project, name, kind));
         all.forEach((name) => {
           if (everythingFolded) {
-            Model.unfoldFolder(Store.project, name);
+            Model.unfoldFolder(Store.project, name, kind);
           } else {
-            Model.foldFolder(Store.project, name);
+            Model.foldFolder(Store.project, name, kind);
           }
         });
         UiProject.markDirty();
-        UiFolders.applyCollapsed();
+        UiFolders.applyCollapsed(kind);
         setStatus(I18n.t(everythingFolded ? "folders.unfoldedAll" : "folders.foldedAll"));
       },
 
-      /** Folds an unfolded folder and the other way round. The state travels
-       *  in the project, so the file remembers which folders are folded. */
-      toggle(name) {
-        const result = Model.isFolded(Store.project, name)
-          ? Model.unfoldFolder(Store.project, name)
-          : Model.foldFolder(Store.project, name);
+      /** Folds an unfolded folder and the other way round. The state travels in
+       *  the project, so the file remembers which folders are folded. */
+      toggle(kind, name) {
+        const result = Model.isFolded(Store.project, name, kind)
+          ? Model.unfoldFolder(Store.project, name, kind)
+          : Model.foldFolder(Store.project, name, kind);
         if (!result.ok) {
           setStatus(result.error);
           return;
         }
         UiProject.markDirty();
-        UiFolders.applyCollapsed();
+        UiFolders.applyCollapsed(kind);
       },
 
-      /** Paints the folded state on the list on screen: the queries of a folded
+      /** Paints the folded state on the list on screen: the items of a folded
        *  folder are hidden and its header shows the arrow and the label of the
        *  action it offers. */
-      applyCollapsed() {
-        const list = document.getElementById("list-queries");
-        const folded = new Set(Model.foldedOf(Store.project));
-        list.querySelectorAll("li[data-name]").forEach((query) => {
-          query.hidden = folded.has(query.dataset.folder || "");
+      applyCollapsed(kind) {
+        const spec = UiFolders.KIND[kind];
+        const list = UiFolders.listOf(kind);
+        const folded = new Set(Model.foldedOf(Store.project, kind));
+        list.querySelectorAll("li[data-name]").forEach((item) => {
+          item.hidden = folded.has(item.dataset.folder || "");
         });
         list.querySelectorAll("li.folder").forEach((header) => {
           const name = header.dataset.folder;
+          if (name === undefined) {
+            return;
+          }
           const isFolded = folded.has(name);
           header.classList.toggle("folder-collapsed", isFolded);
           const toggle = header.querySelector("button.folder-toggle");
@@ -13817,8 +14037,8 @@ ORDER BY edificios DESC, sede;</pre>
         });
         // The panel header offers to fold everything, and to unfold it again
         // when there is nothing left to fold.
-        const button = document.getElementById("btn-fold-all");
-        const names = Model.foldersOf(Store.project);
+        const button = document.getElementById(spec.foldAll);
+        const names = Model.foldersOf(Store.project, kind);
         const everythingFolded = names.length > 0 && names.concat([""]).every((name) => folded.has(name));
         const allLabel = I18n.t(everythingFolded ? "folders.unfoldAll" : "folders.foldAll");
         button.hidden = names.length === 0;
@@ -13827,34 +14047,34 @@ ORDER BY edificios DESC, sede;</pre>
         button.setAttribute("aria-label", allLabel);
       },
 
-      /** Paints the list of queries: a header per folder, its queries under it
-       *  and, at the end, the ones that are in no folder (which is also the
-       *  place to drop a query to take it out of its folder). */
-      render(list, usage, shape) {
-        const folders = Model.foldersOf(Store.project);
-        const counts = Model.folderCounts(Store.project);
+      /** Paints a list of the sidebar: a header per folder of that kind, its
+       *  items under it and, at the end, the ones that are in no folder (which
+       *  is also the place to drop one to take it out of its folder). */
+      render(kind, list, itemFactory) {
+        const folders = Model.foldersOf(Store.project, kind);
+        const counts = Model.folderCounts(Store.project, kind);
         folders.forEach((name) => {
-          list.appendChild(UiFolders.header(name, counts.counts.get(name) || 0));
-          Model.queriesInFolder(Store.project, name).forEach((query) => {
-            list.appendChild(Ui.queryItem(query, usage, shape, name));
+          list.appendChild(UiFolders.header(kind, name, counts.counts.get(name) || 0));
+          Model.itemsInFolder(Store.project, name, kind).forEach((item) => {
+            list.appendChild(itemFactory(item, name));
           });
         });
-        // Without any folder the queries are listed as they always were, with
-        // no «no folder» header; with folders, that header is also the target
-        // to drop a query out of its folder.
+        // Without any folder the items are listed as they always were, with no
+        // «no folder» group; with folders, that header is also the target to
+        // drop an item out of its folder.
         if (folders.length > 0) {
-          list.appendChild(UiFolders.header("", counts.none));
+          list.appendChild(UiFolders.header(kind, "", counts.none));
         }
-        Model.queriesInFolder(Store.project, null).forEach((query) => {
-          list.appendChild(Ui.queryItem(query, usage, shape, ""));
+        Model.itemsInFolder(Store.project, null, kind).forEach((item) => {
+          list.appendChild(itemFactory(item, ""));
         });
-        UiFolders.applyCollapsed();
+        UiFolders.applyCollapsed(kind);
       },
 
-      /** Drag and drop of a query onto a folder. Pointer events, like the
-       *  sidebar handle: it works with mouse, pen and touch. */
-      bindDrag() {
-        const list = document.getElementById("list-queries");
+      /** Drag and drop of an item of that list onto a folder. Pointer events,
+       *  like the sidebar handle: it works with mouse, pen and touch. */
+      bindDrag(kind) {
+        const list = UiFolders.listOf(kind);
         const THRESHOLD = 4;
         let pending = null;
         const clearMarks = () => {
@@ -13879,31 +14099,31 @@ ORDER BY edificios DESC, sede;</pre>
             return;
           }
           if (!pending.dragging) {
-            // A short movement is still a click: only past the threshold does the
-            // drag start (so selecting a query keeps working).
+            // A short movement is still a click: only past the threshold does
+            // the drag start (so selecting an item keeps working).
             if (Math.abs(event.clientX - pending.x) < THRESHOLD && Math.abs(event.clientY - pending.y) < THRESHOLD) {
               return;
             }
             pending.dragging = true;
             pending.item.classList.add("dragging");
           }
-          const target = UiFolders.folderAt(event.clientX, event.clientY);
+          const target = UiFolders.folderAt(kind, event.clientX, event.clientY);
           clearMarks();
           pending.target = target && target.dataset.folder !== pending.item.dataset.folder ? target : null;
           if (pending.target) {
             pending.target.classList.add("drop-target");
           }
         });
-        document.addEventListener("pointerup", (event) => {
+        document.addEventListener("pointerup", () => {
           if (!pending) {
             return;
           }
           const target = pending.target;
           const dragging = pending.dragging;
-          const query = pending.item.dataset.name;
+          const itemName = pending.item.dataset.name;
           stop();
           if (dragging && target) {
-            UiFolders.dropQueryTo(target.dataset.folder, query);
+            UiFolders.dropItemTo(kind, target.dataset.folder, itemName);
           }
         });
         document.addEventListener("pointercancel", stop);
@@ -13914,77 +14134,111 @@ ORDER BY edificios DESC, sede;</pre>
         });
       },
 
-      /** Folder of the list under a point of the screen (null when there is
+      /** Folder of that list under a point of the screen (null when there is
        *  none: dropping outside a folder changes nothing). */
-      folderAt(x, y) {
+      folderAt(kind, x, y) {
         const element = document.elementFromPoint(x, y);
-        return element ? element.closest("#list-queries li.folder") : null;
+        if (!element) {
+          return null;
+        }
+        const header = element.closest("li.folder");
+        if (!header || header.dataset.folder === undefined || !UiFolders.listOf(kind).contains(header)) {
+          return null;
+        }
+        return header;
       },
 
-      /** Moves a query into the folder it was dropped on; "" takes it out of
+      /** Moves an item into the folder it was dropped on; "" takes it out of
        *  every folder. */
-      dropQueryTo(folder, queryName) {
-        const result = Model.moveQueryToFolder(Store.project, queryName, folder || null);
+      dropItemTo(kind, folder, itemName) {
+        const result = Model.moveToFolder(Store.project, itemName, folder || null, kind);
         if (!result.ok) {
           setStatus(result.error);
           return;
         }
         UiProject.markDirty();
-        Ui.renderSidebarQueries();
+        UiFolders.repaint(kind);
         setStatus(folder
-          ? I18n.t("folders.queryMoved", { query: queryName, folder: folder })
-          : I18n.t("folders.queryUnfoldered", { query: queryName }));
+          ? I18n.t(UiFolders.KIND[kind].moved, { name: itemName, folder: folder })
+          : I18n.t(UiFolders.KIND[kind].unfolder, { name: itemName }));
       },
 
-      /** Fills the folder field and its list of suggestions for the query that
-       *  is open in the editor. */
-      fillEditorOptions() {
-        const query = Store.project.queries.find((item) => item.name === Ui.state.activeQuery);
-        document.getElementById("query-folder").value = query ? query.folder || "" : "";
-        const list = document.getElementById("folder-list");
+      /** Fills the folder field and its list of suggestions for the item of
+       *  that kind that is open in its editor. */
+      fillEditorOptions(kind) {
+        const spec = UiFolders.KIND[kind];
+        const item = UiFolders.activeItem(kind);
+        const folders = Model.foldersOf(Store.project, kind);
+        if (spec.options === null) {
+          UiFolders.fillFolderSelect(spec, item, folders);
+          return;
+        }
+        document.getElementById(spec.field).value = item ? item.folder || "" : "";
+        const list = document.getElementById(spec.options);
         list.textContent = "";
-        Model.foldersOf(Store.project).forEach((name) => {
+        folders.forEach((name) => {
           const option = document.createElement("option");
           option.value = name;
           list.appendChild(option);
         });
       },
 
-      /** Saves the folder written in the editor: a name that does not exist
-       *  creates the folder, an empty one takes the query out of every folder. */
-      commitEditorFolder() {
-        const input = document.getElementById("query-folder");
-        const query = Store.project.queries.find((item) => item.name === Ui.state.activeQuery);
+      /** Fills the drop-down of the folders of that list: «no folder» first and
+       *  then every folder, so the item can be moved by choosing one. */
+      fillFolderSelect(spec, item, folders) {
+        const select = document.getElementById(spec.field);
+        select.textContent = "";
+        const none = document.createElement("option");
+        none.value = "";
+        none.textContent = I18n.t("folders.noFolder");
+        select.appendChild(none);
+        folders.forEach((name) => {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          select.appendChild(option);
+        });
+        select.value = item && item.folder ? item.folder : "";
+      },
+
+      /** Saves the folder chosen in the editor: a name that does not exist
+       *  creates the folder (the field of the queries) and an empty one takes
+       *  the item out of every folder. */
+      commitEditorFolder(kind) {
+        const spec = UiFolders.KIND[kind];
+        const input = document.getElementById(spec.field);
+        const item = UiFolders.activeItem(kind);
         const name = input.value.trim();
-        if (!query || (query.folder || "") === name) {
-          UiFolders.fillEditorOptions();
+        if (!item || (item.folder || "") === name) {
+          UiFolders.fillEditorOptions(kind);
           return;
         }
-        if (name !== "" && !Model.foldersOf(Store.project).includes(name)) {
-          const created = Model.addFolder(Store.project, name);
+        if (name !== "" && !Model.foldersOf(Store.project, kind).includes(name)) {
+          const created = Model.addFolder(Store.project, name, kind);
           if (!created.ok) {
             setStatus(created.error);
-            UiFolders.fillEditorOptions();
+            UiFolders.fillEditorOptions(kind);
             return;
           }
         }
-        const result = Model.moveQueryToFolder(Store.project, query.name, name);
+        const result = Model.moveToFolder(Store.project, item.name, name, kind);
         if (!result.ok) {
           setStatus(result.error);
-          UiFolders.fillEditorOptions();
+          UiFolders.fillEditorOptions(kind);
           return;
         }
         UiProject.markDirty();
-        Ui.renderSidebarQueries();
-        UiFolders.fillEditorOptions();
+        UiFolders.repaint(kind);
+        UiFolders.fillEditorOptions(kind);
         setStatus(name === ""
-          ? I18n.t("folders.queryUnfoldered", { query: query.name })
-          : I18n.t("folders.queryMoved", { query: query.name, folder: name }));
+          ? I18n.t(spec.unfolder, { name: item.name })
+          : I18n.t(spec.moved, { name: item.name, folder: name }));
       },
 
-      /** Creates a folder with a free default name and repaints the list. */
-      add() {
-        const taken = Model.foldersOf(Store.project);
+      /** Creates a folder of that kind with a free default name and repaints
+       *  the list. */
+      add(kind) {
+        const taken = Model.foldersOf(Store.project, kind);
         const base = I18n.t("folders.new");
         let name = base;
         let suffix = 2;
@@ -13992,26 +14246,26 @@ ORDER BY edificios DESC, sede;</pre>
           name = `${base} ${suffix}`;
           suffix += 1;
         }
-        const result = Model.addFolder(Store.project, name);
+        const result = Model.addFolder(Store.project, name, kind);
         if (!result.ok) {
           setStatus(result.error);
           return;
         }
         UiProject.markDirty();
-        Ui.renderSidebarQueries();
+        UiFolders.repaint(kind);
         setStatus(I18n.t("folders.created", { name: name }));
       },
 
-      /** Header of a folder in the list (null when it is not there). */
-      headerOf(name) {
-        return [...document.querySelectorAll("#list-queries li.folder")]
+      /** Header of a folder of that list (null when it is not there). */
+      headerOf(kind, name) {
+        return [...UiFolders.listOf(kind).querySelectorAll("li.folder")]
           .find((item) => item.dataset.folder === name) || null;
       },
 
       /** Turns the name of a folder into an input: Enter renames it, Escape
        *  leaves it as it was, and a name that is not accepted keeps the old one. */
-      rename(name) {
-        const header = UiFolders.headerOf(name);
+      rename(kind, name) {
+        const header = UiFolders.headerOf(kind, name);
         if (!header) {
           return;
         }
@@ -14031,17 +14285,17 @@ ORDER BY edificios DESC, sede;</pre>
           done = true;
           if (commit) {
             const clean = input.value.trim();
-            const result = Model.renameFolder(Store.project, name, clean);
+            const result = Model.renameFolder(Store.project, name, clean, kind);
             if (!result.ok) {
               setStatus(result.error);
             } else if (clean !== name) {
               UiProject.markDirty();
-              Ui.renderSidebarQueries();
+              UiFolders.repaint(kind);
               setStatus(I18n.t("folders.renamedMessage", { name: clean }));
               return;
             }
           }
-          Ui.renderSidebarQueries();
+          UiFolders.repaint(kind);
         };
         input.addEventListener("keydown", (event) => {
           if (event.key === "Enter") {
@@ -14055,26 +14309,28 @@ ORDER BY edificios DESC, sede;</pre>
         input.addEventListener("blur", () => finish(true));
       },
 
-      /** Deletes a folder: its queries are kept, without a folder. */
-      remove(name) {
-        const total = Model.queriesInFolder(Store.project, name).length;
-        if (!window.confirm(I18n.t("folders.confirmDelete", { name: name }))) {
+      /** Deletes a folder: its items are kept, without a folder. */
+      remove(kind, name) {
+        const spec = UiFolders.KIND[kind];
+        const total = Model.itemsInFolder(Store.project, name, kind).length;
+        if (!window.confirm(I18n.t(spec.confirmDelete, { name: name }))) {
           return;
         }
-        const result = Model.deleteFolder(Store.project, name);
+        const result = Model.deleteFolder(Store.project, name, kind);
         if (!result.ok) {
           setStatus(result.error);
           return;
         }
         UiProject.markDirty();
         Ui.renderAll();
-        setStatus(I18n.t("folders.deleted", { name: name, count: total }));
+        setStatus(I18n.t(spec.deleted, { name: name, count: total }));
       },
 
-      /** Header of a folder: the arrow that folds it, its name, how many
-       *  queries it holds and the two actions. The empty name is the «no
-       *  folder» group, which has no name of its own. */
-      header(name, count) {
+      /** Header of a folder: the arrow that folds it, its name, how many items
+       *  it holds and the two actions. The empty name is the «no folder» group,
+       *  which has no name of its own. */
+      header(kind, name, count) {
+        const spec = UiFolders.KIND[kind];
         const item = document.createElement("li");
         item.className = "folder";
         item.dataset.folder = name;
@@ -14091,7 +14347,7 @@ ORDER BY edificios DESC, sede;</pre>
         const number = document.createElement("span");
         number.className = "count";
         number.textContent = String(count);
-        number.title = I18n.t("folders.queriesCount", { count: count });
+        number.title = I18n.t(spec.count, { count: count });
         item.appendChild(number);
         if (name !== "") {
           const rename = document.createElement("button");
@@ -16265,13 +16521,15 @@ ORDER BY edificios DESC, sede;</pre>
           "Ver relaciones", "Consultas como tablas", "vista ×N",
           "Lee como tabla (", "la leen: «", "Subconsultas", "Ayuda SQL",
           "propiedades", "tirador", "140 a 480", "resumen",
-          "Carpetas", "+C", "añadir carpeta", "Sin carpeta", "arrastra", "pliega", "despliega"]],
+          "Carpetas", "+C", "añadir carpeta", "Sin carpeta", "arrastra", "pliega", "despliega",
+          "Carpetas de tablas", "tableFolders", "foldedTableFolders", "Todas las tablas"]],
         ["en", ["Is a foreign key", "Create auto-numbered ID field", "auto-numbered",
           "self-references", "New", "division by zero", "legend",
           "See relations", "Queries as tables", "view ×N",
           "Reads as a table (", "read by: «", "Subqueries", "SQL help",
           "properties", "handle", "140 to 480", "summary",
-          "Folders", "+F", "add folder", "No folder", "drag", "fold", "unfold"]],
+          "Folders", "+F", "add folder", "No folder", "drag", "fold", "unfold",
+          "Table folders", "tableFolders", "foldedTableFolders", "All tables"]],
       ].forEach(([language, words]) => {
         SelfTests.inLanguage(language, () => {
           words.forEach((word) => {
@@ -17483,21 +17741,21 @@ ORDER BY edificios DESC, sede;</pre>
       const cabeceras = [...document.querySelectorAll("#table-summary-tables thead th")].map((th) => th.textContent);
       const rows = [...document.querySelectorAll("#table-summary-tables tbody tr")];
       assertEqual(Ui.state.view, "tables", "the table summary view opens");
-      assertEqual(cabeceras, ["Table", "Description", "Rows", "ID field", "Fields"], "headers of the table summary");
+      assertEqual(cabeceras, ["Table", "Description", "Folder", "Rows", "ID field", "Fields"], "headers of the table summary");
       assertEqual(rows.length, 2, "one row per table");
       assertEqual(
         [...rows[0].children].map((td) => td.textContent),
-        ["campuses", "Campus", "2 row(s)", "id_campus (next: 5)", "id_campus: number\nname: string"],
+        ["campuses", "Campus", "—", "2 row(s)", "id_campus (next: 5)", "id_campus: number\nname: string"],
         "properties of the campuses table, with one field per line",
       );
       assertEqual(
-        getComputedStyle(rows[0].children[4]).whiteSpace,
+        getComputedStyle(rows[0].children[5]).whiteSpace,
         "pre-line",
         "the line breaks of the fields are seen on screen",
       );
       assertEqual(
         [...rows[1].children].map((td) => td.textContent),
-        ["classrooms", "—", "0 row(s)", "—", "code: string"],
+        ["classrooms", "—", "—", "0 row(s)", "—", "code: string"],
         "properties of the classrooms table, without description or ID field",
       );
       assert(document.getElementById("summary-tables-info").textContent.includes("2 table(s)"), "the header counts the tables");
@@ -19049,6 +19307,124 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(empty.none, 0, "and there is nothing loose");
     });
 
+    /** Project used by the table folder cases: two folders and one loose table. */
+    function tableFolderProject() {
+      const table = (name, folder) => {
+        const item = { name, description: "", idField: null, nextId: 1,
+          fields: [{ name: "code", description: null, type: "string" }], rows: [] };
+        if (folder) {
+          item.folder = folder;
+        }
+        return item;
+      };
+      return {
+        name: "tableFolders",
+        tableFolders: ["Staff", "Rooms"],
+        tables: [table("people", "Staff"), table("rooms", "Rooms"), table("courses")],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+    }
+
+    SelfTests.add("When_AddTableFolder_Expect_ListedOnce", () => {
+      const project = { tables: [] };
+      assertEqual(Model.addFolder(project, "  Staff  ", "tables").ok, true, "the name is trimmed and the folder added");
+      assertEqual(project.tableFolders, ["Staff"], "the folder goes to the list of folders of the tables");
+      assertEqual(project.folders, undefined, "and not to the list of folders of the queries");
+      assertEqual(Model.addFolder(project, "Staff", "tables").ok, false, "the same name twice is rejected");
+      assertEqual(Model.addFolder(project, "   ", "tables").ok, false, "an empty name is rejected");
+      assertEqual(project.tableFolders, ["Staff"], "and nothing else is added");
+    });
+
+    SelfTests.add("When_MoveTableToFolder_Expect_FolderChanged", () => {
+      const project = tableFolderProject();
+      assertEqual(Model.moveToFolder(project, "courses", "Staff", "tables").ok, true, "the table moves to the folder");
+      assertEqual(project.tables[2].folder, "Staff", "and the table remembers it");
+      assertEqual(Model.itemsInFolder(project, "Staff", "tables").map((table) => table.name), ["people", "courses"], "the folder holds both tables");
+      assertEqual(Model.moveToFolder(project, "courses", null, "tables").ok, true, "taking it out of every folder works");
+      assertEqual(project.tables[2].folder, undefined, "and the table is left without a folder");
+      assertEqual(Model.moveToFolder(project, "courses", "Nowhere", "tables").ok, false, "a folder that does not exist is rejected");
+      assertEqual(Model.moveToFolder(project, "ghost", "Staff", "tables").ok, false, "and a table that does not exist too");
+    });
+
+    SelfTests.add("When_TableFolderCounts_ExpectTablePerFolder", () => {
+      const counts = Model.folderCounts(tableFolderProject(), "tables");
+      assertEqual([...counts.counts], [["Staff", 1], ["Rooms", 1]], "one table per folder");
+      assertEqual(counts.none, 1, "and one without folder");
+      const empty = Model.folderCounts({ tableFolders: ["Empty"], tables: [] }, "tables");
+      assertEqual([...empty.counts], [["Empty", 0]], "an empty folder counts zero");
+      assertEqual(empty.none, 0, "and there is nothing loose");
+    });
+
+    SelfTests.add("When_RenameTableFolder_ExpectTablesFollow", () => {
+      const project = tableFolderProject();
+      assertEqual(Model.renameFolder(project, "Staff", "People", "tables").ok, true, "the folder is renamed");
+      assertEqual(project.tableFolders, ["People", "Rooms"], "the list keeps the order");
+      assertEqual(project.tables[0].folder, "People", "and the tables inside follow the new name");
+      assertEqual(project.tables[1].folder, "Rooms", "while the others keep theirs");
+      assertEqual(Model.renameFolder(project, "People", "Rooms", "tables").ok, false, "renaming onto another folder is rejected");
+      assertEqual(Model.renameFolder(project, "Ghost", "X", "tables").ok, false, "and a folder that does not exist too");
+    });
+
+    SelfTests.add("When_DeleteTableFolder_ExpectTablesKept", () => {
+      const project = tableFolderProject();
+      assertEqual(Model.deleteFolder(project, "Staff", "tables").ok, true, "the folder is deleted");
+      assertEqual(project.tableFolders, ["Rooms"], "the list keeps the other one");
+      assertEqual(project.tables.map((table) => table.name), ["people", "rooms", "courses"], "and no table is deleted");
+      assertEqual(project.tables[0].folder, undefined, "the tables of the folder are left without one");
+      assertEqual(project.tables[1].folder, "Rooms", "while the others keep theirs");
+    });
+
+    SelfTests.add("When_FoldTableFolder_ExpectStateKept", () => {
+      const project = tableFolderProject();
+      assertEqual(Model.isFolded(project, "Staff", "tables"), false, "the folder starts unfolded");
+      assertEqual(Model.foldFolder(project, "Staff", "tables").ok, true, "folding it works");
+      assertEqual(project.foldedTableFolders, ["Staff"], "and the state is kept in the project");
+      assertEqual(project.foldedFolders, undefined, "without touching the folded folders of the queries");
+      assertEqual(Model.foldFolder(project, "Nowhere", "tables").ok, false, "a folder that does not exist cannot be folded");
+      assertEqual(Model.foldFolder(project, "", "tables").ok, true, "the «no folder» group can be folded too");
+      Model.unfoldFolder(project, "Staff", "tables");
+      assertEqual(Model.isFolded(project, "Staff", "tables"), false, "and unfolding brings it back");
+    });
+
+    SelfTests.add("When_TableFoldersAndQueryFolders_ExpectSeparateLists", () => {
+      const project = tableFolderProject();
+      project.folders = ["Sales"];
+      Model.addFolder(project, "Sales", "tables");
+      assertEqual(project.folders, ["Sales"], "the folders of the queries are left as they are");
+      assertEqual(project.tableFolders, ["Staff", "Rooms", "Sales"], "and the tables get their own");
+      assertEqual(Model.foldersOf(project, "queries"), ["Sales"], "each list answers for itself");
+      assertEqual(Model.foldersOf(project, "tables"), ["Staff", "Rooms", "Sales"], "with its own folders");
+    });
+
+    SelfTests.add("When_TableFolderCreatedWithTheListFolded_ExpectTheFlagGone", () => {
+      const project = {
+        name: "tables",
+        tables: [{ name: "a", description: "", idField: null, nextId: 1,
+          fields: [{ name: "code", description: null, type: "string" }], rows: [] }],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      Model.foldTableList(project);
+      assertEqual(Model.tablesFolded(project), true, "the whole list of tables can be folded while it is flat");
+      assertEqual(Model.addFolder(project, "Sales").ok, true, "a folder of the queries leaves it as it is");
+      assertEqual(Model.tablesFolded(project), true, "because it is the list of tables that is folded");
+      assertEqual(Model.addFolder(project, "Staff", "tables").ok, true, "a folder of tables steps aside");
+      assertEqual(project.tablesFolded, undefined, "and takes the whole-list fold with it");
+      assertEqual(Model.tablesFolded(project), false, "so a flat list painted again is not folded");
+    });
+
+    SelfTests.add("When_MoveTableBetweenFolders_ExpectSameRows", () => {
+      const project = tableFolderProject();
+      const table = Model.findTable(project, "people");
+      table.rows = [{ code: "a" }, { code: "b" }];
+      const query = "SELECT code FROM people ORDER BY code";
+      assertEqual(SqlEngine.run(query, project).rows, [["a"], ["b"]], "the query reads the table of a folder");
+      assertEqual(Model.moveToFolder(project, "people", "Rooms", "tables").ok, true, "the table moves to the other folder");
+      assertEqual(Model.findTable(project, "people").folder, "Rooms", "and it says where it is");
+      assertEqual(SqlEngine.run(query, project).rows, [["a"], ["b"]], "the SQL does not notice the folders");
+    });
+
 
     SelfTests.add("When_ProjectWithFolders_Expect_GroupedList", () => {
       const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
@@ -19158,7 +19534,7 @@ ORDER BY edificios DESC, sede;</pre>
       Store.replaceProject(project);
       Ui.renderSidebarQueries();
       assertEqual(document.getElementById("btn-fold-all").hidden, true, "without folders there is nothing to fold and the button is hidden");
-      UiFolders.toggleAll();
+      UiFolders.toggleAll("queries");
       assertEqual(Model.foldedOf(Store.project), [], "and folding everything changes nothing");
       Store.replaceProject(before.project);
       UiProject.showName();
@@ -19190,6 +19566,10 @@ ORDER BY edificios DESC, sede;</pre>
       const queries = document.getElementById("btn-new-query");
       assertEqual(button.closest("h2") !== null, true, "the button that adds a folder lives in the header of the queries panel");
       assertEqual(queries.previousElementSibling, button, "right beside the button that adds a query");
+      const tableFolder = document.getElementById("btn-new-table-folder");
+      const tables = document.getElementById("btn-new-table");
+      assertEqual(tableFolder.closest("h2") !== null, true, "the button that adds a folder of tables lives in the header of the tables panel");
+      assertEqual(tables.previousElementSibling, tableFolder, "right beside the button that adds a table");
       assertEqual(button.title.indexOf("+F") >= 0, true, "and its tip says the caption: " + button.title);
       assertEqual(document.querySelector(".sidebar-actions"), null, "the block below the list is gone");
       SelfTests.inLanguage("en", () => assertEqual(button.textContent, "+F", "in English the caption is +F (folder)"));
@@ -19198,10 +19578,14 @@ ORDER BY edificios DESC, sede;</pre>
 
     SelfTests.add("When_PanelAddButtons_Expect_SameStyle", () => {
       const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
-      Store.replaceProject(folderProject());
+      const project = folderProject();
+      project.tableFolders = ["Staff"];
+      project.tables[0].folder = "Staff";
+      Store.replaceProject(project);
       Ui.renderSidebarQueries();
       Ui.renderSidebarTables();
-      const ids = ["btn-new-table", "btn-new-query", "btn-new-folder", "btn-fold-all"];
+      const ids = ["btn-new-table", "btn-new-query", "btn-new-folder", "btn-fold-all",
+        "btn-new-table-folder", "btn-fold-all-tables"];
       const styleOf = (id) => {
         const style = getComputedStyle(document.getElementById(id));
         return [style.fontSize, style.padding, style.borderWidth, style.color,
@@ -19265,7 +19649,7 @@ ORDER BY edificios DESC, sede;</pre>
       const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
       Store.replaceProject(folderProject());
       Ui.renderSidebarQueries();
-      UiFolders.rename("Sales");
+      UiFolders.rename("queries", "Sales");
       const input = document.querySelector("#list-queries li.folder[data-folder=\"Sales\"] input.folder-name");
       assert(input !== null, "the name turns into an input");
       assertEqual(input.value, "Sales", "with the current name");
@@ -19276,14 +19660,14 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(document.querySelector("#list-queries li.folder[data-folder=\"Ventas\"] .name").textContent, "Ventas", "the header shows the new name");
       assertEqual(document.querySelectorAll("#list-queries input.folder-name").length, 0, "and the input is gone");
       // Escape leaves the folder as it was.
-      UiFolders.rename("Ventas");
+      UiFolders.rename("queries", "Ventas");
       const cancel = document.querySelector("#list-queries input.folder-name");
       cancel.value = "Otra";
       cancel.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
       assertEqual(Store.project.folders, ["Ventas", "2026"], "cancelling renames nothing");
       assertEqual(document.querySelector("#list-queries li.folder[data-folder=\"Ventas\"] .name").textContent, "Ventas", "and the header keeps the name");
       // A repeated name is refused and the folder keeps its own.
-      UiFolders.rename("Ventas");
+      UiFolders.rename("queries", "Ventas");
       const repeated = document.querySelector("#list-queries input.folder-name");
       repeated.value = "2026";
       repeated.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
@@ -19305,12 +19689,12 @@ ORDER BY edificios DESC, sede;</pre>
         messages.push(message);
         return false;
       };
-      UiFolders.remove("Sales");
+      UiFolders.remove("queries", "Sales");
       assertEqual(messages.length, 1, "deleting a folder asks first");
       assert(messages[0].includes("Sales"), "the warning names the folder: " + messages[0]);
       assertEqual(Store.project.folders, ["Sales", "2026"], "cancelling deletes nothing");
       window.confirm = () => true;
-      UiFolders.remove("Sales");
+      UiFolders.remove("queries", "Sales");
       assertEqual(Store.project.folders, ["2026"], "accepting deletes the folder");
       assertEqual(Store.project.queries.length, 3, "its queries are kept");
       assertEqual(Store.project.queries[0].folder, undefined, "but left without a folder");
@@ -19383,6 +19767,126 @@ ORDER BY edificios DESC, sede;</pre>
       // A name that is not a folder any more is not written back.
       project.foldedFolders.push("Gone");
       assertEqual(JSON.parse(Persistence.serializeProject(project)).foldedFolders, ["Sales"], "and a folder that is gone is not written");
+    });
+
+    /* --- Folders of the tables in the file ------------------------------ */
+
+    /** Project text used by the cases of folders of tables in the file. */
+    function tableFoldersText() {
+      return '{"format":"extractor","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
+        + '"tables":[{"name":"people","description":"","idField":null,"nextId":1,'
+        + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"},'
+        + '{"name":"rooms","description":"","idField":null,"nextId":1,'
+        + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[]}],'
+        + '"queries":[],"settings":{}}';
+    }
+
+    SelfTests.add("When_TableFoldersInTheFile_Expect_ReadAndWritten", () => {
+      const read = Persistence.parseProject(tableFoldersText());
+      assert(read.ok, "the file is read: " + JSON.stringify(read.errors));
+      assertEqual(read.project.tableFolders, ["Staff", "Rooms"], "with its folders of the tables");
+      assertEqual(read.project.tables[0].folder, "Staff", "and each table says which folder it is in");
+      assertEqual(read.project.tables[1].folder, undefined, "while the ones without folder carry no key");
+      assertEqual(read.project.folders, undefined, "the folders of the tables are not the folders of the queries");
+      const written = Persistence.serializeProject(read.project);
+      assertEqual(JSON.parse(written).tableFolders, ["Staff", "Rooms"], "the file writes them back");
+      assertEqual(JSON.parse(written).tables[0].folder, "Staff", "with the folder of each table");
+      assertEqual(JSON.parse(written).tables[1].folder, undefined, "and no folder key for the ones that have none");
+      assertEqual(
+        Object.keys(JSON.parse(written)),
+        ["format", "version", "name", "tableFolders", "tables", "queries", "settings"],
+        "with the folders of the tables in their place, right before the tables",
+      );
+      // With folders of the two kinds in the same project, each list keeps its
+      // own place in the file, right before the list it groups.
+      const both = Persistence.serializeProject({
+        name: "p",
+        folders: ["Sales"],
+        foldedFolders: ["Sales"],
+        tableFolders: ["Staff"],
+        foldedTableFolders: [""],
+        tables: [{ name: "people", description: "", idField: null, nextId: 1,
+          fields: [{ name: "code", description: null, type: "string" }], rows: [], folder: "Staff" }],
+        queries: [{ name: "q", description: "", sql: "SELECT code FROM people", assert: null, folder: "Sales" }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      assertEqual(
+        Object.keys(JSON.parse(both)),
+        ["format", "version", "name", "folders", "foldedFolders", "tableFolders", "foldedTableFolders",
+          "tables", "queries", "settings"],
+        "each kind of folder keeps its place, before its own list",
+      );
+      assertEqual(Persistence.parseProject(Persistence.serializeProject(read.project)).project.tableFolders, ["Staff", "Rooms"], "and the round trip keeps them");
+    });
+
+    SelfTests.add("When_FoldedTableFoldersInTheFile_Expect_Validated", () => {
+      const read = (folded) => Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
+        + '"foldedTableFolders":' + folded + ',"tables":[],"queries":[],"settings":{}}');
+      assertEqual(read('["Staff"]').project.foldedTableFolders, ["Staff"], "a folded folder of tables is read");
+      assertEqual(read('["Staff",""]').project.foldedTableFolders, ["Staff", ""], "the empty name is the «no folder» group");
+      assertEqual(read('["Staff","Gone"]').project.foldedTableFolders, ["Staff"], "a folder that is gone is dropped");
+      assertEqual(read('"Staff"').errors.some((error) => error.includes("foldedTableFolders")), true, "a list that is not a list is an error: " + JSON.stringify(read('"Staff"').errors));
+      assertEqual(read('["Staff","Staff"]').errors.some((error) => error.includes("foldedTableFolders[1]")), true, "and a repeated one too: " + JSON.stringify(read('["Staff","Staff"]').errors));
+    });
+
+    SelfTests.add("When_TableFoldersNotList_Expect_Validated", () => {
+      const read = (raw) => Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tableFolders":' + raw
+        + ',"tables":[],"queries":[],"settings":{}}');
+      assertEqual(read('"Staff"').errors.some((error) => error.includes("tableFolders")), true, "a key that is not a list is named in the error: " + JSON.stringify(read('"Staff"').errors));
+      assertEqual(read('["Staff","  "]').errors.some((error) => error.includes("tableFolders[1]")), true, "an empty name is pointed at: " + JSON.stringify(read('["Staff","  "]').errors));
+      assertEqual(read('["Staff","Staff"]').errors.some((error) => error.includes("tableFolders[1]")), true, "and a repeated one too: " + JSON.stringify(read('["Staff","Staff"]').errors));
+      assertEqual(read('["Staff","Staff"]').ok, false, "none of them is read as a project");
+    });
+
+    SelfTests.add("When_TableFolderNotDeclared_Expect_Adopted", () => {
+      const text = '{"format":"extractor","version":1,"name":"p","tables":[{"name":"people","description":"",'
+        + '"idField":null,"nextId":1,"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"}],'
+        + '"queries":[],"settings":{}}';
+      const read = Persistence.parseProject(text);
+      assert(read.ok, "a table can name a folder that the file does not list: " + JSON.stringify(read.errors));
+      assertEqual(read.project.tableFolders, ["Staff"], "and the folder is adopted");
+      assertEqual(read.project.tables[0].folder, "Staff", "with the table inside");
+    });
+
+    SelfTests.add("When_TableFolderInvalidInTheFile_Expect_Error", () => {
+      const read = (folder) => Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tables":[{"name":"people",'
+        + '"description":"","idField":null,"nextId":1,"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],'
+        + '"folder":' + folder + '}],"queries":[],"settings":{}}');
+      assertEqual(read("7").errors.some((error) => error.includes("folder") || error.includes("carpeta")), true, "a folder of a table that is not text is an error: " + JSON.stringify(read("7").errors));
+      assertEqual(read('"  "').errors.some((error) => error.includes("folder") || error.includes("carpeta")), true, "and an empty one too: " + JSON.stringify(read('"  "').errors));
+      assertEqual(read('"  "').ok, false, "so the file is not read");
+    });
+
+    SelfTests.add("When_TablesFoldedWithTableFolders_Expect_Ignored", () => {
+      const text = '{"format":"extractor","version":1,"name":"p","tableFolders":["Staff"],"tablesFolded":true,'
+        + '"tables":[{"name":"people","description":"","idField":null,"nextId":1,'
+        + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"}],'
+        + '"queries":[],"settings":{}}';
+      const read = Persistence.parseProject(text);
+      assert(read.ok, "the file is read: " + JSON.stringify(read.errors));
+      assertEqual(read.project.tablesFolded, undefined, "with folders of tables the folded whole list is left out");
+      assertEqual(Model.tablesFolded(read.project), false, "so the list is painted by its folders");
+      const written = Persistence.serializeProject(read.project);
+      assertEqual(JSON.parse(written).tablesFolded, undefined, "and it is not written back");
+      assertEqual(JSON.parse(written).tableFolders, ["Staff"], "while the folders of the tables are");
+    });
+
+    SelfTests.add("When_TwoTablesWithTheSameNameInDifferentFolders_Expect_Error", () => {
+      const text = '{"format":"extractor","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
+        + '"tables":[{"name":"people","description":"","idField":null,"nextId":1,'
+        + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"},'
+        + '{"name":"people","description":"","idField":null,"nextId":1,'
+        + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Rooms"}],'
+        + '"queries":[],"settings":{}}';
+      const read = Persistence.parseProject(text);
+      assertEqual(read.ok, false, "two tables with the same name are refused");
+      assertEqual(read.errors.some((error) => error.includes("people")), true, "and the error names the table: " + JSON.stringify(read.errors));
+      const project = tableFolderProject();
+      project.tables.push({ name: "people", description: "", idField: null, nextId: 1,
+        fields: [{ name: "code", description: null, type: "string" }], rows: [], folder: "Rooms" });
+      assertEqual(Model.foldersOf(project, "tables").length, 2, "the two folders exist");
+      assertEqual(Model.itemsInFolder(project, "Staff", "tables").length, 1, "and each one holds its tables");
+      assertEqual(Persistence.serializeProject(project).includes('"name": "people"'), true, "the project cannot be told apart by the folder: the name is what identifies a table");
     });
 
     SelfTests.add("When_CollapseFolder_Expect_KeptInTheProject", () => {
@@ -19496,7 +20000,7 @@ ORDER BY edificios DESC, sede;</pre>
       Store.replaceProject(folderProject());
       Ui.renderSidebarQueries();
       folderToggle("Sales").click();
-      UiFolders.rename("Sales");
+      UiFolders.rename("queries", "Sales");
       const input = document.querySelector("#list-queries input.folder-name");
       input.value = "Ventas";
       input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
@@ -19517,13 +20021,313 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.renderSidebarQueries();
       folderToggle("Sales").click();
       window.confirm = () => true;
-      UiFolders.remove("Sales");
+      UiFolders.remove("queries", "Sales");
       window.confirm = before.confirm;
       assertEqual(Model.foldedOf(Store.project), [], "deleting the folder forgets that it was folded");
       Model.addFolder(Store.project, "Sales");
       Ui.renderSidebarQueries();
       assertEqual(folderToggle("Sales").textContent, "▾", "a folder created again starts unfolded");
       assertEqual(queryItem("q1").hidden, false, "and shows its queries");
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    /* --- Folders of the tables in the sidebar -------------------------- */
+
+    /** Header of a folder of the tables list. */
+    function tableFolderHeader(name) {
+      return document.querySelector("#list-tables li.folder[data-folder=\"" + name + "\"]");
+    }
+
+    /** Table row of the sidebar list, so its folded state can be read. */
+    function tableRow(name) {
+      return document.querySelector("#list-tables li[data-name=\"" + name + "\"]");
+    }
+
+    /** Fold button of a folder of the tables list. */
+    function tableFolderToggle(name) {
+      return tableFolderHeader(name).querySelector("button.folder-toggle");
+    }
+
+    SelfTests.add("When_TablesWithFolders_Expect_GroupedList", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
+      Store.replaceProject(tableFolderProject());
+      Ui.renderSidebarTables();
+      const list = document.getElementById("list-tables");
+      const headers = [...list.querySelectorAll("li.folder")];
+      assertEqual(headers.map((item) => item.dataset.folder), ["Staff", "Rooms", ""], "one header per folder and the «no folder» group");
+      assertEqual(headers.map((item) => item.querySelector(".name").textContent), ["Staff", "Rooms", "No folder"], "the headers carry the names");
+      assertEqual(headers.map((item) => item.querySelector(".count").textContent), ["1", "1", "1"], "and how many tables each one holds");
+      assertEqual(headers.map((item) => item.querySelector(".count").title), ["1 table", "1 table", "1 table"], "with the whole sentence in the tip");
+      const items = [...list.querySelectorAll("li[data-name]")];
+      assertEqual(items.map((item) => item.dataset.name), ["people", "rooms", "courses"], "the tables come under their folder");
+      assertEqual(items.map((item) => item.dataset.folder), ["Staff", "Rooms", ""], "and each one says which folder it is in");
+      assertEqual(items.map((item) => item.classList.contains("folder-open")), [true, true, false], "the ones inside a folder are indented");
+      assertEqual(items[0].querySelector("span").textContent, "people", "the table keeps its name");
+      assertEqual(items[0].querySelector(".detail").textContent, "0", "and how many rows it has");
+      assertEqual(items[0].title.includes("Fields"), true, "with its fields in the tip");
+      assertEqual(headers[0].querySelectorAll("button").length, 3, "a folder header has fold, rename and delete");
+      assertEqual(headers[2].querySelectorAll("button").length, 1, "the «no folder» group is only folded and dropped on");
+      assertEqual(list.querySelector("li[data-group=\"tables\"]"), null, "the «all tables» header steps aside when there are folders");
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_TablesWithoutFolders_Expect_AllTablesHeader", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
+      Store.replaceProject(tablesProject());
+      Ui.renderSidebarTables();
+      const list = document.getElementById("list-tables");
+      const header = list.querySelector("li.folder");
+      assert(header !== null, "without folders the list keeps its «all tables» header");
+      assertEqual(header.dataset.group, "tables", "which is not a folder of tables");
+      assertEqual(header.dataset.folder, undefined, "and has no folder name of its own");
+      assertEqual(list.querySelectorAll("li[data-name]").length, 3, "the tables are listed as they always were");
+      assertEqual(document.getElementById("btn-fold-all-tables").hidden, true, "and there is nothing to fold all");
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_CollapseTableFolder_Expect_ItsTablesHidden", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
+      Store.replaceProject(tableFolderProject());
+      Ui.renderSidebarTables();
+      assertEqual(tableFolderToggle("Staff").getAttribute("aria-expanded"), "true", "the folder of tables starts unfolded");
+      assertEqual(tableRow("people").hidden, false, "so its table is visible");
+      tableFolderToggle("Staff").click();
+      assertEqual(tableRow("people").hidden, true, "folding it hides its tables");
+      assertEqual(tableRow("rooms").hidden, false, "and only the ones of that folder");
+      assertEqual(tableFolderToggle("Staff").textContent, "▸", "with the arrow of the folded state");
+      assertEqual(tableFolderToggle("Staff").title, "Unfold “Staff”", "offering the opposite");
+      assertEqual(tableFolderHeader("Staff").classList.contains("folder-collapsed"), true, "the header is marked as folded");
+      assertEqual(Store.project.foldedTableFolders, ["Staff"], "and the project remembers it");
+      assertEqual(Store.project.foldedFolders, [], "without touching the folded folders of the queries");
+      tableFolderToggle("Staff").click();
+      assertEqual(tableRow("people").hidden, false, "unfolding brings the table back");
+      assertEqual(Store.project.foldedTableFolders, [], "leaving the project without folded folders of tables");
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_FoldAllTableFolders_Expect_EveryFolderFolded", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
+      Store.replaceProject(tableFolderProject());
+      Ui.renderSidebarTables();
+      const button = () => document.getElementById("btn-fold-all-tables");
+      assertEqual(button().hidden, false, "with folders of tables the header of the panel offers to fold them all");
+      assertEqual(button().textContent, "⊟", "with the symbol of folding");
+      assertEqual(button().title, "Fold every folder", "and the tip of the action");
+      button().click();
+      assertEqual(Store.project.foldedTableFolders.slice().sort(), ["", "Rooms", "Staff"], "the button folds every folder of tables and the «no folder» group");
+      assertEqual([...document.querySelectorAll("#list-tables li[data-name]")].every((item) => item.hidden), true, "so every table is hidden");
+      assertEqual(button().textContent, "⊞", "and the button now offers the opposite");
+      assertEqual(button().title, "Unfold every folder", "with its tip");
+      assertEqual(document.getElementById("status").textContent, "Every folder folded.", "the status says so");
+      button().click();
+      assertEqual(Store.project.foldedTableFolders, [], "clicking again unfolds them all");
+      assertEqual(document.getElementById("status").textContent, "Every folder unfolded.", "and the status says that too");
+      assertEqual(tableRow("people").hidden, false, "so the tables are back");
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_NewTableFolder_Expect_EmptyFolderInList", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
+      const project = tableFolderProject();
+      project.tableFolders = [];
+      project.tables.forEach((table) => delete table.folder);
+      Store.replaceProject(project);
+      Ui.renderSidebarTables();
+      document.getElementById("btn-new-table-folder").click();
+      assertEqual(Store.project.tableFolders, ["New folder"], "the button adds a folder with a free name");
+      assertEqual(Store.project.folders, [], "and no folder of the queries");
+      assertEqual(tableFolderHeader("New folder").querySelector(".count").textContent, "0", "the folder shows up empty");
+      assertEqual(tableFolderHeader("New folder").querySelector(".count").title, "0 tables", "with its count in words");
+      document.getElementById("btn-new-table-folder").click();
+      assertEqual(Store.project.tableFolders, ["New folder", "New folder 2"], "and a second one does not repeat the name");
+      assertEqual(Store.dirty, true, "the project is left pending save");
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_RenameTableFolder_ExpectHeaderAndTables", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
+      Store.replaceProject(tableFolderProject());
+      Ui.renderSidebarTables();
+      tableFolderHeader("Staff").querySelector("button.rename-folder").click();
+      const input = document.querySelector("#list-tables input.folder-name");
+      assertEqual(input.value, "Staff", "the header of the folder turns into an input with its name");
+      input.value = "People";
+      input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      assertEqual(Store.project.tableFolders, ["People", "Rooms"], "Enter renames the folder");
+      assertEqual(Store.project.tables[0].folder, "People", "and the tables inside follow");
+      assertEqual(tableFolderHeader("People").querySelector(".name").textContent, "People", "the header shows the new name");
+      assertEqual(document.querySelectorAll("#list-tables input.folder-name").length, 0, "and the input is gone");
+      tableFolderHeader("People").querySelector("button.rename-folder").click();
+      const repeated = document.querySelector("#list-tables input.folder-name");
+      repeated.value = "Rooms";
+      repeated.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      assertEqual(Store.project.tableFolders, ["People", "Rooms"], "renaming onto another folder is refused");
+      assertEqual(tableFolderHeader("People").querySelector(".name").textContent, "People", "and the header keeps its name");
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_DeleteTableFolder_ExpectTablesWithoutFolder", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, confirm: window.confirm };
+      Store.replaceProject(tableFolderProject());
+      Ui.renderSidebarTables();
+      const messages = [];
+      window.confirm = (message) => {
+        messages.push(message);
+        return false;
+      };
+      tableFolderHeader("Staff").querySelector("button.delete-folder").click();
+      assertEqual(messages.length, 1, "deleting a folder of tables asks first");
+      assert(messages[0].includes("Staff"), "the warning names the folder: " + messages[0]);
+      assertEqual(Store.project.tableFolders, ["Staff", "Rooms"], "cancelling deletes nothing");
+      window.confirm = () => true;
+      tableFolderHeader("Staff").querySelector("button.delete-folder").click();
+      assertEqual(Store.project.tableFolders, ["Rooms"], "accepting deletes the folder");
+      assertEqual(Store.project.tables.length, 3, "its tables are kept");
+      assertEqual(Store.project.tables[0].folder, undefined, "but left without a folder");
+      assertEqual(Store.project.tables[1].folder, "Rooms", "and the others keep theirs");
+      assert(document.getElementById("status").textContent.includes("Staff"), "the status says it was deleted: " + document.getElementById("status").textContent);
+      assertEqual(document.querySelectorAll("#list-tables li.folder").length, 2, "the list keeps the remaining folder and the «no folder» group");
+      window.confirm = before.confirm;
+      Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_ChooseTableFolderInEditor_Expect_TableMoved", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, table: Ui.state.activeTable };
+      const project = tableFolderProject();
+      Store.replaceProject(project);
+      Ui.selectTable("courses");
+      const field = document.getElementById("table-folder");
+      assertEqual(field.tagName, "SELECT", "the folder of the table is chosen from a drop-down");
+      assertEqual(field.value, "", "which shows the folder the table is in, empty when it has none");
+      assertEqual(
+        [...field.options].map((option) => [option.value, option.textContent]),
+        [["", "No folder"], ["Staff", "Staff"], ["Rooms", "Rooms"]],
+        "and lists the «no folder» option first and then the folders of the tables",
+      );
+      field.value = "Staff";
+      field.dispatchEvent(new Event("change", { bubbles: true }));
+      assertEqual(Store.project.tables[2].folder, "Staff", "choosing a folder moves the table");
+      assertEqual(document.getElementById("status").textContent.includes("courses"), true, "the status says what happened: " + document.getElementById("status").textContent);
+      assertEqual(tableRow("courses").dataset.folder, "Staff", "and the sidebar lists it under the folder");
+      assertEqual(document.querySelectorAll("#list-tables li[data-name=\"courses\"]").length, 1, "once");
+      // Un nombre que no está en la lista no puede crearse desde aquí: para eso
+      // está el botón +C de la cabecera del panel.
+      assertEqual([...field.options].map((option) => option.value), ["", "Staff", "Rooms"], "the drop-down never invents a folder");
+      document.getElementById("btn-new-table-folder").click();
+      Ui.selectTable("courses");
+      assertEqual([...field.options].map((option) => option.value), ["", "Staff", "Rooms", "New folder"], "the button of the panel is what creates a folder, and it shows up in the drop-down");
+      field.value = "New folder";
+      field.dispatchEvent(new Event("change", { bubbles: true }));
+      assertEqual(Store.project.tables[2].folder, "New folder", "and choosing it moves the table");
+      field.value = "";
+      field.dispatchEvent(new Event("change", { bubbles: true }));
+      assertEqual(Store.project.tables[2].folder, undefined, "while «No folder» takes it out of every folder");
+      assertEqual(field.value, "", "and the drop-down says so");
+      Store.replaceProject(before.project);
+      Ui.state.activeTable = before.table;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_DragTableToFolder_Expect_Moved", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, table: Ui.state.activeTable };
+      Store.replaceProject(tableFolderProject());
+      Store.dirty = false;
+      Ui.renderSidebarTables();
+      const item = document.querySelector("#list-tables li[data-name=\"courses\"]");
+      const header = tableFolderHeader("Staff");
+      const to = centreOf(header);
+      dragQuery(item, to);
+      assertEqual(item.classList.contains("dragging"), true, "while dragging, the table is marked");
+      assertEqual(header.classList.contains("drop-target"), true, "and the folder under the pointer is highlighted");
+      document.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, clientX: to.x, clientY: to.y }));
+      assertEqual(Store.project.tables[2].folder, "Staff", "dropping it on the folder moves the table");
+      assertEqual(Store.dirty, true, "and leaves the project pending save");
+      assert(document.getElementById("status").textContent.includes("courses"), "the status says what happened: " + document.getElementById("status").textContent);
+      const moved = [...document.querySelectorAll("#list-tables li[data-name=\"courses\"]")];
+      assertEqual(moved.length, 1, "the table is listed once");
+      assertEqual(moved[0].dataset.folder, "Staff", "under its new folder");
+      // And back out, onto the «no folder» group.
+      const none = tableFolderHeader("");
+      const back = centreOf(none);
+      const again = document.querySelector("#list-tables li[data-name=\"courses\"]");
+      dragQuery(again, back);
+      document.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, clientX: back.x, clientY: back.y }));
+      assertEqual(Store.project.tables[2].folder, undefined, "dropping it on «No folder» takes it out");
+      Store.replaceProject(before.project);
+      Ui.state.activeTable = before.table;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_ShowTablesSummary_Expect_FolderColumn", () => {
+      const before = { project: Utils.cloneJson(Store.project), view: Ui.state.view, table: Ui.state.activeTable };
+      const project = tableFolderProject();
+      project.tables[2].folder = "Rooms";
+      Store.replaceProject(project);
+      UiSummary.show("tables");
+      const rows = [...document.querySelectorAll("#table-summary-tables tbody tr")];
+      assertEqual([...rows[0].children].map((td) => td.textContent)[2], "Staff", "the summary says which folder each table is in");
+      assertEqual([...rows[1].children].map((td) => td.textContent)[2], "Rooms", "one after another");
+      Store.replaceProject(before.project);
+      Ui.state.activeTable = before.table;
+      Ui.showView(before.view);
+      Ui.renderAll();
+    });
+
+    SelfTests.add("When_DeleteLastTableFolderAfterFoldingTheList_ExpectTablesBack", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, confirm: window.confirm };
+      Store.replaceProject(tablesProject());
+      Ui.renderSidebarTables();
+      document.querySelector("#list-tables button.folder-toggle").click();
+      assertEqual(Model.tablesFolded(Store.project), true, "the flat list of tables can be folded as a whole");
+      assertEqual(tableRow("a").hidden, true, "so its tables are hidden");
+      document.getElementById("btn-new-table-folder").click();
+      assertEqual(Store.project.tableFolders, ["New folder"], "a folder of tables is created");
+      assertEqual(Model.tablesFolded(Store.project), false, "and the whole-list fold is left behind");
+      assertEqual(tableRow("a").hidden, false, "so the tables are on screen again");
+      window.confirm = () => true;
+      tableFolderHeader("New folder").querySelector("button.delete-folder").click();
+      assertEqual(Store.project.tableFolders, [], "deleting the folder leaves no folders of tables");
+      assertEqual(tableRow("a").hidden, false, "and the tables stay visible, not hidden by a stale fold");
+      assertEqual(document.getElementById("btn-fold-all-tables").hidden, true, "with nothing to fold all");
+      window.confirm = before.confirm;
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
