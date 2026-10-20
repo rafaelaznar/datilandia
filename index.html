@@ -1138,7 +1138,8 @@
       overflow-wrap: anywhere;
     }
 
-    #dlg-structure {
+    #dlg-structure,
+    #dlg-tables-structure {
       width: min(760px, 94vw);
       height: min(720px, 88vh);
       padding: 8px 10px;
@@ -1149,16 +1150,19 @@
 
     /*  The window is one column: header on top, the JSON box taking the rest
         and the toolbar at the bottom, so the box fits the size of the window.  */
-    #dlg-structure[open] {
+    #dlg-structure[open],
+    #dlg-tables-structure[open] {
       display: flex;
       flex-direction: column;
     }
 
-    #dlg-structure::backdrop {
+    #dlg-structure::backdrop,
+    #dlg-tables-structure::backdrop {
       background: rgb(0 0 0 / 0.25);
     }
 
-    #dlg-structure #structure-json-text {
+    #dlg-structure #structure-json-text,
+    #dlg-tables-structure #tables-structure-json-text {
       flex: 1 1 auto;
       width: 100%;
       min-height: 0;
@@ -1639,6 +1643,7 @@
                 <li data-i18n="markup.li.rowPagesTotalJumpFirst">Páginas de filas con el total y salto a la primera o a la última.</li>
                 <li data-i18n-html="markup.li.tableFoldersGroupTablesInOneLevel"><b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.</li>
                 <li data-i18n-html="markup.li.pressTablesQueriesTitleSidebar">Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.</li>
+                <li data-i18n-html="markup.li.downloadStructureJsonSummary">En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.</li>
                 <li data-i18n-html="markup.li.linkRelationsBetweenTablesQueries">El enlace <b>Relaciones entre tablas y consultas</b> abre la <b>matriz</b> de relaciones del proyecto: quién apunta a quién y qué consultas citan cada pareja de tablas. El detalle está en el apartado <b>Relaciones</b>.</li>
                 <li data-i18n-html="markup.li.widthLeftColumnIsVariable">El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 195 px o usa las flechas con el tirador enfocado.</li>
               </ul>
@@ -2245,6 +2250,9 @@ ORDER BY edificios DESC, sede;</pre>
       <!-- Summary view: every table with its properties -->
       <section id="view-tables" class="view" hidden>
         <h2><span data-i18n="markup.h2.projectTables">Project tables</span> <span id="summary-tables-info" class="muted"></span></h2>
+        <div class="toolbar">
+          <button data-i18n-title="markup.button.showTablesStructureJsonTip" data-i18n="markup.button.showTablesStructureJson" id="btn-show-tables-structure" type="button" disabled title="Ver en una ventana la estructura JSON de todas las tablas del proyecto">Ver estructura JSON…</button>
+        </div>
         <div class="box-table">
           <table id="table-summary-tables" class="grid"></table>
         </div>
@@ -2299,6 +2307,18 @@ ORDER BY edificios DESC, sede;</pre>
     <textarea data-i18n-aria-label="markup.textarea.tableStructureAsJson" data-i18n-title="markup.textarea.structureJsonReadOnly" id="structure-json-text" readonly spellcheck="false" aria-label="Estructura de la tabla en JSON" title="Estructura de la tabla en JSON (solo lectura)"></textarea>
     <div class="toolbar">
       <button data-i18n-title="markup.button.copyStructureJsonClipboard" data-i18n="markup.button.copy" id="btn-copiar-structure" type="button" title="Copiar el JSON al portapapeles">Copiar</button>
+    </div>
+  </dialog>
+
+  <!-- Modal window: structure of every table as JSON -->
+  <dialog id="dlg-tables-structure" aria-labelledby="dlg-tables-structure-titulo">
+    <div class="dlg-header">
+      <b data-i18n="summary.tablesStructureTitle" id="dlg-tables-structure-titulo">Estructura de las tablas (JSON)</b>
+      <button data-i18n-title="markup.button.closeWindowEsc" data-i18n="markup.button.close" class="derecha" id="btn-close-tables-structure" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+    </div>
+    <textarea data-i18n-aria-label="summary.tablesStructureAria" data-i18n-title="summary.tablesStructureReadOnly" id="tables-structure-json-text" readonly spellcheck="false" aria-label="Estructura de todas las tablas en JSON" title="Estructura de las tablas en JSON (solo lectura)"></textarea>
+    <div class="toolbar">
+      <button data-i18n-title="markup.button.downloadTablesStructureJsonTip" data-i18n="markup.button.downloadTablesStructureJson" id="btn-download-tables-structure" type="button" title="Descargar un JSON con la estructura de todas las tablas del proyecto">Descargar estructura JSON</button>
     </div>
   </dialog>
 
@@ -2784,6 +2804,10 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.mergeTablesTip": "Merge several tables into a new table",
         "markup.button.createTableFromResult": "Create table…",
         "markup.button.createTableFromResultTip": "Create a new table with the columns and rows of the query result",
+        "markup.button.showTablesStructureJson": "View structure JSON…",
+        "markup.button.showTablesStructureJsonTip": "Show the JSON structure of every project table in a window",
+        "markup.button.downloadTablesStructureJson": "Download structure JSON",
+        "markup.button.downloadTablesStructureJsonTip": "Download a JSON with the structure of every project table",
         "markup.button.updateTable": "Update table",
         "markup.button.updateTableDataFromImport": "Replace the data of the table importing a CSV or JSON (keeps fields, foreign keys and queries)",
         "markup.button.valuesFunctions": "Values and functions",
@@ -2961,6 +2985,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.pressMatchWindowClosesLeave": "Press a match and the window closes to leave you on that <b>cell</b> (it changes the page, selects it and the focus is ready to fix it by hand).",
         "markup.li.pressRowReportOpenThat": "Press a row of the report to open that query in the editor; <b>Run again</b> launches the battery once more and <b>Copy report</b> leaves it as text (if the browser does not allow copying, it stays selected for Ctrl+C).",
         "markup.li.pressTablesQueriesTitleSidebar": "Press the <b>Tables</b> or <b>Queries</b> title in the sidebar to see the full list with its <b>properties</b> on the right: description, rows, ID field and fields with their type; in the queries, their assert and the test result. Every row of the summary opens that item.",
+        "markup.li.downloadStructureJsonSummary": "In the <b>Project tables</b> summary, <b>View structure JSON…</b> opens a window with the structure of every table, the same one shown by <b>Structure JSON…</b> for each table (without the rows); inside that window, <b>Download structure JSON</b> saves the JSON to a file.",
         "markup.li.previewShowsUp1000Rows": "The preview shows up to 1000 rows and warns when there are more, but the <b>downloaded file is complete</b>. The query has to be <b>run</b> first: with no result, the window reminds you.",
         "markup.li.projectIsTestModeWhen": "A project is in <b>test mode</b> when <b>some of its queries checks a result</b> (it has an <code>assert</code>): when it is <b>opened</b>, extractor runs <b>every query</b> and compares each result with that query's <code>\"assert\"</code>. If no query checks anything, the project is not a test one and nothing runs on its own. There is nothing to declare: the <code>\"testing\"</code> property of old files is no longer needed.",
         "markup.li.projectNameIsChangedSettings": "The <b>project name</b> is changed in <b>Settings</b>; in the top bar it is only shown.",
@@ -3504,6 +3529,12 @@ ORDER BY edificios DESC, sede;</pre>
         "summary.readBy": "read by: {names}",
         "summary.reads": "reads: {names}",
         "summary.tablesInfo": "{count} table(s) · click a row to open it",
+        "summary.tablesStructureFileName": "tables_structure",
+        "summary.tablesStructureDownloaded": "Structure of {count} table(s) downloaded as “{name}”.",
+        "summary.tablesStructureTitle": "Tables structure (JSON)",
+        "summary.tablesStructureAria": "Structure of all tables as JSON",
+        "summary.tablesStructureReadOnly": "Tables structure as JSON (read-only)",
+        "summary.tablesStructureHint": "Structure of {count} table(s) as JSON. Close with Esc or the “Close” button.",
         "summary.tablesStatus": "Project tables: {count}. Click a row to open it.",
         "tableCsv.downloaded": "Table exported as “{name}” (download, {rows} row(s)).",
         "tableCsv.nothingToCopy": "There is no CSV to copy: the table has no data.",
@@ -3835,6 +3866,10 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.mergeTablesTip": "Fusionar varias tablas en una tabla nueva",
         "markup.button.createTableFromResult": "Crear tabla…",
         "markup.button.createTableFromResultTip": "Crear una tabla nueva con las columnas y filas del resultado de la consulta",
+        "markup.button.showTablesStructureJson": "Ver estructura JSON…",
+        "markup.button.showTablesStructureJsonTip": "Ver en una ventana la estructura JSON de todas las tablas del proyecto",
+        "markup.button.downloadTablesStructureJson": "Descargar estructura JSON",
+        "markup.button.downloadTablesStructureJsonTip": "Descargar un JSON con la estructura de todas las tablas del proyecto",
         "markup.button.updateTable": "Actualizar tabla",
         "markup.button.updateTableDataFromImport": "Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)",
         "markup.button.valuesFunctions": "Valores y funciones",
@@ -3880,9 +3915,9 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dt.typesConversion": "Tipos y conversión",
         "markup.footer.applicationMessages": "Mensajes de la aplicación",
         "markup.h2.importDataCSVJSON": "Importar datos (CSV / JSON)",
-        "markup.h2.projectQueries": "Consultas del proyecto <span id=\"summary-queries-info\" class=\"muted\"></span>",
-        "markup.h2.projectTables": "Tablas del proyecto <span id=\"summary-tables-info\" class=\"muted\"></span>",
-        "markup.h2.relationsBetweenTablesQueries": "Relaciones entre tablas y consultas <span id=\"relations-info\" class=\"muted\"></span>",
+        "markup.h2.projectQueries": "Consultas del proyecto",
+        "markup.h2.projectTables": "Tablas del proyecto",
+        "markup.h2.relationsBetweenTablesQueries": "Relaciones entre tablas y consultas",
         "markup.h2.welcome": "Bienvenido",
         "markup.h3.aggregates": "Agregados",
         "markup.h3.changesDataQueries": "Cambios en los datos y en las consultas",
@@ -4012,6 +4047,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.pressMatchWindowClosesLeave": "Pulsa una coincidencia y la ventana se cierra para dejarte en esa <b>celda</b> (cambia de página, la selecciona y el foco queda listo para corregirla a mano).",
         "markup.li.pressRowReportOpenThat": "Pulsa una fila del informe para abrir esa consulta en el editor; <b>Re-ejecutar</b> lanza otra vez la batería y <b>Copiar informe</b> lo deja como texto (si el navegador no deja copiar, queda seleccionado para Ctrl+C).",
         "markup.li.pressTablesQueriesTitleSidebar": "Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.",
+        "markup.li.downloadStructureJsonSummary": "En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.",
         "markup.li.previewShowsUp1000Rows": "La previsualización muestra hasta 1000 filas y avisa cuando hay más, pero el <b>fichero descargado va completo</b>. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.",
         "markup.li.projectIsTestModeWhen": "Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, extractor ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>\"assert\"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta.",
         "markup.li.projectNameIsChangedSettings": "El <b>nombre del proyecto</b> se cambia en <b>Ajustes</b>; en la barra superior solo se muestra.",
@@ -4555,6 +4591,12 @@ ORDER BY edificios DESC, sede;</pre>
         "summary.readBy": "la leen: {names}",
         "summary.reads": "lee: {names}",
         "summary.tablesInfo": "{count} tabla(s) · pulsa una fila para abrirla",
+        "summary.tablesStructureFileName": "estructura_tablas",
+        "summary.tablesStructureDownloaded": "Estructura de {count} tabla(s) descargada en «{name}».",
+        "summary.tablesStructureTitle": "Estructura de las tablas (JSON)",
+        "summary.tablesStructureAria": "Estructura de todas las tablas en JSON",
+        "summary.tablesStructureReadOnly": "Estructura de las tablas en JSON (solo lectura)",
+        "summary.tablesStructureHint": "Estructura de {count} tabla(s) en JSON. Cierra con Esc o con el botón «Cerrar».",
         "summary.tablesStatus": "Tablas del proyecto: {count}. Pulsa una fila para abrirla.",
         "tableCsv.downloaded": "Tabla exportada en «{name}» (descarga, {rows} fila(s)).",
         "tableCsv.nothingToCopy": "No hay CSV que copiar: la tabla no tiene datos.",
@@ -11394,20 +11436,21 @@ ORDER BY edificios DESC, sede;</pre>
         }
       },
 
-      /** Structure of the table as readable JSON: the metadata and the fields
+      /** Structure of the table as a plain object: the metadata and the fields
        *  with their type and their foreign key references, but no rows. */
+      structure(table) {
+        return {
+          name: table.name,
+          description: table.description || "",
+          idField: table.idField,
+          nextId: table.nextId,
+          fields: table.fields.map((field) => Model.fieldMeta(field)),
+        };
+      },
+
+      /** Structure of the table as readable JSON. */
       structureJson(table) {
-        return JSON.stringify(
-          {
-            name: table.name,
-            description: table.description || "",
-            idField: table.idField,
-            nextId: table.nextId,
-            fields: table.fields.map((field) => Model.fieldMeta(field)),
-          },
-          null,
-          2,
-        );
+        return JSON.stringify(Ui.structure(table), null, 2);
       },
 
       /** Copies the JSON of the structure to the clipboard (or leaves it
@@ -11868,6 +11911,14 @@ ORDER BY edificios DESC, sede;</pre>
       bind() {
         document.getElementById("btn-summary-tables").addEventListener("click", () => UiSummary.show("tables"));
         document.getElementById("btn-summary-queries").addEventListener("click", () => UiSummary.show("queries"));
+        document.getElementById("btn-show-tables-structure").addEventListener("click", () => UiSummary.openTablesStructure());
+        document.getElementById("btn-close-tables-structure").addEventListener("click", () => UiSummary.closeTablesStructure());
+        document.getElementById("dlg-tables-structure").addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            UiSummary.closeTablesStructure();
+          }
+        });
+        document.getElementById("btn-download-tables-structure").addEventListener("click", () => UiSummary.downloadTablesStructure());
         document.getElementById("table-summary-tables").addEventListener("click", (event) => {
           const row = event.target.closest("tr[data-table]");
           if (row) {
@@ -11880,6 +11931,47 @@ ORDER BY edificios DESC, sede;</pre>
             UiQueries.select(row.dataset.query);
           }
         });
+      },
+
+      /** Structure of every table of the project, in project order. */
+      tablesStructure() {
+        return Store.project.tables.map((table) => Ui.structure(table));
+      },
+
+      /** Opens the window with the structure of every table as JSON. */
+      openTablesStructure() {
+        const tables = Store.project.tables;
+        if (tables.length === 0) {
+          setStatus(I18n.t("summary.noTables"));
+          return;
+        }
+        document.getElementById("tables-structure-json-text").value = JSON.stringify(UiSummary.tablesStructure(), null, 2);
+        const dialog = document.getElementById("dlg-tables-structure");
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        setStatus(I18n.t("summary.tablesStructureHint", { count: tables.length }));
+      },
+
+      /** Closes the tables-structure window when it is open. */
+      closeTablesStructure() {
+        const dialog = document.getElementById("dlg-tables-structure");
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Downloads the structure of every table of the project as one JSON file. */
+      downloadTablesStructure() {
+        const tables = Store.project.tables;
+        if (tables.length === 0) {
+          setStatus(I18n.t("summary.noTables"));
+          return;
+        }
+        const base = Utils.slugify(Store.project.name) || I18n.t("project.defaultFileName");
+        const fileName = `${base}_${I18n.t("summary.tablesStructureFileName")}.json`;
+        Utils.downloadText(fileName, JSON.stringify(UiSummary.tablesStructure(), null, 2));
+        setStatus(I18n.t("summary.tablesStructureDownloaded", { count: tables.length, name: fileName }));
       },
 
       /** Fields of the table with their type, one per line ("name: type"). */
@@ -11979,6 +12071,8 @@ ORDER BY edificios DESC, sede;</pre>
             I18n.t("summary.columnRecords"), I18n.t("summary.columnIdField"), I18n.t("misc.fields")],
           rows,
         );
+        document.getElementById("btn-show-tables-structure").disabled = tables.length === 0;
+        document.getElementById("btn-download-tables-structure").disabled = tables.length === 0;
         document.getElementById("summary-tables-info").textContent = tables.length === 0
           ? I18n.t("summary.noTables")
           : I18n.t("summary.tablesInfo", { count: tables.length });
@@ -18069,7 +18163,7 @@ ORDER BY edificios DESC, sede;</pre>
           "propiedades", "tirador", "140 a 480", "resumen",
           "Carpetas", "+C", "añadir carpeta", "Sin carpeta", "arrastra", "pliega", "despliega",
           "Carpetas de tablas", "tableFolders", "foldedTableFolders", "Todas las tablas",
-          "Fusionar tablas", "Crear tabla"]],
+          "Fusionar tablas", "Crear tabla", "Ver estructura JSON", "Descargar estructura JSON"]],
         ["en", ["Is a foreign key", "Create auto-numbered ID field", "auto-numbered",
           "self-references", "New", "division by zero", "legend",
           "See relations", "Queries as tables", "view ×N",
@@ -18077,7 +18171,7 @@ ORDER BY edificios DESC, sede;</pre>
           "properties", "handle", "140 to 480", "summary",
           "Folders", "+F", "add folder", "No folder", "drag", "fold", "unfold",
           "Table folders", "tableFolders", "foldedTableFolders", "All tables",
-          "Merge tables", "Create table"]],
+          "Merge tables", "Create table", "View structure JSON", "Download structure JSON"]],
       ].forEach(([language, words]) => {
         SelfTests.inLanguage(language, () => {
           words.forEach((word) => {
@@ -22519,6 +22613,115 @@ ORDER BY edificios DESC, sede;</pre>
 
       UiQueries.lastResult = before;
       UiQueries.updateCreateTableButton();
+    });
+
+    SelfTests.add("When_TablesSummary_Expect_CleanTitleStructureAndDownloadButton", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+      };
+      Store.replaceProject({
+        name: "structure-summary",
+        tables: [
+          {
+            name: "first",
+            description: "desc",
+            idField: "id",
+            nextId: 3,
+            fields: [
+              { name: "id", description: null, type: "number" },
+              { name: "name", description: null, type: "string", references: { table: "other", field: "id" } },
+            ],
+            rows: [{ id: 1, name: "a" }],
+          },
+          {
+            name: "second",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "x", description: null, type: "boolean" }],
+            rows: [],
+          },
+        ],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      UiSummary.renderTables();
+      const heading = document.querySelector("#view-tables h2");
+      ["es", "en"].forEach((language) => {
+        SelfTests.inLanguage(language, () => {
+          assert(!heading.textContent.includes("<span"), `the tables title has no literal markup in ${language}: ${heading.textContent}`);
+        });
+      });
+      const showButton = document.getElementById("btn-show-tables-structure");
+      const button = document.getElementById("btn-download-tables-structure");
+      const dialog = document.getElementById("dlg-tables-structure");
+      assertEqual(showButton.disabled, false, "the structure button is enabled with tables");
+      assertEqual(button.disabled, false, "the download button is enabled with tables");
+      assertEqual(
+        UiSummary.tablesStructure(),
+        [
+          {
+            name: "first",
+            description: "desc",
+            idField: "id",
+            nextId: 3,
+            fields: [
+              { name: "id", description: null, type: "number" },
+              { name: "name", description: null, type: "string", references: { table: "other", field: "id" } },
+            ],
+          },
+          {
+            name: "second",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "x", description: null, type: "boolean" }],
+          },
+        ],
+        "the structure of every table is the one of the structure report",
+      );
+
+      showButton.click();
+      assertEqual(dialog.open, true, "the structure button opens the window");
+      assertEqual(
+        document.getElementById("tables-structure-json-text").value,
+        JSON.stringify(UiSummary.tablesStructure(), null, 2),
+        "the window shows the structure of every table",
+      );
+      assert(dialog.contains(button), "the download button lives inside the window");
+      UiSummary.closeTablesStructure();
+      assertEqual(dialog.open, false, "the window closes");
+
+      const originalDownload = Utils.downloadText;
+      let downloaded = null;
+      Utils.downloadText = (fileName, text) => {
+        downloaded = { fileName, text };
+      };
+      try {
+        UiSummary.downloadTablesStructure();
+      } finally {
+        Utils.downloadText = originalDownload;
+      }
+      assert(downloaded !== null, "the structure of the tables is downloaded");
+      assert(downloaded.fileName.endsWith(".json"), "with a JSON file name: " + downloaded.fileName);
+      assertEqual(JSON.parse(downloaded.text), UiSummary.tablesStructure(), "the file carries every table structure");
+
+      Store.replaceProject({ name: "empty", tables: [], queries: [], settings: Utils.cloneJson(DEFAULT_SETTINGS) });
+      UiSummary.renderTables();
+      assertEqual(showButton.disabled, true, "the structure button is disabled without tables");
+      assertEqual(button.disabled, true, "the download button is disabled without tables");
+
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
     });
 
     /* =====================================================================
