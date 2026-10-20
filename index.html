@@ -1076,6 +1076,68 @@
       font-family: ui-monospace, Consolas, "Courier New", monospace;
     }
 
+    /* Merge-tables window: name + list of tables with checkboxes. */
+    #dlg-merge-tables {
+      width: min(720px, 94vw);
+      padding: 8px 10px;
+      border: 1px solid #999;
+      background: #fff;
+      color: #000;
+    }
+
+    #dlg-merge-tables::backdrop {
+      background: rgb(0 0 0 / 0.25);
+    }
+
+    #dlg-merge-tables #merge-name {
+      min-width: 18em;
+    }
+
+    #dlg-merge-tables .merge-list {
+      max-height: 42vh;
+      margin: 4px 0;
+      padding: 2px 6px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      background: #fafafa;
+    }
+
+    #dlg-merge-tables .merge-item {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+      padding: 2px 0;
+    }
+
+    #dlg-merge-tables .merge-item-name {
+      font-weight: bold;
+    }
+
+    #dlg-merge-tables .merge-item-meta {
+      color: #555;
+    }
+
+    /* Create-table-from-result window: name + summary of the result. */
+    #dlg-result-table {
+      width: min(600px, 94vw);
+      padding: 8px 10px;
+      border: 1px solid #999;
+      background: #fff;
+      color: #000;
+    }
+
+    #dlg-result-table::backdrop {
+      background: rgb(0 0 0 / 0.25);
+    }
+
+    #dlg-result-table #result-table-name {
+      min-width: 18em;
+    }
+
+    #dlg-result-table #result-table-info {
+      overflow-wrap: anywhere;
+    }
+
     #dlg-structure {
       width: min(760px, 94vw);
       height: min(720px, 88vh);
@@ -1411,12 +1473,13 @@
     <button data-i18n-title="markup.button.goHomePageSummaryEverything" id="mark" type="button" title="Ir a la página de inicio (resumen de todo lo que puedes hacer)">EXTRACTOR</button>
     <span class="muted" data-i18n="project.label">Proyecto:</span>
     <span data-i18n-aria-label="markup.span.projectName" data-i18n-title="markup.span.projectNameChangedSettings" id="project-name" title="Nombre del proyecto (se cambia en «Ajustes»)" aria-label="Nombre del proyecto">Sin título</span>
-    <button data-i18n-title="markup.button.newProjectDiscardsCurrentOne" data-i18n="markup.button.new" id="btn-new" type="button" title="Nuevo proyecto (descarta el actual)">Nuevo</button>
-    <button data-i18n-title="markup.button.openProjectFromJSONFile" data-i18n="markup.button.openJSON" id="btn-open" type="button" title="Abrir un proyecto desde fichero JSON">Abrir JSON</button>
+    <button data-i18n-title="markup.button.newProjectDiscardsCurrentOne" data-i18n="markup.button.new" id="btn-new" type="button" title="Nuevo proyecto (descarta el actual)">Nuevo proyecto</button>
+    <button data-i18n-title="markup.button.openProjectFromJSONFile" data-i18n="markup.button.openJSON" id="btn-open" type="button" title="Abrir un proyecto desde fichero JSON">Abrir proyecto</button>
     <input id="file-open" type="file" accept=".json" title="Fichero de proyecto JSON" hidden>
     <button data-i18n-title="markup.button.saveProjectItsFileCtrl" data-i18n="markup.button.saveProject" id="btn-save" type="button" title="Guardar el proyecto en su fichero (Ctrl+S)">Guardar proyecto</button>
     <button data-i18n-title="markup.button.saveProjectAnotherFileSystem" data-i18n="markup.button.saveProjectAs" id="btn-save-como" type="button" title="Guardar el proyecto en otro fichero (se pedirá con la ventana del sistema)">Guardar proyecto como</button>
     <button data-i18n-title="markup.button.goDataImportPanel" data-i18n="markup.button.importData" id="btn-import" type="button" title="Ir al panel de importación de datos">Importar datos</button>
+    <button data-i18n-title="markup.button.mergeTablesTip" data-i18n="markup.button.mergeTables" id="btn-merge-tables" type="button" title="Fusionar varias tablas en una tabla nueva">Fusionar tablas…</button>
     <button data-i18n-title="markup.button.settingsProjectNameRowsPer" data-i18n="markup.button.settings" id="btn-settings" type="button" title="Ajustes: nombre del proyecto, filas por página y CSV al importar/exportar">Ajustes</button>
     <button data-i18n-title="markup.button.testsRunsEveryQueryCompares" data-i18n="markup.button.tests" id="btn-tests" type="button" hidden title="Pruebas: ejecuta todas las consultas y compara cada resultado con el resultado asertado (assert) del proyecto (aparece cuando alguna consulta es un test)">Pruebas</button>
     <button data-i18n-title="markup.button.selfTestsRunsProgramS" data-i18n="markup.button.selfTests" id="btn-auto-test" type="button" title="Auto-tests: ejecuta la batería interna de pruebas del programa (motor SQL, utilidades e interfaz) y muestra el informe">Auto-tests</button>
@@ -1568,6 +1631,7 @@
                 <li data-i18n-html="markup.li.tableViewForeignKeysAre">En la vista de la tabla, las <b>claves ajenas</b> se leen al pasar el ratón por su celda: la pista dice a qué tabla y campo apuntan y enseña el <b>registro relacionado</b> de la otra tabla (o avisa de que no existe), y el enlace <b>↗</b> abre la <b>consulta</b> con ese registro. Y si la tabla es el <b>destino</b> de alguna clave ajena, lleva una <b>columna por cada una</b> (<code>← tabla.campo</code>) con el <b>número</b> de filas de la otra tabla que traen cada fila: el propio número es un enlace que genera y ejecuta la <b>consulta</b> que las lista.</li>
                 <li data-i18n-html="markup.li.findReplaceTheySearchReplace"><b>Buscar…</b> y <b>Reemplazar…</b>: buscan y reemplazan en toda la tabla o en una columna, con los comodines <code>*</code> y <code>?</code> (apartado «Buscar y reemplazar»).</li>
                 <li data-i18n-html="markup.li.updateTableImportsCSVJSON"><b>Actualizar tabla…</b> sustituye <b>todos los datos</b> de la tabla importando un CSV o JSON (fichero o pegado): funciona como <b>Importar datos</b> pero sin tocar la tabla, sus campos, sus claves ajenas ni las consultas que la usan. Antes de borrar los datos <b>avisa</b> y comprueba que coincidan el número de campos, la cabecera (si la primera fila es cabecera) y los tipos; si algo no coincide, no cambia nada y explica por qué.</li>
+                <li data-i18n-html="markup.li.mergeTablesCreatesNewTable">El botón <b>Fusionar tablas…</b> de la cabecera crea una <b>tabla nueva</b> a partir de varias: escribe su nombre, marca al menos dos tablas y pulsa <b>Fusionar</b>. Los campos son la <b>unión</b> de todos, en el orden de la lista, y cada campo conserva la definición (nombre, tipo, descripción y claves ajenas) de la <b>primera tabla que lo ofrece</b>; las tablas pueden tener campos o tipos distintos. Las filas se <b>concatenan</b> en el orden de la lista y los campos que una tabla no tiene quedan <code>null</code>. Las tablas originales no se modifican y la nueva se añade al proyecto.</li>
                 <li data-i18n-html="markup.li.exportTableDataAsCSV"><b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.</li>
                 <li data-i18n-html="markup.li.renamingFollowsQueriesWhenName"><b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>.</li>
                 <li data-i18n-html="markup.li.deletingWarnsYouBeforeRemoving"><b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.</li>
@@ -1595,6 +1659,7 @@
                 <li data-i18n-html="markup.li.previewShowsUp1000Rows">La previsualización muestra hasta 1000 filas y avisa cuando hay más, pero el <b>fichero descargado va completo</b>. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.</li>
                 <li data-i18n-html="markup.li.theyAreReadOnlyThey">Son <b>solo de lectura</b>: nunca cambian los datos. En pantalla hay un tope de filas; el CSV exportado va completo.</li>
                 <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
+                <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
               
                 <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo escribiendo el nombre (si no existe, se crea). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.</li>
               </ul>
@@ -2118,6 +2183,7 @@ ORDER BY edificios DESC, sede;</pre>
           <button data-i18n-title="markup.button.runQueryCtrlEnter" data-i18n="markup.button.run" id="btn-run" type="button" title="Ejecutar la consulta (Ctrl+Enter)">▶ Ejecutar</button>
           <button data-i18n-title="markup.button.runQuerySaveItsResult" data-i18n="markup.button.turnIntoTest" id="btn-save-test" type="button" title="Ejecutar la consulta, guardar su resultado como resultado esperado (assert) de esa consulta y poner el proyecto en modo test">Convertir en test</button>
           <button data-i18n-title="markup.button.removeAssertedResultThisQuery" data-i18n="markup.button.removeTest" id="btn-quitar-test" type="button" disabled title="Quitar el resultado asertado de esta consulta: seguirá ejecutándose, pero dejará de comprobarse en el informe del proyecto">Quitar test</button>
+          <button data-i18n-title="markup.button.createTableFromResultTip" data-i18n="markup.button.createTableFromResult" id="btn-create-table-result" type="button" disabled title="Crear una tabla nueva con las columnas y filas del resultado de la consulta">Crear tabla…</button>
           <button data-i18n-title="markup.button.deleteThisQuery" data-i18n="markup.button.deleteQuery" id="btn-delete-query" type="button" title="Eliminar esta consulta">Eliminar consulta</button>
           <span class="sep"></span>
           <button data-i18n-title="markup.button.openResultAsCSVText" data-i18n="markup.button.exportCSV" id="btn-exportar-csv" type="button" title="Abrir el resultado como texto CSV en una ventana, para copiarlo o descargarlo como fichero">Exportar CSV…</button>
@@ -2367,6 +2433,46 @@ ORDER BY edificios DESC, sede;</pre>
     <div id="update-log"></div>
   </dialog>
 
+  <!-- Modal window: merge several tables into a new one -->
+  <dialog id="dlg-merge-tables" aria-labelledby="dlg-merge-titulo">
+    <div class="dlg-header">
+      <b data-i18n="merge.title" id="dlg-merge-titulo">Fusionar tablas</b>
+      <button data-i18n-title="markup.button.closeWindowEsc" data-i18n="markup.button.close" class="derecha" id="btn-close-merge" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+    </div>
+    <p data-i18n-html="merge.help" class="muted">Elige las tablas que quieres fusionar, en el orden de la lista: la tabla nueva tendrá la unión de los campos y cada campo conserva la definición de la primera tabla que lo ofrece. Las filas se concatenan; los campos que una tabla no tiene quedan vacíos (null).</p>
+    <div class="toolbar">
+      <label data-i18n="merge.name" for="merge-name">Nombre de la tabla resultante:</label>
+      <input id="merge-name" type="text" autocomplete="off" title="Nombre de la nueva tabla">
+    </div>
+    <div class="toolbar">
+      <label><input id="merge-select-all" type="checkbox"> <span data-i18n="merge.selectAll">Seleccionar todas</span></label>
+      <span id="merge-count" class="muted"></span>
+    </div>
+    <div id="merge-list" class="merge-list"></div>
+    <div class="toolbar">
+      <button data-i18n-title="merge.applyTip" data-i18n="merge.apply" id="btn-merge-apply" type="button" disabled title="Crear la tabla fusionada">Fusionar</button>
+      <button data-i18n="merge.cancel" id="btn-merge-cancel" type="button">Cancelar</button>
+    </div>
+  </dialog>
+
+  <!-- Modal window: create a table from the result of a query -->
+  <dialog id="dlg-result-table" aria-labelledby="dlg-result-table-titulo">
+    <div class="dlg-header">
+      <b data-i18n="resultTable.title" id="dlg-result-table-titulo">Crear tabla con el resultado</b>
+      <button data-i18n-title="markup.button.closeWindowEsc" data-i18n="markup.button.close" class="derecha" id="btn-close-result-table" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+    </div>
+    <p data-i18n-html="resultTable.help" class="muted">Se creará una tabla nueva con las columnas y filas de este resultado. Si una columna repite nombre, se le añade un sufijo numérico.</p>
+    <p id="result-table-info" class="muted"></p>
+    <div class="toolbar">
+      <label data-i18n="resultTable.name" for="result-table-name">Nombre de la tabla:</label>
+      <input id="result-table-name" type="text" autocomplete="off" title="Nombre de la tabla nueva">
+    </div>
+    <div class="toolbar">
+      <button data-i18n-title="resultTable.createTip" data-i18n="resultTable.create" id="btn-result-table-create" type="button" title="Crear la tabla con las columnas y filas del resultado">Crear tabla</button>
+      <button data-i18n="resultTable.cancel" id="btn-result-table-cancel" type="button">Cancelar</button>
+    </div>
+  </dialog>
+
   <!-- Modal window: default settings -->
   <dialog id="dlg-settings" aria-labelledby="dlg-settings-titulo">
     <div class="dlg-header">
@@ -2607,12 +2713,12 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.lastPage": "Last page",
         "markup.button.lastPageResult": "Last page of the result",
         "markup.button.limitsTests": "Limits and tests",
-        "markup.button.new": "New",
+        "markup.button.new": "New project",
         "markup.button.newProjectDiscardsCurrentOne": "New project (discards the current one)",
         "markup.button.nextPage": "Next page",
         "markup.button.nextPageResult": "Next page of the result",
         "markup.button.numbersTextNullOperatorsFunctions": "Numbers, text, null, operators and functions",
-        "markup.button.openJSON": "Open JSON",
+        "markup.button.openJSON": "Open project",
         "markup.button.openProjectFromJSONFile": "Open a project from a JSON file",
         "markup.button.openResultAsCSVText": "Open the result as CSV text in a window, to copy it or download it as a file",
         "markup.button.openTableAsCSVText": "Open the data of the table as CSV text in a window, to copy it or download it as a file",
@@ -2674,6 +2780,10 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.tests": "Tests",
         "markup.button.testsRunsEveryQueryCompares": "Tests: runs every query and compares each result with the project's asserted result (shown when some query is a test)",
         "markup.button.turnIntoTest": "Turn into a test",
+        "markup.button.mergeTables": "Merge tables…",
+        "markup.button.mergeTablesTip": "Merge several tables into a new table",
+        "markup.button.createTableFromResult": "Create table…",
+        "markup.button.createTableFromResultTip": "Create a new table with the columns and rows of the query result",
         "markup.button.updateTable": "Update table",
         "markup.button.updateTableDataFromImport": "Replace the data of the table importing a CSV or JSON (keeps fields, foreign keys and queries)",
         "markup.button.valuesFunctions": "Values and functions",
@@ -2826,12 +2936,14 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.everyFigureGreaterThan0": "Every figure <b>greater than 0</b> is a <b>link</b>: it builds (or reuses) the <b>query</b> that returns exactly those rows, leaves it selected and runs it, so that you can check it.",
         "markup.li.pressTableNameOpensTable": "Press a <b>table name</b> in a row or column header to <b>open that table</b>.",
         "markup.li.everyQueryCanCarryIts": "Every query can carry its <b>asserted result</b> for <b>test mode</b>: when the project is opened it is run and compared with it (section «Test mode»). The editor's <b>Turn into a test</b> button saves the result you have on screen as that expected result.",
+        "markup.li.createTableFromResultCreatesNew": "<b>Create table…</b> creates a <b>new table</b> with the columns and rows of the result on screen and asks for its name; the button is enabled when the query has a result with rows. The query does not change; if the result repeats column names, a numeric suffix is added.",
         "markup.li.exportCSVOpensResultCSV": "<b>Export CSV…</b> opens the <b>Result in CSV</b> window with the <b>preview</b> of the result: <b>Copy</b> takes it to the clipboard and <b>Download CSV</b> saves the file with the query name (asking for the folder, if the browser has a save dialog).",
         "markup.li.fieldsMetadataAddRenameDelete": "<b>Fields and metadata…</b>: add, rename and delete fields, with description and <b>type</b> (<code>string</code>, <code>number</code>, <code>boolean</code>); tick a checkbox to say which one is the table's <b>ID field</b> (only one) and which ones are <b>foreign keys</b>, choosing the target table and field. Everything is saved in the project.",
         "markup.li.filesCSVJSONSeveralAt": "<b>Files</b>: CSV and JSON, several at once and mixed. Each file creates a table with its name (lower case, with <code>_</code>) and leaves a report with what was read and the problems found.",
         "markup.li.findReplaceTableBarSame": "<b>Find…</b> and <b>Replace…</b> (table bar): the same window in two modes; the replace mode adds the field with the new text and the <b>Replace all</b> button.",
         "markup.li.findReplaceTheySearchReplace": "<b>Find…</b> and <b>Replace…</b>: they search and replace in the whole table or in one column, with the wildcards <code>*</code> and <code>?</code> (section «Find and replace»).",
         "markup.li.updateTableImportsCSVJSON": "<b>Update table…</b> replaces <b>all the data</b> of the table by importing a CSV or JSON (file or pasted): it works like <b>Import data</b> but does not touch the table, its fields, its foreign keys or the queries that use it. Before deleting the data it <b>warns you</b> and checks that the number of fields matches, that the header matches (if the first row is a header) and that the types match; if something does not match, it changes nothing and says why.",
+        "markup.li.mergeTablesCreatesNewTable": "The <b>Merge tables…</b> button in the header creates a <b>new table</b> from several: give it a name, tick at least two tables and press <b>Merge</b>. The fields are the <b>union</b> of all of them, in the order of the list, and each field keeps the definition (name, type, description and foreign keys) of the <b>first table that has it</b>; tables may have different fields or types. Rows are <b>concatenated</b> in the order of the list and fields a table does not have are left <code>null</code>. The original tables are not changed and the new one is added to the project.",
         "markup.li.exportTableDataAsCSV": "<b>Export CSV…</b> opens the data of the table as <b>CSV text in a window</b>, with <b>Copy</b> and <b>Download CSV</b> and the same separator, header and decimal-comma options as the result of a query.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> and <b>→</b> with the handle focused: change the width of the left column; <b>Home</b> and <b>End</b> take it to the ends.",
         "markup.li.idFieldIsAutoNumbered": "The <b>ID field is auto-numbered</b>: every new row gets the <b>next number</b> and none is repeated or reused when rows are deleted. That is why it is not edited by hand: it can be searched in, but it is not replaced. With <b>Create auto-numbered ID field</b> you add a new one (the name is written next to it), at the start of the table, and it numbers the rows that were already there <b>1..N</b>. Marking any other field as ID also makes it auto-numbered.",
@@ -3080,6 +3192,37 @@ ORDER BY edificios DESC, sede;</pre>
         "busy.openingProject": "Opening the project…",
         "busy.savingProject": "Saving the project…",
         "busy.exportingCsv": "Exporting CSV…",
+        "busy.mergingTables": "Merging tables…",
+        "busy.creatingTable": "Creating table…",
+        "merge.title": "Merge tables",
+        "merge.help": "Choose the tables to merge, in the order shown: the new table takes the union of the fields, and each field keeps the definition of the first table that has it. Rows are concatenated; fields a table does not have are left empty (null).",
+        "merge.name": "Name of the new table:",
+        "merge.selectAll": "Select all",
+        "merge.tableMeta": "{rows} row(s) · {fields} field(s)",
+        "merge.selectedCount": "{count} table(s) selected",
+        "merge.apply": "Merge",
+        "merge.applyTip": "Create the merged table",
+        "merge.cancel": "Cancel",
+        "merge.nameRequired": "The new table needs a name.",
+        "merge.tableExists": "A table called “{name}” already exists.",
+        "merge.selectAtLeastTwo": "Select at least two tables to merge.",
+        "merge.noFields": "The selected tables have no fields.",
+        "merge.noTables": "There are no tables to merge.",
+        "merge.status": "Choose the tables to merge and the name of the new table.",
+        "merge.done": "Table “{name}” created from {tables} table(s): {rows} row(s) and {fields} field(s).",
+        "resultTable.title": "Create table from result",
+        "resultTable.help": "A new table will be created with the columns and rows of this result. If a column name is repeated, a numeric suffix is added.",
+        "resultTable.name": "Name of the table:",
+        "resultTable.defaultName": "result",
+        "resultTable.info": "Columns: {columns} · {rows} row(s)",
+        "resultTable.create": "Create table",
+        "resultTable.createTip": "Create the table with the columns and rows of the result",
+        "resultTable.cancel": "Cancel",
+        "resultTable.nameRequired": "The table needs a name.",
+        "resultTable.tableExists": "A table called “{name}” already exists.",
+        "resultTable.noResult": "Run the query before creating a table.",
+        "resultTable.status": "Choose the name of the new table.",
+        "resultTable.done": "Table “{name}” created from the query result: {rows} row(s) and {fields} field(s).",
         "misc.value": "Value",
         "misc.yes": "yes",
         "model.autoIdDescription": "Auto-numbered identifier",
@@ -3621,12 +3764,12 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.lastPage": "Última página",
         "markup.button.lastPageResult": "Última página del resultado",
         "markup.button.limitsTests": "Límites y pruebas",
-        "markup.button.new": "Nuevo",
+        "markup.button.new": "Nuevo proyecto",
         "markup.button.newProjectDiscardsCurrentOne": "Nuevo proyecto (descarta el actual)",
         "markup.button.nextPage": "Página siguiente",
         "markup.button.nextPageResult": "Página siguiente del resultado",
         "markup.button.numbersTextNullOperatorsFunctions": "Números, texto, null, operadores y funciones",
-        "markup.button.openJSON": "Abrir JSON",
+        "markup.button.openJSON": "Abrir proyecto",
         "markup.button.openProjectFromJSONFile": "Abrir un proyecto desde fichero JSON",
         "markup.button.openResultAsCSVText": "Abrir el resultado como texto CSV en una ventana, para copiarlo o descargarlo como fichero",
         "markup.button.openTableAsCSVText": "Abrir los datos de la tabla como texto CSV en una ventana, para copiarlo o descargarlo como fichero",
@@ -3688,6 +3831,10 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.tests": "Pruebas",
         "markup.button.testsRunsEveryQueryCompares": "Pruebas: ejecuta todas las consultas y compara cada resultado con el resultado asertado (assert) del proyecto (aparece cuando alguna consulta es un test)",
         "markup.button.turnIntoTest": "Convertir en test",
+        "markup.button.mergeTables": "Fusionar tablas…",
+        "markup.button.mergeTablesTip": "Fusionar varias tablas en una tabla nueva",
+        "markup.button.createTableFromResult": "Crear tabla…",
+        "markup.button.createTableFromResultTip": "Crear una tabla nueva con las columnas y filas del resultado de la consulta",
         "markup.button.updateTable": "Actualizar tabla",
         "markup.button.updateTableDataFromImport": "Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)",
         "markup.button.valuesFunctions": "Valores y funciones",
@@ -3840,12 +3987,14 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.everyFigureGreaterThan0": "Cada cifra <b>mayor que 0</b> es un <b>enlace</b>: genera (o reutiliza) la <b>consulta</b> que devuelve exactamente esas filas, la deja seleccionada y la ejecuta, para que la compruebes.",
         "markup.li.pressTableNameOpensTable": "Pulsa el <b>nombre de una tabla</b> en una cabecera de fila o de columna para <b>abrir esa tabla</b>.",
         "markup.li.everyQueryCanCarryIts": "Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.",
+        "markup.li.createTableFromResultCreatesNew": "<b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.",
         "markup.li.exportCSVOpensResultCSV": "<b>Exportar CSV…</b> abre la ventana <b>Resultado en CSV</b> con la <b>previsualización</b> del resultado: <b>Copiar</b> lo lleva al portapapeles y <b>Descargar CSV</b> guarda el fichero con el nombre de la consulta (preguntando la carpeta, si el navegador tiene ventana de guardado).",
         "markup.li.fieldsMetadataAddRenameDelete": "<b>Campos y metadatos…</b>: añadir, renombrar y borrar campos, con descripción y <b>tipo</b> (<code>string</code>, <code>number</code>, <code>boolean</code>); marca con una casilla cuál es el <b>campo ID</b> de la tabla (solo uno) y cuáles son <b>claves ajenas</b>, eligiendo la tabla y el campo de destino. Todo se guarda en el proyecto.",
         "markup.li.filesCSVJSONSeveralAt": "<b>Ficheros</b>: CSV y JSON, varios a la vez y mezclados. Cada fichero crea una tabla con su nombre (minúsculas, con <code>_</code>) y deja un informe con lo leído y los problemas encontrados.",
         "markup.li.findReplaceTableBarSame": "<b>Buscar…</b> y <b>Reemplazar…</b> (barra de la tabla): la misma ventana en dos modos; el modo reemplazo añade el campo con el texto nuevo y el botón <b>Reemplazar todo</b>.",
         "markup.li.findReplaceTheySearchReplace": "<b>Buscar…</b> y <b>Reemplazar…</b>: buscan y reemplazan en toda la tabla o en una columna, con los comodines <code>*</code> y <code>?</code> (apartado «Buscar y reemplazar»).",
         "markup.li.updateTableImportsCSVJSON": "<b>Actualizar tabla…</b> sustituye <b>todos los datos</b> de la tabla importando un CSV o JSON (fichero o pegado): funciona como <b>Importar datos</b> pero sin tocar la tabla, sus campos, sus claves ajenas ni las consultas que la usan. Antes de borrar los datos <b>avisa</b> y comprueba que coincidan el número de campos, la cabecera (si la primera fila es cabecera) y los tipos; si algo no coincide, no cambia nada y explica por qué.",
+        "markup.li.mergeTablesCreatesNewTable": "El botón <b>Fusionar tablas…</b> de la cabecera crea una <b>tabla nueva</b> a partir de varias: escribe su nombre, marca al menos dos tablas y pulsa <b>Fusionar</b>. Los campos son la <b>unión</b> de todos, en el orden de la lista, y cada campo conserva la definición (nombre, tipo, descripción y claves ajenas) de la <b>primera tabla que lo ofrece</b>; las tablas pueden tener campos o tipos distintos. Las filas se <b>concatenan</b> en el orden de la lista y los campos que una tabla no tiene quedan <code>null</code>. Las tablas originales no se modifican y la nueva se añade al proyecto.",
         "markup.li.exportTableDataAsCSV": "<b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.",
         "markup.li.idFieldIsAutoNumbered": "El <b>campo ID es autonumérico</b>: cada fila nueva recibe el <b>siguiente número</b> y ninguno se repite ni se reutiliza al borrar filas. Por eso no se edita a mano: se puede buscar en él, pero no se reemplaza. Con <b>Crear campo ID autonumérico</b> añades uno nuevo (el nombre se escribe a su lado), al principio de la tabla, y numera <b>1..N</b> las filas que ya había. Marcar cualquier otro campo como ID también lo vuelve autonumérico.",
@@ -4094,6 +4243,37 @@ ORDER BY edificios DESC, sede;</pre>
         "busy.openingProject": "Abriendo el proyecto…",
         "busy.savingProject": "Guardando el proyecto…",
         "busy.exportingCsv": "Exportando CSV…",
+        "busy.mergingTables": "Fusionando tablas…",
+        "busy.creatingTable": "Creando tabla…",
+        "merge.title": "Fusionar tablas",
+        "merge.help": "Elige las tablas que quieres fusionar, en el orden de la lista: la tabla nueva tendrá la unión de los campos y cada campo conserva la definición de la primera tabla que lo ofrece. Las filas se concatenan; los campos que una tabla no tiene quedan vacíos (null).",
+        "merge.name": "Nombre de la tabla resultante:",
+        "merge.selectAll": "Seleccionar todas",
+        "merge.tableMeta": "{rows} fila(s) · {fields} campo(s)",
+        "merge.selectedCount": "{count} tabla(s) seleccionada(s)",
+        "merge.apply": "Fusionar",
+        "merge.applyTip": "Crear la tabla fusionada",
+        "merge.cancel": "Cancelar",
+        "merge.nameRequired": "La tabla nueva necesita un nombre.",
+        "merge.tableExists": "Ya existe una tabla llamada «{name}».",
+        "merge.selectAtLeastTwo": "Selecciona al menos dos tablas para fusionar.",
+        "merge.noFields": "Las tablas seleccionadas no tienen campos.",
+        "merge.noTables": "No hay tablas para fusionar.",
+        "merge.status": "Elige las tablas que quieres fusionar y el nombre de la tabla nueva.",
+        "merge.done": "Tabla «{name}» creada a partir de {tables} tabla(s): {rows} fila(s) y {fields} campo(s).",
+        "resultTable.title": "Crear tabla con el resultado",
+        "resultTable.help": "Se creará una tabla nueva con las columnas y filas de este resultado. Si una columna repite nombre, se le añade un sufijo numérico.",
+        "resultTable.name": "Nombre de la tabla:",
+        "resultTable.defaultName": "resultado",
+        "resultTable.info": "Columnas: {columns} · {rows} fila(s)",
+        "resultTable.create": "Crear tabla",
+        "resultTable.createTip": "Crear la tabla con las columnas y filas del resultado",
+        "resultTable.cancel": "Cancelar",
+        "resultTable.nameRequired": "La tabla necesita un nombre.",
+        "resultTable.tableExists": "Ya existe una tabla llamada «{name}».",
+        "resultTable.noResult": "Ejecuta la consulta antes de crear una tabla.",
+        "resultTable.status": "Elige el nombre de la tabla nueva.",
+        "resultTable.done": "Tabla «{name}» creada desde el resultado de la consulta: {rows} fila(s) y {fields} campo(s).",
         "misc.value": "Valor",
         "misc.yes": "sí",
         "model.autoIdDescription": "Identificador autonumérico",
@@ -5075,6 +5255,98 @@ ORDER BY edificios DESC, sede;</pre>
           fields: (fields || []).map((field) => Model.fieldMeta(field)),
           rows: [],
         };
+      },
+
+      /** Merges several tables into a new one. The fields are the union, in
+       *  order of first appearance; a shared field keeps the definition of the
+       *  first table that has it. Rows are concatenated; fields that a row does
+       *  not have become null. The result has no auto-increment ID field. */
+      mergeTables(name, tables) {
+        const fields = [];
+        const fieldNames = new Set();
+        tables.forEach((table) => {
+          table.fields.forEach((field) => {
+            if (fieldNames.has(field.name)) {
+              return;
+            }
+            fieldNames.add(field.name);
+            fields.push(Model.fieldMeta(field));
+          });
+        });
+        const rows = [];
+        tables.forEach((table) => {
+          table.rows.forEach((row) => {
+            const merged = {};
+            fields.forEach((field) => {
+              const value = Object.hasOwn(row, field.name) ? row[field.name] : null;
+              if (field.name === "__proto__") {
+                Object.defineProperty(merged, field.name, {
+                  value,
+                  enumerable: true,
+                  writable: true,
+                  configurable: true,
+                });
+              } else {
+                merged[field.name] = value;
+              }
+            });
+            rows.push(merged);
+          });
+        });
+        return {
+          name,
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields,
+          rows,
+        };
+      },
+
+      /** Builds a table from a query result: its columns and rows, with the
+       *  type of each column inferred from its values. Repeated or empty column
+       *  names are made unique and the rows are matched by position. */
+      tableFromResult(name, columns, values) {
+        const fieldNames = [];
+        const used = new Set();
+        columns.forEach((rawName, index) => {
+          const base = String(rawName == null ? "" : rawName).trim() === ""
+            ? `c${index + 1}`
+            : String(rawName);
+          let fieldName = base;
+          let suffix = 2;
+          while (used.has(fieldName)) {
+            fieldName = `${base}_${suffix}`;
+            suffix += 1;
+          }
+          used.add(fieldName);
+          fieldNames.push(fieldName);
+        });
+        const rows = values.map((rowValues) => {
+          const row = {};
+          fieldNames.forEach((fieldName, index) => {
+            const value = rowValues[index] === undefined ? null : rowValues[index];
+            if (fieldName === "__proto__") {
+              Object.defineProperty(row, fieldName, {
+                value,
+                enumerable: true,
+                writable: true,
+                configurable: true,
+              });
+            } else {
+              row[fieldName] = value;
+            }
+          });
+          return row;
+        });
+        const fields = fieldNames.map((fieldName) => ({
+          name: fieldName,
+          description: null,
+          type: Model.fieldTypeFromRows(rows, fieldName),
+        }));
+        const table = Model.createTable(name, fields);
+        table.rows = rows;
+        return table;
       },
 
       /** Metadata of a field: name, description, type and, when it has one, the
@@ -12469,6 +12741,21 @@ ORDER BY edificios DESC, sede;</pre>
         document.getElementById("btn-run").addEventListener("click", () => UiQueries.execute());
         document.getElementById("btn-save-test").addEventListener("click", () => UiQueries.saveAsTest());
         document.getElementById("btn-quitar-test").addEventListener("click", () => UiQueries.removeTest());
+        document.getElementById("btn-create-table-result").addEventListener("click", () => UiQueries.openCreateTable());
+        document.getElementById("btn-close-result-table").addEventListener("click", () => UiQueries.closeCreateTable());
+        document.getElementById("btn-result-table-cancel").addEventListener("click", () => UiQueries.closeCreateTable());
+        document.getElementById("btn-result-table-create").addEventListener("click", () => UiQueries.createTableFromResult());
+        document.getElementById("result-table-name").addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            UiQueries.createTableFromResult();
+          }
+        });
+        document.getElementById("dlg-result-table").addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            UiQueries.closeCreateTable();
+          }
+        });
         document.getElementById("btn-delete-query").addEventListener("click", () => UiQueries.remove());
         document.getElementById("query-name").addEventListener("change", () => UiQueries.renameFromInput());
         document.getElementById("query-description").addEventListener("change", () => UiQueries.saveDescription());
@@ -12502,6 +12789,7 @@ ORDER BY edificios DESC, sede;</pre>
             UiQueries.selectResultRow(Number(row.dataset.index));
           }
         });
+        UiQueries.updateCreateTableButton();
       },
 
       activeQueryOrNull() {
@@ -12612,6 +12900,7 @@ ORDER BY edificios DESC, sede;</pre>
         UiQueries.lastResult = null;
         UiQueries.page = 0;
         UiQueries.selectedRow = null;
+        UiQueries.updateCreateTableButton();
       },
 
       renameFromInput() {
@@ -12759,6 +13048,74 @@ ORDER BY edificios DESC, sede;</pre>
         return true;
       },
 
+      /** Opens the window to create a table from the current result. */
+      openCreateTable() {
+        const result = UiQueries.lastResult;
+        if (!result) {
+          setStatus(I18n.t("resultTable.noResult"));
+          return;
+        }
+        const query = UiQueries.activeQueryOrNull();
+        const base = Utils.slugify(query ? query.name : "") || I18n.t("resultTable.defaultName");
+        const input = document.getElementById("result-table-name");
+        input.value = Model.uniqueTableName(Store.project, base);
+        document.getElementById("result-table-info").textContent = I18n.t("resultTable.info", {
+          columns: result.columns.map(String).join(", "),
+          rows: result.rows.length,
+        });
+        const dialog = document.getElementById("dlg-result-table");
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        input.focus();
+        input.select();
+        setStatus(I18n.t("resultTable.status"));
+      },
+
+      /** Closes the create-table window when it is open. */
+      closeCreateTable() {
+        const dialog = document.getElementById("dlg-result-table");
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Creates a table with the columns and rows of the current result. */
+      async createTableFromResult() {
+        const result = UiQueries.lastResult;
+        if (!result) {
+          setStatus(I18n.t("resultTable.noResult"));
+          return false;
+        }
+        const input = document.getElementById("result-table-name");
+        const name = Utils.slugify(input.value);
+        if (!name) {
+          window.alert(I18n.t("resultTable.nameRequired"));
+          input.focus();
+          return false;
+        }
+        if (Model.findTable(Store.project, name)) {
+          window.alert(I18n.t("resultTable.tableExists", { name: name }));
+          input.focus();
+          return false;
+        }
+        await Busy.run(I18n.t("busy.creatingTable"), () => {
+          const table = Model.tableFromResult(name, result.columns, result.rows);
+          Store.project.tables.push(table);
+          UiProject.markDirty();
+          UiQueries.closeCreateTable();
+          Ui.selectTable(name);
+          setStatus(I18n.t("resultTable.done", { name: name, rows: table.rows.length, fields: table.fields.length }));
+        });
+        return true;
+      },
+
+      /** Enables “Create table…” only when the result on screen has rows. */
+      updateCreateTableButton() {
+        const result = UiQueries.lastResult;
+        document.getElementById("btn-create-table-result").disabled = !(result && result.rows.length > 0);
+      },
+
       /** Enables “Remove test” only when the open query checks something. */
       updateTestControls() {
         const query = UiQueries.activeQueryOrNull();
@@ -12842,6 +13199,7 @@ ORDER BY edificios DESC, sede;</pre>
         UiQueries.lastResult = result;
         UiQueries.page = 0;
         UiQueries.selectedRow = null;
+        UiQueries.updateCreateTableButton();
         UiQueries.renderResult();
 
         const plan = document.getElementById("query-plan");
@@ -14193,6 +14551,132 @@ ORDER BY edificios DESC, sede;</pre>
           detail.className = "detail-err";
           detail.textContent = `• ${message}`;
           log.appendChild(detail);
+        });
+      },
+    };
+
+    /* =====================================================================
+       8c · MERGE TABLES
+       Creates a new table joining the fields and rows of several tables.
+       ===================================================================== */
+
+    const UiMergeTables = {
+      /** Wires the button of the table view and the window controls. */
+      bind() {
+        document.getElementById("btn-merge-tables").addEventListener("click", () => UiMergeTables.open());
+        document.getElementById("btn-close-merge").addEventListener("click", () => UiMergeTables.close());
+        document.getElementById("btn-merge-cancel").addEventListener("click", () => UiMergeTables.close());
+        document.getElementById("btn-merge-apply").addEventListener("click", () => UiMergeTables.apply());
+        document.getElementById("merge-select-all").addEventListener("change", (event) => {
+          UiMergeTables.checkboxes().forEach((box) => {
+            box.checked = event.target.checked;
+          });
+          UiMergeTables.updateCount();
+        });
+        document.getElementById("merge-list").addEventListener("change", () => UiMergeTables.updateCount());
+        document.getElementById("dlg-merge-tables").addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            UiMergeTables.close();
+          }
+        });
+      },
+
+      /** Checkboxes of the tables, in project order. */
+      checkboxes() {
+        return Array.from(document.querySelectorAll("#merge-list input[type=checkbox]"));
+      },
+
+      /** Opens the window with the tables of the project. */
+      open() {
+        const list = document.getElementById("merge-list");
+        list.textContent = "";
+        const tables = Store.project.tables;
+        if (tables.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "muted";
+          empty.textContent = I18n.t("merge.noTables");
+          list.appendChild(empty);
+        } else {
+          tables.forEach((table) => {
+            const label = document.createElement("label");
+            label.className = "merge-item";
+            const box = document.createElement("input");
+            box.type = "checkbox";
+            box.value = table.name;
+            const name = document.createElement("span");
+            name.className = "merge-item-name mono";
+            name.textContent = table.name;
+            const meta = document.createElement("span");
+            meta.className = "merge-item-meta";
+            meta.textContent = I18n.t("merge.tableMeta", { rows: table.rows.length, fields: table.fields.length });
+            label.append(box, name, meta);
+            list.appendChild(label);
+          });
+        }
+        document.getElementById("merge-name").value = "";
+        document.getElementById("merge-select-all").checked = false;
+        UiMergeTables.updateCount();
+        const dialog = document.getElementById("dlg-merge-tables");
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        document.getElementById("merge-name").focus();
+        setStatus(I18n.t("merge.status"));
+      },
+
+      /** Updates the number of selected tables and the state of the button. */
+      updateCount() {
+        const selected = UiMergeTables.checkboxes().filter((box) => box.checked).length;
+        document.getElementById("merge-count").textContent = I18n.t("merge.selectedCount", { count: selected });
+        document.getElementById("btn-merge-apply").disabled = selected < 2;
+      },
+
+      /** Closes the window when it is open. */
+      close() {
+        const dialog = document.getElementById("dlg-merge-tables");
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Tables chosen in the list, in the order of the list. */
+      chosenTables() {
+        return UiMergeTables.checkboxes()
+          .filter((box) => box.checked)
+          .map((box) => Model.findTable(Store.project, box.value))
+          .filter(Boolean);
+      },
+
+      /** Creates the merged table with the chosen tables. */
+      async apply() {
+        const input = document.getElementById("merge-name");
+        const name = Utils.slugify(input.value);
+        if (!name) {
+          window.alert(I18n.t("merge.nameRequired"));
+          input.focus();
+          return;
+        }
+        if (Model.findTable(Store.project, name)) {
+          window.alert(I18n.t("merge.tableExists", { name: name }));
+          input.focus();
+          return;
+        }
+        const chosen = UiMergeTables.chosenTables();
+        if (chosen.length < 2) {
+          window.alert(I18n.t("merge.selectAtLeastTwo"));
+          return;
+        }
+        if (!chosen.some((table) => table.fields.length > 0)) {
+          window.alert(I18n.t("merge.noFields"));
+          return;
+        }
+        await Busy.run(I18n.t("busy.mergingTables"), () => {
+          const table = Model.mergeTables(name, chosen);
+          Store.project.tables.push(table);
+          UiProject.markDirty();
+          UiMergeTables.close();
+          Ui.selectTable(name);
+          setStatus(I18n.t("merge.done", { name: name, tables: chosen.length, rows: table.rows.length, fields: table.fields.length }));
         });
       },
     };
@@ -16269,6 +16753,56 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.uniqueTableName(project, "otros"), "otros", "without collision");
     });
 
+    SelfTests.add("When_MergeTables_Expect_UnionOfFieldsAndConcatenatedRows", () => {
+      const first = {
+        name: "first",
+        description: "",
+        idField: null,
+        nextId: 1,
+        fields: [
+          { name: "id", description: null, type: "number" },
+          { name: "name", description: "Name in the first table", type: "string" },
+        ],
+        rows: [{ id: 1, name: "Ana" }],
+      };
+      const second = {
+        name: "second",
+        description: "",
+        idField: null,
+        nextId: 1,
+        fields: [
+          { name: "name", description: "Name in the second table", type: "number" },
+          { name: "age", description: null, type: "number" },
+        ],
+        rows: [{ name: "Luis", age: 30 }],
+      };
+      const merged = Model.mergeTables("merged", [first, second]);
+      assertEqual(merged.fields.map((field) => field.name), ["id", "name", "age"], "union in order of first appearance");
+      const name = merged.fields.find((field) => field.name === "name");
+      assertEqual(name.description, "Name in the first table", "the definition comes from the first table that has the field");
+      assertEqual(name.type, "string", "including its type");
+      assertEqual(merged.rows, [{ id: 1, name: "Ana", age: null }, { id: null, name: "Luis", age: 30 }], "rows concatenated with null for missing fields");
+      assertEqual(merged.idField, null, "the result has no auto-increment ID field");
+      assertEqual(first.rows.length, 1, "the source tables are not changed");
+    });
+
+    SelfTests.add("When_TableFromResult_Expect_ColumnsRowsAndTypes", () => {
+      const table = Model.tableFromResult(
+        "result",
+        ["a", "b", "a", ""],
+        [[1, "x", 2, true], [3, null, 4, false]],
+      );
+      assertEqual(table.name, "result", "the name is kept");
+      assertEqual(table.fields.map((field) => field.name), ["a", "b", "a_2", "c4"], "repeated and empty names are made unique");
+      assertEqual(table.fields.map((field) => field.type), ["number", "string", "number", "boolean"], "types inferred from the values");
+      assertEqual(
+        table.rows,
+        [{ a: 1, b: "x", a_2: 2, c4: true }, { a: 3, b: null, a_2: 4, c4: false }],
+        "the rows keep the values by position",
+      );
+      assertEqual(table.idField, null, "it has no auto-increment ID field");
+    });
+
     /* --- Cases T3: persistence ------------------------------------------ */
 
     SelfTests.add("When_SerializeThenParse_Expect_EqualProject", () => {
@@ -17534,14 +18068,16 @@ ORDER BY edificios DESC, sede;</pre>
           "Lee como tabla (", "la leen: «", "Subconsultas", "Ayuda SQL",
           "propiedades", "tirador", "140 a 480", "resumen",
           "Carpetas", "+C", "añadir carpeta", "Sin carpeta", "arrastra", "pliega", "despliega",
-          "Carpetas de tablas", "tableFolders", "foldedTableFolders", "Todas las tablas"]],
+          "Carpetas de tablas", "tableFolders", "foldedTableFolders", "Todas las tablas",
+          "Fusionar tablas", "Crear tabla"]],
         ["en", ["Is a foreign key", "Create auto-numbered ID field", "auto-numbered",
           "self-references", "New", "division by zero", "legend",
           "See relations", "Queries as tables", "view ×N",
           "Reads as a table (", "read by: «", "Subqueries", "SQL help",
           "properties", "handle", "140 to 480", "summary",
           "Folders", "+F", "add folder", "No folder", "drag", "fold", "unfold",
-          "Table folders", "tableFolders", "foldedTableFolders", "All tables"]],
+          "Table folders", "tableFolders", "foldedTableFolders", "All tables",
+          "Merge tables", "Create table"]],
       ].forEach(([language, words]) => {
         SelfTests.inLanguage(language, () => {
           words.forEach((word) => {
@@ -21891,6 +22427,100 @@ ORDER BY edificios DESC, sede;</pre>
       UiProject.updateDirtyIndicator();
     });
 
+    SelfTests.add("When_HeaderProjectButtons_Expect_ProjectLabels", () => {
+      SelfTests.inLanguage("es", () => {
+        assertEqual(document.getElementById("btn-new").textContent, "Nuevo proyecto", "new button in Spanish");
+        assertEqual(document.getElementById("btn-open").textContent, "Abrir proyecto", "open button in Spanish");
+      });
+      SelfTests.inLanguage("en", () => {
+        assertEqual(document.getElementById("btn-new").textContent, "New project", "new button in English");
+        assertEqual(document.getElementById("btn-open").textContent, "Open project", "open button in English");
+      });
+    });
+
+    SelfTests.add("When_OpenMergeTables_Expect_TableListAndSelectAll", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+      };
+      Store.replaceProject({
+        name: "merge-dialog",
+        tables: [
+          {
+            name: "first",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "a", description: null, type: "number" }],
+            rows: [{ a: 1 }],
+          },
+          {
+            name: "second",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "b", description: null, type: "string" }],
+            rows: [{ b: "x" }],
+          },
+        ],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      document.getElementById("btn-merge-tables").click();
+      const dialog = document.getElementById("dlg-merge-tables");
+      assertEqual(dialog.open, true, "the header button opens the window");
+      const boxes = UiMergeTables.checkboxes();
+      assertEqual(boxes.map((box) => box.value), ["first", "second"], "the list follows the project order");
+      document.getElementById("merge-select-all").click();
+      assert(boxes.every((box) => box.checked), "select all marks every table");
+      assertEqual(document.getElementById("btn-merge-apply").disabled, false, "the merge button is enabled");
+      UiMergeTables.close();
+      assertEqual(dialog.open, false, "the window closes");
+
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_OpenCreateTableFromResult_Expect_SummaryAndSuggestedName", () => {
+      const before = UiQueries.lastResult;
+      const button = document.getElementById("btn-create-table-result");
+      const dialog = document.getElementById("dlg-result-table");
+      UiQueries.lastResult = { columns: ["a", "b"], rows: [[1, "x"], [2, null]] };
+      UiQueries.updateCreateTableButton();
+      assertEqual(button.disabled, false, "the button is enabled when the result has rows");
+      button.click();
+      assertEqual(dialog.open, true, "the query button opens the window");
+      const info = document.getElementById("result-table-info").textContent;
+      assert(info.includes("a, b"), "the summary names the columns: " + info);
+      assert(info.includes("2"), "and the number of rows: " + info);
+      assert(document.getElementById("result-table-name").value !== "", "a free name is suggested");
+      UiQueries.closeCreateTable();
+      assertEqual(dialog.open, false, "the window closes");
+
+      UiQueries.lastResult = { columns: ["a"], rows: [] };
+      UiQueries.updateCreateTableButton();
+      assertEqual(button.disabled, true, "the button is disabled when the result has no rows");
+      button.click();
+      assertEqual(dialog.open, false, "an empty result does not open the window");
+
+      UiQueries.lastResult = null;
+      UiQueries.updateCreateTableButton();
+      assertEqual(button.disabled, true, "the button is disabled without a result");
+      button.click();
+      assertEqual(dialog.open, false, "without a result the window does not open");
+
+      UiQueries.lastResult = before;
+      UiQueries.updateCreateTableButton();
+    });
+
     /* =====================================================================
        12 · INITIALISATION
        ===================================================================== */
@@ -21908,6 +22538,7 @@ ORDER BY edificios DESC, sede;</pre>
         UiTableCsv.bind();
         UiImport.bind();
         UiUpdateTable.bind();
+        UiMergeTables.bind();
         UiGlobal.bind();
         Settings.bind();
         UiHelp.bind();
