@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>extractor — análisis de datos en el navegador</title>
+  <title>datilandia — análisis de datos en el navegador</title>
   <style>
     /* =====================================================================
-       extractor · stylesheet
+       datilandia · stylesheet
        Theme: white, dense, native browser controls.
        ===================================================================== */
 
@@ -1474,7 +1474,7 @@
        STRUCTURE: project header, sidebar, views and status.
        ===================================================================== -->
   <header id="header">
-    <button data-i18n-title="markup.button.goHomePageSummaryEverything" id="mark" type="button" title="Ir a la página de inicio (resumen de todo lo que puedes hacer)">EXTRACTOR</button>
+    <button data-i18n-title="markup.button.goHomePageSummaryEverything" id="mark" type="button" title="Ir a la página de inicio (resumen de todo lo que puedes hacer)">DATILANDIA</button>
     <span class="muted" data-i18n="project.label">Proyecto:</span>
     <span data-i18n-aria-label="markup.span.projectName" data-i18n-title="markup.span.projectNameChangedSettings" id="project-name" title="Nombre del proyecto (se cambia en «Ajustes»)" aria-label="Nombre del proyecto">Sin título</span>
     <button data-i18n-title="markup.button.newProjectDiscardsCurrentOne" data-i18n="markup.button.new" id="btn-new" type="button" title="Nuevo proyecto (descarta el actual)">Nuevo proyecto</button>
@@ -1584,7 +1584,7 @@
         </section>
 
         <h2 data-i18n="markup.h2.welcome">Bienvenido</h2>
-        <p data-i18n-html="markup.p.extractorIsSingleFileData"><b>EXTRACTOR</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): extractor las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, consultas usadas como tabla y relaciones. Pulsa <b>EXTRACTOR</b> en la barra superior para volver a esta página.</p>
+        <p data-i18n-html="markup.p.datilandiaIsSingleFileData"><b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, consultas usadas como tabla y relaciones. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página.</p>
 
         <div class="help-panel">
           <nav data-i18n-aria-label="markup.nav.helpSections" class="help-menu" aria-label="Apartados de la ayuda">
@@ -1708,17 +1708,17 @@
             <section class="help-bloque" data-help="test">
               <h3 data-i18n="markup.h3.testModeQueriesAssertedResult">Modo test: consultas con resultado asertado</h3>
               <ul>
-                <li data-i18n-html="markup.li.projectIsTestModeWhen">Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, extractor ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>"assert"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>"testing"</code> de los ficheros antiguos ya no hace falta.</li>
+                <li data-i18n-html="markup.li.projectIsTestModeWhen">Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, datilandia ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>"assert"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>"testing"</code> de los ficheros antiguos ya no hace falta.</li>
                 <li data-i18n-html="markup.li.assertIsExpectedResultThat">El <code>"assert"</code> es el resultado esperado de esa consulta: <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder: true</code> (mismo conjunto de filas, sin importar el orden). Basta con uno de los tres primeros para que la consulta se compruebe.</li>
                 <li data-i18n-html="markup.li.comparisonIsStrictNullOnly">La comparación es <b>estricta</b>: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Renombrar una tabla o un campo ajusta también los nombres asertados, pero <b>nunca los valores</b>.</li>
                 <li data-i18n-html="markup.li.reportOpensItsOwnWhen">El <b>informe</b> se abre solo al cargar: resumen (consultas, correctas, fallidas y sin assert), una fila por consulta —sus filas, si lleva assert y el resultado— y el <b>detalle de las diferencias</b>, con lo esperado y lo obtenido en cada fila o columna que no cuadra. Si una consulta no compila, se marca como fallida con el error.</li>
                 <li data-i18n-html="markup.li.editorSTurnIntoTest">El botón <b>Convertir en test</b> del editor de consultas ejecuta esa consulta, guarda su resultado como su <code>assert</code> (columnas y filas, valor a valor) y pone el <b>proyecto en modo test</b>. Si la consulta ya comprobaba un resultado, te pregunta antes de sustituirlo; con <b>Quitar test</b> (activo solo si la consulta comprueba algo) vuelve a dejarla sin comprobar, sin sacar al proyecto del modo test.</li>
                 <li data-i18n-html="markup.li.projectSTestModeIs">El <b>modo test</b> del proyecto se ve <b>arriba del todo a la derecha</b> de la barra superior (<b>modo test</b> o <b>sin test</b>), y en la barra lateral cada consulta lleva su <b>marca</b>: <b>test</b> si tiene resultado asertado y <b>sin test</b> si no. El resumen de consultas lo detalla en su columna <b>Assert</b>.</li>
                 <li data-i18n-html="markup.li.pressRowReportOpenThat">Pulsa una fila del informe para abrir esa consulta en el editor; <b>Re-ejecutar</b> lanza otra vez la batería y <b>Copiar informe</b> lo deja como texto (si el navegador no deja copiar, queda seleccionado para Ctrl+C).</li>
-                <li data-i18n-html="markup.li.testsButtonTopBarLaunches">El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.extractor.runProjectTests()</code>.</li>
+                <li data-i18n-html="markup.li.testsButtonTopBarLaunches">El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.datilandia.runProjectTests()</code>.</li>
                 <li data-i18n-html="markup.li.selfTestsButtonTopBar">El botón <b>Auto-tests</b> de la barra superior comprueba <b>el propio programa</b> (motor SQL, utilidades, ficheros e interfaz), no tus datos: ejecuta la batería interna y abre el <b>Informe de auto-tests</b>.</li>
                 <li data-i18n-html="markup.li.thatReportCarriesCountOne">Ese informe lleva el <b>recuento</b>, una fila por caso —número, caso, resultado y detalle— y el bloque <b>Casos que fallan</b> con el motivo de cada uno. <b>Re-ejecutar</b> la lanza otra vez, <b>Copiar informe</b> lo deja como texto y <b>Esc</b> cierra la ventana.</li>
-                <li data-i18n-html="markup.li.batteryDoesNotTouchYour">La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.extractor.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.</li>
+                <li data-i18n-html="markup.li.batteryDoesNotTouchYour">La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.datilandia.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.</li>
                 <li data-i18n-html="markup.li.completeFormatAssertExampleAre">El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.</li>
               </ul>
             </section>
@@ -2100,10 +2100,10 @@ ORDER BY fecha DESC;</pre>
                     <h3 data-i18n="markup.h3.testQueriesTestMode">Consultas de prueba (modo test)</h3>
                     <p data-i18n-html="markup.p.projectIsTestOneWhen">Un proyecto es de <b>test</b> cuando alguna de sus consultas comprueba un resultado: al abrirlo se ejecutan todas las consultas y se comparan con su <code>"assert"</code>, y el informe se abre solo. La propiedad <code>"testing"</code> de los ficheros antiguos ya no hace falta (se ignora): el modo test se deduce de las consultas. Cada <code>assert</code> admite <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder</code> (comparar sin importar el orden).</p>
                     <p data-i18n-html="markup.p.comparisonIsStrictNullOnly">La comparación es estricta: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Las consultas sin <code>assert</code> se ejecutan y se marcan como <b>sin comprobar</b>; las que no compilan, como <b>fallidas</b> con su error.</p>
-                    <p data-i18n-html="markup.p.testsButtonTopBarLaunches">El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.extractor.runProjectTests()</code> devuelve el informe completo.</p>
+                    <p data-i18n-html="markup.p.testsButtonTopBarLaunches">El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.datilandia.runProjectTests()</code> devuelve el informe completo.</p>
                     <p data-i18n-html="markup.p.editorSTurnIntoTest">El botón <b>Convertir en test</b> del editor guarda el resultado actual de esa consulta como su <code>assert</code> (las columnas y todas las filas, valor a valor; <code>rowCount: 0</code> si no devuelve ninguna) y pone el proyecto en modo test. En el fichero se escribe en forma compacta: <code>columns</code>, <code>rows</code> y, solo cuando aportan algo, <code>rowCount</code> e <code>ignoreOrder</code>. El modo test del proyecto y la marca de cada consulta se ven en la barra superior y en la barra lateral.</p>
                     <p data-i18n-html="markup.p.editorSRemoveTestButton">El botón <b>Quitar test</b> del editor hace lo contrario con esa consulta: le quita el <code>assert</code> (te pregunta antes) y deja de comprobarse, aunque el <b>proyecto siga en modo test</b>. La consulta se sigue ejecutando a mano con <b>▶ Ejecutar</b>.</p>
-                    <p data-i18n-html="markup.p.selfTestsButtonLaunchesProgram">El botón <b>Auto-tests</b> lanza la batería interna del programa y abre su informe; sin ventana, <code>window.extractor.selfTest()</code> devuelve el recuento y el detalle de cada caso.</p>
+                    <p data-i18n-html="markup.p.selfTestsButtonLaunchesProgram">El botón <b>Auto-tests</b> lanza la batería interna del programa y abre su informe; sin ventana, <code>window.datilandia.selfTest()</code> devuelve el recuento y el detalle de cada caso.</p>
                   </section>
                 </div>
                 <div class="help-sql-code">
@@ -2600,8 +2600,8 @@ ORDER BY edificios DESC, sede;</pre>
   <script id="i18n-messages">
     /* Interface messages: one flat dictionary per language, keyed by symbolic keys.
        A message is a string with {placeholders}, or { one, other } when it depends on a count. */
-    window.extractor = window.extractor || {};
-    window.extractor.messages = {
+    window.datilandia = window.datilandia || {};
+    window.datilandia.messages = {
       en: {
         "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename or delete it from its header; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by typing the name (it is created when it does not exist). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>.",
         "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header renames, deletes and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
@@ -2942,7 +2942,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.assertIsExpectedResultThat": "The <code>\"assert\"</code> is the expected result of that query: <code>columns</code> (names and order of the columns), <code>rows</code> (the expected rows, value by value), <code>rowCount</code> (only how many rows) and <code>ignoreOrder: true</code> (same set of rows, whatever the order). One of the first three is enough for the query to be checked.",
         "markup.li.atEndCellGreyNumber": "At the end of the cell, in grey, the <b>number of queries</b> that cite <b>both tables</b> (with their names in the mouse hint). It is counted <b>once per pair</b>, not in both cells.",
         "markup.li.autoNumberedIDFieldIs": "The auto-numbered <b>ID field</b> is never changed: it can be searched in, but if you choose only that column it warns you that it is not replaced.",
-        "markup.li.batteryDoesNotTouchYour": "The battery <b>does not touch your project</b>: every case runs over test data and leaves everything as it was. It runs with <b>no project loaded</b>: with a project open it warns and closes it (unsaved changes are lost). Without a window: <code>window.extractor.selfTest()</code> returns the report with the total, the passes, the failures and the detail of every case.",
+        "markup.li.batteryDoesNotTouchYour": "The battery <b>does not touch your project</b>: every case runs over test data and leaves everything as it was. It runs with <b>no project loaded</b>: with a project open it warns and closes it (unsaved changes are lost). Without a window: <code>window.datilandia.selfTest()</code> returns the report with the total, the passes, the failures and the detail of every case.",
         "markup.li.beforeResultYouWillSee": "Before the result you will see the <b>plan</b> with the time of each step; if something fails, the error tells you <b>line, column and what to check</b>.",
         "markup.li.comparisonIsStrictNullOnly": "The comparison is <b>strict</b>: <code>null</code> only matches <code>null</code>, a number is not a text and <code>1</code> is not <code>true</code>. Renaming a table or a field also adjusts the asserted names, but <b>never the values</b>.",
         "markup.li.completeFormatAssertExampleAre": "The complete format of the assert and an example are in the <b>SQL help</b> sections of this page.",
@@ -2987,7 +2987,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.pressTablesQueriesTitleSidebar": "Press the <b>Tables</b> or <b>Queries</b> title in the sidebar to see the full list with its <b>properties</b> on the right: description, rows, ID field and fields with their type; in the queries, their assert and the test result. Every row of the summary opens that item.",
         "markup.li.downloadStructureJsonSummary": "In the <b>Project tables</b> summary, <b>View structure JSON…</b> opens a window with the structure of every table, the same one shown by <b>Structure JSON…</b> for each table (without the rows); inside that window, <b>Download structure JSON</b> saves the JSON to a file.",
         "markup.li.previewShowsUp1000Rows": "The preview shows up to 1000 rows and warns when there are more, but the <b>downloaded file is complete</b>. The query has to be <b>run</b> first: with no result, the window reminds you.",
-        "markup.li.projectIsTestModeWhen": "A project is in <b>test mode</b> when <b>some of its queries checks a result</b> (it has an <code>assert</code>): when it is <b>opened</b>, extractor runs <b>every query</b> and compares each result with that query's <code>\"assert\"</code>. If no query checks anything, the project is not a test one and nothing runs on its own. There is nothing to declare: the <code>\"testing\"</code> property of old files is no longer needed.",
+        "markup.li.projectIsTestModeWhen": "A project is in <b>test mode</b> when <b>some of its queries checks a result</b> (it has an <code>assert</code>): when it is <b>opened</b>, datilandia runs <b>every query</b> and compares each result with that query's <code>\"assert\"</code>. If no query checks anything, the project is not a test one and nothing runs on its own. There is nothing to declare: the <code>\"testing\"</code> property of old files is no longer needed.",
         "markup.li.projectNameIsChangedSettings": "The <b>project name</b> is changed in <b>Settings</b>; in the top bar it is only shown.",
         "markup.li.projectSTestModeIs": "The project's <b>test mode</b> is shown <b>at the very top right</b> of the top bar (<b>test mode</b> or <b>no tests</b>), and in the sidebar every query carries its <b>mark</b>: <b>test</b> if it has an asserted result and <b>no tests</b> if not. The query summary goes into detail in its <b>Assert</b> column.",
         "markup.li.queryCanBeReadFrom": "A query can <b>be read from another one as if it were a table</b>: write its name in the <code>FROM</code> and the engine runs it straight away (section <b>SQL help</b>, «Queries as tables»). Also, when you <b>rename it</b>, the queries that use it are rewritten and, if you <b>delete it</b>, it warns you which ones are left hanging.",
@@ -3008,7 +3008,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.sidebarLinkRelationsOpensMatrix": "The sidebar link <b>Relations</b> opens a <b>matrix</b> with the project's tables in <b>rows and columns</b>. In each crossing cell you see what joins the table of the row with the one of the column.",
         "markup.li.sidebarQueryThatSomeOther": "In the sidebar, the query that <b>some other one reads as a table</b> carries the <b>«view»</b> mark in blue, or <b>«view ×N»</b> if N queries read it. Hover over its hint and it tells you both directions: <b>«Reads as a table (n): …»</b> (whom it reads) and <b>«Read as a table by (n): …»</b> (who reads it). The mark is only information: it does not change what the query checks.",
         "markup.li.tableViewForeignKeysAre": "In the table view, <b>foreign keys</b> are read by hovering over their cell: the hint says which table and field they point to and shows the <b>related record</b> of the other table (or warns that it does not exist), and the link <b>↗</b> opens the <b>query</b> with that record. And if the table is the <b>target</b> of some foreign key, it carries <b>one column for each of them</b> (<code>← table.field</code>) with the <b>number</b> of rows of the other table that bring each row: the number itself is a link that builds and runs the <b>query</b> that lists them.",
-        "markup.li.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>only appears if the project has some test</b> (some query with an <code>assert</code>). Without opening windows: <code>window.extractor.runProjectTests()</code>.",
+        "markup.li.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>only appears if the project has some test</b> (some query with an <code>assert</code>). Without opening windows: <code>window.datilandia.runProjectTests()</code>.",
         "markup.li.thatReportCarriesCountOne": "That report carries the <b>count</b>, one row per case —number, case, result and detail— and the <b>Failing cases</b> block with the reason of each one. <b>Run again</b> launches it once more, <b>Copy report</b> leaves it as text and <b>Esc</b> closes the window.",
         "markup.li.theyAreReadOnlyThey": "They are <b>read-only</b>: they never change the data. On screen there is a cap on rows; the exported CSV is complete.",
         "markup.li.typeIsInferredImportIt": "The type is <b>inferred on import</b>, it can be <b>changed by hand</b> and it is saved in the project. <code>null</code> is not a type: it is missing information. <code>number</code> accepts decimals.",
@@ -3040,7 +3040,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.everyFileCreatesTableFile": "Every file creates a table with the file name (without the extension, in lower case and with _). The JSON must be an array of objects with the same properties; the CSV must have the same fields in every row.",
         "markup.p.everyForeignKeyAppearsCell": "Every foreign key appears in the cell of the table that defines it (row, child) pointing to the table and the target field (column, parent): field → target field.",
         "markup.p.everyQuerySAssertFollows": "Every query's <code>assert</code> follows the renamed field, except when the name comes from an alias. The editor of the open query updates straight away.",
-        "markup.p.extractorIsSingleFileData": "<b>EXTRACTOR</b> is a single-file data analysis notebook: you <b>import</b> files or paste text, you <b>edit them as tables</b> and you <b>query them with SQL</b>. Tables, queries and settings are saved together in <b>a JSON project file</b> that runs entirely in the browser. A project can also bring its own <b>tests</b> (test mode): extractor runs them when it opens it and shows you the report. The <b>dashboard</b> above summarises the open project: tables, rows, fields, foreign keys, queries, queries used as tables and relations. Press <b>EXTRACTOR</b> in the top bar to come back to this page.",
+        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> is a single-file data analysis notebook: you <b>import</b> files or paste text, you <b>edit them as tables</b> and you <b>query them with SQL</b>. Tables, queries and settings are saved together in <b>a JSON project file</b> that runs entirely in the browser. A project can also bring its own <b>tests</b> (test mode): datilandia runs them when it opens it and shows you the report. The <b>dashboard</b> above summarises the open project: tables, rows, fields, foreign keys, queries, queries used as tables and relations. Press <b>DATILANDIA</b> in the top bar to come back to this page.",
         "markup.p.fromItIsValidAny": "In the <code>FROM</code> it is valid <b>in any position</b>: alone, with an alias, joined to a table or to another query (<code>INNER JOIN</code> and <code>LEFT JOIN</code>, including the anti-join <code>IS NULL</code>), separated by commas, and also with the projection <code>alias.*</code>. The <b>same view twice</b> in the same query are two independent sources (and it is computed only once per run). A view that returns no rows is an <b>empty table</b>, not an error: <code>COUNT(*)</code> gives 0.",
         "markup.p.groupBYJoinsRowsThat": "<code>GROUP BY</code> joins the rows that share the given values (one or several columns or expressions). The columns of the <code>SELECT</code> that are not inside an aggregate have to appear in the <code>GROUP BY</code>.",
         "markup.p.havingFiltersGroupsAlreadyComputed": "<code>HAVING</code> filters <b>groups already computed</b> (that is why it can use aggregates, unlike <code>WHERE</code>, which filters rows beforehand).",
@@ -3064,12 +3064,12 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.queriesUsedAsTablesCanBeRead": "Queries can also be read <b>inside a subquery</b> and as a <b>derived table</b>: <code>WHERE id IN (SELECT id FROM [sales summary])</code> and <code>FROM (SELECT …) AS t</code>. And a query whose SQL carries a subquery still works as a view: it runs whole, subquery included (section <b>Subqueries</b>).",
         "markup.p.queryIsMaterialisedBeforeBeing": "The query is <b>materialised</b> before being read: it runs entirely —its <code>WHERE</code>, its <code>JOIN</code>, its <code>GROUP BY</code>/<code>HAVING</code>, its <code>DISTINCT</code>, its <code>ORDER BY</code> and its <code>LIMIT</code>/<code>OFFSET</code>— and what the outer query sees is <b>its finished result</b>. That is why the <code>LIMIT</code> of a view arrives already trimmed, and a view that groups can be aggregated again (double aggregation).",
         "markup.p.renamingTableFieldRewritesQueries": "Renaming a <b>table</b> or a <b>field</b> rewrites the queries of the project that use it: the <code>FROM</code>/<code>JOIN</code>, the qualified columns (<code>table.field</code>) and the bare column. <b>Output aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected; an <code>ORDER BY</code> pointing at an alias stays as it is.",
-        "markup.p.selfTestsButtonLaunchesProgram": "The <b>Self-tests</b> button launches the program's internal battery and opens its report; without a window, <code>window.extractor.selfTest()</code> returns the count and the detail of every case.",
+        "markup.p.selfTestsButtonLaunchesProgram": "The <b>Self-tests</b> button launches the program's internal battery and opens its report; without a window, <code>window.datilandia.selfTest()</code> returns the count and the detail of every case.",
         "markup.p.subqueryIsSELECTInsideAnother": "A <b>subquery</b> is a <code>SELECT</code> inside another one. It is used with <code>IN</code> (and <code>NOT IN</code>), with a comparison and <code>ANY</code>/<code>SOME</code> or <code>ALL</code>, and with <code>EXISTS</code> (and <code>NOT EXISTS</code>). It can read a <b>query used as a table</b> and it can also go in the <code>FROM</code> with an alias (derived table). If it names outer columns inside it is <b>correlated</b> and runs row by row. Used as a value it must return a single column and a single row.",
         "markup.p.severalKeysSeparatedByCommas": "Several keys separated by commas, from the most important to the least. Each one takes <code>ASC</code> (by default) or <code>DESC</code>, and <code>NULLS FIRST</code> / <code>NULLS LAST</code> to decide where the missing values go.",
         "markup.p.severalTablesSeparatedByCommas": "Several tables separated by commas are equivalent to an <b>implicit join</b>: if you also compare fields of both in the <code>WHERE</code>, the engine turns it into a real join.",
         "markup.p.targetHas01Several": "A <b>target</b> has 0, 1 or several related origins.",
-        "markup.p.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>is only shown if the project has some test</b>. To launch it without opening windows, with any project: <code>window.extractor.runProjectTests()</code> returns the complete report.",
+        "markup.p.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>is only shown if the project has some test</b>. To launch it without opening windows, with any project: <code>window.datilandia.runProjectTests()</code> returns the complete report.",
         "markup.p.theyCanBeNestedInside": "They can be nested inside each other and used both in the <code>SELECT</code> and in the <code>WHERE</code>, <code>GROUP BY</code> or <code>ORDER BY</code>. If the argument is <code>null</code>, the result is usually <code>null</code>.",
         "markup.p.typesAreKeptNumberField": "The <b>types are kept</b>: a <code>number</code> field is still a number when read from outside (it can be added, divided or compared with <code>= 31</code>), a <code>boolean</code> responds to <code>= true</code> and a <code>null</code> is still <code>null</code> (that is why <code>COALESCE</code>, <code>IS NULL</code> and <code>ORDER BY … NULLS FIRST</code> work). The columns are named as the <b>output aliases</b> of the view.",
         "markup.p.updateTableWarning": "Updating will <b>replace all the data</b> of the table. The table, its fields, its foreign keys and the queries that use it are kept. The new data must have the <b>same number of fields</b>, the <b>same names</b> (when the first row is a header) and the <b>same types</b>.",
@@ -3275,7 +3275,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.invalidJson": "The file is not valid JSON: {message}",
         "persistence.missingFields": "{label}: missing fields: {fields}.",
         "persistence.mustBeObject": "{label}: must be an object.",
-        "persistence.notProject": "Not an extractor project: expected \"format\": \"{format}\".",
+        "persistence.notProject": "Not an datilandia project: expected \"format\": \"{format}\".",
         "persistence.queriesNotList": "\"queries\" must be a list of queries.",
         "persistence.queryDescriptionInvalid": "{label} (\"{queryName}\"): \"description\" must be text.",
         "persistence.queryNameMissing": "{label}: the query name (\"name\") is missing.",
@@ -3298,7 +3298,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.valueTypeInvalid": "{rowLabel}, field \"{fieldName}\": expected text, number, boolean or null (found {kind}).",
         "project.confirmDiscard": "There are unsaved changes that will be lost when you {action}. Continue?",
         "project.confirmNew": "Discard the current project and start a new one?",
-        "project.fileType": "Extractor project (JSON)",
+        "project.fileType": "Datilandia project (JSON)",
         "project.loadFailed": "“{file}” could not be loaded: {count} problem(s).",
         "project.loadFailedDetail": "“{file}” could not be loaded:\n\n• {detail}{rest}",
         "project.loaded": "Project “{name}” loaded from “{file}”: {tables} tables, {queries} queries.",
@@ -3314,7 +3314,7 @@ ORDER BY edificios DESC, sede;</pre>
         "project.testModeTip": "Project in test mode: some query checks an asserted result (assert) and it is checked when opening the file",
         "project.unsavedChanges": "Unsaved changes",
         "project.unsavedChangesTip": "Save the project with “Save project” or Ctrl+S",
-        "project.windowTitle": "{dot}extractor — data and queries",
+        "project.windowTitle": "{dot}datilandia — data and queries",
         "projectTests.columnsMismatch": "Columns: expected {expected} and got {actual}.",
         "projectTests.extraRows": "{count} row(s) are not asserted: {rows}.",
         "projectTests.failedCount": "{count} failed",
@@ -4004,7 +4004,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.assertIsExpectedResultThat": "El <code>\"assert\"</code> es el resultado esperado de esa consulta: <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder: true</code> (mismo conjunto de filas, sin importar el orden). Basta con uno de los tres primeros para que la consulta se compruebe.",
         "markup.li.atEndCellGreyNumber": "Al final de la casilla, en gris, el <b>número de consultas</b> que citan <b>las dos tablas</b> (con sus nombres en la pista del ratón). Se cuenta <b>una vez por pareja</b>, no en las dos casillas.",
         "markup.li.autoNumberedIDFieldIs": "El <b>campo ID</b> autonumérico nunca se modifica: se puede buscar en él, pero si eliges solo esa columna te avisa de que no se reemplaza.",
-        "markup.li.batteryDoesNotTouchYour": "La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.extractor.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.",
+        "markup.li.batteryDoesNotTouchYour": "La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.datilandia.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.",
         "markup.li.beforeResultYouWillSee": "Antes del resultado verás el <b>plan</b> con el tiempo de cada paso; si algo falla, el error te dice <b>línea, columna y qué revisar</b>.",
         "markup.li.comparisonIsStrictNullOnly": "La comparación es <b>estricta</b>: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Renombrar una tabla o un campo ajusta también los nombres asertados, pero <b>nunca los valores</b>.",
         "markup.li.completeFormatAssertExampleAre": "El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.",
@@ -4049,7 +4049,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.pressTablesQueriesTitleSidebar": "Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.",
         "markup.li.downloadStructureJsonSummary": "En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.",
         "markup.li.previewShowsUp1000Rows": "La previsualización muestra hasta 1000 filas y avisa cuando hay más, pero el <b>fichero descargado va completo</b>. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.",
-        "markup.li.projectIsTestModeWhen": "Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, extractor ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>\"assert\"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta.",
+        "markup.li.projectIsTestModeWhen": "Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, datilandia ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>\"assert\"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta.",
         "markup.li.projectNameIsChangedSettings": "El <b>nombre del proyecto</b> se cambia en <b>Ajustes</b>; en la barra superior solo se muestra.",
         "markup.li.projectSTestModeIs": "El <b>modo test</b> del proyecto se ve <b>arriba del todo a la derecha</b> de la barra superior (<b>modo test</b> o <b>sin test</b>), y en la barra lateral cada consulta lleva su <b>marca</b>: <b>test</b> si tiene resultado asertado y <b>sin test</b> si no. El resumen de consultas lo detalla en su columna <b>Assert</b>.",
         "markup.li.queryCanBeReadFrom": "Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.",
@@ -4070,7 +4070,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.sidebarLinkRelationsOpensMatrix": "El enlace <b>Relaciones</b> de la barra lateral abre una <b>matriz</b> con las tablas del proyecto en <b>filas y columnas</b>. En cada casilla de cruce se ve lo que une la tabla de la fila con la de la columna.",
         "markup.li.sidebarQueryThatSomeOther": "En la barra lateral, la consulta que <b>alguna otra lee como tabla</b> lleva la marca <b>«vista»</b> en azul, o <b>«vista ×N»</b> si la leen N consultas. Pasa el ratón por su pista y te dice los dos sentidos: <b>«Lee como tabla (n): …»</b> (a quién lee ella) y <b>«La leen como tabla (n): …»</b> (quién la lee a ella). La marca es solo información: no cambia lo que comprueba la consulta.",
         "markup.li.tableViewForeignKeysAre": "En la vista de la tabla, las <b>claves ajenas</b> se leen al pasar el ratón por su celda: la pista dice a qué tabla y campo apuntan y enseña el <b>registro relacionado</b> de la otra tabla (o avisa de que no existe), y el enlace <b>↗</b> abre la <b>consulta</b> con ese registro. Y si la tabla es el <b>destino</b> de alguna clave ajena, lleva una <b>columna por cada una</b> (<code>← tabla.campo</code>) con el <b>número</b> de filas de la otra tabla que traen cada fila: el propio número es un enlace que genera y ejecuta la <b>consulta</b> que las lista.",
-        "markup.li.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.extractor.runProjectTests()</code>.",
+        "markup.li.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.datilandia.runProjectTests()</code>.",
         "markup.li.thatReportCarriesCountOne": "Ese informe lleva el <b>recuento</b>, una fila por caso —número, caso, resultado y detalle— y el bloque <b>Casos que fallan</b> con el motivo de cada uno. <b>Re-ejecutar</b> la lanza otra vez, <b>Copiar informe</b> lo deja como texto y <b>Esc</b> cierra la ventana.",
         "markup.li.theyAreReadOnlyThey": "Son <b>solo de lectura</b>: nunca cambian los datos. En pantalla hay un tope de filas; el CSV exportado va completo.",
         "markup.li.typeIsInferredImportIt": "El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.",
@@ -4102,7 +4102,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.everyFileCreatesTableFile": "Cada fichero crea una tabla con el nombre del fichero (sin extensión, en minúsculas y con _). El JSON debe ser un array de objetos con las mismas propiedades; el CSV debe tener los mismos campos en todas las filas.",
         "markup.p.everyForeignKeyAppearsCell": "Cada clave ajena aparece en la casilla de la tabla que la define (fila, hijo) apuntando a la tabla y el campo de destino (columna, padre): campo → campo destino.",
         "markup.p.everyQuerySAssertFollows": "El <code>assert</code> de cada consulta sigue al campo renombrado, salvo cuando el nombre lo produce un alias. El editor de la consulta abierta se actualiza al momento.",
-        "markup.p.extractorIsSingleFileData": "<b>EXTRACTOR</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): extractor las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, consultas usadas como tabla y relaciones. Pulsa <b>EXTRACTOR</b> en la barra superior para volver a esta página.",
+        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, consultas usadas como tabla y relaciones. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página.",
         "markup.p.fromItIsValidAny": "En el <code>FROM</code> vale <b>en cualquier posición</b>: sola, con alias, unida a una tabla o a otra consulta (<code>INNER JOIN</code> y <code>LEFT JOIN</code>, incluida la anti-unión <code>IS NULL</code>), separada por comas, y también con la proyección <code>alias.*</code>. La <b>misma vista dos veces</b> en la misma consulta son dos fuentes independientes (y se calcula una sola vez por ejecución). Una vista que no devuelve filas es una <b>tabla vacía</b>, no un error: <code>COUNT(*)</code> da 0.",
         "markup.p.groupBYJoinsRowsThat": "<code>GROUP BY</code> junta las filas que comparten los valores indicados (una o varias columnas o expresiones). Las columnas del <code>SELECT</code> que no estén dentro de un agregado tienen que aparecer en el <code>GROUP BY</code>.",
         "markup.p.havingFiltersGroupsAlreadyComputed": "<code>HAVING</code> filtra <b>grupos ya calculados</b> (por eso puede usar agregados, al contrario que <code>WHERE</code>, que filtra filas antes).",
@@ -4126,12 +4126,12 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.queriesUsedAsTablesCanBeRead": "Las consultas se pueden leer también <b>dentro de una subconsulta</b> y como <b>tabla derivada</b>: <code>WHERE id IN (SELECT id FROM [resumen de ventas])</code> y <code>FROM (SELECT …) AS t</code>. Y una consulta cuyo SQL lleva una subconsulta sigue valiendo como vista: se ejecuta entera, subconsulta incluida (apartado <b>Subconsultas</b>).",
         "markup.p.queryIsMaterialisedBeforeBeing": "La consulta se <b>materializa</b> antes de leerla: se ejecuta entera —su <code>WHERE</code>, sus <code>JOIN</code>, su <code>GROUP BY</code>/<code>HAVING</code>, su <code>DISTINCT</code>, su <code>ORDER BY</code> y su <code>LIMIT</code>/<code>OFFSET</code>— y lo que ve la consulta de fuera es <b>su resultado ya hecho</b>. Por eso el <code>LIMIT</code> de una vista llega ya recortado, y una vista que agrupa se puede volver a agregar (doble agregación).",
         "markup.p.renamingTableFieldRewritesQueries": "Renombrar una <b>tabla</b> o un <b>campo</b> reescribe las consultas del proyecto que lo usan: el <code>FROM</code>/<code>JOIN</code>, las columnas cualificadas (<code>tabla.campo</code>) y la columna suelta. Se respetan los <b>alias de salida</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>; un <code>ORDER BY</code> que apunta a un alias se queda como está.",
-        "markup.p.selfTestsButtonLaunchesProgram": "El botón <b>Auto-tests</b> lanza la batería interna del programa y abre su informe; sin ventana, <code>window.extractor.selfTest()</code> devuelve el recuento y el detalle de cada caso.",
+        "markup.p.selfTestsButtonLaunchesProgram": "El botón <b>Auto-tests</b> lanza la batería interna del programa y abre su informe; sin ventana, <code>window.datilandia.selfTest()</code> devuelve el recuento y el detalle de cada caso.",
         "markup.p.subqueryIsSELECTInsideAnother": "Una <b>subconsulta</b> es un <code>SELECT</code> dentro de otro. Se usa con <code>IN</code> (y <code>NOT IN</code>), con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>EXISTS</code> (y <code>NOT EXISTS</code>). Puede leer una <b>consulta usada como tabla</b> y también ponerse en el <code>FROM</code> con un alias (tabla derivada). Si dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Usada como valor, tiene que devolver una sola columna y una sola fila.",
         "markup.p.severalKeysSeparatedByCommas": "Varias claves separadas por comas, de la más importante a la menos. Cada una admite <code>ASC</code> (por defecto) o <code>DESC</code>, y <code>NULLS FIRST</code> / <code>NULLS LAST</code> para decidir dónde van los valores que faltan.",
         "markup.p.severalTablesSeparatedByCommas": "Varias tablas por comas equivalen a un <b>join implícito</b>: si además comparas campos de las dos en el <code>WHERE</code>, el motor lo convierte en un join de verdad.",
         "markup.p.targetHas01Several": "Un <b>destino</b> tiene 0, 1 o varios orígenes relacionados.",
-        "markup.p.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.extractor.runProjectTests()</code> devuelve el informe completo.",
+        "markup.p.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.datilandia.runProjectTests()</code> devuelve el informe completo.",
         "markup.p.theyCanBeNestedInside": "Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.",
         "markup.p.typesAreKeptNumberField": "Los <b>tipos se conservan</b>: un campo <code>number</code> sigue siendo número al leerlo desde fuera (se puede sumar, dividir o comparar con <code>= 31</code>), un <code>boolean</code> responde a <code>= true</code> y un <code>null</code> sigue siendo <code>null</code> (por eso valen <code>COALESCE</code>, <code>IS NULL</code> y <code>ORDER BY … NULLS FIRST</code>). Las columnas se llaman como los <b>alias de salida</b> de la vista.",
         "markup.p.updateTableWarning": "Al actualizar se <b>sustituirán todos los datos</b> de la tabla. La tabla, sus campos, sus claves ajenas y las consultas que la usan se conservan. Los datos nuevos deben tener el <b>mismo número de campos</b>, los <b>mismos nombres</b> (si la primera fila es cabecera) y los <b>mismos tipos</b>.",
@@ -4337,7 +4337,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.invalidJson": "El fichero no es JSON válido: {message}",
         "persistence.missingFields": "{label}: faltan campos: {fields}.",
         "persistence.mustBeObject": "{label}: debe ser un objeto.",
-        "persistence.notProject": "No es un proyecto de extractor: se esperaba \"format\": \"{format}\".",
+        "persistence.notProject": "No es un proyecto de datilandia: se esperaba \"format\": \"{format}\".",
         "persistence.queriesNotList": "\"queries\" debe ser una lista de consultas.",
         "persistence.queryDescriptionInvalid": "{label} (\"{queryName}\"): \"description\" debe ser texto.",
         "persistence.queryNameMissing": "{label}: falta el nombre de la consulta (\"name\").",
@@ -4360,7 +4360,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.valueTypeInvalid": "{rowLabel}, campo \"{fieldName}\": se esperaba texto, número, booleano o null (se encontró {kind}).",
         "project.confirmDiscard": "Hay cambios sin guardar que se perderán al {action}. ¿Continuar?",
         "project.confirmNew": "¿Descartar el proyecto actual y empezar uno nuevo?",
-        "project.fileType": "Proyecto extractor (JSON)",
+        "project.fileType": "Proyecto datilandia (JSON)",
         "project.loadFailed": "No se pudo cargar «{file}»: {count} problema(s).",
         "project.loadFailedDetail": "No se pudo cargar «{file}»:\n\n• {detail}{rest}",
         "project.loaded": "Proyecto «{name}» cargado desde «{file}»: {tables} tablas, {queries} consultas.",
@@ -4376,7 +4376,7 @@ ORDER BY edificios DESC, sede;</pre>
         "project.testModeTip": "Proyecto en modo test: alguna consulta comprueba un resultado asertado (assert) y se comprueba al abrirlo",
         "project.unsavedChanges": "Cambios pendientes de guardar",
         "project.unsavedChangesTip": "Guarda el proyecto con «Guardar proyecto» o Ctrl+S",
-        "project.windowTitle": "{dot}extractor — datos y consultas",
+        "project.windowTitle": "{dot}datilandia — datos y consultas",
         "projectTests.columnsMismatch": "Columnas: se esperaba {expected} y se obtuvo {actual}.",
         "projectTests.extraRows": "Sobran {count} fila(s) no asertadas: {rows}.",
         "projectTests.failedCount": "{count} fallida(s)",
@@ -4734,7 +4734,7 @@ ORDER BY edificios DESC, sede;</pre>
     "use strict";
 
     /** Public namespace (self-tests and external automation). */
-    window.extractor = window.extractor || {};
+    window.datilandia = window.datilandia || {};
 
     /* =====================================================================
        1 · UTILITIES
@@ -4923,7 +4923,7 @@ ORDER BY edificios DESC, sede;</pre>
 
       current: "en",
 
-      messages: window.extractor.messages,
+      messages: window.datilandia.messages,
 
       /** Keys asked for that are in no dictionary (a bug; see the self-tests). */
       missing: new Set(),
@@ -5027,7 +5027,7 @@ ORDER BY edificios DESC, sede;</pre>
       },
     };
 
-    window.extractor.store = Store.project;
+    window.datilandia.store = Store.project;
 
     const Model = {
       /** Is the project in test mode? Yes, when any of its queries checks an
@@ -6235,7 +6235,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     const Persistence = {
       /** Identifier and version of the project file format. */
-      FORMAT: "extractor",
+      FORMAT: "datilandia",
       VERSION: 1,
 
       /** Serialises the project to a readable JSON text. It fills in the type of
@@ -16048,7 +16048,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     /* =====================================================================
        11 · SELF-TESTS
-       Internal test battery, runnable with window.extractor.selfTest().
+       Internal test battery, runnable with window.datilandia.selfTest().
        Naming convention: When_<action>_Expect_<result>.
        ===================================================================== */
 
@@ -16170,11 +16170,11 @@ ORDER BY edificios DESC, sede;</pre>
       },
     };
 
-    window.extractor.selfTest = () => SelfTests.run();
+    window.datilandia.selfTest = () => SelfTests.run();
 
     /** Runs the test battery of the project and returns the report (without
      *  opening any window): external automation. */
-    window.extractor.runProjectTests = () => ProjectTests.run(Store.project);
+    window.datilandia.runProjectTests = () => ProjectTests.run(Store.project);
 
     /* --- Cases T2: utilities and model ---------------------------------- */
 
@@ -16313,11 +16313,11 @@ ORDER BY edificios DESC, sede;</pre>
       const ida = Persistence.parseProject(Persistence.serializeProject(project));
       assert(ida.ok, "valid project: " + JSON.stringify(ida.errors));
       assertEqual(ida.project.settings, project.settings, "the settings of the project go and come back");
-      const withoutSettings = Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tables":[],"queries":[]}');
+      const withoutSettings = Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","tables":[],"queries":[]}');
       assert(withoutSettings.ok, "valid project: " + JSON.stringify(withoutSettings.errors));
       assertEqual(withoutSettings.project.settings, DEFAULT_SETTINGS, "without settings → default values");
       const malos = Persistence.parseProject(JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "p",
         tables: [],
@@ -17003,7 +17003,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     SelfTests.add("When_LoadTableWithoutFields_Expect_ErrorWithTableName", () => {
       const text = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "x",
         tables: [{ name: "employees", rows: [] }],
@@ -17288,7 +17288,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     SelfTests.add("When_ParseProjectFieldType_Expect_ValidatedAndRespected", () => {
       const malo = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "p",
         tables: [{ name: "t", description: "", idField: null, nextId: 1, fields: [{ name: "a", description: null, type: "fecha" }], rows: [] }],
@@ -17297,7 +17297,7 @@ ORDER BY edificios DESC, sede;</pre>
       const invalido = Persistence.parseProject(malo);
       assert(!invalido.ok && invalido.errors.some((e) => e.includes('"type"')), "type not supported: " + JSON.stringify(invalido.errors));
       const bueno = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "p",
         tables: [{ name: "t", description: "", idField: null, nextId: 1, fields: [{ name: "a", description: null, type: "string" }], rows: [{ a: 1 }] }],
@@ -17307,7 +17307,7 @@ ORDER BY edificios DESC, sede;</pre>
       assert(valido.ok, "valid project: " + JSON.stringify(valido.errors));
       assertEqual(valido.project.tables[0].fields[0].type, "string", "the type of the file is respected (the data does not overwrite it)");
       const viejo = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "p",
         tables: [{ name: "t", description: "", idField: null, nextId: 1, fields: [{ name: "a", description: null }], rows: [] }],
@@ -17317,7 +17317,7 @@ ORDER BY edificios DESC, sede;</pre>
       assert(antiguo.ok, "a project without type is still valid: " + JSON.stringify(antiguo.errors));
       assertEqual(antiguo.project.tables[0].fields[0].type, "string", "without values → string by default");
       const withNull = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "p",
         tables: [{ name: "t", description: "", idField: null, nextId: 1, fields: [{ name: "a", description: null, type: "null" }], rows: [{ a: true }] }],
@@ -18366,7 +18366,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     SelfTests.add("When_ParseProjectWithAssert_Expect_Loaded", () => {
       const text = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "tests",
         testing: true,
@@ -18390,7 +18390,7 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_ParseProjectWithoutAsserts_Expect_NotTestProject", () => {
-      const text = '{"format":"extractor","version":1,"name":"p","tables":[],"queries":[{"name":"q","sql":"SELECT a FROM t"}]}';
+      const text = '{"format":"datilandia","version":1,"name":"p","tables":[],"queries":[{"name":"q","sql":"SELECT a FROM t"}]}';
       const result = Persistence.parseProject(text);
       assert(result.ok, "valid project: " + JSON.stringify(result.errors));
       assertEqual(result.project.queries[0].assert, null, "without assert → null");
@@ -18398,17 +18398,17 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_ParseProjectWithOldTestingFlag_Expect_Ignored", () => {
-      const withFlag = '{"format":"extractor","version":1,"name":"p","testing":true,"tables":[],"queries":[]}';
+      const withFlag = '{"format":"datilandia","version":1,"name":"p","testing":true,"tables":[],"queries":[]}';
       const result = Persistence.parseProject(withFlag);
       assert(result.ok, "the old property does not make the file invalid: " + JSON.stringify(result.errors));
       assertEqual(Model.isTestProject(result.project), false, "and it is not enough to put the project in test mode");
-      const malTipada = '{"format":"extractor","version":1,"name":"p","testing":"sí","tables":[],"queries":[]}';
+      const malTipada = '{"format":"datilandia","version":1,"name":"p","testing":"sí","tables":[],"queries":[]}';
       assert(Persistence.parseProject(malTipada).ok, "even badly typed, it is ignored without making the project invalid");
     });
 
     SelfTests.add("When_ParseAssertWithoutExpectedResult_Expect_Error", () => {
       const text = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "p",
         tables: [],
@@ -18681,7 +18681,7 @@ ORDER BY edificios DESC, sede;</pre>
     SelfTests.add("When_OpenTestingProject_Expect_AutoReport", () => {
       const antes = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
       const text = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "auto",
         testing: true,
@@ -18712,7 +18712,7 @@ ORDER BY edificios DESC, sede;</pre>
      *  Test mode of the project is deduced from its queries. */
     function openMiniProject(withAssert) {
       const cuerpo = {
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "mini",
         tables: [{ name: "t", fields: [{ name: "a", type: "number" }], rows: [{ a: 1 }] }],
@@ -19858,7 +19858,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     SelfTests.add("When_InvalidFieldReferences_Expect_Error", () => {
       const text = JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "x",
         tables: [{ name: "t", fields: [{ name: "a", references: { table: 1, field: "b" } }], rows: [] }],
@@ -20576,7 +20576,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Object.keys(row), ["constructor", "a"], "the row brings the two keys of its own");
       assert(row.constructor === null, "a field called constructor is null, not the function of the prototype");
       const cargado = Persistence.parseProject(JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         tables: [{ name: "t", fields: [{ name: "constructor" }, { name: "a" }], rows: [{ a: 1 }] }],
       }));
@@ -20668,7 +20668,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual([null, "a", 1, true].map((value) => Utils.nonScalarKind(value)), [null, null, null, null], "the valid cell values");
       assertEqual([[1], {}, undefined].map((value) => Utils.nonScalarKind(value)), ["array", "object", "undefined"], "the rest says what it is");
       const cargado = Persistence.parseProject(JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         tables: [{ name: "t", fields: [{ name: "a" }], rows: [{ a: [1] }, { a: { x: 1 } }] }],
       }));
@@ -20728,7 +20728,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     SelfTests.add("When_QueryNamesRepeatInFile_Expect_LoadError", () => {
       const cargado = Persistence.parseProject(JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         tables: [],
         queries: [{ name: "q", sql: "SELECT 1 FROM t" }, { name: "otra", sql: "SELECT 1 FROM t" }, { name: "q", sql: "SELECT 2 FROM t" }],
@@ -20740,7 +20740,7 @@ ORDER BY edificios DESC, sede;</pre>
     SelfTests.add("When_OpenAnotherProject_Expect_PreviousReportAndResultDiscarded", () => {
       const antes = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, view: Ui.state.view };
       const text = (withAssert) => JSON.stringify({
-        format: "extractor",
+        format: "datilandia",
         version: 1,
         name: "otro",
         tables: [{ name: "t", fields: [{ name: "a", type: "number" }], rows: [{ a: 7 }] }],
@@ -20812,9 +20812,9 @@ ORDER BY edificios DESC, sede;</pre>
       const loaded = Persistence.parseProject(Persistence.serializeProject(project));
       assert(loaded.ok, "valid project: " + JSON.stringify(loaded.errors));
       assertEqual(loaded.project.settings.language, "es", "the language travels in the project file");
-      const withoutLanguage = Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tables":[],"queries":[],"settings":{}}');
+      const withoutLanguage = Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","tables":[],"queries":[],"settings":{}}');
       assertEqual(withoutLanguage.project.settings.language, "en", "a project without a language opens in English");
-      const invalid = Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tables":[],"queries":[],"settings":{"language":"fr"}}');
+      const invalid = Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","tables":[],"queries":[],"settings":{"language":"fr"}}');
       assert(!invalid.ok && invalid.errors.some((error) => error.includes("settings.language")), "an unsupported language is rejected: " + JSON.stringify(invalid.errors));
     });
 
@@ -21386,12 +21386,12 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_FoldedFoldersInTheFile_Expect_Validated", () => {
-      const read = (folded) => Persistence.parseProject('{"format":"extractor","version":1,"name":"p",'
+      const read = (folded) => Persistence.parseProject('{"format":"datilandia","version":1,"name":"p",'
         + '"folders":["Sales","2026"],"foldedFolders":' + folded + ', "tables":[],"queries":[],"settings":{}}');
       const valid = read('["Sales","","Gone"]');
       assert(valid.ok, "a file with folded folders is read: " + JSON.stringify(valid.errors));
       assertEqual(Model.foldedOf(valid.project), ["Sales", ""], "the ones that exist are kept, the empty name is the «no folder» group and a folder that is gone is dropped");
-      const withoutKey = Persistence.parseProject('{"format":"extractor","version":1,"name":"p","folders":["Sales"],"tables":[],"queries":[],"settings":{}}');
+      const withoutKey = Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","folders":["Sales"],"tables":[],"queries":[],"settings":{}}');
       assertEqual(Model.foldedOf(withoutKey.project), [], "without the key nothing is folded, and the file is still valid");
       assert(!read('"Sales"').ok, "a folded list that is not a list is rejected");
       assert(read('"Sales"').errors.some((error) => error.includes("foldedFolders")), "naming the key: " + JSON.stringify(read('"Sales"').errors));
@@ -21415,7 +21415,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     /** Project text used by the cases of folders of tables in the file. */
     function tableFoldersText() {
-      return '{"format":"extractor","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
+      return '{"format":"datilandia","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
         + '"tables":[{"name":"people","description":"","idField":null,"nextId":1,'
         + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"},'
         + '{"name":"rooms","description":"","idField":null,"nextId":1,'
@@ -21462,7 +21462,7 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_FoldedTableFoldersInTheFile_Expect_Validated", () => {
-      const read = (folded) => Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
+      const read = (folded) => Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
         + '"foldedTableFolders":' + folded + ',"tables":[],"queries":[],"settings":{}}');
       assertEqual(read('["Staff"]').project.foldedTableFolders, ["Staff"], "a folded folder of tables is read");
       assertEqual(read('["Staff",""]').project.foldedTableFolders, ["Staff", ""], "the empty name is the «no folder» group");
@@ -21472,7 +21472,7 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_TableFoldersNotList_Expect_Validated", () => {
-      const read = (raw) => Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tableFolders":' + raw
+      const read = (raw) => Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","tableFolders":' + raw
         + ',"tables":[],"queries":[],"settings":{}}');
       assertEqual(read('"Staff"').errors.some((error) => error.includes("tableFolders")), true, "a key that is not a list is named in the error: " + JSON.stringify(read('"Staff"').errors));
       assertEqual(read('["Staff","  "]').errors.some((error) => error.includes("tableFolders[1]")), true, "an empty name is pointed at: " + JSON.stringify(read('["Staff","  "]').errors));
@@ -21481,7 +21481,7 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_TableFolderNotDeclared_Expect_Adopted", () => {
-      const text = '{"format":"extractor","version":1,"name":"p","tables":[{"name":"people","description":"",'
+      const text = '{"format":"datilandia","version":1,"name":"p","tables":[{"name":"people","description":"",'
         + '"idField":null,"nextId":1,"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"}],'
         + '"queries":[],"settings":{}}';
       const read = Persistence.parseProject(text);
@@ -21491,7 +21491,7 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_TableFolderInvalidInTheFile_Expect_Error", () => {
-      const read = (folder) => Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tables":[{"name":"people",'
+      const read = (folder) => Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","tables":[{"name":"people",'
         + '"description":"","idField":null,"nextId":1,"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],'
         + '"folder":' + folder + '}],"queries":[],"settings":{}}');
       assertEqual(read("7").errors.some((error) => error.includes("folder") || error.includes("carpeta")), true, "a folder of a table that is not text is an error: " + JSON.stringify(read("7").errors));
@@ -21500,7 +21500,7 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_TablesFoldedWithTableFolders_Expect_Ignored", () => {
-      const text = '{"format":"extractor","version":1,"name":"p","tableFolders":["Staff"],"tablesFolded":true,'
+      const text = '{"format":"datilandia","version":1,"name":"p","tableFolders":["Staff"],"tablesFolded":true,'
         + '"tables":[{"name":"people","description":"","idField":null,"nextId":1,'
         + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"}],'
         + '"queries":[],"settings":{}}';
@@ -21514,7 +21514,7 @@ ORDER BY edificios DESC, sede;</pre>
     });
 
     SelfTests.add("When_TwoTablesWithTheSameNameInDifferentFolders_Expect_Error", () => {
-      const text = '{"format":"extractor","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
+      const text = '{"format":"datilandia","version":1,"name":"p","tableFolders":["Staff","Rooms"],'
         + '"tables":[{"name":"people","description":"","idField":null,"nextId":1,'
         + '"fields":[{"name":"code","description":null,"type":"string"}],"rows":[],"folder":"Staff"},'
         + '{"name":"people","description":"","idField":null,"nextId":1,'
@@ -21998,7 +21998,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     /** Contents of a file with one table and the folded flag asked for. */
     function tableFile(folded) {
-      return '{"format":"extractor","version":1,"name":"p","tablesFolded":' + folded
+      return '{"format":"datilandia","version":1,"name":"p","tablesFolded":' + folded
         + ',"tables":[{"name":"t","description":"","idField":"id","nextId":1,'
         + '"fields":[{"name":"id","type":"number","description":null}],"rows":[]}],'
         + '"queries":[],"settings":{}}';
@@ -22109,7 +22109,7 @@ ORDER BY edificios DESC, sede;</pre>
       assert(Persistence.serializeProject(no.project).indexOf("tablesFolded") < 0, "and the default value is not written back");
       assert(!Persistence.parseProject(tableFile('"yes"')).ok, "a flag that is not a boolean is rejected");
       assert(Persistence.parseProject(tableFile('"yes"')).errors.some((error) => error.includes("tablesFolded")), "naming the key: " + JSON.stringify(Persistence.parseProject(tableFile('"yes"')).errors));
-      const withoutKey = Persistence.parseProject('{"format":"extractor","version":1,"name":"p","tables":[],"queries":[],"settings":{}}');
+      const withoutKey = Persistence.parseProject('{"format":"datilandia","version":1,"name":"p","tables":[],"queries":[],"settings":{}}');
       assertEqual(Model.tablesFolded(withoutKey.project), false, "without the key nothing is folded");
     });
 
@@ -22765,7 +22765,7 @@ ORDER BY edificios DESC, sede;</pre>
     };
 
     /** Public API for self-tests and external automation. */
-    window.extractor.api = {
+    window.datilandia.api = {
       Utils,
       Model,
       Persistence,
