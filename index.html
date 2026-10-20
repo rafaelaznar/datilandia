@@ -1360,6 +1360,47 @@
       color: #a00;
       font-family: ui-monospace, Consolas, "Courier New", monospace;
     }
+
+    /* --- 9. Waiting window for imports, exports and saves ------------- */
+
+    #busy-overlay {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #000;
+    }
+
+    #busy-overlay::backdrop {
+      background: rgb(0 0 0 / 0.25);
+    }
+
+    #busy-overlay .busy-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      max-width: min(560px, 92vw);
+      padding: 12px 18px;
+      border: 1px solid #999;
+      background: #fff;
+      box-shadow: 0 4px 16px rgb(0 0 0 / 0.2);
+      font-weight: bold;
+    }
+
+    #busy-overlay .busy-spinner {
+      flex: none;
+      width: 22px;
+      height: 22px;
+      border: 3px solid #ccc;
+      border-top-color: #333;
+      border-radius: 50%;
+      animation: busy-spin 0.8s linear infinite;
+    }
+
+    @keyframes busy-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 <body>
@@ -2422,6 +2463,14 @@ ORDER BY edificios DESC, sede;</pre>
 
   <footer data-i18n-title="markup.footer.applicationMessages" id="status" title="Mensajes de la aplicación">Listo.</footer>
 
+  <!-- Waiting window: shown while an import, export or save is running -->
+  <dialog id="busy-overlay" aria-labelledby="busy-message">
+    <div class="busy-box">
+      <span class="busy-spinner" aria-hidden="true"></span>
+      <span data-i18n="busy.working" id="busy-message">Trabajando…</span>
+    </div>
+  </dialog>
+
   <script id="i18n-messages">
     /* Interface messages: one flat dictionary per language, keyed by symbolic keys.
        A message is a string with {placeholders}, or { one, other } when it depends on a count. */
@@ -3024,7 +3073,13 @@ ORDER BY edificios DESC, sede;</pre>
         "misc.rowsCount": "{count} row(s)",
         "misc.rowsCountDot": "{count} row(s).",
                 "misc.readyToImport": "Ready. Import data (CSV/JSON) or open a project; if it brings tests (test mode), they run when it is opened.",
-"misc.untitled": "Untitled",
+ "misc.untitled": "Untitled",
+        "busy.working": "Working…",
+        "busy.importing": "Importing data…",
+        "busy.updatingTable": "Updating the table…",
+        "busy.openingProject": "Opening the project…",
+        "busy.savingProject": "Saving the project…",
+        "busy.exportingCsv": "Exporting CSV…",
         "misc.value": "Value",
         "misc.yes": "yes",
         "model.autoIdDescription": "Auto-numbered identifier",
@@ -4032,7 +4087,13 @@ ORDER BY edificios DESC, sede;</pre>
         "misc.rowsCount": "{count} fila(s)",
         "misc.rowsCountDot": "{count} fila(s).",
                 "misc.readyToImport": "Listo. Importa datos (CSV/JSON) o abre un proyecto; si trae tests (modo test), se ejecutan al abrirlo.",
-"misc.untitled": "Sin título",
+ "misc.untitled": "Sin título",
+        "busy.working": "Trabajando…",
+        "busy.importing": "Importando datos…",
+        "busy.updatingTable": "Actualizando la tabla…",
+        "busy.openingProject": "Abriendo el proyecto…",
+        "busy.savingProject": "Guardando el proyecto…",
+        "busy.exportingCsv": "Exportando CSV…",
         "misc.value": "Valor",
         "misc.yes": "sí",
         "model.autoIdDescription": "Identificador autonumérico",
@@ -4573,7 +4634,14 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Downloads a text as a file in the browser. */
       downloadText(fileName, text, mime) {
-        const blob = new Blob([text], { type: mime || "application/json;charset=utf-8" });
+        Utils.downloadChunks(fileName, [text], mime);
+      },
+
+      /** Downloads already-prepared chunks. Building the Blob from the chunks
+       *  avoids joining them into one string, which fails on very large files
+       *  with «Invalid string length». */
+      downloadChunks(fileName, chunks, mime) {
+        const blob = new Blob(chunks, { type: mime || "application/json;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement("a");
         anchor.href = url;
@@ -5454,6 +5522,403 @@ ORDER BY edificios DESC, sede;</pre>
        3 · PERSISTENCE
        Serialisation, validation, saving and loading of the project in JSON.
        ===================================================================== */
+
+    /** Yields the same text as JSON.stringify(value, null, 2), piece by piece,
+     *  so a very large project never has to fit in one single string. */
+    function* jsonTextChunks(value, indent = "") {
+      if (value === null) {
+        yield "null";
+        return;
+      }
+      const type = typeof value;
+      if (type === "string" || type === "number" || type === "boolean") {
+        yield JSON.stringify(value);
+        return;
+      }
+      if (type !== "object") {
+        return;
+      }
+      const childIndent = indent + "  ";
+      if (Array.isArray(value)) {
+        if (value.length === 0) {
+          yield "[]";
+          return;
+        }
+        yield "[\n";
+        for (let index = 0; index < value.length; index += 1) {
+          if (index > 0) {
+            yield ",\n";
+          }
+          yield childIndent;
+          const item = value[index];
+          const itemType = typeof item;
+          if (item === undefined || itemType === "function" || itemType === "symbol") {
+            yield "null";
+          } else {
+            yield* jsonTextChunks(item, childIndent);
+          }
+        }
+        yield `\n${indent}]`;
+        return;
+      }
+      const keys = Object.keys(value).filter((key) => {
+        const child = value[key];
+        return child !== undefined && typeof child !== "function" && typeof child !== "symbol";
+      });
+      if (keys.length === 0) {
+        yield "{}";
+        return;
+      }
+      yield "{\n";
+      for (let index = 0; index < keys.length; index += 1) {
+        if (index > 0) {
+          yield ",\n";
+        }
+        yield childIndent;
+        yield JSON.stringify(keys[index]);
+        yield ": ";
+        yield* jsonTextChunks(value[keys[index]], childIndent);
+      }
+      yield `\n${indent}}`;
+    }
+
+    /** Groups the pieces of jsonTextChunks into batches of about `size`
+     *  characters, ready to be written one by one. */
+    function* jsonBatches(value, size = 1024 * 1024) {
+      let buffer = "";
+      for (const piece of jsonTextChunks(value)) {
+        buffer += piece;
+        if (buffer.length >= size) {
+          yield buffer;
+          buffer = "";
+        }
+      }
+      if (buffer.length > 0) {
+        yield buffer;
+      }
+    }
+
+    /** Incremental JSON parser. Feed it text chunks with write() and call
+     *  finish() to obtain the value. It keeps the value being built and the
+     *  token in progress, never the whole text, so a project file of several
+     *  gigabytes can be read without hitting the maximum string length. */
+    function createJsonStreamParser() {
+      const stack = [];
+      let root;
+      let hasRoot = false;
+      let mode = "default";
+      let token = "";
+      let escaped = false;
+      let stringAs = "value";
+      let needsParse = false;
+
+      function fail(message) {
+        throw new Error(message);
+      }
+
+      function assign(value) {
+        const frame = stack[stack.length - 1];
+        if (frame) {
+          if (frame.kind === "array") {
+            frame.value.push(value);
+            frame.state = "comma";
+          } else {
+            if (frame.key === "__proto__") {
+              // JSON.parse creates an own property, never touches the prototype.
+              Object.defineProperty(frame.value, frame.key, {
+                value,
+                enumerable: true,
+                writable: true,
+                configurable: true,
+              });
+            } else {
+              frame.value[frame.key] = value;
+            }
+            frame.key = null;
+            frame.state = "comma";
+          }
+          return;
+        }
+        if (hasRoot) {
+          fail("Unexpected data after the end of the JSON value");
+        }
+        root = value;
+        hasRoot = true;
+      }
+
+      function closeContainer() {
+        const frame = stack.pop();
+        assign(frame.value);
+      }
+
+      function startValue(ch) {
+        if (ch === "{") {
+          stack.push({ kind: "object", value: {}, key: null, state: "keyOrEnd" });
+          return;
+        }
+        if (ch === "[") {
+          stack.push({ kind: "array", value: [], state: "valueOrEnd" });
+          return;
+        }
+        if (ch === '"') {
+          mode = "string";
+          stringAs = "value";
+          token = "";
+          escaped = false;
+          needsParse = false;
+          return;
+        }
+        if (ch === "-" || (ch >= "0" && ch <= "9")) {
+          mode = "number";
+          token = ch;
+          return;
+        }
+        if (ch === "t" || ch === "f" || ch === "n") {
+          mode = "literal";
+          token = ch;
+          return;
+        }
+        fail(`Unexpected character ${JSON.stringify(ch)}`);
+      }
+
+      /** Ends a number or literal that is complete because a delimiter came. */
+      function finishToken() {
+        if (mode === "number") {
+          let value;
+          try {
+            value = JSON.parse(token);
+          } catch (err) {
+            fail("Invalid number");
+          }
+          token = "";
+          mode = "default";
+          assign(value);
+          return;
+        }
+        if (mode === "literal") {
+          let value;
+          if (token === "true") {
+            value = true;
+          } else if (token === "false") {
+            value = false;
+          } else if (token === "null") {
+            value = null;
+          } else {
+            fail("Invalid literal");
+          }
+          token = "";
+          mode = "default";
+          assign(value);
+        }
+      }
+
+      function write(text) {
+        let index = 0;
+        while (index < text.length) {
+          const ch = text[index];
+
+          if (mode === "string") {
+            if (escaped) {
+              token += ch;
+              escaped = false;
+              index += 1;
+              continue;
+            }
+            if (ch === "\\") {
+              token += ch;
+              escaped = true;
+              needsParse = true;
+              index += 1;
+              continue;
+            }
+            if (ch === '"') {
+              // Most strings carry no escape: they need no JSON.parse at all.
+              const value = needsParse ? JSON.parse(`"${token}"`) : token;
+              token = "";
+              mode = "default";
+              if (stringAs === "key") {
+                const frame = stack[stack.length - 1];
+                frame.key = value;
+                frame.state = "colon";
+              } else {
+                assign(value);
+              }
+              index += 1;
+              continue;
+            }
+            if (ch < " ") {
+              // A raw control character is not valid JSON: let JSON.parse
+              // produce the same error as the non-streaming path.
+              needsParse = true;
+            }
+            token += ch;
+            index += 1;
+            continue;
+          }
+
+          if (mode === "number") {
+            if ((ch >= "0" && ch <= "9") || ch === "-" || ch === "+" || ch === "."
+              || ch === "e" || ch === "E") {
+              token += ch;
+              index += 1;
+              continue;
+            }
+            finishToken();
+            continue;
+          }
+
+          if (mode === "literal") {
+            if (ch >= "a" && ch <= "z") {
+              token += ch;
+              index += 1;
+              continue;
+            }
+            finishToken();
+            continue;
+          }
+
+          if (ch === " " || ch === "\t" || ch === "\n" || ch === "\r") {
+            index += 1;
+            continue;
+          }
+
+          if (hasRoot && stack.length === 0) {
+            fail("Unexpected data after the end of the JSON value");
+          }
+
+          const frame = stack[stack.length - 1];
+          if (!frame) {
+            startValue(ch);
+            index += 1;
+            continue;
+          }
+
+          if (frame.kind === "object") {
+            if (frame.state === "keyOrEnd") {
+              if (ch === "}") {
+                closeContainer();
+                index += 1;
+                continue;
+              }
+              if (ch !== '"') {
+                fail("Expected a property name in double quotes");
+              }
+              mode = "string";
+              stringAs = "key";
+              token = "";
+              escaped = false;
+              needsParse = false;
+              index += 1;
+              continue;
+            }
+            if (frame.state === "key") {
+              if (ch !== '"') {
+                fail("Expected a property name in double quotes");
+              }
+              mode = "string";
+              stringAs = "key";
+              token = "";
+              escaped = false;
+              needsParse = false;
+              index += 1;
+              continue;
+            }
+            if (frame.state === "colon") {
+              if (ch !== ":") {
+                fail("Expected ':' after the property name");
+              }
+              frame.state = "value";
+              index += 1;
+              continue;
+            }
+            if (frame.state === "value") {
+              startValue(ch);
+              index += 1;
+              continue;
+            }
+            // frame.state === "comma"
+            if (ch === ",") {
+              frame.state = "key";
+              index += 1;
+              continue;
+            }
+            if (ch === "}") {
+              closeContainer();
+              index += 1;
+              continue;
+            }
+            fail("Expected ',' or '}'");
+          }
+
+          if (frame.state === "valueOrEnd") {
+            if (ch === "]") {
+              closeContainer();
+              index += 1;
+              continue;
+            }
+            startValue(ch);
+            index += 1;
+            continue;
+          }
+          if (frame.state === "value") {
+            startValue(ch);
+            index += 1;
+            continue;
+          }
+          // frame.state === "comma"
+          if (ch === ",") {
+            frame.state = "value";
+            index += 1;
+            continue;
+          }
+          if (ch === "]") {
+            closeContainer();
+            index += 1;
+            continue;
+          }
+          fail("Expected ',' or ']'");
+        }
+      }
+
+      function finish() {
+        if (mode === "string") {
+          fail("Unterminated string");
+        }
+        finishToken();
+        if (stack.length > 0 || !hasRoot) {
+          fail("Unexpected end of JSON input");
+        }
+        return root;
+      }
+
+      return { write, finish };
+    }
+
+    /** Reads a binary JSON stream with the incremental parser. Throws when the
+     *  JSON is invalid or incomplete. */
+    async function parseJsonStreamValue(stream) {
+      const reader = stream.getReader();
+      try {
+        const decoder = new TextDecoder();
+        const parser = createJsonStreamParser();
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) {
+            break;
+          }
+          parser.write(decoder.decode(value, { stream: true }));
+        }
+        parser.write(decoder.decode());
+        return parser.finish();
+      } finally {
+        try {
+          await reader.cancel();
+        } catch (ignored) {
+          // The stream was already closed.
+        }
+      }
+    }
+
     const Persistence = {
       /** Identifier and version of the project file format. */
       FORMAT: "extractor",
@@ -5462,6 +5927,26 @@ ORDER BY edificios DESC, sede;</pre>
       /** Serialises the project to a readable JSON text. It fills in the type of
        *  the fields that have none; the types already chosen are respected. */
       serializeProject(project) {
+        return JSON.stringify(Persistence.projectToJson(project), null, 2);
+      },
+
+      /** Yields the serialised project in chunks, so it can be written to disk
+       *  without ever building the whole text in one string: with millions of
+       *  rows that one string exceeds the maximum length the browser allows. */
+      *serializeProjectChunks(project) {
+        yield* jsonBatches(Persistence.projectToJson(project));
+      },
+
+      /** Writes the serialised project through `write`, one chunk at a time. */
+      async writeProject(project, write) {
+        for (const chunk of Persistence.serializeProjectChunks(project)) {
+          await write(chunk);
+        }
+      },
+
+      /** Plain object that is written to the file. It fills in the type of the
+       *  fields that have none; the types already chosen are respected. */
+      projectToJson(project) {
         project.tables.forEach((table) => {
           table.fields.forEach((field) => {
             if (!Model.FIELD_TYPES.includes(field.type)) {
@@ -5504,11 +5989,7 @@ ORDER BY edificios DESC, sede;</pre>
         content.tables = project.tables.map((table) => Persistence.tableToJson(table));
         content.queries = project.queries.map((query) => Persistence.queryToJson(query));
         content.settings = project.settings || Utils.cloneJson(DEFAULT_SETTINGS);
-        return JSON.stringify(
-          content,
-          null,
-          2,
-        );
+        return content;
       },
 
       /** Compact form of the asserted result for the file: only what is checked,
@@ -5545,13 +6026,32 @@ ORDER BY edificios DESC, sede;</pre>
       /** Validates and turns a JSON text into a project.
        *  Returns { ok: true, project } or { ok: false, errors: [...] }. */
       parseProject(text) {
-        const errors = [];
         let root;
         try {
           root = JSON.parse(text);
         } catch (err) {
           return { ok: false, errors: [I18n.t("persistence.invalidJson", { message: err.message })] };
         }
+        return Persistence.parseProjectRoot(root);
+      },
+
+      /** Parses a project from a binary stream, reading it in chunks: a project
+       *  of several gigabytes never has to fit in one string. Returns the same
+       *  shape as parseProject. */
+      async parseProjectStream(stream) {
+        let root;
+        try {
+          root = await parseJsonStreamValue(stream);
+        } catch (err) {
+          return { ok: false, errors: [I18n.t("persistence.invalidJson", { message: err.message })] };
+        }
+        return Persistence.parseProjectRoot(root);
+      },
+
+      /** Validates a plain JSON object and turns it into a project.
+       *  Returns { ok: true, project } or { ok: false, errors: [...] }. */
+      parseProjectRoot(root) {
+        const errors = [];
         if (root === null || typeof root !== "object" || Array.isArray(root)) {
           return { ok: false, errors: [I18n.t("persistence.rootNotObject")] };
         }
@@ -5759,17 +6259,16 @@ ORDER BY edificios DESC, sede;</pre>
         if (extra.length > 0 || missing.length > 0) {
           return;
         }
-        const row = {};
         fields.forEach((field) => {
           const value = rawRow[field.name];
           const kind = Utils.nonScalarKind(value);
           if (kind !== null) {
             errors.push(I18n.t("persistence.valueTypeInvalid", { rowLabel: rowLabel, fieldName: field.name, kind: kind }));
-            return;
           }
-          row[field.name] = value;
         });
-        rows.push(row);
+        // The row is already a plain object with exactly the declared fields:
+        // keeping it avoids copying every row of a very large project.
+        rows.push(rawRow);
       },
 
       /** Table as it is written to the file: the folder key only when the table
@@ -6053,10 +6552,11 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       /** Downloads the project as a JSON file (no file access); returns the name
-       *  used. */
+       *  used. The chunks are not joined: a very large project would not fit in
+       *  one string. */
       saveToFile(project) {
         const fileName = Persistence.projectFileName(project);
-        Utils.downloadText(fileName, Persistence.serializeProject(project));
+        Utils.downloadChunks(fileName, [...Persistence.serializeProjectChunks(project)]);
         return fileName;
       },
     };
@@ -6156,6 +6656,140 @@ ORDER BY edificios DESC, sede;</pre>
         }
       }
       return { rows, errors };
+    }
+
+    /** Internal error used to stop a CSV stream as soon as the header is
+     *  invalid, instead of reading a huge file to the end. */
+    class CsvStreamAbort extends Error {
+      constructor(result) {
+        super("csv import aborted");
+        this.result = result;
+      }
+    }
+
+    /** Incremental CSV splitter with the same rules as splitCsvRows: RFC 4180
+     *  quotes, escaped "" quotes and line breaks inside quotes. write() emits
+     *  each complete row as { cells, line }; finish() closes the last row and
+     *  returns the errors. Trailing blank lines are dropped. */
+    function createCsvStreamParser(delimiter) {
+      const errors = [];
+      const blankRows = [];
+      let cells = [];
+      let cell = "";
+      let inQuotes = false;
+      let pendingQuote = false;
+      let skipLF = false;
+      let line = 1;
+      let rowStartLine = 1;
+      let first = true;
+
+      function emit(row, onRow) {
+        const blank = row.cells.length === 1 && row.cells[0] === "";
+        if (blank) {
+          blankRows.push(row);
+          return;
+        }
+        if (blankRows.length > 0) {
+          blankRows.forEach((pending) => onRow(pending));
+          blankRows.length = 0;
+        }
+        onRow(row);
+      }
+
+      function endRow(onRow) {
+        cells.push(cell);
+        emit({ cells, line: rowStartLine }, onRow);
+        cells = [];
+        cell = "";
+        line += 1;
+        rowStartLine = line;
+      }
+
+      function write(text, onRow) {
+        let index = 0;
+        if (first && text.length > 0) {
+          first = false;
+          if (text.charCodeAt(0) === 0xFEFF) {
+            index = 1;
+          }
+        }
+        while (index < text.length) {
+          const char = text[index];
+          if (skipLF) {
+            skipLF = false;
+            if (char === "\n") {
+              index += 1;
+              continue;
+            }
+          }
+          if (pendingQuote) {
+            pendingQuote = false;
+            if (char === '"') {
+              cell += '"';
+              index += 1;
+              continue;
+            }
+            inQuotes = false;
+            continue;
+          }
+          if (inQuotes) {
+            if (char === '"') {
+              // The next character decides between an escaped quote and the
+              // closing quote; it may arrive in the next chunk.
+              pendingQuote = true;
+              index += 1;
+              continue;
+            }
+            if (char === "\n") {
+              line += 1;
+            }
+            cell += char;
+            index += 1;
+            continue;
+          }
+          if (char === '"') {
+            inQuotes = true;
+            index += 1;
+            continue;
+          }
+          if (char === delimiter) {
+            cells.push(cell);
+            cell = "";
+            index += 1;
+            continue;
+          }
+          if (char === "\n" || char === "\r") {
+            if (char === "\r") {
+              skipLF = true;
+            }
+            endRow(onRow);
+            index += 1;
+            continue;
+          }
+          cell += char;
+          index += 1;
+        }
+      }
+
+      function finish(onRow) {
+        if (pendingQuote) {
+          pendingQuote = false;
+          inQuotes = false;
+        }
+        if (inQuotes) {
+          errors.push(I18n.t("importer.unclosedQuotes", { line: rowStartLine }));
+        }
+        if (cell !== "" || cells.length > 0) {
+          cells.push(cell);
+          emit({ cells, line: rowStartLine }, onRow);
+          cells = [];
+          cell = "";
+        }
+        blankRows.length = 0;
+        return { errors };
+      }
+
+      return { write, finish };
     }
 
     const Importer = {
@@ -6291,6 +6925,124 @@ ORDER BY edificios DESC, sede;</pre>
         return { ok: true, fields, rows: data, errors: [], skipped };
       },
 
+      /** Reads a CSV file as a stream and turns it into fields and rows,
+       *  without joining the whole file into one string.
+       *  Options: { delimiter, customDelimiter, header, infer, skipInvalid }.
+       *  Returns { ok, fields, rows, errors, skipped, format }. */
+      async parseCsvStream(stream, options) {
+        const config = Object.assign({ delimiter: ",", header: true, infer: true, skipInvalid: false }, options);
+        const reader = stream.getReader();
+        const decoder = new TextDecoder();
+        try {
+          let prefix = "";
+          if (config.delimiter === "auto" || config.delimiter === "otro") {
+            // Read just enough to detect the delimiter without loading the file.
+            let newlines = 0;
+            while (prefix.length < 128 * 1024 && newlines < 5) {
+              const { value, done } = await reader.read();
+              if (done) {
+                break;
+              }
+              const chunk = decoder.decode(value, { stream: true });
+              prefix += chunk;
+              for (let index = 0; index < chunk.length; index += 1) {
+                if (chunk[index] === "\n") {
+                  newlines += 1;
+                }
+              }
+            }
+          }
+          const delimiter = Importer.resolveDelimiter(prefix, config);
+          const parser = createCsvStreamParser(delimiter);
+          const errors = [];
+          const skipped = [];
+          const data = [];
+          let fields = [];
+          let width = 0;
+          let sawRow = false;
+
+          const addRow = (row) => {
+            if (row.cells.length !== width) {
+              const message = I18n.t("importer.rowWidthMismatch", { line: row.line, expected: width, found: row.cells.length });
+              if (config.skipInvalid) {
+                skipped.push(message);
+              } else {
+                errors.push(message);
+              }
+              return;
+            }
+            data.push(row.cells.map((cell) => (config.infer ? Utils.inferValue(cell) : cell)));
+          };
+
+          const onRow = (row) => {
+            if (!sawRow) {
+              sawRow = true;
+              if (config.header) {
+                const headerErrors = [];
+                const names = new Set();
+                row.cells.forEach((rawName, index) => {
+                  const name = rawName.trim();
+                  if (name === "") {
+                    headerErrors.push(I18n.t("importer.headerUnnamedColumn", { column: index + 1 }));
+                  } else if (names.has(name)) {
+                    headerErrors.push(I18n.t("importer.headerDuplicateField", { column: index + 1, fieldName: name }));
+                  }
+                  names.add(name);
+                });
+                if (headerErrors.length > 0) {
+                  throw new CsvStreamAbort({ ok: false, fields: [], rows: [], errors: headerErrors, skipped: [], format: "CSV" });
+                }
+                fields = row.cells.map((rawName) => ({ name: rawName.trim(), description: null }));
+                width = fields.length;
+                return;
+              }
+              fields = row.cells.map((cell, index) => ({ name: `c${index + 1}`, description: null }));
+              width = fields.length;
+            }
+            addRow(row);
+          };
+
+          if (prefix !== "") {
+            parser.write(prefix, onRow);
+          }
+          for (;;) {
+            const { value, done } = await reader.read();
+            if (done) {
+              break;
+            }
+            parser.write(decoder.decode(value, { stream: true }), onRow);
+          }
+          parser.write(decoder.decode(), onRow);
+          const split = parser.finish(onRow);
+          errors.push(...split.errors);
+          if (!sawRow) {
+            return { ok: false, fields: [], rows: [], errors: [I18n.t("importer.csvEmpty")], skipped, format: "CSV" };
+          }
+          if (errors.length > 0) {
+            return { ok: false, fields, rows: [], errors, skipped, format: "CSV" };
+          }
+          return { ok: true, fields, rows: data, errors: [], skipped, format: "CSV" };
+        } catch (err) {
+          if (err instanceof CsvStreamAbort) {
+            return err.result;
+          }
+          return {
+            ok: false,
+            fields: [],
+            rows: [],
+            errors: [I18n.t("importer.readFailed", { message: err.message })],
+            skipped: [],
+            format: "CSV",
+          };
+        } finally {
+          try {
+            await reader.cancel();
+          } catch (ignored) {
+            // The stream was already closed.
+          }
+        }
+      },
+
       /** Turns a JSON text (array of objects) into fields and rows.
        *  Returns { ok, fields, rows, errors, skipped }. */
       parseJsonTable(text) {
@@ -6300,6 +7052,32 @@ ORDER BY edificios DESC, sede;</pre>
         } catch (err) {
           return { ok: false, fields: [], rows: [], errors: [I18n.t("persistence.invalidJson", { message: err.message })], skipped: [] };
         }
+        return Importer.jsonTableFromValue(root);
+      },
+
+      /** Reads a JSON file as a stream and turns it into fields and rows. The
+       *  file never has to fit in one string, so it can be of any size. */
+      async parseJsonStream(stream) {
+        let root;
+        try {
+          root = await parseJsonStreamValue(stream);
+        } catch (err) {
+          return {
+            ok: false,
+            fields: [],
+            rows: [],
+            errors: [I18n.t("persistence.invalidJson", { message: err.message })],
+            skipped: [],
+            format: "JSON",
+          };
+        }
+        return { ...Importer.jsonTableFromValue(root), format: "JSON" };
+      },
+
+      /** Turns the value already read from a JSON file into fields and rows.
+       *  The value must be an array of objects.
+       *  Returns { ok, fields, rows, errors, skipped }. */
+      jsonTableFromValue(root) {
         if (!Array.isArray(root)) {
           return { ok: false, fields: [], rows: [], errors: [I18n.t("importer.jsonMustBeArrayOfObjects")], skipped: [] };
         }
@@ -6334,17 +7112,16 @@ ORDER BY edificios DESC, sede;</pre>
           if (extra.length > 0 || missing.length > 0) {
             return;
           }
-          const row = {};
           fieldNames.forEach((name) => {
             const value = item[name];
             const kind = Utils.nonScalarKind(value);
             if (kind !== null) {
               errors.push(I18n.t("importer.valueTypeNested", { label: label, fieldName: name, kind: kind }));
-              return;
             }
-            row[name] = value;
           });
-          rows.push(row);
+          // The object already carries exactly the declared fields: keeping it
+          // avoids copying every row of a very large JSON file.
+          rows.push(item);
         });
         if (errors.length > 0) {
           return { ok: false, fields, rows: [], errors, skipped: [] };
@@ -6382,7 +7159,13 @@ ORDER BY edificios DESC, sede;</pre>
        *  "csv", "json" or "auto" (JSON when the text starts with «[» or «{»).
        *  Returns a report { fileName, table, rows, ok, errors, skipped, format }. */
       importText(project, text, options) {
-        const parsed = Importer.parseText(text, options);
+        return Importer.importParsed(project, Importer.parseText(text, options), options);
+      },
+
+      /** Imports data that has already been read and parsed and creates its
+       *  table. Options: { fileName, baseName, config, format }.
+       *  Returns a report { fileName, table, rows, ok, errors, skipped, format }. */
+      importParsed(project, parsed, options) {
         if (!parsed.ok) {
           return {
             fileName: options.fileName,
@@ -6397,19 +7180,19 @@ ORDER BY edificios DESC, sede;</pre>
         const baseName = Utils.slugify(options.baseName) || "pasted";
         const tableName = Model.uniqueTableName(project, baseName);
         const table = Model.createTable(tableName, parsed.fields);
-        parsed.rows.forEach((values) => {
-          const source = {};
-          if (Array.isArray(values)) {
+        if (parsed.format === "JSON") {
+          // The parsed objects already have the declared fields: they become
+          // the rows directly, without a second copy of a very large file.
+          table.rows = parsed.rows;
+        } else {
+          parsed.rows.forEach((values) => {
+            const row = {};
             table.fields.forEach((field, index) => {
-              source[field.name] = values[index];
+              row[field.name] = values[index];
             });
-          } else {
-            table.fields.forEach((field) => {
-              source[field.name] = values[field.name];
-            });
-          }
-          Model.addRow(table, source);
-        });
+            table.rows.push(row);
+          });
+        }
         Model.refreshFieldTypes(table);
         project.tables.push(table);
         return {
@@ -6426,6 +7209,20 @@ ORDER BY edificios DESC, sede;</pre>
       /** Imports a user file and creates its table in the project.
        *  Returns a report { fileName, table, rows, ok, errors, skipped }. */
       async importFile(project, file, config) {
+        const options = {
+          fileName: file.name,
+          baseName: Importer.tableNameFromFile(file.name),
+          config,
+          format: /\.json$/i.test(file.name) ? "json" : "csv",
+        };
+        if (options.format === "json" && typeof file.stream === "function") {
+          const parsed = await Importer.parseJsonStream(file.stream());
+          return Importer.importParsed(project, parsed, options);
+        }
+        if (options.format === "csv" && typeof file.stream === "function") {
+          const parsed = await Importer.parseCsvStream(file.stream(), config);
+          return Importer.importParsed(project, parsed, options);
+        }
         let text;
         try {
           text = await file.text();
@@ -6439,12 +7236,7 @@ ORDER BY edificios DESC, sede;</pre>
             skipped: [],
           };
         }
-        return Importer.importText(project, text, {
-          fileName: file.name,
-          baseName: Importer.tableNameFromFile(file.name),
-          config,
-          format: /\.json$/i.test(file.name) ? "json" : "csv",
-        });
+        return Importer.importText(project, text, options);
       },
 
       /** Imports several files (CSV and JSON mixed) and returns their reports. */
@@ -12255,7 +13047,7 @@ ORDER BY edificios DESC, sede;</pre>
           setStatus(I18n.t("queries.csvRunBeforeDownload"));
           return;
         }
-        const csv = "\uFEFF" + Utils.resultToCsv(result, UiQueries.readCsvConfig());
+        const buildCsv = () => "\uFEFF" + Utils.resultToCsv(result, UiQueries.readCsvConfig());
         const query = UiQueries.activeQueryOrNull();
         const fileName = `${Utils.slugify(query ? query.name : "") || "query"}.csv`;
         if (typeof window.showSaveFilePicker === "function") {
@@ -12264,9 +13056,20 @@ ORDER BY edificios DESC, sede;</pre>
               suggestedName: fileName,
               types: [{ description: I18n.t("queries.csvFileType"), accept: { "text/csv": [".csv"] } }],
             });
-            const writable = await handle.createWritable();
-            await writable.write(csv);
-            await writable.close();
+            await Busy.run(I18n.t("busy.exportingCsv"), async () => {
+              const writable = await handle.createWritable();
+              try {
+                await writable.write(buildCsv());
+                await writable.close();
+              } catch (err) {
+                try {
+                  await writable.abort();
+                } catch (ignored) {
+                  // The stream may already be closed: the interesting error is the one above.
+                }
+                throw err;
+              }
+            });
             setStatus(I18n.t("queries.csvSavedAs", { name: handle.name, rows: result.rows.length }));
             return;
           } catch (err) {
@@ -12276,7 +13079,9 @@ ORDER BY edificios DESC, sede;</pre>
             }
           }
         }
-        Utils.downloadText(fileName, csv, "text/csv");
+        await Busy.run(I18n.t("busy.exportingCsv"), () => {
+          Utils.downloadText(fileName, buildCsv(), "text/csv");
+        });
         setStatus(I18n.t("queries.csvDownloaded", { name: fileName, rows: result.rows.length }));
       },
     };
@@ -12419,7 +13224,7 @@ ORDER BY edificios DESC, sede;</pre>
           setStatus(I18n.t("tableCsv.tableGone"));
           return;
         }
-        const csv = "\uFEFF" + Utils.resultToCsv(result, UiTableCsv.readConfig());
+        const buildCsv = () => "\uFEFF" + Utils.resultToCsv(result, UiTableCsv.readConfig());
         const fileName = `${Utils.slugify(result.name) || "tabla"}.csv`;
         if (typeof window.showSaveFilePicker === "function") {
           try {
@@ -12427,9 +13232,20 @@ ORDER BY edificios DESC, sede;</pre>
               suggestedName: fileName,
               types: [{ description: I18n.t("queries.csvFileType"), accept: { "text/csv": [".csv"] } }],
             });
-            const writable = await handle.createWritable();
-            await writable.write(csv);
-            await writable.close();
+            await Busy.run(I18n.t("busy.exportingCsv"), async () => {
+              const writable = await handle.createWritable();
+              try {
+                await writable.write(buildCsv());
+                await writable.close();
+              } catch (err) {
+                try {
+                  await writable.abort();
+                } catch (ignored) {
+                  // The stream may already be closed: the interesting error is the one above.
+                }
+                throw err;
+              }
+            });
             setStatus(I18n.t("tableCsv.savedAs", { name: handle.name, rows: result.rows.length }));
             return;
           } catch (err) {
@@ -12439,7 +13255,9 @@ ORDER BY edificios DESC, sede;</pre>
             }
           }
         }
-        Utils.downloadText(fileName, csv, "text/csv");
+        await Busy.run(I18n.t("busy.exportingCsv"), () => {
+          Utils.downloadText(fileName, buildCsv(), "text/csv");
+        });
         setStatus(I18n.t("tableCsv.downloaded", { name: fileName, rows: result.rows.length }));
       },
     };
@@ -13014,14 +13832,16 @@ ORDER BY edificios DESC, sede;</pre>
         if (!files || files.length === 0) {
           return;
         }
-        setStatus(I18n.t("importPanel.importingFiles", { count: files.length }));
-        const reports = await Importer.importFiles(Store.project, Array.from(files), UiImport.readConfig());
-        input.value = "";
-        UiImport.afterImport(reports);
+        const chosen = Array.from(files);
+        await Busy.run(I18n.t("importPanel.importingFiles", { count: chosen.length }), async () => {
+          const reports = await Importer.importFiles(Store.project, chosen, UiImport.readConfig());
+          input.value = "";
+          UiImport.afterImport(reports);
+        });
       },
 
       /** Imports the text pasted in the box (CSV or JSON, self-detected). */
-      importPasted() {
+      async importPasted() {
         const textarea = document.getElementById("import-pasted");
         const text = textarea.value.trim();
         if (text === "") {
@@ -13030,13 +13850,16 @@ ORDER BY edificios DESC, sede;</pre>
           return;
         }
         const nameInput = document.getElementById("import-name");
-        const report = Importer.importText(Store.project, text, {
-          fileName: I18n.t("importPanel.pastedData"),
-          baseName: nameInput.value,
-          config: UiImport.readConfig(),
-          format: "auto",
+        let report;
+        await Busy.run(I18n.t("busy.importing"), () => {
+          report = Importer.importText(Store.project, text, {
+            fileName: I18n.t("importPanel.pastedData"),
+            baseName: nameInput.value,
+            config: UiImport.readConfig(),
+            format: "auto",
+          });
+          UiImport.afterImport([report]);
         });
-        UiImport.afterImport([report]);
         if (report.ok) {
           textarea.value = "";
           nameInput.value = "";
@@ -13114,11 +13937,11 @@ ORDER BY edificios DESC, sede;</pre>
           UiUpdateTable.handleFiles(event.target.files);
         });
         document.getElementById("update-separador").addEventListener("change", () => UiUpdateTable.syncCustomDelimiter());
-        document.getElementById("btn-update-apply").addEventListener("click", () => UiUpdateTable.applyPasted());
+        document.getElementById("btn-update-apply").addEventListener("click", () => UiUpdateTable.applyPastedWithWait());
         document.getElementById("update-pasted").addEventListener("keydown", (event) => {
           if (event.ctrlKey && event.key === "Enter") {
             event.preventDefault();
-            UiUpdateTable.applyPasted();
+            UiUpdateTable.applyPastedWithWait();
           }
         });
       },
@@ -13181,14 +14004,25 @@ ORDER BY edificios DESC, sede;</pre>
         }
         const file = files[0];
         input.value = "";
-        let text;
-        try {
-          text = await file.text();
-        } catch (err) {
-          UiUpdateTable.showLog([I18n.t("importer.readFailed", { message: err.message })], [], file.name);
-          return;
-        }
-        UiUpdateTable.applyText(text, file.name, /\.json$/i.test(file.name) ? "json" : "csv");
+        const format = /\.json$/i.test(file.name) ? "json" : "csv";
+        await Busy.run(I18n.t("busy.updatingTable"), async () => {
+          if (typeof file.stream === "function") {
+            const config = UiUpdateTable.readConfig();
+            const parsed = format === "json"
+              ? await Importer.parseJsonStream(file.stream())
+              : await Importer.parseCsvStream(file.stream(), config);
+            UiUpdateTable.applyParsed(parsed, file.name, config);
+            return;
+          }
+          let text;
+          try {
+            text = await file.text();
+          } catch (err) {
+            UiUpdateTable.showLog([I18n.t("importer.readFailed", { message: err.message })], [], file.name);
+            return;
+          }
+          UiUpdateTable.applyText(text, file.name, format);
+        });
       },
 
       /** Updates the table from the text pasted in the box. */
@@ -13205,16 +14039,33 @@ ORDER BY edificios DESC, sede;</pre>
         }
       },
 
+      /** Same as applyPasted, behind the waiting window. Kept apart so the
+       *  self-tests can still drive the synchronous method directly. */
+      applyPastedWithWait() {
+        const textarea = document.getElementById("update-pasted");
+        if (textarea.value.trim() === "") {
+          UiUpdateTable.applyPasted();
+          return;
+        }
+        Busy.run(I18n.t("busy.updatingTable"), () => UiUpdateTable.applyPasted());
+      },
+
       /** Parses the text, checks it against the table and, after confirming,
        *  replaces every row. Returns true only when the data was replaced. */
       applyText(text, fileName, format) {
+        const config = UiUpdateTable.readConfig();
+        const parsed = Importer.parseText(text, { config, format });
+        return UiUpdateTable.applyParsed(parsed, fileName, config);
+      },
+
+      /** Checks already parsed data against the table and, after confirming,
+       *  replaces every row. Returns true only when the data was replaced. */
+      applyParsed(parsed, fileName, config = UiUpdateTable.readConfig()) {
         const table = Model.findTable(Store.project, UiUpdateTable.tableName);
         if (!table) {
           UiUpdateTable.close();
           return false;
         }
-        const config = UiUpdateTable.readConfig();
-        const parsed = Importer.parseText(text, { config, format });
         if (!parsed.ok) {
           UiUpdateTable.showLog(parsed.errors, parsed.skipped, fileName);
           setStatus(I18n.t("updateTable.failed", { name: table.name }));
@@ -13356,6 +14207,57 @@ ORDER BY edificios DESC, sede;</pre>
       document.getElementById("status").textContent = message;
     }
 
+    /* =====================================================================
+       9b · WAITING WINDOW
+       A modal spinner shown while an import, export or save is running. It
+       waits for the browser to paint it before the heavy work starts.
+       ===================================================================== */
+
+    const Busy = {
+      bind() {
+        // Escape must not close the window while the work is still running.
+        document.getElementById("busy-overlay").addEventListener("cancel", (event) => {
+          event.preventDefault();
+        });
+      },
+
+      /** Shows the waiting window with a message and waits until it is painted. */
+      async show(message) {
+        const dialog = document.getElementById("busy-overlay");
+        document.getElementById("busy-message").textContent = message || I18n.t("busy.working");
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        // Two frames (and a task) let the browser paint the spinner before a
+        // synchronous import or export takes over the main thread.
+        await new Promise((resolve) => {
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              window.setTimeout(resolve, 0);
+            });
+          });
+        });
+      },
+
+      /** Closes the waiting window. */
+      hide() {
+        const dialog = document.getElementById("busy-overlay");
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Shows the waiting window while the task runs and closes it afterwards. */
+      async run(message, task) {
+        await Busy.show(message);
+        try {
+          return await task();
+        } finally {
+          Busy.hide();
+        }
+      },
+    };
+
     const UiProject = {
       /** File of the project opened or saved with «… as» (when the browser gives
        *  file access): it allows overwriting it without asking. */
@@ -13456,7 +14358,6 @@ ORDER BY edificios DESC, sede;</pre>
         if (Store.project.name.trim() === "") {
           UiProject.setName(I18n.t("misc.untitled"));
         }
-        const text = Persistence.serializeProject(Store.project);
         const fileName = Persistence.projectFileName(Store.project);
         if (typeof window.showSaveFilePicker === "function") {
           try {
@@ -13466,9 +14367,20 @@ ORDER BY edificios DESC, sede;</pre>
                 types: [{ description: I18n.t("project.fileType"), accept: { "application/json": [".json"] } }],
               });
             }
-            const writable = await UiProject.fileHandle.createWritable();
-            await writable.write(text);
-            await writable.close();
+            await Busy.run(I18n.t("busy.savingProject"), async () => {
+              const writable = await UiProject.fileHandle.createWritable();
+              try {
+                await Persistence.writeProject(Store.project, (chunk) => writable.write(chunk));
+                await writable.close();
+              } catch (err) {
+                try {
+                  await writable.abort();
+                } catch (ignored) {
+                  // The stream may already be closed: the interesting error is the one above.
+                }
+                throw err;
+              }
+            });
             UiProject.markClean();
             setStatus(I18n.t("project.savedIn", { name: UiProject.fileHandle.name, tables: Store.project.tables.length, queries: Store.project.queries.length }));
             return true;
@@ -13480,7 +14392,7 @@ ORDER BY edificios DESC, sede;</pre>
             UiProject.fileHandle = null;
           }
         }
-        const savedName = Persistence.saveToFile(Store.project);
+        const savedName = await Busy.run(I18n.t("busy.savingProject"), () => Persistence.saveToFile(Store.project));
         UiProject.markClean();
         setStatus(I18n.t("project.savedIn", { name: savedName, tables: Store.project.tables.length, queries: Store.project.queries.length }));
         return true;
@@ -13509,10 +14421,11 @@ ORDER BY edificios DESC, sede;</pre>
               types: [{ description: I18n.t("project.fileType"), accept: { "application/json": [".json"] } }],
             });
             const file = await handle.getFile();
-            const text = await file.text();
-            if (UiProject.openText(text, file.name)) {
-              UiProject.fileHandle = handle;
-            }
+            await Busy.run(I18n.t("busy.openingProject"), async () => {
+              if (await UiProject.openStream(file, file.name)) {
+                UiProject.fileHandle = handle;
+              }
+            });
             return;
           } catch (err) {
             if (err && err.name === "AbortError") {
@@ -13530,8 +14443,7 @@ ORDER BY edificios DESC, sede;</pre>
         }
         UiProject.fileHandle = null;
         try {
-          const text = await file.text();
-          UiProject.openText(text, file.name);
+          await Busy.run(I18n.t("busy.openingProject"), () => UiProject.openStream(file, file.name));
         } catch (err) {
           window.alert(I18n.t("project.readError", { name: file.name, message: err.message }));
         } finally {
@@ -13546,9 +14458,24 @@ ORDER BY edificios DESC, sede;</pre>
         UiQueries.clearOutput();
       },
 
+      /** Loads a project from a file, reading it in chunks: it does not matter
+       *  how large it is. Falls back to the text path in old browsers. */
+      async openStream(file, fileName) {
+        if (typeof file.stream !== "function") {
+          return UiProject.openText(await file.text(), fileName);
+        }
+        const result = await Persistence.parseProjectStream(file.stream());
+        return UiProject.openResult(result, fileName);
+      },
+
       /** Loads a project from text; it reports the errors when there are any. */
       openText(text, fileName) {
-        const result = Persistence.parseProject(text);
+        return UiProject.openResult(Persistence.parseProject(text), fileName);
+      },
+
+      /** Loads a project from an already parsed result; it reports the errors
+       *  when there are any. */
+      openResult(result, fileName) {
         if (!result.ok) {
           UiProject.showLoadErrors(fileName, result.errors);
           return false;
@@ -15370,6 +16297,69 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.isTestProject(result.project), true, "and it is worked out from the assert of its query");
     });
 
+    SelfTests.add("When_SerializeProjectInChunks_Expect_SameText", () => {
+      const project = {
+        name: 'Ñandú "y" Cía.\n',
+        tables: [{
+          name: "t",
+          description: null,
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "a", description: null }, { name: "b", description: "d" }],
+          rows: [{ a: 1, b: null }, { a: 'di "hola"\ny', b: true }, { a: 2.5, b: false }],
+        }, {
+          name: "empty",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [],
+          rows: [],
+        }],
+        queries: [{
+          name: "q",
+          description: "",
+          sql: "SELECT * FROM t",
+          assert: { columns: ["a"], rows: [[1]], rowCount: 1, ignoreOrder: false },
+        }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      const expected = Persistence.serializeProject(Utils.cloneJson(project));
+      const chunks = [...Persistence.serializeProjectChunks(Utils.cloneJson(project))];
+      assertEqual(chunks.join(""), expected, "the chunks rebuild exactly the same text");
+    });
+
+    SelfTests.add("When_JsonBatchesVerySmall_Expect_SameTextInSeveralBatches", () => {
+      const value = { a: [1, 2, 3], b: "x", c: { d: null } };
+      const batches = [...jsonBatches(value, 8)];
+      assert(batches.length > 1, "it must split into several batches");
+      assertEqual(batches.join(""), JSON.stringify(value, null, 2), "and join back to the same text");
+    });
+
+    SelfTests.add("When_JsonStreamParserTinyChunks_Expect_SameValue", () => {
+      const text = JSON.stringify({
+        name: 'Ñandú "y"\n',
+        list: [1, -2.5e3, true, false, null, 'a\\b"c', { nested: [] }, []],
+        empty: {},
+      }, null, 2);
+      const parser = createJsonStreamParser();
+      for (let index = 0; index < text.length; index += 3) {
+        parser.write(text.slice(index, index + 3));
+      }
+      assertEqual(parser.finish(), JSON.parse(text), "the stream parser rebuilds the same value");
+    });
+
+    SelfTests.add("When_JsonStreamParserTruncated_Expect_Error", () => {
+      const parser = createJsonStreamParser();
+      parser.write('{"a": [1, 2');
+      let failed = false;
+      try {
+        parser.finish();
+      } catch (err) {
+        failed = true;
+      }
+      assert(failed, "an incomplete JSON must fail");
+    });
+
     SelfTests.add("When_ProjectFileName_Expect_Slug", () => {
       assertEqual(Persistence.projectFileName({ name: "My Project" }), "my_project.json", "slug of the name");
       assertEqual(Persistence.projectFileName({ name: "Ñandú y Cía." }), "nandu_y_cia.json", "accents cleaned");
@@ -15427,6 +16417,28 @@ ORDER BY edificios DESC, sede;</pre>
       const result = Importer.parseCsv("a,b\n123,", { delimiter: ",", header: true, infer: false });
       assert(result.ok, "valid CSV: " + JSON.stringify(result.errors));
       assertEqual(result.rows[0], ["123", ""], "without inference everything is text");
+    });
+
+    SelfTests.add("When_CsvStreamParserOneCharChunks_Expect_SameRows", () => {
+      const text = '\uFEFFa;b;c\r\n"1;x";"di ""hola"""\r\n\r\n"linea\nnueva";2;3\r\n\r\n';
+      const expected = splitCsvRows(text, ";");
+      const parser = createCsvStreamParser(";");
+      const rows = [];
+      for (let index = 0; index < text.length; index += 1) {
+        parser.write(text[index], (row) => rows.push(row));
+      }
+      const result = parser.finish((row) => rows.push(row));
+      assertEqual(result.errors, expected.errors, "the same quote errors");
+      assertEqual(rows, expected.rows, "the same rows and line numbers");
+    });
+
+    SelfTests.add("When_CsvStreamParserUnclosedQuote_Expect_Error", () => {
+      const parser = createCsvStreamParser(",");
+      const rows = [];
+      parser.write('a,b\n"sin cerrar', (row) => rows.push(row));
+      const result = parser.finish((row) => rows.push(row));
+      assertEqual(result.errors.length, 1, "an unclosed quote is reported");
+      assertEqual(rows.length, 2, "the rows read so far are kept");
     });
 
     SelfTests.add("When_JsonNestedValue_Expect_ErrorWithPath", () => {
@@ -20884,6 +21896,7 @@ ORDER BY edificios DESC, sede;</pre>
        ===================================================================== */
     const App = {
       init() {
+        Busy.bind();
         UiProject.bind();
         Ui.bind();
         UiSearch.bind();
