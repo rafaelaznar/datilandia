@@ -1666,7 +1666,7 @@
                 <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
                 <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
               
-                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo escribiendo el nombre (si no existe, se crea). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.</li>
+                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.</li>
               </ul>
             </section>
 
@@ -2199,8 +2199,7 @@ ORDER BY edificios DESC, sede;</pre>
           <label data-i18n="markup.label.description2" for="query-description">Descripción:</label>
           <input id="query-description" type="text" title="Descripción de la consulta (metadatos)">
           <label data-i18n="markup.label.folder" for="query-folder">Carpeta:</label>
-          <input data-i18n-title="ui.folderTip" id="query-folder" list="folder-list" type="text" title="Carpeta de la consulta; escribe un nombre nuevo para crearla">
-          <datalist id="folder-list"></datalist>
+          <select data-i18n-title="ui.folderTip" id="query-folder" title="Carpeta de la consulta; elige una de la lista (+C crea una nueva)"></select>
         </div>
         <textarea data-i18n-aria-label="markup.textarea.sqlQuery" data-i18n-title="markup.textarea.sqlQuerySELECTOnly" id="query-sql" rows="8" spellcheck="false" aria-label="Consulta SQL" title="Consulta SQL (solo SELECT)"></textarea>
         <div id="query-plan" class="muted"></div>
@@ -2603,7 +2602,7 @@ ORDER BY edificios DESC, sede;</pre>
     window.datilandia = window.datilandia || {};
     window.datilandia.messages = {
       en: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename or delete it from its header; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by typing the name (it is created when it does not exist). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename or delete it from its header; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>.",
         "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header renames, deletes and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
@@ -2639,7 +2638,7 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.queriesCount": {"one":"{count} query","other":"{count} queries"},
         "ui.folder": "Folder",
         "ui.folderNone": "No folder",
-        "ui.folderTip": "Folder of the query; type a new name to create it",
+        "ui.folderTip": "Folder of the query; choose one from the list (+F creates a new one)",
         "ui.tableFolderTip": "Folder of the table; choose one from the list (+F creates a new one)",
         "summary.folder": "Folder",
         "markup.button.newFolder": "+F",
@@ -3665,7 +3664,7 @@ ORDER BY edificios DESC, sede;</pre>
         "utils.zeroRowsPerPage": "0 rows · {perPage} per page",
       },
       es: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo escribiendo el nombre (si no existe, se crea). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.",
         "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
@@ -3701,7 +3700,7 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.queriesCount": {"one":"{count} consulta","other":"{count} consultas"},
         "ui.folder": "Carpeta",
         "ui.folderNone": "Sin carpeta",
-        "ui.folderTip": "Carpeta de la consulta; escribe un nombre nuevo para crearla",
+        "ui.folderTip": "Carpeta de la consulta; elige una de la lista (+C crea una nueva)",
         "ui.tableFolderTip": "Carpeta de la tabla; elige una de la lista (+C crea una nueva)",
         "summary.folder": "Carpeta",
         "markup.button.newFolder": "+C",
@@ -15377,7 +15376,6 @@ ORDER BY edificios DESC, sede;</pre>
           foldAll: "btn-fold-all-tables",
           newFolder: "btn-new-table-folder",
           field: "table-folder",
-          options: null, // the tables choose their folder from a drop-down
           active: "activeTable",
           items: "tables",
           count: "folders.tablesCount",
@@ -15391,7 +15389,6 @@ ORDER BY edificios DESC, sede;</pre>
           foldAll: "btn-fold-all",
           newFolder: "btn-new-folder",
           field: "query-folder",
-          options: "folder-list",
           active: "activeQuery",
           items: "queries",
           count: "folders.queriesCount",
@@ -15419,6 +15416,14 @@ ORDER BY edificios DESC, sede;</pre>
         Ui.renderSidebarQueries();
       },
 
+      /** Repaints the list of that kind and refreshes the folder field of its
+       *  editor, so a folder that was just created, renamed or deleted shows up
+       *  (or disappears) without having to reopen the item. */
+      refresh(kind) {
+        UiFolders.repaint(kind);
+        UiFolders.fillEditorOptions(kind);
+      },
+
       /** Item of that kind that is open in its editor (null when there is none). */
       activeItem(kind) {
         const spec = UiFolders.KIND[kind];
@@ -15433,14 +15438,8 @@ ORDER BY edificios DESC, sede;</pre>
           document.getElementById(spec.foldAll).addEventListener("click", () => UiFolders.toggleAll(kind));
           UiFolders.listOf(kind).addEventListener("click", (event) => UiFolders.headerClick(kind, event));
           UiFolders.bindDrag(kind);
-          const field = document.getElementById(spec.field);
-          field.addEventListener("change", () => UiFolders.commitEditorFolder(kind));
-          field.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              UiFolders.commitEditorFolder(kind);
-            }
-          });
+          document.getElementById(spec.field)
+            .addEventListener("change", () => UiFolders.commitEditorFolder(kind));
         });
       },
 
@@ -15662,30 +15661,18 @@ ORDER BY edificios DESC, sede;</pre>
           return;
         }
         UiProject.markDirty();
-        UiFolders.repaint(kind);
+        UiFolders.refresh(kind);
         setStatus(folder
           ? I18n.t(UiFolders.KIND[kind].moved, { name: itemName, folder: folder })
           : I18n.t(UiFolders.KIND[kind].unfolder, { name: itemName }));
       },
 
-      /** Fills the folder field and its list of suggestions for the item of
-       *  that kind that is open in its editor. */
+      /** Fills the drop-down of the folders of that list for the item of that
+       *  kind that is open in its editor. */
       fillEditorOptions(kind) {
         const spec = UiFolders.KIND[kind];
         const item = UiFolders.activeItem(kind);
-        const folders = Model.foldersOf(Store.project, kind);
-        if (spec.options === null) {
-          UiFolders.fillFolderSelect(spec, item, folders);
-          return;
-        }
-        document.getElementById(spec.field).value = item ? item.folder || "" : "";
-        const list = document.getElementById(spec.options);
-        list.textContent = "";
-        folders.forEach((name) => {
-          const option = document.createElement("option");
-          option.value = name;
-          list.appendChild(option);
-        });
+        UiFolders.fillFolderSelect(spec, item, Model.foldersOf(Store.project, kind));
       },
 
       /** Fills the drop-down of the folders of that list: «no folder» first and
@@ -15706,9 +15693,8 @@ ORDER BY edificios DESC, sede;</pre>
         select.value = item && item.folder ? item.folder : "";
       },
 
-      /** Saves the folder chosen in the editor: a name that does not exist
-       *  creates the folder (the field of the queries) and an empty one takes
-       *  the item out of every folder. */
+      /** Saves the folder chosen in the editor: an empty value takes the item
+       *  out of every folder. New folders are created with the +C button. */
       commitEditorFolder(kind) {
         const spec = UiFolders.KIND[kind];
         const input = document.getElementById(spec.field);
@@ -15718,14 +15704,6 @@ ORDER BY edificios DESC, sede;</pre>
           UiFolders.fillEditorOptions(kind);
           return;
         }
-        if (name !== "" && !Model.foldersOf(Store.project, kind).includes(name)) {
-          const created = Model.addFolder(Store.project, name, kind);
-          if (!created.ok) {
-            setStatus(created.error);
-            UiFolders.fillEditorOptions(kind);
-            return;
-          }
-        }
         const result = Model.moveToFolder(Store.project, item.name, name, kind);
         if (!result.ok) {
           setStatus(result.error);
@@ -15733,8 +15711,7 @@ ORDER BY edificios DESC, sede;</pre>
           return;
         }
         UiProject.markDirty();
-        UiFolders.repaint(kind);
-        UiFolders.fillEditorOptions(kind);
+        UiFolders.refresh(kind);
         setStatus(name === ""
           ? I18n.t(spec.unfolder, { name: item.name })
           : I18n.t(spec.moved, { name: item.name, folder: name }));
@@ -15757,7 +15734,7 @@ ORDER BY edificios DESC, sede;</pre>
           return;
         }
         UiProject.markDirty();
-        UiFolders.repaint(kind);
+        UiFolders.refresh(kind);
         setStatus(I18n.t("folders.created", { name: name }));
       },
 
@@ -15795,12 +15772,12 @@ ORDER BY edificios DESC, sede;</pre>
               setStatus(result.error);
             } else if (clean !== name) {
               UiProject.markDirty();
-              UiFolders.repaint(kind);
+              UiFolders.refresh(kind);
               setStatus(I18n.t("folders.renamedMessage", { name: clean }));
               return;
             }
           }
-          UiFolders.repaint(kind);
+          UiFolders.refresh(kind);
         };
         input.addEventListener("keydown", (event) => {
           if (event.key === "Enter") {
@@ -15828,6 +15805,7 @@ ORDER BY edificios DESC, sede;</pre>
         }
         UiProject.markDirty();
         Ui.renderAll();
+        UiFolders.fillEditorOptions(kind);
         setStatus(I18n.t(spec.deleted, { name: name, count: total }));
       },
 
@@ -22117,12 +22095,16 @@ ORDER BY edificios DESC, sede;</pre>
       const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
       Store.replaceProject(folderProject());
       UiQueries.select("q1");
-      const input = document.getElementById("query-folder");
-      assertEqual(input.value, "Sales", "the editor shows the folder of the query");
-      const options = [...document.querySelectorAll("#folder-list option")].map((option) => option.value);
-      assertEqual(options, ["Sales", "2026"], "and offers every folder of the project");
+      const field = document.getElementById("query-folder");
+      assertEqual(field.tagName, "SELECT", "the folder of the query is chosen from a drop-down");
+      assertEqual(field.value, "Sales", "the editor shows the folder of the query");
+      assertEqual(
+        [...field.options].map((option) => [option.value, option.textContent]),
+        [["", "No folder"], ["Sales", "Sales"], ["2026", "2026"]],
+        "and lists the «no folder» option first and then every folder of the project",
+      );
       UiQueries.select("q3");
-      assertEqual(input.value, "", "a query without folder leaves the field empty");
+      assertEqual(field.value, "", "a query without folder leaves the field on «no folder»");
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
@@ -22130,24 +22112,30 @@ ORDER BY edificios DESC, sede;</pre>
       UiProject.updateDirtyIndicator();
     });
 
-    SelfTests.add("When_TypeFolderInEditor_Expect_QueryMoved", () => {
+    SelfTests.add("When_ChooseQueryFolderInEditor_Expect_QueryMoved", () => {
       const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
       Store.replaceProject(folderProject());
       Store.dirty = false;
       UiQueries.select("q3");
-      const input = document.getElementById("query-folder");
-      input.value = "Ventas";
-      input.dispatchEvent(new Event("change"));
-      assertEqual(Store.project.folders, ["Sales", "2026", "Ventas"], "a name that does not exist creates the folder");
-      assertEqual(Store.project.queries[2].folder, "Ventas", "and the query goes into it");
+      const field = document.getElementById("query-folder");
+      field.value = "Sales";
+      field.dispatchEvent(new Event("change"));
+      assertEqual(Store.project.folders, ["Sales", "2026"], "the drop-down never invents a folder");
+      assertEqual(Store.project.queries[2].folder, "Sales", "and the query goes into it");
       assertEqual(Store.dirty, true, "the project is left pending save");
       assert(document.getElementById("status").textContent.includes("q3"), "the status says what happened: " + document.getElementById("status").textContent);
       const list = [...document.querySelectorAll("#list-queries li[data-name]")];
-      assertEqual(list.find((item) => item.dataset.name === "q3").dataset.folder, "Ventas", "the sidebar moves it too");
-      input.value = "";
-      input.dispatchEvent(new Event("change"));
-      assertEqual(Store.project.queries[2].folder, undefined, "emptying the field takes the query out of its folder");
-      assertEqual(Store.project.folders, ["Sales", "2026", "Ventas"], "and the folder stays, even when it is empty");
+      assertEqual(list.find((item) => item.dataset.name === "q3").dataset.folder, "Sales", "the sidebar moves it too");
+      field.value = "";
+      field.dispatchEvent(new Event("change"));
+      assertEqual(Store.project.queries[2].folder, undefined, "«no folder» takes the query out of its folder");
+      assertEqual(Store.project.folders, ["Sales", "2026"], "and the folder stays, even when it is empty");
+      // A folder created from the panel shows up in the drop-down right away.
+      document.getElementById("btn-new-folder").click();
+      assertEqual([...field.options].map((option) => option.value), ["", "Sales", "2026", "New folder"], "the +C button creates a folder and the drop-down shows it without reopening the query");
+      field.value = "New folder";
+      field.dispatchEvent(new Event("change"));
+      assertEqual(Store.project.queries[2].folder, "New folder", "and choosing it moves the query");
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
