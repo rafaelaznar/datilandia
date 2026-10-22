@@ -1,14 +1,15 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 134 queries)",
+  "name": "SQL tests · Education (8 tables, 139 queries)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
     "C · Related queries",
     "D · Integrity",
     "E · Views",
-    "F · Subqueries"
+    "F · Subqueries",
+    "G · Unions"
   ],
   "tableFolders": [
     "Structure",
@@ -6718,6 +6719,149 @@
         ]
       },
       "folder": "F · Subqueries"
+    },
+    {
+      "name": "G01 · Campus and degree names, without repeats",
+      "description": "UNION of two tables with one column each: the campus names and the degree names, every one once and sorted by name.",
+      "sql": "SELECT name FROM campuses UNION SELECT name FROM degrees ORDER BY name",
+      "assert": {
+        "columns": [
+          "name"
+        ],
+        "rows": [
+          [
+            "Andean Campus"
+          ],
+          [
+            "Computer Engineering"
+          ],
+          [
+            "Data Science"
+          ],
+          [
+            "Law"
+          ],
+          [
+            "Medicine"
+          ],
+          [
+            "North Campus"
+          ],
+          [
+            "Primary Education"
+          ],
+          [
+            "Seaside Campus"
+          ],
+          [
+            "Software Engineering"
+          ],
+          [
+            "South Campus"
+          ]
+        ]
+      },
+      "folder": "G · Unions"
+    },
+    {
+      "name": "G02 · The country of every campus, twice (UNION ALL)",
+      "description": "The same SELECT on both sides of UNION ALL: the rows are stacked without removing repeats, so there are 8 of them.",
+      "sql": "SELECT country FROM campuses UNION ALL SELECT country FROM campuses ORDER BY country",
+      "assert": {
+        "columns": [
+          "country"
+        ],
+        "rows": [
+          [
+            "Colombia"
+          ],
+          [
+            "Colombia"
+          ],
+          [
+            "Spain"
+          ],
+          [
+            "Spain"
+          ],
+          [
+            "Spain"
+          ],
+          [
+            "Spain"
+          ],
+          [
+            "Spain"
+          ],
+          [
+            "Spain"
+          ]
+        ]
+      },
+      "folder": "G · Unions"
+    },
+    {
+      "name": "G03 · Every country once (UNION)",
+      "description": "The same union without ALL: UNION removes the repeated rows, so each country comes out once.",
+      "sql": "SELECT country FROM campuses UNION SELECT country FROM campuses ORDER BY country",
+      "assert": {
+        "columns": [
+          "country"
+        ],
+        "rows": [
+          [
+            "Colombia"
+          ],
+          [
+            "Spain"
+          ]
+        ]
+      },
+      "folder": "G · Unions"
+    },
+    {
+      "name": "G04 · A union read as a table",
+      "description": "The union goes in the FROM with an alias (derived table): the subject identifiers of the catalogue and of the enrollments, without repeats, are counted.",
+      "sql": "SELECT COUNT(*) AS n FROM (SELECT id_subject FROM subjects UNION SELECT id_subject FROM enrollments) AS t",
+      "assert": {
+        "columns": [
+          "n"
+        ],
+        "rows": [
+          [
+            16
+          ]
+        ]
+      },
+      "folder": "G · Unions"
+    },
+    {
+      "name": "G05 · Union with output alias, ORDER BY and LIMIT",
+      "description": "Both sides name their column item: the ORDER BY of the union sorts the combined result by that name and the LIMIT keeps the first 5.",
+      "sql": "SELECT name AS item FROM buildings UNION SELECT code AS item FROM classrooms ORDER BY item LIMIT 5",
+      "assert": {
+        "columns": [
+          "item"
+        ],
+        "rows": [
+          [
+            "B-EST1"
+          ],
+          [
+            "B-SALA"
+          ],
+          [
+            "Bolívar Block"
+          ],
+          [
+            "C-LAB1"
+          ],
+          [
+            "C-LAB2"
+          ]
+        ]
+      },
+      "folder": "G · Unions"
     }
   ],
   "settings": {

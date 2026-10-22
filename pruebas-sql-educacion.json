@@ -1,14 +1,15 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 134 consultas)",
+  "name": "Pruebas SQL · Educación (8 tablas, 139 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
     "C · Consultas relacionadas",
     "D · Integridad",
     "E · Vistas",
-    "F · Subconsultas"
+    "F · Subconsultas",
+    "G · Uniones"
   ],
   "tableFolders": [
     "Estructura",
@@ -6718,6 +6719,149 @@
         ]
       },
       "folder": "F · Subconsultas"
+    },
+    {
+      "name": "G01 · Nombres de campus y de titulaciones, sin repetir",
+      "description": "UNION de dos tablas de una columna: los nombres de los campus y los de las titulaciones, cada uno una vez y ordenados por nombre.",
+      "sql": "SELECT nombre FROM sedes UNION SELECT nombre FROM estudios ORDER BY nombre",
+      "assert": {
+        "columns": [
+          "nombre"
+        ],
+        "rows": [
+          [
+            "Campus Andino"
+          ],
+          [
+            "Campus Norte"
+          ],
+          [
+            "Campus Sur"
+          ],
+          [
+            "Campus del Mar"
+          ],
+          [
+            "Ciencia de Datos"
+          ],
+          [
+            "Derecho"
+          ],
+          [
+            "Educación Primaria"
+          ],
+          [
+            "Ingeniería Informática"
+          ],
+          [
+            "Ingeniería del Software"
+          ],
+          [
+            "Medicina"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G02 · El país de cada campus, dos veces (UNION ALL)",
+      "description": "El mismo SELECT a los dos lados de UNION ALL: las filas se ponen una debajo de otra sin quitar repetidos, así que salen 8.",
+      "sql": "SELECT pais FROM sedes UNION ALL SELECT pais FROM sedes ORDER BY pais",
+      "assert": {
+        "columns": [
+          "pais"
+        ],
+        "rows": [
+          [
+            "Colombia"
+          ],
+          [
+            "Colombia"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G03 · Cada país una vez (UNION)",
+      "description": "La misma unión sin ALL: UNION quita las filas repetidas, así que cada país sale una sola vez.",
+      "sql": "SELECT pais FROM sedes UNION SELECT pais FROM sedes ORDER BY pais",
+      "assert": {
+        "columns": [
+          "pais"
+        ],
+        "rows": [
+          [
+            "Colombia"
+          ],
+          [
+            "España"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G04 · Una unión leída como tabla",
+      "description": "La unión va en el FROM con alias (tabla derivada): se cuentan los identificadores de asignatura del catálogo y de las matrículas, sin repetir.",
+      "sql": "SELECT COUNT(*) AS n FROM (SELECT id_asignatura FROM asignaturas UNION SELECT id_asignatura FROM matriculas) AS t",
+      "assert": {
+        "columns": [
+          "n"
+        ],
+        "rows": [
+          [
+            16
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G05 · Unión con alias, ORDER BY y LIMIT",
+      "description": "Los dos lados llaman item a su columna: el ORDER BY de la unión ordena el resultado combinado por ese nombre y el LIMIT deja los 5 primeros.",
+      "sql": "SELECT nombre AS item FROM edificios UNION SELECT codigo AS item FROM aulas ORDER BY item LIMIT 5",
+      "assert": {
+        "columns": [
+          "item"
+        ],
+        "rows": [
+          [
+            "Anexo Marina"
+          ],
+          [
+            "Aulario Kepler"
+          ],
+          [
+            "Aulario Pitágoras"
+          ],
+          [
+            "B-EST1"
+          ],
+          [
+            "B-SALA"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
     }
   ],
   "settings": {

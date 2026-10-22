@@ -1,14 +1,15 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 191 consultas)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 196 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
     "C · Consultas relacionadas",
     "D · Integridad",
     "E · Vistas",
-    "F · Subconsultas"
+    "F · Subconsultas",
+    "G · Uniones"
   ],
   "tableFolders": [
     "Centro",
@@ -20254,6 +20255,179 @@
         ]
       },
       "folder": "F · Subconsultas"
+    },
+    {
+      "name": "G01 · Nombres de hospitales y de aseguradoras, sin repetir",
+      "description": "UNION de dos tablas de una columna: los nombres de los hospitales y los de las aseguradoras, cada uno una vez y ordenados por nombre.",
+      "sql": "SELECT nombre FROM hospitales UNION SELECT nombre FROM seguros ORDER BY nombre",
+      "assert": {
+        "columns": [
+          "nombre"
+        ],
+        "rows": [
+          [
+            "Andes Salud"
+          ],
+          [
+            "Clínica Santa Elena"
+          ],
+          [
+            "Cobertura Básica"
+          ],
+          [
+            "Hospital Clínic de Barcelona"
+          ],
+          [
+            "Hospital General de Valencia"
+          ],
+          [
+            "Hospital Metropolitano de Quito"
+          ],
+          [
+            "Hospital San José"
+          ],
+          [
+            "Hospital Universitario La Paz"
+          ],
+          [
+            "Hospital Virgen del Rocío"
+          ],
+          [
+            "Mutua Laboral"
+          ],
+          [
+            "Salud Pública"
+          ],
+          [
+            "Seguros Médicos del Norte"
+          ],
+          [
+            "VidaPlena"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G02 · El país de cada hospital, dos veces (UNION ALL)",
+      "description": "El mismo SELECT a los dos lados de UNION ALL: las filas se ponen una debajo de otra sin quitar repetidos, así que salen 14.",
+      "sql": "SELECT pais FROM hospitales UNION ALL SELECT pais FROM hospitales ORDER BY pais",
+      "assert": {
+        "columns": [
+          "pais"
+        ],
+        "rows": [
+          [
+            "Colombia"
+          ],
+          [
+            "Colombia"
+          ],
+          [
+            "Ecuador"
+          ],
+          [
+            "Ecuador"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ],
+          [
+            "España"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G03 · Cada país una vez (UNION)",
+      "description": "La misma unión sin ALL: UNION quita las filas repetidas, así que cada país sale una sola vez.",
+      "sql": "SELECT pais FROM hospitales UNION SELECT pais FROM hospitales ORDER BY pais",
+      "assert": {
+        "columns": [
+          "pais"
+        ],
+        "rows": [
+          [
+            "Colombia"
+          ],
+          [
+            "Ecuador"
+          ],
+          [
+            "España"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G04 · Una unión leída como tabla",
+      "description": "La unión va en el FROM con alias (tabla derivada): se cuentan los identificadores de médico de la plantilla y de las citas, sin repetir.",
+      "sql": "SELECT COUNT(*) AS n FROM (SELECT id_medico FROM medicos UNION SELECT id_medico FROM citas) AS t",
+      "assert": {
+        "columns": [
+          "n"
+        ],
+        "rows": [
+          [
+            31
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
+    },
+    {
+      "name": "G05 · Unión con alias, ORDER BY y LIMIT",
+      "description": "Los dos lados llaman item a su columna: el ORDER BY de la unión ordena el resultado combinado por ese nombre y el LIMIT deja los 5 primeros.",
+      "sql": "SELECT nombre AS item FROM hospitales UNION SELECT nombre AS item FROM seguros ORDER BY item LIMIT 5",
+      "assert": {
+        "columns": [
+          "item"
+        ],
+        "rows": [
+          [
+            "Andes Salud"
+          ],
+          [
+            "Clínica Santa Elena"
+          ],
+          [
+            "Cobertura Básica"
+          ],
+          [
+            "Hospital Clínic de Barcelona"
+          ],
+          [
+            "Hospital General de Valencia"
+          ]
+        ]
+      },
+      "folder": "G · Uniones"
     }
   ],
   "settings": {

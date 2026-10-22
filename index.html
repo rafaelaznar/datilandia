@@ -1866,6 +1866,7 @@ FROM tabla [AS alias] [, otra AS alias]…
 [INNER|LEFT [OUTER] JOIN tabla AS alias ON condición]
 [WHERE condición]
 [GROUP BY expresión [, …]] [HAVING condición]
+[UNION [ALL] SELECT …]
 [ORDER BY expresión [ASC|DESC] [NULLS FIRST|LAST] [, …]]
 [LIMIT n [OFFSET m]]</pre>
                     <p data-i18n-html="markup.p.youOnlyHaveWriteParts">Solo hay que escribir las partes que necesites, pero el orden es ese. Las palabras clave no distinguen mayúsculas de minúsculas. <code>FROM</code> es obligatorio: no hay <code>SELECT</code> sin tabla.</p>
@@ -1874,6 +1875,11 @@ FROM tabla [AS alias] [, otra AS alias]…
                     <h3>SELECT y DISTINCT</h3>
                     <p data-i18n-html="markup.p.bringsAllColumnsIfNot"><code>*</code> trae todas las columnas; si no, una lista de columnas, expresiones o funciones separadas por comas. Cada elemento admite un alias, y el alias se escribe <b data-i18n-html="markup.b.alwaysAS">siempre con <code>AS</code></b>.</p>
                     <p data-i18n-html="markup.p.distinctRemovesRepeatedRowsComparing"><code>DISTINCT</code> quita las filas repetidas comparando el conjunto de columnas seleccionadas.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.combiningQueriesUnion">Unir consultas: UNION y UNION ALL</h3>
+                    <p data-i18n-html="markup.p.unionStacksRowsTwoQueries"><code>UNION</code> <b>pega las filas</b> de dos consultas una debajo de otra: las dos tienen que devolver <b>el mismo número de columnas</b>, en el mismo orden. <code>UNION</code> quita las filas repetidas; <code>UNION ALL</code> las deja todas. Se pueden encadenar más de dos consultas.</p>
+                    <p data-i18n-html="markup.p.orderByLimitAfterUnionApply">El <code>ORDER BY</code> y el <code>LIMIT</code> que van <b>al final</b> ordenan y cortan el resultado entero de la unión; ahí solo valen las columnas del resultado, por su nombre (<code>AS</code>) o por su posición (<code>ORDER BY 2</code>).</p>
                   </section>
                 </div>
                 <div class="help-sql-code">
@@ -1889,6 +1895,16 @@ FROM alumnos;</pre>
                   <pre class="sql-ejemplo mono">SELECT DISTINCT curso
 FROM alumnos
 ORDER BY curso;</pre>
+                  <h4 data-i18n="markup.h4.combinedWithUnion">Dos cursos, uno debajo del otro</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre, curso FROM alumnos_2025
+UNION
+SELECT nombre, curso FROM alumnos_2026
+ORDER BY nombre;</pre>
+                  <h4 data-i18n="markup.h4.keepingRepeatsUnionAll">Con repetidos: UNION ALL</h4>
+                  <pre class="sql-ejemplo mono">SELECT curso FROM alumnos_2025
+UNION ALL
+SELECT curso FROM alumnos_2026
+ORDER BY 1;</pre>
                 </div>
               </div>
               <h3 data-i18n="markup.h3.whatDialectSupports" class="help-sql-subtitulo">Lo que admite el dialecto</h3>
@@ -1905,6 +1921,8 @@ ORDER BY curso;</pre>
                 <dd><code>=</code> <code>==</code> <code>&lt;&gt;</code> <code>!=</code> <code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code>, <code>AND</code>, <code>OR</code>, <code>NOT</code>; <code>IS [NOT] NULL</code>; <code>[NOT] LIKE … [ESCAPE …]</code>; <code>[NOT] IN (…)</code>; <code>[NOT] BETWEEN … AND …</code>; <code>[NOT] IN (SELECT …)</code>, <code>[NOT] EXISTS (SELECT …)</code>, <code>= ANY (SELECT …)</code>, <code>&gt;= ALL (SELECT …)</code>.</dd>
                 <dt data-i18n="markup.dt.subqueries">Subconsultas</dt>
                 <dd data-i18n-html="markup.dd.subqueryIsSELECTInsideAnother">Un <code>SELECT</code> entre paréntesis dentro de otro: con <code>IN</code> y <code>NOT IN</code>, con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM otra)</code>). La subconsulta puede leer una <b>consulta como tabla</b>, y también va en el <code>FROM</code> con alias (<b>tabla derivada</b>): <code>FROM (SELECT …) AS t</code>. Si por dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Como valor (en el <code>SELECT</code> o comparada) tiene que devolver <b>una sola columna</b> y una sola fila.</dd>
+                <dt data-i18n="markup.dt.union">UNION</dt>
+                <dd data-i18n-html="markup.dd.unionConcatenatesRowsTwoSelects"><code>UNION</code> y <code>UNION ALL</code> ponen debajo las filas de dos <code>SELECT</code> (y de más, encadenados): las dos partes devuelven el mismo número de columnas y <code>UNION</code> quita las filas repetidas, mientras que <code>UNION ALL</code> las conserva. El <code>ORDER BY</code> y el <code>LIMIT</code> finales valen para el resultado entero.</dd>
                 <dt>GROUP BY / HAVING</dt>
                 <dd data-i18n-html="markup.dd.aggregatesCOUNTSUMAVGMIN">Agregados <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>, con <code>DISTINCT</code> dentro: <code>COUNT(DISTINCT puesto)</code>. <code>HAVING</code> filtra los grupos ya calculados.</dd>
                 <dt>ORDER BY</dt>
@@ -2195,7 +2213,7 @@ ORDER BY fecha DESC;</pre>
                   <section>
                     <h3 data-i18n="markup.h3.errorsPlanLimits">Errores, plan y límites</h3>
                     <p data-i18n-html="markup.p.ifSomethingIsBadlyWritten">Si algo está mal escrito, el mensaje indica <b>línea y columna</b>, enseña el fragmento y sugiere el nombre más parecido. Al ejecutar, el <b>plan</b> muestra cada paso con su tiempo.</p>
-                    <p data-i18n-html="markup.p.queriesAreReadOnlyThere">Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>UNION</code> o <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas.</p>
+                    <p data-i18n-html="markup.p.queriesAreReadOnlyThere">Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas; para juntar resultados, <code>UNION</code>.</p>
                     <p data-i18n-html="markup.p.oneSingleStatementRunsFinal">Se ejecuta <b>una sola sentencia</b>: el <code>;</code> final se acepta, pero no encadenes varias consultas separadas por <code>;</code> (todo lo que vaya después se considera un error de sobra).</p>
                   </section>
                   <section>
@@ -2943,6 +2961,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dd.subqueryIsSELECTInsideAnother": "A <code>SELECT</code> in brackets inside another one: with <code>IN</code> and <code>NOT IN</code>, with a comparison and <code>ANY</code>/<code>SOME</code> or <code>ALL</code>, and with <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM another)</code>). The subquery can read a <b>query as a table</b>, and it can also go in the <code>FROM</code> with an alias (<b>derived table</b>): <code>FROM (SELECT …) AS t</code>. If it names outer columns inside it is <b>correlated</b> and runs row by row. Used as a value (in the <code>SELECT</code> or compared) it must return <b>a single column</b> and a single row.",
         "markup.dd.severalColumnsASCDESCNULLS": "Several columns, <code>ASC</code>/<code>DESC</code> and <code>NULLS FIRST</code>/<code>NULLS LAST</code>. A number is the position of a column of the result: <code>ORDER BY 2 DESC</code>. Numeric texts are sorted and compared <b>by value</b>, and where the missing values go is decided by <code>NULLS FIRST/LAST</code> even if the key is <code>DESC</code> (without saying it: first in <code>ASC</code>, at the end in <code>DESC</code>).",
         "markup.dd.textTextAreBothText": "<code>'text'</code> and <code>\"text\"</code> are <b>both text</b> (to include the quote, double it); <code>[Name with spaces]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
+        "markup.dd.unionConcatenatesRowsTwoSelects": "<code>UNION</code> and <code>UNION ALL</code> stack the rows of two <code>SELECT</code>s (and of more, chained): both sides return the same number of columns and <code>UNION</code> drops the repeated rows, while <code>UNION ALL</code> keeps them. The final <code>ORDER BY</code> and <code>LIMIT</code> apply to the whole result.",
         "markup.div.dragChangeWidthMinimum140": "Drag to change the width (minimum 140 px, maximum 480 px); double-click to go back to 195 px; when it has the focus, the keyboard arrows",
         "markup.div.widthLeftColumn": "Width of the left column",
         "markup.dt.fields": "Fields",
@@ -2968,6 +2987,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dt.tablesProject": "Tables in the project",
         "markup.dt.subqueries": "Subqueries",
         "markup.dt.typesConversion": "Types and conversion",
+        "markup.dt.union": "UNION",
         "markup.footer.applicationMessages": "Application messages",
         "markup.h2.importDataCSVJSON": "Import data (CSV / JSON)",
         "markup.h2.projectQueries": "Project queries",
@@ -2977,6 +2997,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h3.aggregates": "Aggregates",
         "markup.h3.changesDataQueries": "Changes in the data and in the queries",
         "markup.h3.combiningConditions": "Combining conditions",
+        "markup.h3.combiningQueriesUnion": "Combining queries: UNION and UNION ALL",
         "markup.h3.defaultCSVExport": "Default CSV export",
         "markup.h3.defaultCSVImport": "Default CSV import",
         "markup.h3.differencesAssertedResult": "Differences with the asserted result",
@@ -3017,6 +3038,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h4.assertThatOnlyCountsRows": "An assert that only counts rows or that does not sort",
         "markup.h4.cartesianProduct5Students3": "Cartesian product: 5 students × 3 cycles = 15 rows",
         "markup.h4.columnsAliasesExpressions": "Columns, aliases and expressions",
+        "markup.h4.combinedWithUnion": "Two courses, one under the other",
         "markup.h4.commentsQuotesNamesBrackets": "Comments, quotes and names in brackets",
         "markup.h4.compareFilter": "Compare and filter",
         "markup.h4.countGroup": "Count and group",
@@ -3025,6 +3047,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h4.filterGroupsHAVING": "Filter groups with HAVING",
         "markup.h4.implicitJoinCommasAliases": "Implicit join with commas, with aliases",
         "markup.h4.itsAssertProjectFile": "And its assert in the project file",
+        "markup.h4.keepingRepeatsUnionAll": "With repeats: UNION ALL",
         "markup.h4.leftJOINAlsoThoseNo": "LEFT JOIN: also those with no pair",
         "markup.h4.missingValues": "Missing values",
         "markup.h4.paginationOverViewThatAlready": "Pagination over a view that already brings its own LIMIT",
@@ -3176,10 +3199,11 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.numbersAreWrittenDecimalPoint": "Numbers are written with a decimal point (<code>3.5</code>). <code>'text'</code> and <code>\"text\"</code> are <b>exactly the same</b>: a string of text. To put a quote inside, double it (<code>'d''Artagnan'</code>).",
         "markup.p.oneSingleStatementRunsFinal": "<b>One single statement</b> runs: the final <code>;</code> is accepted, but do not chain several queries separated by <code>;</code> (everything after it is treated as a spurious error).",
         "markup.p.oneTableCanBeQueried": "One table can be queried, or several separated by commas. The alias (with <code>AS</code>) shortens the references and avoids ambiguities: <code>c.name</code>. If there is no doubt, the bare field name is also valid.",
+        "markup.p.orderByLimitAfterUnionApply": "The <code>ORDER BY</code> and <code>LIMIT</code> written <b>at the end</b> sort and cut the whole result of the union; there only the columns of the result count, by their name (<code>AS</code>) or by their position (<code>ORDER BY 2</code>).",
         "markup.p.originHas01Related": "An <b>origin</b> has 0 or 1 related targets.",
         "markup.p.otherSectionsThisSQLHelp": "The other sections of this <b>SQL help</b> explain every part with examples; errors and limits, in <b>Limits and tests</b>.",
         "markup.p.projectIsTestOneWhen": "A project is a <b>test</b> one when some of its queries checks a result: when it is opened all the queries run and are compared with their <code>\"assert\"</code>, and the report opens on its own. The <code>\"testing\"</code> property of old files is no longer needed (it is ignored): test mode is worked out from the queries. Every <code>assert</code> takes <code>columns</code> (names and order of the columns), <code>rows</code> (the expected rows, value by value), <code>rowCount</code> (only how many rows) and <code>ignoreOrder</code> (compare whatever the order).",
-        "markup.p.queriesAreReadOnlyThere": "Queries are read-only: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and neither <code>UNION</code> nor <code>CASE</code>. Joins and subqueries are used to cross tables.",
+        "markup.p.queriesAreReadOnlyThere": "Queries are read-only: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and neither <code>CASE</code>. Joins and subqueries are used to cross tables; <code>UNION</code> to stack results.",
         "markup.p.queriesUsedAsTablesCanBeRead": "Queries can also be read <b>inside a subquery</b> and as a <b>derived table</b>: <code>WHERE id IN (SELECT id FROM [sales summary])</code> and <code>FROM (SELECT …) AS t</code>. And a query whose SQL carries a subquery still works as a view: it runs whole, subquery included (section <b>Subqueries</b>).",
         "markup.p.queryIsMaterialisedBeforeBeing": "The query is <b>materialised</b> before being read: it runs entirely —its <code>WHERE</code>, its <code>JOIN</code>, its <code>GROUP BY</code>/<code>HAVING</code>, its <code>DISTINCT</code>, its <code>ORDER BY</code> and its <code>LIMIT</code>/<code>OFFSET</code>— and what the outer query sees is <b>its finished result</b>. That is why the <code>LIMIT</code> of a view arrives already trimmed, and a view that groups can be aggregated again (double aggregation).",
         "markup.p.renamingTableFieldRewritesQueries": "Renaming a <b>table</b> or a <b>field</b> rewrites the queries of the project that use it: the <code>FROM</code>/<code>JOIN</code>, the qualified columns (<code>table.field</code>) and the bare column. <b>Output aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected; an <code>ORDER BY</code> pointing at an alias stays as it is.",
@@ -3191,6 +3215,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>is only shown if the project has some test</b>. To launch it without opening windows, with any project: <code>window.datilandia.runProjectTests()</code> returns the complete report.",
         "markup.p.theyCanBeNestedInside": "They can be nested inside each other and used both in the <code>SELECT</code> and in the <code>WHERE</code>, <code>GROUP BY</code> or <code>ORDER BY</code>. If the argument is <code>null</code>, the result is usually <code>null</code>.",
         "markup.p.typesAreKeptNumberField": "The <b>types are kept</b>: a <code>number</code> field is still a number when read from outside (it can be added, divided or compared with <code>= 31</code>), a <code>boolean</code> responds to <code>= true</code> and a <code>null</code> is still <code>null</code> (that is why <code>COALESCE</code>, <code>IS NULL</code> and <code>ORDER BY … NULLS FIRST</code> work). The columns are named as the <b>output aliases</b> of the view.",
+        "markup.p.unionStacksRowsTwoQueries": "<code>UNION</code> <b>glues the rows</b> of two queries one under the other: both must return <b>the same number of columns</b>, in the same order. <code>UNION</code> drops the repeated rows; <code>UNION ALL</code> keeps them all. More than two queries can be chained.",
         "markup.p.updateTableWarning": "Updating will <b>replace all the data</b> of the table. The table, its fields, its foreign keys and the queries that use it are kept. The new data must have the <b>same number of fields</b>, the <b>same names</b> (when the first row is a header) and the <b>same types</b>.",
         "markup.p.whereMissingValuesGoIs": "Where the missing values go is decided by <code>NULLS FIRST</code>/<code>NULLS LAST</code> and <code>DESC</code> does not flip it: without saying it, in <code>ASC</code> they go first and in <code>DESC</code> at the end.",
         "markup.p.youOnlyHaveWriteParts": "You only have to write the parts you need, but the order is that one. Keywords are not case-sensitive. <code>FROM</code> is compulsory: there is no <code>SELECT</code> without a table.",
@@ -3611,6 +3636,8 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlPlanner.scanSubquery": "Scan “{alias}” (subquery of the FROM)",
         "sqlPlanner.sortKeys": "Sort by {count} key(s)",
         "sqlPlanner.subqueryColumn": "(subquery)",
+        "sqlPlanner.union": "UNION of both results",
+        "sqlPlanner.unionAll": "UNION ALL of both results",
         "sqlRename.andMore": "{visibles} and {remaining} more",
         "sqlValidator.aggregateInGroupBy": "The aggregate function “{functionName}” cannot be used in GROUP BY.",
         "sqlValidator.aggregateInGroupByHint": "Group by columns and use the aggregate in the column list or in HAVING.",
@@ -3648,6 +3675,10 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlValidator.subqueryOneColumnHint": "Write one expression in the SELECT of the subquery, or pick one of its columns.",
         "sqlValidator.tableNotFoundNoTables": "Table “{tableName}” does not exist in the project, which has no tables yet.",
         "sqlValidator.tableNotFoundWithList": "Table “{tableName}” does not exist in the project. Available tables: {tables}.",
+        "sqlValidator.unionColumnCount": "The two sides of the UNION return a different number of columns: {left} and {right}.",
+        "sqlValidator.unionColumnCountHint": "Give both SELECTs the same number of columns, in the same order.",
+        "sqlValidator.unionOrderBy": "In a UNION, ORDER BY can only name a column of the result.",
+        "sqlValidator.unionOrderByHint": "Use the name of an output column (with AS) or its position: ORDER BY 2.",
         "sqlValidator.unsupportedExpression": "Unsupported expression: “{type}”.",
         "sqlValidator.usageHint": "Usage: {doc}.",
         "sqlValidator.wrongArgCount": "Function “{functionName}” expects {expected}, but received {received}.",
@@ -4032,6 +4063,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dd.subqueryIsSELECTInsideAnother": "Un <code>SELECT</code> entre paréntesis dentro de otro: con <code>IN</code> y <code>NOT IN</code>, con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM otra)</code>). La subconsulta puede leer una <b>consulta como tabla</b>, y también va en el <code>FROM</code> con alias (<b>tabla derivada</b>): <code>FROM (SELECT …) AS t</code>. Si por dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Como valor (en el <code>SELECT</code> o comparada) tiene que devolver <b>una sola columna</b> y una sola fila.",
         "markup.dd.severalColumnsASCDESCNULLS": "Varias columnas, <code>ASC</code>/<code>DESC</code> y <code>NULLS FIRST</code>/<code>NULLS LAST</code>. Un número es la posición de una columna del resultado: <code>ORDER BY 2 DESC</code>. Los textos numéricos se ordenan y comparan <b>por valor</b>, y el sitio de los valores que faltan lo manda <code>NULLS FIRST/LAST</code> aunque la clave sea <code>DESC</code> (sin indicarlo: primero en <code>ASC</code>, al final en <code>DESC</code>).",
         "markup.dd.textTextAreBothText": "<code>'texto'</code> y <code>\"texto\"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
+        "markup.dd.unionConcatenatesRowsTwoSelects": "<code>UNION</code> y <code>UNION ALL</code> ponen debajo las filas de dos <code>SELECT</code> (y de más, encadenados): las dos partes devuelven el mismo número de columnas y <code>UNION</code> quita las filas repetidas, mientras que <code>UNION ALL</code> las conserva. El <code>ORDER BY</code> y el <code>LIMIT</code> finales valen para el resultado entero.",
         "markup.div.dragChangeWidthMinimum140": "Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 195 px; con el foco, las flechas del teclado",
         "markup.div.widthLeftColumn": "Ancho de la columna izquierda",
         "markup.dt.fields": "Campos",
@@ -4057,6 +4089,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dt.tablesProject": "Tablas del proyecto",
         "markup.dt.subqueries": "Subconsultas",
         "markup.dt.typesConversion": "Tipos y conversión",
+        "markup.dt.union": "UNION",
         "markup.footer.applicationMessages": "Mensajes de la aplicación",
         "markup.h2.importDataCSVJSON": "Importar datos (CSV / JSON)",
         "markup.h2.projectQueries": "Consultas del proyecto",
@@ -4066,6 +4099,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h3.aggregates": "Agregados",
         "markup.h3.changesDataQueries": "Cambios en los datos y en las consultas",
         "markup.h3.combiningConditions": "Combinar condiciones",
+        "markup.h3.combiningQueriesUnion": "Unir consultas: UNION y UNION ALL",
         "markup.h3.defaultCSVExport": "Exportar CSV por defecto",
         "markup.h3.defaultCSVImport": "Importar CSV por defecto",
         "markup.h3.differencesAssertedResult": "Diferencias con el resultado asertado",
@@ -4106,6 +4140,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h4.assertThatOnlyCountsRows": "Un assert que solo cuenta filas o que no ordena",
         "markup.h4.cartesianProduct5Students3": "Producto cartesiano: 5 alumnos × 3 ciclos = 15 filas",
         "markup.h4.columnsAliasesExpressions": "Columnas, alias y expresiones",
+        "markup.h4.combinedWithUnion": "Dos cursos, uno debajo del otro",
         "markup.h4.commentsQuotesNamesBrackets": "Comentarios, comillas y nombres entre corchetes",
         "markup.h4.compareFilter": "Comparar y filtrar",
         "markup.h4.countGroup": "Contar y agrupar",
@@ -4114,6 +4149,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.h4.filterGroupsHAVING": "Filtrar grupos con HAVING",
         "markup.h4.implicitJoinCommasAliases": "Join implícito por comas, con alias",
         "markup.h4.itsAssertProjectFile": "Y su assert en el fichero del proyecto",
+        "markup.h4.keepingRepeatsUnionAll": "Con repetidos: UNION ALL",
         "markup.h4.leftJOINAlsoThoseNo": "LEFT JOIN: también los que no tienen pareja",
         "markup.h4.missingValues": "Valores que faltan",
         "markup.h4.paginationOverViewThatAlready": "Paginación sobre una vista que ya trae su propio LIMIT",
@@ -4265,10 +4301,11 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.numbersAreWrittenDecimalPoint": "Los números se escriben con punto decimal (<code>3.5</code>). <code>'texto'</code> y <code>\"texto\"</code> son <b>exactamente lo mismo</b>: una cadena de texto. Para meter una comilla dentro, duplícala (<code>'d''Artagnan'</code>).",
         "markup.p.oneSingleStatementRunsFinal": "Se ejecuta <b>una sola sentencia</b>: el <code>;</code> final se acepta, pero no encadenes varias consultas separadas por <code>;</code> (todo lo que vaya después se considera un error de sobra).",
         "markup.p.oneTableCanBeQueried": "Se puede consultar una tabla o varias separadas por comas. El alias (con <code>AS</code>) acorta las referencias y evita ambigüedades: <code>c.nombre</code>. Si no hay dudas, también vale el nombre del campo a secas.",
+        "markup.p.orderByLimitAfterUnionApply": "El <code>ORDER BY</code> y el <code>LIMIT</code> que van <b>al final</b> ordenan y cortan el resultado entero de la unión; ahí solo valen las columnas del resultado, por su nombre (<code>AS</code>) o por su posición (<code>ORDER BY 2</code>).",
         "markup.p.originHas01Related": "Un <b>origen</b> tiene 0 o 1 destinos relacionados.",
         "markup.p.otherSectionsThisSQLHelp": "Los demás apartados de esta <b>Ayuda SQL</b> explican cada parte con ejemplos; los errores y los límites, en <b>Límites y pruebas</b>.",
         "markup.p.projectIsTestOneWhen": "Un proyecto es de <b>test</b> cuando alguna de sus consultas comprueba un resultado: al abrirlo se ejecutan todas las consultas y se comparan con su <code>\"assert\"</code>, y el informe se abre solo. La propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta (se ignora): el modo test se deduce de las consultas. Cada <code>assert</code> admite <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder</code> (comparar sin importar el orden).",
-        "markup.p.queriesAreReadOnlyThere": "Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>UNION</code> o <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas.",
+        "markup.p.queriesAreReadOnlyThere": "Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas; para juntar resultados, <code>UNION</code>.",
         "markup.p.queriesUsedAsTablesCanBeRead": "Las consultas se pueden leer también <b>dentro de una subconsulta</b> y como <b>tabla derivada</b>: <code>WHERE id IN (SELECT id FROM [resumen de ventas])</code> y <code>FROM (SELECT …) AS t</code>. Y una consulta cuyo SQL lleva una subconsulta sigue valiendo como vista: se ejecuta entera, subconsulta incluida (apartado <b>Subconsultas</b>).",
         "markup.p.queryIsMaterialisedBeforeBeing": "La consulta se <b>materializa</b> antes de leerla: se ejecuta entera —su <code>WHERE</code>, sus <code>JOIN</code>, su <code>GROUP BY</code>/<code>HAVING</code>, su <code>DISTINCT</code>, su <code>ORDER BY</code> y su <code>LIMIT</code>/<code>OFFSET</code>— y lo que ve la consulta de fuera es <b>su resultado ya hecho</b>. Por eso el <code>LIMIT</code> de una vista llega ya recortado, y una vista que agrupa se puede volver a agregar (doble agregación).",
         "markup.p.renamingTableFieldRewritesQueries": "Renombrar una <b>tabla</b> o un <b>campo</b> reescribe las consultas del proyecto que lo usan: el <code>FROM</code>/<code>JOIN</code>, las columnas cualificadas (<code>tabla.campo</code>) y la columna suelta. Se respetan los <b>alias de salida</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>; un <code>ORDER BY</code> que apunta a un alias se queda como está.",
@@ -4280,6 +4317,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.p.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.datilandia.runProjectTests()</code> devuelve el informe completo.",
         "markup.p.theyCanBeNestedInside": "Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.",
         "markup.p.typesAreKeptNumberField": "Los <b>tipos se conservan</b>: un campo <code>number</code> sigue siendo número al leerlo desde fuera (se puede sumar, dividir o comparar con <code>= 31</code>), un <code>boolean</code> responde a <code>= true</code> y un <code>null</code> sigue siendo <code>null</code> (por eso valen <code>COALESCE</code>, <code>IS NULL</code> y <code>ORDER BY … NULLS FIRST</code>). Las columnas se llaman como los <b>alias de salida</b> de la vista.",
+        "markup.p.unionStacksRowsTwoQueries": "<code>UNION</code> <b>pega las filas</b> de dos consultas una debajo de otra: las dos tienen que devolver <b>el mismo número de columnas</b>, en el mismo orden. <code>UNION</code> quita las filas repetidas; <code>UNION ALL</code> las deja todas. Se pueden encadenar más de dos consultas.",
         "markup.p.updateTableWarning": "Al actualizar se <b>sustituirán todos los datos</b> de la tabla. La tabla, sus campos, sus claves ajenas y las consultas que la usan se conservan. Los datos nuevos deben tener el <b>mismo número de campos</b>, los <b>mismos nombres</b> (si la primera fila es cabecera) y los <b>mismos tipos</b>.",
         "markup.p.whereMissingValuesGoIs": "El sitio de los valores que faltan lo manda <code>NULLS FIRST</code>/<code>NULLS LAST</code> y no lo invierte <code>DESC</code>: sin decirlo, en <code>ASC</code> van primero y en <code>DESC</code> al final.",
         "markup.p.youOnlyHaveWriteParts": "Solo hay que escribir las partes que necesites, pero el orden es ese. Las palabras clave no distinguen mayúsculas de minúsculas. <code>FROM</code> es obligatorio: no hay <code>SELECT</code> sin tabla.",
@@ -4700,6 +4738,8 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlPlanner.scanSubquery": "Escaneo «{alias}» (subconsulta del FROM)",
         "sqlPlanner.sortKeys": "Orden por {count} clave(s)",
         "sqlPlanner.subqueryColumn": "(subconsulta)",
+        "sqlPlanner.union": "UNION de ambos resultados",
+        "sqlPlanner.unionAll": "UNION ALL de ambos resultados",
         "sqlRename.andMore": "{visibles} y {remaining} más",
         "sqlValidator.aggregateInGroupBy": "La función de agregado «{functionName}» no se puede usar en GROUP BY.",
         "sqlValidator.aggregateInGroupByHint": "Agrupa por columnas y usa el agregado en la lista de columnas o en HAVING.",
@@ -4737,6 +4777,10 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlValidator.subqueryOneColumnHint": "Escribe una única expresión en el SELECT de la subconsulta, o elige una de sus columnas.",
         "sqlValidator.tableNotFoundNoTables": "La tabla «{tableName}» no existe en el proyecto, que todavía no tiene tablas.",
         "sqlValidator.tableNotFoundWithList": "La tabla «{tableName}» no existe en el proyecto. Tablas disponibles: {tables}.",
+        "sqlValidator.unionColumnCount": "Los dos lados del UNION devuelven distinto número de columnas: {left} y {right}.",
+        "sqlValidator.unionColumnCountHint": "Da a los dos SELECT el mismo número de columnas, en el mismo orden.",
+        "sqlValidator.unionOrderBy": "En un UNION, ORDER BY solo puede nombrar una columna del resultado.",
+        "sqlValidator.unionOrderByHint": "Usa el nombre de una columna de salida (con AS) o su posición: ORDER BY 2.",
         "sqlValidator.unsupportedExpression": "Expresión no soportada: «{type}».",
         "sqlValidator.usageHint": "Uso: {doc}.",
         "sqlValidator.wrongArgCount": "La función «{functionName}» espera {expected}, y recibió {received}.",
@@ -7866,7 +7910,7 @@ ORDER BY edificios DESC, sede;</pre>
 
     /** Reserved words of the dialect (compared in upper case). */
     const SQL_KEYWORDS = [
-      "SELECT", "DISTINCT", "FROM", "AS", "INNER", "LEFT", "OUTER", "JOIN", "ON",
+      "SELECT", "DISTINCT", "UNION", "FROM", "AS", "INNER", "LEFT", "OUTER", "JOIN", "ON",
       "WHERE", "GROUP", "BY", "HAVING", "ORDER", "ASC", "DESC", "NULLS", "FIRST",
       "LAST", "LIMIT", "OFFSET", "AND", "OR", "NOT", "NULL", "TRUE", "FALSE",
       "IS", "IN", "BETWEEN", "LIKE", "ESCAPE", "EXISTS", "ANY", "SOME", "ALL",
@@ -8086,8 +8130,9 @@ ORDER BY edificios DESC, sede;</pre>
     /** Rewrites in the SQL the references to a column or a table that has
      *  been renamed, so the queries of the project keep working. */
     const SqlRename = {
-      /** Words that close the table block of the FROM/JOIN. */
-      SOURCE_END_KEYWORDS: ["ON", "WHERE", "GROUP", "HAVING", "ORDER", "LIMIT", "OFFSET"],
+      /** Words that close the table block of the FROM/JOIN. UNION closes it
+       *  too: the SELECT that follows brings its own FROM. */
+      SOURCE_END_KEYWORDS: ["ON", "WHERE", "GROUP", "HAVING", "ORDER", "LIMIT", "OFFSET", "UNION"],
 
       /** Parses the SQL and works out what each identifier is: table name
        *  positions, identifiers of the FROM/JOIN block, declared aliases (of
@@ -8349,7 +8394,7 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Parses the whole query. Throws SqlParseError when it is not valid. */
       parse() {
-        const ast = this.parseSelect();
+        const ast = this.parseQuery();
         this.matchPunct(";");
         const token = this.peek();
         if (token.type !== "eof") {
@@ -8358,6 +8403,47 @@ ORDER BY edificios DESC, sede;</pre>
         return ast;
       }
 
+      /** Parses a SELECT or the SELECTs joined by UNION [ALL], plus the
+       *  ORDER BY and LIMIT of the whole result. */
+      parseQuery() {
+        let query = this.parseSelect();
+        while (this.matchKeyword("UNION")) {
+          const all = this.matchKeyword("ALL") !== null;
+          if (!all) {
+            this.matchKeyword("DISTINCT");
+          }
+          const right = this.parseSelect();
+          query = { type: "union", all, left: query, right, orderBy: [], limit: null, offset: null };
+        }
+        const orderBy = [];
+        if (this.matchKeyword("ORDER")) {
+          this.expectKeyword("BY");
+          orderBy.push(...this.parseOrderList());
+        }
+        let limit = null;
+        let offset = null;
+        if (this.matchKeyword("LIMIT")) {
+          const first = this.expectNumber("LIMIT");
+          if (this.matchPunct(",")) {
+            offset = first;
+            limit = this.expectNumber("LIMIT");
+          } else {
+            limit = first;
+            if (this.matchKeyword("OFFSET")) {
+              offset = this.expectNumber("OFFSET");
+            }
+          }
+        }
+        // In a union they order and cut the combined result; in a single
+        // SELECT, that same result.
+        query.orderBy = orderBy;
+        query.limit = limit;
+        query.offset = offset;
+        return query;
+      }
+
+      /** One SELECT block: everything up to HAVING (ORDER BY and LIMIT belong
+       *  to the query that may combine several SELECTs). */
       parseSelect() {
         this.expectKeyword("SELECT");
         const distinct = this.matchKeyword("DISTINCT") !== null;
@@ -8382,26 +8468,7 @@ ORDER BY edificios DESC, sede;</pre>
           groupBy = this.parseExpressionList();
         }
         const having = this.matchKeyword("HAVING") ? this.parseExpression() : null;
-        const orderBy = [];
-        if (this.matchKeyword("ORDER")) {
-          this.expectKeyword("BY");
-          orderBy.push(...this.parseOrderList());
-        }
-        let limit = null;
-        let offset = null;
-        if (this.matchKeyword("LIMIT")) {
-          const first = this.expectNumber("LIMIT");
-          if (this.matchPunct(",")) {
-            offset = first;
-            limit = this.expectNumber("LIMIT");
-          } else {
-            limit = first;
-            if (this.matchKeyword("OFFSET")) {
-              offset = this.expectNumber("OFFSET");
-            }
-          }
-        }
-        return { type: "select", distinct, columns, from, joins, where, groupBy, having, orderBy, limit, offset };
+        return { type: "select", distinct, columns, from, joins, where, groupBy, having, orderBy: [], limit: null, offset: null };
       }
 
       parseSelectList() {
@@ -8466,7 +8533,7 @@ ORDER BY edificios DESC, sede;</pre>
         if (!(token.type === "keyword" && token.value === "SELECT")) {
           throw this.expectedError(token, "SELECT");
         }
-        const ast = this.parseSelect();
+        const ast = this.parseQuery();
         this.expectPunct(")");
         return ast;
       }
@@ -8614,7 +8681,7 @@ ORDER BY edificios DESC, sede;</pre>
             this.next();
             this.expectPunct("(");
             if (this.peek().type === "keyword" && this.peek().value === "SELECT") {
-              const query = this.parseSelect();
+              const query = this.parseQuery();
               this.expectPunct(")");
               left = { type: "in", expr: left, query, values: null, not: negated };
               continue;
@@ -8705,7 +8772,7 @@ ORDER BY edificios DESC, sede;</pre>
         if (token.type === "punct" && token.value === "(") {
           this.next();
           if (this.peek().type === "keyword" && this.peek().value === "SELECT") {
-            const ast = this.parseSelect();
+            const ast = this.parseQuery();
             this.expectPunct(")");
             return { type: "subquery", ast };
           }
@@ -8916,7 +8983,7 @@ ORDER BY edificios DESC, sede;</pre>
        *  cached or named: it belongs to the query that writes it. */
       materializeAst(ast, project, state, label) {
         const ejecucion = state || SqlViews.newState();
-        const resolved = SqlValidator.validateSelect(ast, project, ejecucion, []);
+        const resolved = SqlValidator.validate(ast, project, ejecucion);
         const result = SqlExecutor.execute(SqlPlanner.build(ast, resolved));
         ejecucion.ms += result.ms;
         return SqlViews.resultTable({ name: label || "", description: "" }, result);
@@ -9079,7 +9146,73 @@ ORDER BY edificios DESC, sede;</pre>
        *  without falling into circles. Returns { sources, hasAggregates } or
        *  throws SqlValidationError. */
       validate(ast, project, state) {
-        return SqlValidator.validateSelect(ast, project, state, []);
+        return SqlValidator.validateQuery(ast, project, state, []);
+      },
+
+      /** Validates a SELECT or a UNION of SELECTs. `outerSources` are the
+       *  sources of the enclosing queries, so a correlated subquery can point
+       *  at them. */
+      validateQuery(ast, project, state, outerSources) {
+        if (ast.type !== "union") {
+          return SqlValidator.validateSelect(ast, project, state, outerSources);
+        }
+        return SqlValidator.validateUnion(ast, project, state, outerSources);
+      },
+
+      /** Validates a UNION [ALL]: both sides are full queries and must return
+       *  the same number of columns. The notes each side needs to be planned
+       *  are kept in the node (left.resolved, right.resolved), together with
+       *  the output columns, which its ORDER BY can name. */
+      validateUnion(ast, project, state, outerSources) {
+        const ejecucion = state || SqlViews.newState();
+        const izquierda = SqlValidator.validateQuery(ast.left, project, ejecucion, outerSources);
+        const derecha = SqlValidator.validateQuery(ast.right, project, ejecucion, outerSources);
+        ast.left.resolved = izquierda;
+        ast.right.resolved = derecha;
+        const columnasIzquierda = SqlValidator.outputColumnCount(ast.left, izquierda.sources);
+        const columnasDerecha = SqlValidator.outputColumnCount(ast.right, derecha.sources);
+        if (columnasIzquierda !== columnasDerecha) {
+          throw new SqlValidationError(
+            I18n.t("sqlValidator.unionColumnCount", { left: columnasIzquierda, right: columnasDerecha }),
+            { hint: I18n.t("sqlValidator.unionColumnCountHint") },
+          );
+        }
+        ast.columnCount = columnasIzquierda;
+        ast.columnLabels = ast.left.type === "union"
+          ? ast.left.columnLabels
+          : SqlPlanner.buildProjectItems(ast.left, izquierda).map((item) => item.label);
+        SqlValidator.validateUnionOrder(ast);
+        const outerRefs = new Set([...izquierda.outerRefs, ...derecha.outerRefs]);
+        return { sources: [], outer: outerSources || [], hasAggregates: false, outerRefs };
+      },
+
+      /** ORDER BY of a union: it can only point at the columns of the result,
+       *  by their position or by their name. */
+      validateUnionOrder(ast) {
+        ast.orderBy.forEach((item) => {
+          const expr = item.expr;
+          if (expr.type === "literal" && Number.isInteger(expr.value)) {
+            if (expr.value < 1 || expr.value > ast.columnCount) {
+              throw new SqlValidationError(
+                I18n.t("sqlValidator.orderByPositionOutOfRange", { position: expr.value, columnCount: ast.columnCount }),
+                { hint: I18n.t("sqlValidator.orderByPositionHint") },
+              );
+            }
+            item.ordinal = expr.value;
+            return;
+          }
+          const alias = expr.type === "column" && !expr.table
+            ? ast.columnLabels.find((label) => label.toLowerCase() === expr.name.toLowerCase())
+            : null;
+          if (alias) {
+            item.aliasRef = alias;
+            return;
+          }
+          throw new SqlValidationError(
+            I18n.t("sqlValidator.unionOrderBy"),
+            { hint: I18n.t("sqlValidator.unionOrderByHint") },
+          );
+        });
       },
 
       /** Validates and annotates one SELECT. `outerSources` are the sources of
@@ -9164,7 +9297,7 @@ ORDER BY edificios DESC, sede;</pre>
       validateSubquery(node, context, singleColumn) {
         const inner = node.query || node.ast;
         const outer = context.sources.concat(context.outer || []);
-        const resolved = SqlValidator.validateSelect(inner, context.project, context.state, outer);
+        const resolved = SqlValidator.validateQuery(inner, context.project, context.state, outer);
         node.resolved = resolved;
         // It is correlated when it reads a column that its own sources do not
         // provide: that row has to be at hand for every outer row. The
@@ -9225,12 +9358,12 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       /** Direct subexpressions of a node (for generic walks). The AST of a
-       *  subquery (a whole SELECT) is not an expression: it is left out so
-       *  walks do not reach into another query. */
+       *  subquery (a whole SELECT) and a union are not expressions: they are
+       *  left out so walks do not reach into another query. */
       childExpressions(expr) {
         const children = [];
         const isExpression = (value) => value && typeof value === "object"
-          && typeof value.type === "string" && value.type !== "select";
+          && typeof value.type === "string" && value.type !== "select" && value.type !== "union";
         Object.values(expr).forEach((value) => {
           if (Array.isArray(value)) {
             value.forEach((item) => {
@@ -9425,8 +9558,12 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       /** Number of columns of the result: each asterisk counts the fields of
-       *  the sources it refers to (all of them, or the one of the `alias.*`). */
+       *  the sources it refers to (all of them, or the one of the `alias.*`).
+       *  A union returns the columns of its sides (already checked to match). */
       outputColumnCount(ast, sources) {
+        if (ast.type === "union") {
+          return ast.columnCount;
+        }
         let total = 0;
         ast.columns.forEach((col) => {
           if (col.expr.type !== "star") {
@@ -9630,6 +9767,9 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Returns { root, columns } from the validated AST. */
       build(ast, resolved) {
+        if (ast.type === "union") {
+          return SqlPlanner.buildUnion(ast);
+        }
         SqlPlanner.prepareSubqueries(ast);
         const fromSource = resolved.sources[0];
         let op = { op: "scan", source: fromSource, label: SqlPlanner.sourceLabel(fromSource) };
@@ -9690,12 +9830,37 @@ ORDER BY edificios DESC, sede;</pre>
           op = { op: "sort", input: op, keys, label: I18n.t("sqlPlanner.sortKeys", { count: keys.length }) };
         }
 
-        if (ast.limit !== null) {
-          const suffix = ast.offset ? I18n.t("sqlPlanner.limitSkip", { offset: ast.offset }) : "";
-          op = { op: "limit", input: op, limit: ast.limit, offset: ast.offset || 0, label: I18n.t("sqlPlanner.limit", { limit: ast.limit, suffix: suffix }) };
-        }
+        return { root: SqlPlanner.withLimit(op, ast), columns: items.map((item) => item.label) };
+      },
 
-        return { root: op, columns: items.map((item) => item.label) };
+      /** Plan of a UNION [ALL]: both sides run and their rows are concatenated
+       *  (plain UNION drops the repeated ones). ORDER BY and LIMIT apply to
+       *  the combined result and can only name its columns. */
+      buildUnion(ast) {
+        const izquierda = SqlPlanner.build(ast.left, ast.left.resolved);
+        const derecha = SqlPlanner.build(ast.right, ast.right.resolved);
+        let op = {
+          op: "union",
+          left: izquierda.root,
+          right: derecha.root,
+          all: ast.all,
+          label: I18n.t(ast.all ? "sqlPlanner.unionAll" : "sqlPlanner.union"),
+        };
+        if (ast.orderBy.length > 0) {
+          const items = izquierda.columns.map((label) => ({ label }));
+          const keys = SqlPlanner.buildSortKeys(ast, items);
+          op = { op: "sort", input: op, keys, label: I18n.t("sqlPlanner.sortKeys", { count: keys.length }) };
+        }
+        return { root: SqlPlanner.withLimit(op, ast), columns: izquierda.columns };
+      },
+
+      /** LIMIT/OFFSET step of the query, or the same plan when it has none. */
+      withLimit(op, ast) {
+        if (ast.limit === null) {
+          return op;
+        }
+        const suffix = ast.offset ? I18n.t("sqlPlanner.limitSkip", { offset: ast.offset }) : "";
+        return { op: "limit", input: op, limit: ast.limit, offset: ast.offset || 0, label: I18n.t("sqlPlanner.limit", { limit: ast.limit, suffix: suffix }) };
       },
 
       /** Builds, once, the plan of every subquery the query carries (predicates
@@ -9916,6 +10081,8 @@ ORDER BY edificios DESC, sede;</pre>
             return SqlExecutor.evalProject(op, steps, outer);
           case "distinct":
             return SqlExecutor.evalDistinct(op, steps, outer);
+          case "union":
+            return SqlExecutor.evalUnion(op, steps, outer);
           case "sort":
             return SqlExecutor.evalSort(op, steps, outer);
           case "limit":
@@ -10133,8 +10300,15 @@ ORDER BY edificios DESC, sede;</pre>
       evalDistinct(op, steps, outer) {
         const input = SqlExecutor.evalOp(op.input, steps, outer);
         const startedAt = performance.now();
+        const output = SqlExecutor.dropRepeated(input);
+        SqlExecutor.recordStep(steps, op.label, output.length, startedAt);
+        return output;
+      },
+
+      /** Drops the items whose row of values was already seen. */
+      dropRepeated(items) {
         const seen = new Set();
-        const output = input.filter((item) => {
+        return items.filter((item) => {
           const key = SqlExecutor.keyOf(item.values);
           if (seen.has(key)) {
             return false;
@@ -10142,6 +10316,16 @@ ORDER BY edificios DESC, sede;</pre>
           seen.add(key);
           return true;
         });
+      },
+
+      /** Runs both sides and concatenates their rows; UNION (not ALL) also
+       *  drops the repeated ones, comparing the whole row of values. */
+      evalUnion(op, steps, outer) {
+        const izquierda = SqlExecutor.evalOp(op.left, steps, outer);
+        const derecha = SqlExecutor.evalOp(op.right, steps, outer);
+        const startedAt = performance.now();
+        const todas = izquierda.concat(derecha);
+        const output = op.all ? todas : SqlExecutor.dropRepeated(todas);
         SqlExecutor.recordStep(steps, op.label, output.length, startedAt);
         return output;
       },
@@ -18479,6 +18663,65 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(result.result.rows[2][0], null, "NULL is a distinct value");
     });
 
+    SelfTests.add("When_Union_Expect_RepeatedRowsDropped", () => {
+      const sql = "SELECT department FROM employees UNION SELECT department FROM employees";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.columns, ["department"], "the columns of the first SELECT");
+      assertEqual(result.result.rows.map((row) => row[0]), ["Sales", "IT", null], "each row once, in the order it appears");
+      assert(result.result.steps.some((step) => step.label.includes("UNION")), "the plan shows the union: " + JSON.stringify(result.result.steps.map((s) => s.label)));
+    });
+
+    SelfTests.add("When_UnionAll_Expect_RepeatedRowsKept", () => {
+      const sql = "SELECT department FROM employees UNION ALL SELECT department FROM employees";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.rows.length, 8, "both sides, repeats included");
+      assert(result.result.steps.some((step) => step.label.includes("UNION ALL")), "the plan says ALL: " + JSON.stringify(result.result.steps.map((s) => s.label)));
+    });
+
+    SelfTests.add("When_UnionWithOrderByLimit_Expect_WholeResultSortedAndCut", () => {
+      const sql = "SELECT name AS n FROM employees WHERE age < 40 UNION SELECT name FROM departments ORDER BY n LIMIT 3";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.rows.map((row) => row[0]), ["Ana", "IT", "Marta"], "the ORDER BY and LIMIT of the union sort and cut the whole result");
+    });
+
+    SelfTests.add("When_UnionSidesDifferentColumns_Expect_Error", () => {
+      const sql = "SELECT name, age FROM employees UNION SELECT name FROM departments";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(!result.ok, "the query is rejected");
+      assert(result.error.message.includes("UNION"), "the error names the union: " + result.error.message);
+    });
+
+    SelfTests.add("When_UnionOrderByColumnNotInResult_Expect_Error", () => {
+      const sql = "SELECT name FROM employees UNION SELECT name FROM departments ORDER BY age";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(!result.ok, "ORDER BY can only name a column of the result");
+      assert(result.error.message.includes("ORDER BY"), "the error explains it: " + result.error.message);
+    });
+
+    SelfTests.add("When_UnionInDerivedTable_Expect_CombinedRows", () => {
+      const sql = "SELECT COUNT(*) AS n FROM (SELECT name FROM employees UNION SELECT name FROM departments) AS t";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.rows, [[6]], "four employees plus two departments, none repeated");
+    });
+
+    SelfTests.add("When_UnionQueryReadAsTable_Expect_CombinedRows", () => {
+      const project = buildSqlTestProject();
+      project.queries = [{ name: "all_names", sql: "SELECT name FROM employees UNION SELECT name FROM departments" }];
+      const result = SqlEngine.runSafe("SELECT COUNT(*) AS n FROM all_names", project);
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.rows, [[6]], "a union also works as a query read as a table");
+    });
+
+    SelfTests.add("When_UnionSecondSelect_Expect_TablesFoundForRenaming", () => {
+      const project = buildSqlTestProject();
+      project.queries = [{ name: "combined", sql: "SELECT name FROM employees UNION SELECT name FROM departments" }];
+      assertEqual(SqlRename.queriesUsingTable(project, "departments"), ["combined"], "the tables of the second SELECT are found");
+    });
+
     SelfTests.add("When_DivisionByZero_Expect_Null", () => {
       const result = SqlEngine.runSafe("SELECT name, age / 0 AS r FROM employees LIMIT 1", buildSqlTestProject());
       assert(result.ok, "valid query: " + (result.error && result.error.message));
@@ -18890,7 +19133,7 @@ ORDER BY edificios DESC, sede;</pre>
       const text = view.textContent;
       ["SELECT", "DISTINCT", "FROM", "JOIN", "WHERE", "GROUP BY", "HAVING",
         "ORDER BY", "NULLS LAST", "LIMIT", "OFFSET", "LIKE", "BETWEEN",
-        "SUBSTR", "CONCAT", "COALESCE", "EXISTS", "ANY", "ALL", "hash join", "testing",
+        "SUBSTR", "CONCAT", "COALESCE", "EXISTS", "ANY", "ALL", "UNION ALL", "hash join", "testing",
         "assert", "rowCount", "ignoreOrder", "alias", "runProjectTests"].forEach((key) => {
         assert(text.includes(key), `the help mentions ${key}`);
       });
@@ -18964,7 +19207,7 @@ ORDER BY edificios DESC, sede;</pre>
       assert(muestra >= 14, "examples: " + muestra);
       ["SELECT", "DISTINCT", "FROM", "JOIN", "LEFT", "WHERE", "LIKE", "ESCAPE", "BETWEEN",
         "IS NULL", "GROUP BY", "HAVING", "ORDER BY", "NULLS LAST", "LIMIT", "OFFSET",
-        "COUNT(DISTINCT", "SUBSTR", "CONCAT", "COALESCE", "IFNULL", "NULLIF", "ROUND", "hash join",
+        "COUNT(DISTINCT", "SUBSTR", "CONCAT", "COALESCE", "IFNULL", "NULLIF", "ROUND", "UNION ALL", "hash join",
         "testing", "assert", "rowCount", "ignoreOrder", "runProjectTests"].forEach((key) => {
         assert(all.includes(key), `the SQL help explains ${key}`);
       });
@@ -19955,6 +20198,32 @@ ORDER BY edificios DESC, sede;</pre>
       assert(
         document.getElementById("query-plan").textContent.includes("query “big”"),
         "the plan announces the source: " + document.getElementById("query-plan").textContent,
+      );
+      restoreMiniProject(antes);
+      UiQueries.refreshEditor();
+    });
+
+    SelfTests.add("When_ExecuteUnionQuery_Expect_BothRowsAndUnionInPlan", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+      };
+      Store.replaceProject(buildConvertProject([
+        { name: "union_codes", description: "", sql: "SELECT code FROM classrooms UNION SELECT code FROM classrooms" },
+      ]));
+      UiQueries.select("union_codes");
+      document.getElementById("btn-run").click();
+      const cabeceras = Array.from(document.querySelectorAll("#query-result thead th")).map((th) => th.textContent);
+      assertEqual(cabeceras, ["code"], "the columns of the union");
+      const filas = Array.from(document.querySelectorAll("#query-result tbody tr"));
+      assertEqual(filas.length, 2, "the repeated row comes out once");
+      assertEqual(document.getElementById("query-error").hidden, true, "without errors on screen");
+      assert(
+        document.getElementById("query-plan").textContent.includes("UNION"),
+        "the plan shows the union: " + document.getElementById("query-plan").textContent,
       );
       restoreMiniProject(antes);
       UiQueries.refreshEditor();
