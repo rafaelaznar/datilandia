@@ -425,6 +425,27 @@
       white-space: nowrap;
     }
 
+    /* End of a query row of the sidebar: its marks and the «D» that duplicates
+       the query, side by side and to the right of the name. */
+    .row-actions {
+      display: flex;
+      gap: 4px;
+      align-items: baseline;
+      white-space: nowrap;
+    }
+
+    .row-actions .duplicate-query {
+      padding: 0 2px;
+      font-size: 9px;
+      line-height: 1;
+      color: #555;
+    }
+
+    .row-actions .duplicate-query:hover,
+    .row-actions .duplicate-query:focus-visible {
+      color: #000;
+    }
+
     /* Mark of the queries that another query reads as a table. */
     .mark-view {
       color: #1a4f8a;
@@ -1666,7 +1687,7 @@
                 <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
                 <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
               
-                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.</li>
+                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además su propio <b>D</b> para duplicarla; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.</li>
               </ul>
             </section>
 
@@ -2603,10 +2624,11 @@ ORDER BY edificios DESC, sede;</pre>
     window.datilandia = window.datilandia || {};
     window.datilandia.messages = {
       en: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename or delete it from its header; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>D</b> button of its header (it copies the folder with all its queries) or delete it from there; every query of the list also carries its own <b>D</b> to duplicate it; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>.",
         "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header renames, deletes and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
+        "folders.duplicateTip": "Duplicate the folder “{name}” with its queries",
         "folders.collapse": "Fold “{name}”",
         "folders.expand": "Unfold “{name}”",
         "folders.foldAll": "Fold every folder",
@@ -2623,6 +2645,7 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.rename": "Rename",
         "folders.noFolder": "No folder",
         "folders.created": "Folder “{name}” created.",
+        "folders.duplicated": {"one":"Folder “{name}” duplicated as “{copy}” with {count} query.","other":"Folder “{name}” duplicated as “{copy}” with {count} queries."},
         "folders.renamedMessage": "Folder renamed to “{name}”.",
         "folders.deleted": "Folder “{name}” deleted; its {count} queries are left without a folder.",
         "folders.confirmDelete": "Delete the folder “{name}”? Its queries are kept, without a folder.",
@@ -3354,6 +3377,8 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.csvTruncated": "Showing the first {max} of {total} rows (the exported file includes them all).",
         "queries.defaultSql": "SELECT * FROM table",
         "queries.descriptionUpdated": "Description of “{name}” updated.",
+        "queries.duplicateTip": "Duplicate the query “{name}”",
+        "queries.duplicated": "Query “{name}” duplicated as “{copy}”.",
         "queries.emptyEditor": "There is no query to run: the editor is empty.",
         "queries.emptyEditorHint": "Write a SELECT query, for example: SELECT * FROM table_name",
         "queries.emptyEditorTitle": "Empty editor",
@@ -3378,6 +3403,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.suffixedName": "query_{n}",
         "queries.testRemovedNoTests": "“{name}” no longer checks an asserted result: the project is left without tests.",
         "queries.testRemovedStillTest": "“{name}” no longer checks an asserted result; the project stays in test mode.",
+        "queries.unknown": "There is no query “{name}”.",
         "queries.updatedSuffix": {"one":" ({count} query updated)","other":" ({count} queries updated)"},
         "queries.usedAsTableWarning": "\n\nQueries that use it as a table ({count}) will stop working: {names}.",
         "relations.corner": "source ↓ / target →",
@@ -3666,10 +3692,11 @@ ORDER BY edificios DESC, sede;</pre>
         "utils.zeroRowsPerPage": "0 rows · {perPage} per page",
       },
       es: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala o bórrala desde su cabecera; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además su propio <b>D</b> para duplicarla; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.",
         "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
+        "folders.duplicateTip": "Duplicar la carpeta «{name}» con sus consultas",
         "folders.collapse": "Plegar «{name}»",
         "folders.expand": "Desplegar «{name}»",
         "folders.foldAll": "Plegar todas las carpetas",
@@ -3686,6 +3713,7 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.rename": "Renombrar",
         "folders.noFolder": "Sin carpeta",
         "folders.created": "Carpeta «{name}» creada.",
+        "folders.duplicated": {"one":"Carpeta «{name}» duplicada como «{copy}» con {count} consulta.","other":"Carpeta «{name}» duplicada como «{copy}» con {count} consultas."},
         "folders.renamedMessage": "Carpeta renombrada a «{name}».",
         "folders.deleted": "Carpeta «{name}» borrada; sus {count} consultas se quedan sin carpeta.",
         "folders.confirmDelete": "¿Borrar la carpeta «{name}»? Sus consultas se quedan sin carpeta.",
@@ -4417,6 +4445,8 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.csvTruncated": "Mostrando las primeras {max} de {total} filas (el fichero exportado incluye todas).",
         "queries.defaultSql": "SELECT * FROM tabla",
         "queries.descriptionUpdated": "Descripción de «{name}» actualizada.",
+        "queries.duplicateTip": "Duplicar la consulta «{name}»",
+        "queries.duplicated": "Consulta «{name}» duplicada como «{copy}».",
         "queries.emptyEditor": "No hay ninguna consulta que ejecutar: el editor está vacío.",
         "queries.emptyEditorHint": "Escribe una consulta SELECT, por ejemplo: SELECT * FROM nombre_de_tabla",
         "queries.emptyEditorTitle": "Editor vacío",
@@ -4441,6 +4471,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.suffixedName": "consulta_{n}",
         "queries.testRemovedNoTests": "«{name}» ya no comprueba ningún resultado asertado: el proyecto se queda sin tests.",
         "queries.testRemovedStillTest": "«{name}» ya no comprueba ningún resultado asertado; el proyecto sigue en modo test.",
+        "queries.unknown": "No existe la consulta «{name}».",
         "queries.updatedSuffix": {"one":" ({count} consulta actualizada)","other":" ({count} consultas actualizadas)"},
         "queries.usedAsTableWarning": "\n\nLas consultas que la usan como tabla ({count}) dejarán de funcionar: {names}.",
         "relations.corner": "origen ↓ / destino →",
@@ -5282,6 +5313,63 @@ ORDER BY edificios DESC, sede;</pre>
       /** Puts a query in a folder: `moveToFolder` for the list of the queries. */
       moveQueryToFolder(project, queryName, folder) {
         return Model.moveToFolder(project, queryName, folder, "queries");
+      },
+
+      /* --- Duplicating queries and their folders ------------------------- */
+
+      /** First name of a list that is free: the base one or base_2, base_3… */
+      freeName(taken, baseName) {
+        if (!taken.has(baseName)) {
+          return baseName;
+        }
+        let suffix = 2;
+        while (taken.has(`${baseName}_${suffix}`)) {
+          suffix += 1;
+        }
+        return `${baseName}_${suffix}`;
+      },
+
+      /** Duplicates a query right after it, with a free name and the same SQL,
+       *  description, folder and asserted result. */
+      duplicateQuery(project, name) {
+        const index = project.queries.findIndex((query) => query.name === name);
+        if (index < 0) {
+          return { ok: false, error: I18n.t("queries.unknown", { name: name }) };
+        }
+        const copy = Utils.cloneJson(project.queries[index]);
+        copy.name = Model.freeName(new Set(project.queries.map((query) => query.name)), name);
+        project.queries.splice(index + 1, 0, copy);
+        return { ok: true, query: copy };
+      },
+
+      /** Duplicates a folder of queries with all its queries: the new folder
+       *  goes right after the original and the copies keep their order and
+       *  take free names. */
+      duplicateQueryFolder(project, name) {
+        const folders = Model.foldersOf(project, "queries");
+        if (!folders.includes(name)) {
+          return { ok: false, error: I18n.t("folders.unknown", { name: name }) };
+        }
+        const copyName = Model.freeName(new Set(folders), name);
+        const position = folders.indexOf(name) + 1;
+        project.folders = folders.slice(0, position).concat([copyName], folders.slice(position));
+        const taken = new Set(project.queries.map((query) => query.name));
+        let count = 0;
+        const queries = [];
+        project.queries.forEach((query) => {
+          queries.push(query);
+          if (query.folder !== name) {
+            return;
+          }
+          const copy = Utils.cloneJson(query);
+          copy.name = Model.freeName(taken, query.name);
+          taken.add(copy.name);
+          copy.folder = copyName;
+          queries.push(copy);
+          count += 1;
+        });
+        project.queries = queries;
+        return { ok: true, folder: copyName, count: count };
       },
 
       /** Finds a table by name inside the project (null when it does not exist). */
@@ -10821,7 +10909,18 @@ ORDER BY edificios DESC, sede;</pre>
           view.title = I18n.t("ui.viewReaders", { count: lectores.length, names: SqlRename.listNames(lectores) });
           marcas.appendChild(view);
         }
-        item.appendChild(marcas);
+        const actions = document.createElement("span");
+        actions.className = "row-actions";
+        actions.appendChild(marcas);
+        const duplicate = document.createElement("button");
+        duplicate.type = "button";
+        duplicate.className = "panel-action duplicate-query";
+        duplicate.textContent = "D";
+        duplicate.dataset.name = query.name;
+        duplicate.title = I18n.t("queries.duplicateTip", { name: query.name });
+        duplicate.setAttribute("aria-label", duplicate.title);
+        actions.appendChild(duplicate);
+        item.appendChild(actions);
         return item;
       },
 
@@ -12855,6 +12954,11 @@ ORDER BY edificios DESC, sede;</pre>
       bind() {
         document.getElementById("btn-new-query").addEventListener("click", () => UiQueries.create());
         document.getElementById("list-queries").addEventListener("click", (event) => {
+          const duplicate = event.target.closest("button.duplicate-query");
+          if (duplicate) {
+            UiQueries.duplicate(duplicate.dataset.name);
+            return;
+          }
           const item = event.target.closest("li[data-name]");
           if (item) {
             UiQueries.select(item.dataset.name);
@@ -12939,6 +13043,18 @@ ORDER BY edificios DESC, sede;</pre>
         UiProject.markDirty();
         UiQueries.select(name);
         setStatus(I18n.t("queries.created", { name: name }));
+      },
+
+      /** Duplicates a query of the list with its «D» and opens the copy. */
+      duplicate(name) {
+        const result = Model.duplicateQuery(Store.project, name);
+        if (!result.ok) {
+          setStatus(result.error);
+          return;
+        }
+        UiProject.markDirty();
+        UiQueries.select(result.query.name);
+        setStatus(I18n.t("queries.duplicated", { name: name, copy: result.query.name }));
       },
 
       /** Opens a query generated by the program (the figures of the
@@ -15491,6 +15607,11 @@ ORDER BY edificios DESC, sede;</pre>
           UiFolders.rename(kind, rename.dataset.folder);
           return true;
         }
+        const duplicate = event.target.closest("button.duplicate-folder");
+        if (duplicate) {
+          UiFolders.duplicate(kind, duplicate.dataset.folder);
+          return true;
+        }
         const remove = event.target.closest("button.delete-folder");
         if (remove) {
           UiFolders.remove(kind, remove.dataset.folder);
@@ -15767,6 +15888,20 @@ ORDER BY edificios DESC, sede;</pre>
         setStatus(I18n.t("folders.created", { name: name }));
       },
 
+      /** Duplicates a folder of queries with all its queries («D»). */
+      duplicate(kind, name) {
+        const result = Model.duplicateQueryFolder(Store.project, name);
+        if (!result.ok) {
+          setStatus(result.error);
+          return;
+        }
+        UiProject.markDirty();
+        UiFolders.refresh(kind);
+        setStatus(I18n.t("folders.duplicated", {
+          name: name, copy: result.folder, count: result.count,
+        }));
+      },
+
       /** Header of a folder of that list (null when it is not there). */
       headerOf(kind, name) {
         return [...UiFolders.listOf(kind).querySelectorAll("li.folder")]
@@ -15862,6 +15997,16 @@ ORDER BY edificios DESC, sede;</pre>
         number.title = I18n.t(spec.count, { count: count });
         item.appendChild(number);
         if (name !== "") {
+          if (kind === "queries") {
+            const duplicate = document.createElement("button");
+            duplicate.type = "button";
+            duplicate.className = "panel-action duplicate-folder";
+            duplicate.textContent = "D";
+            duplicate.title = I18n.t("folders.duplicateTip", { name: name });
+            duplicate.setAttribute("aria-label", duplicate.title);
+            duplicate.dataset.folder = name;
+            item.appendChild(duplicate);
+          }
           const rename = document.createElement("button");
           rename.type = "button";
           rename.className = "panel-action rename-folder";
@@ -21024,6 +21169,44 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.moveQueryToFolder(project, "q3", "Sales").ok, true, "moving it to its folder is a no-op");
     });
 
+    SelfTests.add("When_DuplicateQuery_Expect_CopyRightAfterWithFreeName", () => {
+      const project = folderProject();
+      project.queries[0].assert = { columns: ["id"], rows: [[1]], rowCount: 1, ignoreOrder: false };
+      const result = Model.duplicateQuery(project, "q1");
+      assertEqual(result.ok, true, "a query of the project can be duplicated");
+      assertEqual(result.query.name, "q1_2", "the copy takes a free name");
+      assertEqual(project.queries.map((query) => query.name), ["q1", "q1_2", "q2", "q3"], "and goes right after the original");
+      assertEqual(project.queries[1].sql, project.queries[0].sql, "with the same SQL");
+      assertEqual(project.queries[1].folder, "Sales", "and the same folder");
+      assertEqual(project.queries[1].assert.rowCount, 1, "and the same asserted result");
+      assert(project.queries[1].assert !== project.queries[0].assert, "as a copy of its own: changing it does not touch the original");
+      assertEqual(Model.duplicateQuery(project, "q1").query.name, "q1_3", "the next copy takes the next free name");
+      assertEqual(project.queries[1].name, "q1_3", "also right after the original");
+      assertEqual(Model.duplicateQuery(project, "nope").ok, false, "an unknown query is rejected");
+    });
+
+    SelfTests.add("When_DuplicateQueryFolder_Expect_CopiesInsideNewFolder", () => {
+      const project = folderProject();
+      const result = Model.duplicateQueryFolder(project, "Sales");
+      assertEqual(result.ok, true, "a folder of queries can be duplicated");
+      assertEqual(result.folder, "Sales_2", "the copy takes a free name");
+      assertEqual(result.count, 1, "and says how many queries it copied");
+      assertEqual(project.folders, ["Sales", "Sales_2", "2026"], "the new folder goes right after the original");
+      assertEqual(project.queries.map((query) => query.name), ["q1", "q1_2", "q2", "q3"], "the copy of its query goes with it");
+      assertEqual(project.queries[1].folder, "Sales_2", "inside the new folder");
+      assertEqual(project.queries[0].folder, "Sales", "while the original stays where it was");
+      assertEqual(project.queries[1].sql, project.queries[0].sql, "with the same SQL");
+      assertEqual(Model.duplicateQueryFolder(project, "Sales").folder, "Sales_3", "the next copy takes the next free name");
+      assertEqual(Model.duplicateQueryFolder(project, "nope").ok, false, "an unknown folder is rejected");
+      assertEqual(Model.duplicateQueryFolder(project, "").ok, false, "the «no folder» group is not a folder to copy");
+      const empty = folderProject();
+      empty.queries = empty.queries.filter((query) => query.folder !== "2026");
+      const vacia = Model.duplicateQueryFolder(empty, "2026");
+      assertEqual(vacia.count, 0, "an empty folder is copied without queries");
+      assert(empty.folders.includes(vacia.folder), "but the new folder is in the list: " + vacia.folder);
+      assertEqual(empty.queries.length, 2, "and no query is added");
+    });
+
     SelfTests.add("When_FolderCounts_ExpectQueryPerFolder", () => {
       const counts = Model.folderCounts(folderProject());
       assertEqual([...counts.counts], [["Sales", 1], ["2026", 1]], "one query per folder");
@@ -21168,7 +21351,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(items.map((item) => item.classList.contains("folder-open")), [true, true, false], "the ones inside a folder are indented");
       assertEqual(items[0].querySelector("span").textContent, "q1", "the query keeps its name and its marks");
       assertEqual(items[0].querySelector(".marcas") !== null, true, "the marks stay");
-      assertEqual(headers[0].querySelectorAll("button").length, 3, "a folder header has fold, rename and delete");
+      assertEqual(headers[0].querySelectorAll("button").length, 4, "a folder header has fold, duplicate, rename and delete");
       assertEqual(headers[2].querySelectorAll("button").length, 1, "the «no folder» group is only folded and dropped on");
       Store.replaceProject(before.project);
       UiProject.showName();
@@ -21429,6 +21612,61 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(document.querySelectorAll("#list-queries li.folder").length, 2, "the list keeps the remaining folder and the «no folder» group");
       window.confirm = before.confirm;
       Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_ClickDuplicateQueryMark_Expect_CopyOpened", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery };
+      Store.replaceProject(folderProject());
+      Store.dirty = false;
+      Ui.renderSidebarQueries();
+      const duplicate = queryItem("q1").querySelector("button.duplicate-query");
+      assert(duplicate !== null, "every query of the list carries its «D»");
+      assertEqual(duplicate.textContent, "D", "with the symbol of the action");
+      assertEqual(duplicate.title, "Duplicate the query “q1”", "and the tip that says what it does");
+      assertEqual(duplicate.getAttribute("aria-label"), duplicate.title, "also for whoever does not see the symbol");
+      duplicate.click();
+      assertEqual(Store.project.queries.map((query) => query.name), ["q1", "q1_2", "q2", "q3"], "the copy lands right after the query");
+      assertEqual(Ui.state.activeQuery, "q1_2", "and opens in the editor");
+      assertEqual(document.getElementById("query-name").value, "q1_2", "with its name in the field");
+      assertEqual(document.getElementById("view-query").hidden, false, "in the query view");
+      assertEqual(Store.dirty, true, "the project is left pending save");
+      assertEqual(queryItem("q1_2") !== null, true, "the copy is listed in the sidebar");
+      assertEqual(queryItem("q1_2").dataset.folder, "Sales", "under the folder of the original");
+      assert(document.getElementById("status").textContent.includes("q1_2"), "and the status names it: " + document.getElementById("status").textContent);
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_ClickDuplicateFolderMark_Expect_QueriesCopied", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery };
+      Store.replaceProject(folderProject());
+      Store.dirty = false;
+      Ui.renderSidebarQueries();
+      const duplicate = folderHeader("Sales").querySelector("button.duplicate-folder");
+      assert(duplicate !== null, "every folder of queries carries its «D»");
+      assertEqual(duplicate.textContent, "D", "with the symbol of the action");
+      assertEqual(duplicate.title, "Duplicate the folder “Sales” with its queries", "and the tip that says what it does");
+      assertEqual(document.querySelector("#list-tables button.duplicate-folder"), null, "the folders of the tables do not carry it");
+      assertEqual(folderHeader("").querySelectorAll("button.duplicate-folder").length, 0, "nor the «no folder» group");
+      duplicate.click();
+      assertEqual(Store.project.folders, ["Sales", "Sales_2", "2026"], "the copy of the folder goes after the original");
+      assertEqual(Store.project.queries.map((query) => query.name), ["q1", "q1_2", "q2", "q3"], "with a copy of its queries");
+      assertEqual(Store.project.queries[1].folder, "Sales_2", "inside the new folder");
+      assertEqual(Store.dirty, true, "the project is left pending save");
+      const headers = [...document.querySelectorAll("#list-queries li.folder")];
+      assertEqual(headers.map((item) => item.dataset.folder), ["Sales", "Sales_2", "2026", ""], "the list shows the new folder");
+      assertEqual(queryItem("q1_2").dataset.folder, "Sales_2", "with the copy under it");
+      assert(document.getElementById("status").textContent.includes("Sales_2"), "and the status names it: " + document.getElementById("status").textContent);
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
       UiProject.showName();
       Ui.renderAll();
       Store.dirty = before.dirty;
@@ -22386,15 +22624,20 @@ ORDER BY edificios DESC, sede;</pre>
       Settings.apply();
       Ui.renderAll();
       const header = () => document.querySelector("#list-queries li.folder[data-folder=\"Sales\"]");
-      assertEqual(header().querySelector("button.rename-folder").textContent, "✎", "the actions of a folder are two symbols");
+      assertEqual(header().querySelector("button.rename-folder").textContent, "✎", "the actions of a folder are symbols");
+      assertEqual(header().querySelector("button.duplicate-folder").textContent, "D", "the one that duplicates it too");
       assertEqual(header().querySelector("button.rename-folder").title, "Rename the folder “Sales”", "with their meaning in the tip, in English");
       assertEqual(header().querySelector("button.delete-folder").title, "Delete the folder “Sales”", "both of them");
+      assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicate the folder “Sales” with its queries", "and the duplicate one");
+      assertEqual(queryItem("q1").querySelector("button.duplicate-query").title, "Duplicate the query “q1”", "and the «D» of the queries");
       const select = document.getElementById("language-select");
       select.value = "es";
       select.dispatchEvent(new Event("change"));
       assertEqual(header().querySelector("button.rename-folder").textContent, "✎", "the symbols do not change with the language");
       assertEqual(header().querySelector("button.rename-folder").title, "Renombrar la carpeta «Sales»", "but their tips do");
       assertEqual(header().querySelector("button.delete-folder").title, "Borrar la carpeta «Sales»", "both of them");
+      assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicar la carpeta «Sales» con sus consultas", "and the duplicate one");
+      assertEqual(queryItem("q1").querySelector("button.duplicate-query").title, "Duplicar la consulta «q1»", "and the «D» of the queries");
       assertEqual(document.querySelector("#list-queries li.folder[data-folder=\"\"] .name").textContent, "Sin carpeta", "and the «no folder» group too");
       assertEqual(document.querySelector("#list-queries li[data-name] .mark-test").textContent, "sin test", "the marks of the queries as well");
       assertEqual(folderToggle("Sales").title, "Plegar «Sales»", "and the fold button of the headers");
