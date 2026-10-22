@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 133 queries)",
+  "name": "SQL tests · Education (8 tables, 134 queries)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -3092,6 +3092,56 @@
             4,
             3,
             2
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A33 · Records with CONCAT (text and numbers)",
+      "description": "Joins name and surname with CONCAT, and the degree code with the identifier: the first 7 students by identifier. The contact is null when there is no email.",
+      "sql": "SELECT CONCAT(name, ' ', last_name) AS student, CONCAT(degree_code, '-', id_student) AS enrollment_code, CONCAT(degree_code, ' · ', email) AS contact FROM students ORDER BY id_student LIMIT 7",
+      "assert": {
+        "columns": [
+          "student",
+          "enrollment_code",
+          "contact"
+        ],
+        "rows": [
+          [
+            "Ana García López",
+            "GINF-1",
+            "GINF · ana.garcia@alu.es"
+          ],
+          [
+            "Luis Martín Soto",
+            "GINF-2",
+            "GINF · luis.martin@alu.es"
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            "GINF-3",
+            null
+          ],
+          [
+            "Diego Fernández Blanco",
+            "GMED-4",
+            "GMED · diego.fernandez@alu.es"
+          ],
+          [
+            "Marta Ruiz Navarro",
+            "GEDU-5",
+            "GEDU · marta.ruiz@alu.es"
+          ],
+          [
+            "Javier Ortega Díaz",
+            "TDER-6",
+            "TDER · javier.ortega@alu.es"
+          ],
+          [
+            "Lucía Moreno Pascual",
+            "MSW-7",
+            null
           ]
         ]
       },

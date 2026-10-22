@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Health and hospitals (20 tables, 190 queries)",
+  "name": "SQL tests · Health and hospitals (20 tables, 191 queries)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -12715,6 +12715,48 @@
             28,
             "Sergio",
             "Molina Morales"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation"
+    },
+    {
+      "name": "A46 · Patient records with CONCAT",
+      "description": "Joins name and surname with CONCAT, and the blood group with the city: the first 7 patients by identifier. The result is null when there is no blood group.",
+      "sql": "SELECT CONCAT(name, ' ', last_name) AS patient, CONCAT(blood_group, ' · ', city) AS blood_city FROM patients ORDER BY id_patient LIMIT 7",
+      "assert": {
+        "columns": [
+          "patient",
+          "blood_city"
+        ],
+        "rows": [
+          [
+            "Miguel Rubio González",
+            "A+ · Quito"
+          ],
+          [
+            "Beatriz Navarro Molina",
+            "A- · Málaga"
+          ],
+          [
+            "Francisco Muñoz García",
+            "O- · Madrid"
+          ],
+          [
+            "María López Martín",
+            "A- · Murcia"
+          ],
+          [
+            "Julia Díaz Domínguez",
+            "O- · Bilbao"
+          ],
+          [
+            "Pedro García Domínguez",
+            "B+ · Murcia"
+          ],
+          [
+            "Beatriz Díaz Ruiz",
+            null
           ]
         ]
       },

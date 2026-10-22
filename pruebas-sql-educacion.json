@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 133 consultas)",
+  "name": "Pruebas SQL · Educación (8 tablas, 134 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -3092,6 +3092,56 @@
             4,
             3,
             2
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A33 · Fichas con CONCAT (texto y números)",
+      "description": "Une nombre y apellidos con CONCAT, y el código de estudio con el identificador: los 7 primeros estudiantes por identificador. El contacto es null cuando no hay correo.",
+      "sql": "SELECT CONCAT(nombre, ' ', apellidos) AS estudiante, CONCAT(codigo_estudio, '-', id_estudiante) AS codigo_matricula, CONCAT(codigo_estudio, ' · ', email) AS contacto FROM estudiantes ORDER BY id_estudiante LIMIT 7",
+      "assert": {
+        "columns": [
+          "estudiante",
+          "codigo_matricula",
+          "contacto"
+        ],
+        "rows": [
+          [
+            "Ana García López",
+            "GINF-1",
+            "GINF · ana.garcia@alu.es"
+          ],
+          [
+            "Luis Martín Soto",
+            "GINF-2",
+            "GINF · luis.martin@alu.es"
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            "GINF-3",
+            null
+          ],
+          [
+            "Diego Fernández Blanco",
+            "GMED-4",
+            "GMED · diego.fernandez@alu.es"
+          ],
+          [
+            "Marta Ruiz Navarro",
+            "GEDU-5",
+            "GEDU · marta.ruiz@alu.es"
+          ],
+          [
+            "Javier Ortega Díaz",
+            "TDER-6",
+            "TDER · javier.ortega@alu.es"
+          ],
+          [
+            "Lucía Moreno Pascual",
+            "MSW-7",
+            null
           ]
         ]
       },

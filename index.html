@@ -1805,11 +1805,11 @@ ORDER BY curso;</pre>
                 <dt>LIMIT / OFFSET</dt>
                 <dd data-i18n-html="markup.dd.limit20OFFSET40MySQL"><code>LIMIT 20 OFFSET 40</code> o al estilo MySQL <code>LIMIT 40, 20</code> (primero el salto, después las filas).</dd>
                 <dt data-i18n="markup.dt.operators">Operadores</dt>
-                <dd data-i18n-html="markup.dd.concatenationParenthesesDivisionByZero"><code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenación <code>||</code> y paréntesis. Una <b>división por cero</b> no falla: da <code>null</code>. Comentarios con <code>--</code> o <code>/* … */</code>.</dd>
+                <dd data-i18n-html="markup.dd.concatenationParenthesesDivisionByZero"><code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenación <code>||</code> o <code>CONCAT(…)</code> y paréntesis. Una <b>división por cero</b> no falla: da <code>null</code>. Comentarios con <code>--</code> o <code>/* … */</code>.</dd>
                 <dt data-i18n="markup.dt.literalsIdentifiers">Literales e identificadores</dt>
                 <dd data-i18n-html="markup.dd.textTextAreBothText"><code>'texto'</code> y <code>"texto"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.</dd>
                 <dt data-i18n="markup.dt.functions">Funciones</dt>
-                <dd data-i18n-html="markup.dd.absROUNDXDecHalf"><code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
+                <dd data-i18n-html="markup.dd.absROUNDXDecHalf"><code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>CONCAT(x, y, …)</code> (textos unidos; <code>null</code> si algún argumento lo es), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
                 <dt data-i18n="markup.dt.typesConversion">Tipos y conversión</dt>
                 <dd data-i18n-html="markup.dd.fieldTypeConvertsWhenQuerying">El <b>tipo del campo</b> convierte al consultar: un campo <code>number</code> con valores «31» responde a <code>= 31</code>, y uno <code>boolean</code> a <code>= true</code>. Los datos guardados no se tocan.</dd>
                 <dt data-i18n="markup.dt.readOnly">Solo lectura</dt>
@@ -2043,13 +2043,13 @@ LIMIT 3 OFFSET 2;</pre>
                   </section>
                   <section>
                     <h3 data-i18n="markup.h3.operatorsComments">Operadores y comentarios</h3>
-                    <p data-i18n-html="markup.p.arithmeticGivesRemainderDivisionConcatenates">Aritmética con <code>+</code>, <code>-</code>, <code>*</code> y <code>/</code>; <code>%</code> da el resto de la división y <code>||</code> concatena textos (números incluidos). Los paréntesis agrupan.</p>
+                    <p data-i18n-html="markup.p.arithmeticGivesRemainderDivisionConcatenates">Aritmética con <code>+</code>, <code>-</code>, <code>*</code> y <code>/</code>; <code>%</code> da el resto de la división y <code>||</code> (o <code>CONCAT(…)</code>) concatena textos (números incluidos). Los paréntesis agrupan.</p>
                     <p data-i18n-html="markup.p.dividingByZeroIsNot">Dividir por <b>cero</b> no es un error: el resultado de esa operación es <code>null</code>.</p>
                     <p data-i18n-html="markup.p.commentsEndLineSeveralLines">Comentarios: <code>--</code> hasta el final de la línea y <code>/* … */</code> para varias líneas.</p>
                   </section>
                   <section>
                     <h3 data-i18n="markup.h3.functions">Funciones</h3>
-                    <p data-i18n-html="markup.p.absXAbsoluteValueROUND"><code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.</p>
+                    <p data-i18n-html="markup.p.absXAbsoluteValueROUND"><code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.</p>
                     <p data-i18n-html="markup.p.theyCanBeNestedInside">Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.</p>
                   </section>
                   <section>
@@ -2062,7 +2062,8 @@ LIMIT 3 OFFSET 2;</pre>
                   <h4 data-i18n="markup.h4.textFunctionsSELECTWHERE">Funciones de texto en el SELECT y en el WHERE</h4>
                   <pre class="sql-ejemplo mono">SELECT TRIM(nombre) AS nombre,
        LENGTH(TRIM(nombre)) AS letras,
-       SUBSTR(nombre, 1, 3) AS iniciales,
+       CONCAT(SUBSTR(nombre, 1, 3), '…') AS iniciales,
+       CONCAT(nombre, ' (', curso, ')') AS ficha,
        LOWER(curso) AS curso
 FROM alumnos
 WHERE LOWER(SUBSTR(nombre, 1, 1)) = 'a'
@@ -2812,10 +2813,10 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.valuesFunctions": "Values and functions",
         "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparisons, text, combined conditions and subqueries",
         "markup.button.whereRowsComeFromTables": "Where the rows come from: tables, queries read as tables and joins",
-        "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (the half moves away from zero: 2.5 → 3 and −2.5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, start[, length])</code> (1 = first character; negative ones count from the end), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
+        "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (the half moves away from zero: 2.5 → 3 and −2.5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, start[, length])</code> (1 = first character; negative ones count from the end), <code>CONCAT(x, y, …)</code> (texts joined; <code>null</code> if any argument is), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
         "markup.dd.aggregatesCOUNTSUMAVGMIN": "Aggregates <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code>, with <code>DISTINCT</code> inside: <code>COUNT(DISTINCT position)</code>. <code>HAVING</code> filters the groups already computed.",
         "markup.dd.columnsExpressionsAliasesASDISTINCT": "Columns, expressions and <code>*</code>, with aliases <code>AS</code>, and <code>DISTINCT</code> to avoid repeating rows.",
-        "markup.dd.concatenationParenthesesDivisionByZero": "<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenation <code>||</code> and parentheses. A <b>division by zero</b> does not fail: it gives <code>null</code>. Comments with <code>--</code> or <code>/* … */</code>.",
+        "markup.dd.concatenationParenthesesDivisionByZero": "<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenation <code>||</code> or <code>CONCAT(…)</code> and parentheses. A <b>division by zero</b> does not fail: it gives <code>null</code>. Comments with <code>--</code> or <code>/* … */</code>.",
         "markup.dd.fieldTypeConvertsWhenQuerying": "The <b>field type</b> converts when querying: a <code>number</code> field with «31» values responds to <code>= 31</code>, and a <code>boolean</code> one to <code>= true</code>. The stored data is not touched.",
         "markup.dd.fromNameAnyQueryProject": "In the <code>FROM</code> the name of any <b>query</b> of the project is valid: it is run and its result is read as a table (<code>FROM sales_2026 AS v</code>), alone or joined to tables and to other queries. They <b>can be chained</b> (view of a view) and the query that somebody reads that way carries the <b>«view»</b> mark in the sidebar. If the name matches that of a table, the table wins.",
         "markup.dd.innerJOINLEFTOUTERJOIN": "<code>INNER JOIN</code> and <code>LEFT [OUTER] JOIN</code> with <code>ON</code>. Equalities between tables are resolved with a <b>hash join</b>, so it is also smooth with big tables.",
@@ -3017,9 +3018,9 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.widthLeftColumnIsVariable": "The width of the left column is <b>variable</b>: drag the <b>handle</b> between the sidebar and the view (from 140 to 480 px), double-click to go back to 195 px or use the arrows with the handle focused.",
         "markup.li.wildcardsHaveNoEscapeLiteral": "The wildcards have no escape: a literal <code>*</code> or <code>?</code> cannot be searched for.",
         "markup.nav.helpSections": "Help sections",
-        "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal.",
+        "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>CONCAT(a, b, …)</code> joins texts, with <code>null</code> if any argument is · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal.",
         "markup.p.anyQueryProjectCanBe": "Any query of the project can be read from another <b>as if it were a table</b>: write its name in the <code>FROM</code> and the engine runs it when the query that uses it runs. Its result is treated as one more table (alias, <code>JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>…), with the columns of that query's <code>SELECT</code> —output aliases included— and one row per row of the result.",
-        "markup.p.arithmeticGivesRemainderDivisionConcatenates": "Arithmetic with <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code>; <code>%</code> gives the remainder of the division and <code>||</code> concatenates texts (numbers included). Parentheses group.",
+        "markup.p.arithmeticGivesRemainderDivisionConcatenates": "Arithmetic with <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code>; <code>%</code> gives the remainder of the division and <code>||</code> (or <code>CONCAT(…)</code>) concatenates texts (numbers included). Parentheses group.",
         "markup.p.bewareMissingValuesNullNull": "Beware of the missing values: <code>null = null</code> is not true. It is asked with <code>IS NULL</code> and <code>IS NOT NULL</code>. A <code>number</code> field with «31» texts responds the same to <code>= 31</code> (because of the field type).",
         "markup.p.bringsAllColumnsIfNot": "<code>*</code> brings all the columns; if not, a list of columns, expressions or functions separated by commas. Every item takes an alias, and the alias is written <b>always with <code>AS</code></b>.",
         "markup.p.chainingThemIsWhatGives": "Chaining them is what gives <b>view of a view</b>: a query that reads another that reads another, as many levels as you want. The <b>«view»</b> mark of the sidebar and the <b>Views</b> column of the query summary tell you who reads whom.",
@@ -3115,6 +3116,7 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlFunctions.trim": "TRIM(text)",
         "sqlFunctions.sum": "SUM([DISTINCT] number)",
         "sqlFunctions.substr": "SUBSTR(text, start, [length])",
+        "sqlFunctions.concat": "CONCAT(text, text, …)",
         "sqlFunctions.round": "ROUND(number, decimals)",
         "sqlFunctions.nullif": "NULLIF(value1, value2)",
         "sqlFunctions.min": "MIN(value)",
@@ -3874,10 +3876,10 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.valuesFunctions": "Valores y funciones",
         "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparaciones, texto, condiciones combinadas y subconsultas",
         "markup.button.whereRowsComeFromTables": "De dónde salen las filas: tablas, consultas leídas como tablas y joins",
-        "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
+        "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>CONCAT(x, y, …)</code> (textos unidos; <code>null</code> si algún argumento lo es), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
         "markup.dd.aggregatesCOUNTSUMAVGMIN": "Agregados <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>, con <code>DISTINCT</code> dentro: <code>COUNT(DISTINCT puesto)</code>. <code>HAVING</code> filtra los grupos ya calculados.",
         "markup.dd.columnsExpressionsAliasesASDISTINCT": "Columnas, expresiones y <code>*</code>, con alias <code>AS</code>, y <code>DISTINCT</code> para no repetir filas.",
-        "markup.dd.concatenationParenthesesDivisionByZero": "<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenación <code>||</code> y paréntesis. Una <b>división por cero</b> no falla: da <code>null</code>. Comentarios con <code>--</code> o <code>/* … */</code>.",
+        "markup.dd.concatenationParenthesesDivisionByZero": "<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenación <code>||</code> o <code>CONCAT(…)</code> y paréntesis. Una <b>división por cero</b> no falla: da <code>null</code>. Comentarios con <code>--</code> o <code>/* … */</code>.",
         "markup.dd.fieldTypeConvertsWhenQuerying": "El <b>tipo del campo</b> convierte al consultar: un campo <code>number</code> con valores «31» responde a <code>= 31</code>, y uno <code>boolean</code> a <code>= true</code>. Los datos guardados no se tocan.",
         "markup.dd.fromNameAnyQueryProject": "En el <code>FROM</code> vale el nombre de cualquier <b>consulta</b> del proyecto: se ejecuta y su resultado se lee como una tabla (<code>FROM ventas_2026 AS v</code>), sola o unida a tablas y a otras consultas. <b>Se pueden encadenar</b> (vista de vista) y la consulta que alguien lee así lleva la marca <b>«vista»</b> en la barra lateral. Si el nombre coincide con el de una tabla, gana la tabla.",
         "markup.dd.innerJOINLEFTOUTERJOIN": "<code>INNER JOIN</code> y <code>LEFT [OUTER] JOIN</code> con <code>ON</code>. Las igualdades entre tablas se resuelven con <b>hash join</b>, así que también va fino con tablas grandes.",
@@ -4079,9 +4081,9 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.widthLeftColumnIsVariable": "El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 195 px o usa las flechas con el tirador enfocado.",
         "markup.li.wildcardsHaveNoEscapeLiteral": "Los comodines no tienen escape: un <code>*</code> o un <code>?</code> literales no se pueden buscar.",
         "markup.nav.helpSections": "Apartados de la ayuda",
-        "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.",
+        "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.",
         "markup.p.anyQueryProjectCanBe": "Cualquier consulta del proyecto se puede leer desde otra <b>como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al ejecutar la consulta que la usa. Su resultado se trata como una tabla más (alias, <code>JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>…), con las columnas del <code>SELECT</code> de esa consulta —alias de salida incluidos— y una fila por fila del resultado.",
-        "markup.p.arithmeticGivesRemainderDivisionConcatenates": "Aritmética con <code>+</code>, <code>-</code>, <code>*</code> y <code>/</code>; <code>%</code> da el resto de la división y <code>||</code> concatena textos (números incluidos). Los paréntesis agrupan.",
+        "markup.p.arithmeticGivesRemainderDivisionConcatenates": "Aritmética con <code>+</code>, <code>-</code>, <code>*</code> y <code>/</code>; <code>%</code> da el resto de la división y <code>||</code> (o <code>CONCAT(…)</code>) concatena textos (números incluidos). Los paréntesis agrupan.",
         "markup.p.bewareMissingValuesNullNull": "Ojo con los valores que faltan: <code>null = null</code> no es cierto. Se pregunta con <code>IS NULL</code> y <code>IS NOT NULL</code>. Un campo <code>number</code> con textos «31» responde igual a <code>= 31</code> (por el tipo del campo).",
         "markup.p.bringsAllColumnsIfNot": "<code>*</code> trae todas las columnas; si no, una lista de columnas, expresiones o funciones separadas por comas. Cada elemento admite un alias, y el alias se escribe <b>siempre con <code>AS</code></b>.",
         "markup.p.chainingThemIsWhatGives": "Encadenarlas es lo que da la <b>vista de vista</b>: una consulta que lee a otra que lee a otra, tantos niveles como quieras. La marca <b>«vista»</b> de la barra lateral y la columna <b>Vistas</b> del resumen de consultas te dicen quién lee a quién.",
@@ -4177,6 +4179,7 @@ ORDER BY edificios DESC, sede;</pre>
         "sqlFunctions.trim": "TRIM(texto)",
         "sqlFunctions.sum": "SUM([DISTINCT] número)",
         "sqlFunctions.substr": "SUBSTR(texto, inicio, [longitud])",
+        "sqlFunctions.concat": "CONCAT(texto, texto, …)",
         "sqlFunctions.round": "ROUND(número, decimales)",
         "sqlFunctions.nullif": "NULLIF(valor1, valor2)",
         "sqlFunctions.min": "MIN(valor)",
@@ -8830,6 +8833,7 @@ ORDER BY edificios DESC, sede;</pre>
       LENGTH: { min: 1, max: 1, doc: "sqlFunctions.length" },
       TRIM: { min: 1, max: 1, doc: "sqlFunctions.trim" },
       SUBSTR: { min: 2, max: 3, doc: "sqlFunctions.substr" },
+      CONCAT: { min: 1, max: 9, doc: "sqlFunctions.concat" },
       COALESCE: { min: 1, max: 9, doc: "sqlFunctions.coalesce" },
       IFNULL: { min: 2, max: 2, doc: "sqlFunctions.ifnull" },
       NULLIF: { min: 2, max: 2, doc: "sqlFunctions.nullif" },
@@ -10392,6 +10396,8 @@ ORDER BY edificios DESC, sede;</pre>
             const length = Math.max(SqlExecutor.coerceNumber(args[2], "SUBSTR"), 0);
             return text.slice(begin, begin + length);
           }
+          case "CONCAT":
+            return args.some((value) => value === null) ? null : args.join("");
           case "COALESCE": {
             const found = args.find((value) => value !== null);
             return found === undefined ? null : found;
@@ -17769,6 +17775,16 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(result.result.rows[0], ["ANA", 3, 10.3], "UPPER, LENGTH and ROUND");
     });
 
+    SelfTests.add("When_ConcatFunction_Expect_TextJoined", () => {
+      const sql = "SELECT CONCAT(name, ' ', department) AS t FROM employees LIMIT 1";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.rows[0][0], "Ana Sales", "CONCAT joins texts");
+      const nulo = SqlEngine.runSafe("SELECT CONCAT(name, NULL) AS t FROM employees LIMIT 1", buildSqlTestProject());
+      assert(nulo.ok, "valid query: " + (nulo.error && nulo.error.message));
+      assertEqual(nulo.result.rows[0][0], null, "null if any argument is null");
+    });
+
     SelfTests.add("When_EquiJoin_Expect_HashJoinUsed", () => {
       const sql = "SELECT e.name FROM employees AS e JOIN departments AS d ON e.department = d.name";
       const result = SqlEngine.runSafe(sql, buildSqlTestProject());
@@ -18127,7 +18143,7 @@ ORDER BY edificios DESC, sede;</pre>
       const text = view.textContent;
       ["SELECT", "DISTINCT", "FROM", "JOIN", "WHERE", "GROUP BY", "HAVING",
         "ORDER BY", "NULLS LAST", "LIMIT", "OFFSET", "LIKE", "BETWEEN",
-        "SUBSTR", "COALESCE", "EXISTS", "ANY", "ALL", "hash join", "testing",
+        "SUBSTR", "CONCAT", "COALESCE", "EXISTS", "ANY", "ALL", "hash join", "testing",
         "assert", "rowCount", "ignoreOrder", "alias", "runProjectTests"].forEach((key) => {
         assert(text.includes(key), `the help mentions ${key}`);
       });
@@ -18201,7 +18217,7 @@ ORDER BY edificios DESC, sede;</pre>
       assert(muestra >= 14, "examples: " + muestra);
       ["SELECT", "DISTINCT", "FROM", "JOIN", "LEFT", "WHERE", "LIKE", "ESCAPE", "BETWEEN",
         "IS NULL", "GROUP BY", "HAVING", "ORDER BY", "NULLS LAST", "LIMIT", "OFFSET",
-        "COUNT(DISTINCT", "SUBSTR", "COALESCE", "IFNULL", "NULLIF", "ROUND", "hash join",
+        "COUNT(DISTINCT", "SUBSTR", "CONCAT", "COALESCE", "IFNULL", "NULLIF", "ROUND", "hash join",
         "testing", "assert", "rowCount", "ignoreOrder", "runProjectTests"].forEach((key) => {
         assert(all.includes(key), `the SQL help explains ${key}`);
       });

@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 190 consultas)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 191 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -12715,6 +12715,48 @@
             28,
             "Sergio",
             "Molina Morales"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados"
+    },
+    {
+      "name": "A46 · Fichas de pacientes con CONCAT",
+      "description": "Une nombre y apellidos con CONCAT, y el grupo sanguíneo con la ciudad: los 7 primeros pacientes por identificador. El resultado es null cuando no hay grupo sanguíneo.",
+      "sql": "SELECT CONCAT(nombre, ' ', apellidos) AS paciente, CONCAT(grupo_sanguineo, ' · ', ciudad) AS grupo_ciudad FROM pacientes ORDER BY id_paciente LIMIT 7",
+      "assert": {
+        "columns": [
+          "paciente",
+          "grupo_ciudad"
+        ],
+        "rows": [
+          [
+            "Miguel Rubio González",
+            "A+ · Quito"
+          ],
+          [
+            "Beatriz Navarro Molina",
+            "A- · Málaga"
+          ],
+          [
+            "Francisco Muñoz García",
+            "O- · Madrid"
+          ],
+          [
+            "María López Martín",
+            "A- · Murcia"
+          ],
+          [
+            "Julia Díaz Domínguez",
+            "O- · Bilbao"
+          ],
+          [
+            "Pedro García Domínguez",
+            "B+ · Murcia"
+          ],
+          [
+            "Beatriz Díaz Ruiz",
+            null
           ]
         ]
       },
