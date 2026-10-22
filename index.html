@@ -1432,6 +1432,90 @@
       font-family: ui-monospace, Consolas, "Courier New", monospace;
     }
 
+    /* Selector flotante de nombres para el editor de SQL. */
+    #insert-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      width: 320px;
+      max-height: 340px;
+      border: 1px solid #888;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    #insert-search {
+      margin: 4px;
+      padding: 2px 4px;
+      font: inherit;
+    }
+
+    #insert-list {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding-bottom: 4px;
+    }
+
+    .insert-group {
+      padding: 5px 6px 2px;
+      color: #666;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .insert-row {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .insert-toggle,
+    .insert-pick {
+      border: 0;
+      background: none;
+      color: #000;
+      font: inherit;
+      text-align: start;
+      cursor: pointer;
+    }
+
+    .insert-toggle {
+      width: 16px;
+      padding: 0;
+      color: #555;
+    }
+
+    .insert-pick {
+      flex: 1 1 auto;
+      padding: 2px 4px;
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+    }
+
+    .insert-pick:hover,
+    .insert-pick.active {
+      background: #dce9f9;
+    }
+
+    .insert-field {
+      padding-left: 22px;
+    }
+
+    .insert-type {
+      padding-right: 6px;
+      color: #777;
+      font-size: 10px;
+    }
+
+    .insert-note {
+      padding: 3px 8px;
+      color: #666;
+    }
+
     /* --- 8. Import panel ---------------------------------------- */
 
     #import-log {
@@ -1674,6 +1758,7 @@
               <h3 data-i18n="markup.h3.queries">Consultas</h3>
               <ul>
                 <li data-i18n-html="markup.li.createGiveItNameDescription">Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>.</li>
+                <li data-i18n-html="markup.li.insertButtonSpeedsUpWriting"><b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos.</li>
                 <li data-i18n-html="markup.li.queryCanBeReadFrom">Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.</li>
                 <li data-i18n-html="markup.li.sidebarQueryThatSomeOther">En la barra lateral, la consulta que <b>alguna otra lee como tabla</b> lleva la marca <b>«vista»</b> en azul, o <b>«vista ×N»</b> si la leen N consultas. Pasa el ratón por su pista y te dice los dos sentidos: <b>«Lee como tabla (n): …»</b> (a quién lee ella) y <b>«La leen como tabla (n): …»</b> (quién la lee a ella). La marca es solo información: no cambia lo que comprueba la consulta.</li>
                 <li data-i18n-html="markup.li.querySummaryQueriesTitleSidebar">El <b>resumen de consultas</b> (el título <b>Consultas</b> de la barra lateral) lleva una columna <b>Vistas</b> con lo mismo, una línea por sentido (<code>lee: «…»</code> y <code>la leen: «…»</code>), o un guion si no hay ninguna. El <b>salpicadero</b> de la bienvenida cuenta en <b>Consultas como tabla</b> cuántas consultas del proyecto se leen así.</li>
@@ -1763,6 +1848,7 @@
               <ul>
                 <li data-i18n-html="markup.li.ctrlSSaveProject"><b>Ctrl+S</b>: guardar el proyecto.</li>
                 <li data-i18n-html="markup.li.ctrlEnterRunQueryImport"><b>Ctrl+Enter</b>: ejecutar la consulta (o importar el texto pegado).</li>
+                <li data-i18n-html="markup.li.ctrlSpaceOpensInsertList"><b>Ctrl+Space</b>: abrir la lista de tablas, consultas y campos para insertarlos en la consulta.</li>
                 <li data-i18n-html="markup.li.enterTableNameRenamesIt"><b>Enter</b> en el nombre de la tabla la renombra; en el nombre de un campo nuevo lo añade.</li>
                 <li data-i18n-html="markup.li.handleFocusedChangeWidthLeft"><b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.</li>
                 <li data-i18n-html="markup.li.escClosePopUpWindows"><b>Esc</b>: cerrar las ventanas emergentes.</li>
@@ -2223,7 +2309,15 @@ ORDER BY edificios DESC, sede;</pre>
           <label data-i18n="markup.label.folder" for="query-folder">Carpeta:</label>
           <select data-i18n-title="ui.folderTip" id="query-folder" title="Carpeta de la consulta; elige una de la lista (+C crea una nueva)"></select>
         </div>
+        <div class="toolbar">
+          <button data-i18n-title="queries.insertTip" data-i18n="queries.insertButton" id="btn-insert" type="button" title="Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space)">Insertar tabla, consulta o campo…</button>
+          <span data-i18n="queries.insertHint" class="muted">Pulsa un nombre para escribirlo en el cursor; ▸ despliega sus campos.</span>
+        </div>
         <textarea data-i18n-aria-label="markup.textarea.sqlQuery" data-i18n-title="markup.textarea.sqlQuerySELECTOnly" id="query-sql" rows="8" spellcheck="false" aria-label="Consulta SQL" title="Consulta SQL (solo SELECT)"></textarea>
+        <div id="insert-popup" role="dialog" data-i18n-aria-label="queries.insertTitle" aria-label="Insertar en el cursor" hidden>
+          <input data-i18n-aria-label="queries.insertSearchAria" data-i18n-placeholder="queries.insertSearchPlaceholder" id="insert-search" type="text" autocomplete="off" spellcheck="false" aria-label="Buscar una tabla, una consulta o un campo" placeholder="Buscar una tabla, una consulta o un campo…">
+          <div id="insert-list" data-i18n-aria-label="queries.insertListAria" aria-label="Tablas, consultas y campos"></div>
+        </div>
         <div id="query-plan" class="muted"></div>
         <div id="query-error" hidden></div>
         <div id="query-paginacion" class="toolbar" hidden>
@@ -2976,6 +3070,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.csvQuotesDoubledQuotesBOM": "<b>CSV</b>: quotes, doubled quotes, BOM and CRLF line breaks. The delimiter is detected on its own, or you choose it: <code>,</code> <code>;</code> tab, space or another one.",
         "markup.li.ctrlEnterRunQueryImport": "<b>Ctrl+Enter</b>: run the query (or import the pasted text).",
         "markup.li.ctrlSSaveProject": "<b>Ctrl+S</b>: save the project.",
+        "markup.li.ctrlSpaceOpensInsertList": "<b>Ctrl+Space</b>: open the list of tables, queries and fields to insert them in the query.",
         "markup.li.deletingWarnsYouBeforeRemoving": "<b>Deleting warns you</b>: before removing a table or a field it tells you how many queries use it and which ones, and afterwards it reminds you of the ones left citing a name that no longer exists.",
         "markup.li.editorSTurnIntoTest": "The editor's <b>Turn into a test</b> button runs that query, saves its result as its <code>assert</code> (columns and rows, value by value) and puts the <b>project in test mode</b>. If the query already checked a result, it asks you before replacing it; with <b>Remove test</b> (only active if the query checks something) it goes back to checking nothing, without taking the project out of test mode.",
         "markup.li.enterTableNameRenamesIt": "<b>Enter</b> in the table name renames it; in the name of a new field it adds it.",
@@ -2994,6 +3089,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.exportTableDataAsCSV": "<b>Export CSV…</b> opens the data of the table as <b>CSV text in a window</b>, with <b>Copy</b> and <b>Download CSV</b> and the same separator, header and decimal-comma options as the result of a query.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> and <b>→</b> with the handle focused: change the width of the left column; <b>Home</b> and <b>End</b> take it to the ends.",
         "markup.li.idFieldIsAutoNumbered": "The <b>ID field is auto-numbered</b>: every new row gets the <b>next number</b> and none is repeated or reused when rows are deleted. That is why it is not edited by hand: it can be searched in, but it is not replaced. With <b>Create auto-numbered ID field</b> you add a new one (the name is written next to it), at the start of the table, and it numbers the rows that were already there <b>1..N</b>. Marking any other field as ID also makes it auto-numbered.",
+        "markup.li.insertButtonSpeedsUpWriting": "<b>Insert table, query or field…</b> (above the editor, or <b>Ctrl+Space</b> inside it) opens a <b>list</b> with the project's tables and queries: click a name to write it <b>at the cursor</b> (with brackets when the name needs them) or press <b>▸</b> to see its <b>fields</b> and click one. The <b>search box</b> filters the list and the fields.",
         "markup.li.insideCellGoForeignKeys": "Inside the cell go the <b>foreign keys</b> of the row's table that point to the column's, written as <code>field → target field</code>. The <b>diagonal</b> holds the <b>self-references</b>: the foreign keys of a table that point to itself.",
         "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: an array of objects with the same keys and simple values.",
         "markup.li.jsonIsValidatedWhenIt": "The JSON is validated when it is opened: if something does not add up it tells you exactly what, including the asserted result (<code>assert</code>) of every query. The old <code>\"testing\"</code> property is accepted but <b>ignored</b>: test mode is worked out from the queries.",
@@ -3389,6 +3485,25 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.errorTitle": "Error while running the query",
         "queries.errorValidation": "Query error (validation)",
         "queries.executed": "Query “{name}” run: {rows} row(s) in {ms} ms.",
+        "queries.insertButton": "Insert table, query or field…",
+        "queries.insertFieldTip": "Write the field “{name}” at the cursor",
+        "queries.insertFieldsError": "The fields of “{name}” could not be read: {message}",
+        "queries.insertFoldTip": "Hide the fields of “{name}”",
+        "queries.insertHint": "Click a name to write it at the cursor; ▸ shows its fields.",
+        "queries.insertListAria": "Tables, queries and fields",
+        "queries.insertNameTip": "Write “{name}” at the cursor",
+        "queries.insertNeedsQuery": "Open or create a query to insert names in it.",
+        "queries.insertNoFieldResults": "No field matches “{text}”.",
+        "queries.insertNoFields": "“{name}” has no fields.",
+        "queries.insertNoResults": "Nothing matches “{text}”.",
+        "queries.insertQueries": "Queries",
+        "queries.insertSearchAria": "Search a table, a query or a field",
+        "queries.insertSearchPlaceholder": "Search a table, a query or a field…",
+        "queries.insertTables": "Tables",
+        "queries.insertTip": "Insert a table, a query or one of its fields at the cursor (Ctrl+Space). The arrow ▸ shows the fields.",
+        "queries.insertTitle": "Insert at the cursor",
+        "queries.insertUnfoldTip": "Show the fields of “{name}”",
+        "queries.inserted": "“{name}” written at the cursor.",
         "queries.keptAssert": "The asserted result of “{name}” is kept.",
         "queries.keptPreviousAssert": "The previous asserted result of “{name}” is kept.",
         "queries.nameEmpty": "The query name cannot be empty.",
@@ -4044,6 +4159,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.csvQuotesDoubledQuotesBOM": "<b>CSV</b>: comillas, comillas duplicadas, BOM y saltos CRLF. El separador se detecta solo, o lo eliges: <code>,</code> <code>;</code> tabulador, espacio u otro.",
         "markup.li.ctrlEnterRunQueryImport": "<b>Ctrl+Enter</b>: ejecutar la consulta (o importar el texto pegado).",
         "markup.li.ctrlSSaveProject": "<b>Ctrl+S</b>: guardar el proyecto.",
+        "markup.li.ctrlSpaceOpensInsertList": "<b>Ctrl+Space</b>: abrir la lista de tablas, consultas y campos para insertarlos en la consulta.",
         "markup.li.deletingWarnsYouBeforeRemoving": "<b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.",
         "markup.li.editorSTurnIntoTest": "El botón <b>Convertir en test</b> del editor de consultas ejecuta esa consulta, guarda su resultado como su <code>assert</code> (columnas y filas, valor a valor) y pone el <b>proyecto en modo test</b>. Si la consulta ya comprobaba un resultado, te pregunta antes de sustituirlo; con <b>Quitar test</b> (activo solo si la consulta comprueba algo) vuelve a dejarla sin comprobar, sin sacar al proyecto del modo test.",
         "markup.li.enterTableNameRenamesIt": "<b>Enter</b> en el nombre de la tabla la renombra; en el nombre de un campo nuevo lo añade.",
@@ -4062,6 +4178,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.exportTableDataAsCSV": "<b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.",
         "markup.li.idFieldIsAutoNumbered": "El <b>campo ID es autonumérico</b>: cada fila nueva recibe el <b>siguiente número</b> y ninguno se repite ni se reutiliza al borrar filas. Por eso no se edita a mano: se puede buscar en él, pero no se reemplaza. Con <b>Crear campo ID autonumérico</b> añades uno nuevo (el nombre se escribe a su lado), al principio de la tabla, y numera <b>1..N</b> las filas que ya había. Marcar cualquier otro campo como ID también lo vuelve autonumérico.",
+        "markup.li.insertButtonSpeedsUpWriting": "<b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos.",
         "markup.li.insideCellGoForeignKeys": "Dentro de la casilla van las <b>claves ajenas</b> de la tabla de la fila que apuntan a la de la columna, escritas como <code>campo → campo destino</code>. La <b>diagonal</b> recoge las <b>autorreferencias</b>: las claves ajenas de una tabla que apuntan a ella misma.",
         "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: un array de objetos con las mismas claves y valores simples.",
         "markup.li.jsonIsValidatedWhenIt": "El JSON se valida al abrirlo: si algo no cuadra te dice exactamente qué, incluido el resultado asertado (<code>assert</code>) de cada consulta. La antigua propiedad <code>\"testing\"</code> se acepta pero se <b>ignora</b>: el modo test se deduce de las consultas.",
@@ -4457,6 +4574,25 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.errorTitle": "Error al ejecutar la consulta",
         "queries.errorValidation": "Error de consulta (validación)",
         "queries.executed": "Consulta «{name}» ejecutada: {rows} fila(s) en {ms} ms.",
+        "queries.insertButton": "Insertar tabla, consulta o campo…",
+        "queries.insertFieldTip": "Escribir el campo «{name}» en el cursor",
+        "queries.insertFieldsError": "No se han podido leer los campos de «{name}»: {message}",
+        "queries.insertFoldTip": "Ocultar los campos de «{name}»",
+        "queries.insertHint": "Pulsa un nombre para escribirlo en el cursor; ▸ despliega sus campos.",
+        "queries.insertListAria": "Tablas, consultas y campos",
+        "queries.insertNameTip": "Escribir «{name}» en el cursor",
+        "queries.insertNeedsQuery": "Abre o crea una consulta para insertar nombres en ella.",
+        "queries.insertNoFieldResults": "Ningún campo coincide con «{text}».",
+        "queries.insertNoFields": "«{name}» no tiene campos.",
+        "queries.insertNoResults": "Nada coincide con «{text}».",
+        "queries.insertQueries": "Consultas",
+        "queries.insertSearchAria": "Buscar una tabla, una consulta o un campo",
+        "queries.insertSearchPlaceholder": "Buscar una tabla, una consulta o un campo…",
+        "queries.insertTables": "Tablas",
+        "queries.insertTip": "Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space). La flecha ▸ muestra los campos.",
+        "queries.insertTitle": "Insertar en el cursor",
+        "queries.insertUnfoldTip": "Mostrar los campos de «{name}»",
+        "queries.inserted": "«{name}» escrito en el cursor.",
         "queries.keptAssert": "Se mantiene el resultado asertado de «{name}».",
         "queries.keptPreviousAssert": "Se mantiene el resultado asertado anterior de «{name}».",
         "queries.nameEmpty": "El nombre de la consulta no puede estar vacío.",
@@ -10594,6 +10730,9 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Shows one of the main views (#view-empty, table, …). */
       showView(name) {        Ui.state.view = name;
+        if (name !== "query") {
+          UiQueryInsert.hide();
+        }
         ["vacio", "table", "query", "import", "tables", "queries", "relations"].forEach((candidate) => {
           document.getElementById(`view-${candidate}`).hidden = candidate !== name;
         });
@@ -12987,6 +13126,11 @@ ORDER BY edificios DESC, sede;</pre>
         document.getElementById("query-description").addEventListener("change", () => UiQueries.saveDescription());
         document.getElementById("query-sql").addEventListener("change", () => UiQueries.saveSql());
         document.getElementById("query-sql").addEventListener("keydown", (event) => {
+          if (event.ctrlKey && event.code === "Space") {
+            event.preventDefault();
+            UiQueryInsert.toggleOpen();
+            return;
+          }
           if (event.ctrlKey && event.key === "Enter") {
             event.preventDefault();
             UiQueries.execute();
@@ -13113,6 +13257,7 @@ ORDER BY edificios DESC, sede;</pre>
         if (!query) {
           return;
         }
+        UiQueryInsert.hide();
         Ui.state.activeQuery = name;
         Ui.renderSidebarQueries();
         Ui.showView("query");
@@ -14977,6 +15122,373 @@ ORDER BY edificios DESC, sede;</pre>
         } finally {
           Busy.hide();
         }
+      },
+    };
+
+    /* =====================================================================
+       9c · NAMES FOR THE SQL EDITOR
+       A floating list with the tables and the queries of the project (and
+       the fields of each one) that writes the chosen name at the caret.
+       ===================================================================== */
+
+    const UiQueryInsert = {
+      /** Is the list on screen? */
+      open: false,
+
+      /** Names whose fields the user opened or closed by hand: "table\u0000name"
+       *  → true (opened) or false (closed). That choice wins over the one the
+       *  search makes when it matches a field. */
+      unfolded: new Map(),
+
+      /** Columns of the queries already worked out, keyed by name and SQL. */
+      columns: new Map(),
+
+      popup() {
+        return document.getElementById("insert-popup");
+      },
+
+      editor() {
+        return document.getElementById("query-sql");
+      },
+
+      button() {
+        return document.getElementById("btn-insert");
+      },
+
+      /** Opens the list under its button and puts the caret in the search box. */
+      show() {
+        if (!UiQueries.activeQueryOrNull()) {
+          setStatus(I18n.t("queries.insertNeedsQuery"));
+          return;
+        }
+        UiQueryInsert.open = true;
+        UiQueryInsert.unfolded.clear();
+        UiQueryInsert.columns.clear();
+        document.getElementById("insert-search").value = "";
+        UiQueryInsert.popup().hidden = false;
+        UiQueryInsert.render();
+        document.getElementById("insert-search").focus();
+      },
+
+      /** Closes the list; nothing happens when it is already closed. */
+      hide() {
+        if (!UiQueryInsert.open) {
+          return;
+        }
+        UiQueryInsert.open = false;
+        UiQueryInsert.popup().hidden = true;
+        document.getElementById("insert-list").textContent = "";
+      },
+
+      /** Opens or closes the list, as the button does. */
+      toggleOpen() {
+        if (UiQueryInsert.open) {
+          UiQueryInsert.hide();
+        } else {
+          UiQueryInsert.show();
+        }
+      },
+
+      /** Puts the list under the button, inside the window. */
+      place() {
+        const box = UiQueryInsert.button().getBoundingClientRect();
+        const popup = UiQueryInsert.popup();
+        const width = popup.offsetWidth;
+        const height = popup.offsetHeight;
+        const left = Math.max(4, Math.min(box.left, window.innerWidth - width - 4));
+        const top = box.bottom + 2 + height > window.innerHeight - 4
+          ? Math.max(4, box.top - height - 2)
+          : box.bottom + 2;
+        popup.style.left = `${left}px`;
+        popup.style.top = `${top}px`;
+      },
+
+      /** Writes the identifier of a table, a query or a field at the caret and
+       *  closes the list. */
+      insert(name) {
+        const editor = UiQueryInsert.editor();
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        const text = Utils.sqlIdentifier(name);
+        UiQueryInsert.hide();
+        editor.setRangeText(text, start, end, "end");
+        editor.focus();
+        UiQueries.saveSql();
+        setStatus(I18n.t("queries.inserted", { name: name }));
+      },
+
+      /** Shows or hides the fields of a table or a query. */
+      unfold(kind, name) {
+        const item = UiQueryInsert.sourceOf(kind, name);
+        if (!item) {
+          return;
+        }
+        const filter = document.getElementById("insert-search").value.trim().toLowerCase();
+        UiQueryInsert.unfolded.set(
+          `${kind}\u0000${name}`,
+          !UiQueryInsert.isUnfolded(kind, item, filter),
+        );
+        UiQueryInsert.render();
+      },
+
+      /** Table or query of the list with that name. */
+      sourceOf(kind, name) {
+        const list = kind === "table" ? Store.project.tables : Store.project.queries;
+        return list.find((item) => item.name === name) || null;
+      },
+
+      /** Are the fields of that name on screen? A table opens on its own while
+       *  the search matches one of its fields, unless the user closed it. */
+      isUnfolded(kind, item, filter) {
+        const key = `${kind}\u0000${item.name}`;
+        if (UiQueryInsert.unfolded.has(key)) {
+          return UiQueryInsert.unfolded.get(key);
+        }
+        return kind === "table"
+          && filter !== ""
+          && item.fields.some((field) => field.name.toLowerCase().includes(filter));
+      },
+
+      /** Fields of a table or a query. The columns of a query are read from its
+       *  plan (it is not run); the outcome is kept until the list closes. */
+      fieldsOf(kind, item) {
+        if (kind === "table") {
+          return {
+            fields: item.fields.map((field) => ({ name: field.name, type: field.type || "" })),
+            error: "",
+          };
+        }
+        const key = `${item.name}\u0000${item.sql}`;
+        if (!UiQueryInsert.columns.has(key)) {
+          const outcome = SqlEngine.columnsSafe(item.sql, Store.project);
+          UiQueryInsert.columns.set(key, outcome.ok
+            ? { fields: outcome.columns.map((name) => ({ name: name, type: "" })), error: "" }
+            : { fields: [], error: String((outcome.error && outcome.error.message) || outcome.error) });
+        }
+        return UiQueryInsert.columns.get(key);
+      },
+
+      note(text) {
+        const note = document.createElement("div");
+        note.className = "insert-note";
+        note.textContent = text;
+        return note;
+      },
+
+      /** A clickable name of the list. */
+      pick(text, dataset, tip) {
+        const pick = document.createElement("button");
+        pick.type = "button";
+        pick.className = "insert-pick";
+        pick.dataset.action = "insert";
+        Object.entries(dataset).forEach(([key, value]) => {
+          pick.dataset[key] = value;
+        });
+        pick.textContent = text;
+        pick.title = tip;
+        return pick;
+      },
+
+      /** The fields of a table or a query, under its name. */
+      fieldRows(kind, item, container, filter) {
+        const { fields, error } = UiQueryInsert.fieldsOf(kind, item);
+        if (error) {
+          container.appendChild(UiQueryInsert.note(
+            I18n.t("queries.insertFieldsError", { name: item.name, message: error }),
+          ));
+          return;
+        }
+        if (fields.length === 0) {
+          container.appendChild(UiQueryInsert.note(I18n.t("queries.insertNoFields", { name: item.name })));
+          return;
+        }
+        const visible = fields.filter((field) => field.name.toLowerCase().includes(filter));
+        if (visible.length === 0) {
+          container.appendChild(UiQueryInsert.note(I18n.t("queries.insertNoFieldResults", { text: filter })));
+          return;
+        }
+        visible.forEach((field) => {
+          const row = document.createElement("div");
+          row.className = "insert-row insert-field";
+          row.appendChild(UiQueryInsert.pick(
+            field.name,
+            { kind: kind, name: field.name },
+            I18n.t("queries.insertFieldTip", { name: field.name }),
+          ));
+          if (field.type) {
+            const type = document.createElement("span");
+            type.className = "insert-type";
+            type.textContent = field.type;
+            row.appendChild(type);
+          }
+          container.appendChild(row);
+        });
+      },
+
+      /** The name of a table or a query, with its unfold arrow. */
+      itemRow(kind, item, filter) {
+        const unfolded = UiQueryInsert.isUnfolded(kind, item, filter);
+        const block = document.createElement("div");
+
+        const row = document.createElement("div");
+        row.className = "insert-row";
+        const arrow = document.createElement("button");
+        arrow.type = "button";
+        arrow.className = "insert-toggle";
+        arrow.dataset.action = "unfold";
+        arrow.dataset.kind = kind;
+        arrow.dataset.name = item.name;
+        arrow.setAttribute("aria-expanded", unfolded ? "true" : "false");
+        arrow.textContent = unfolded ? "▾" : "▸";
+        arrow.title = I18n.t(unfolded ? "queries.insertFoldTip" : "queries.insertUnfoldTip", { name: item.name });
+        arrow.setAttribute("aria-label", arrow.title);
+        row.appendChild(arrow);
+        row.appendChild(UiQueryInsert.pick(
+          item.name,
+          { kind: kind, name: item.name },
+          I18n.t("queries.insertNameTip", { name: item.name }),
+        ));
+        block.appendChild(row);
+        if (unfolded) {
+          UiQueryInsert.fieldRows(kind, item, block, filter);
+        }
+        return block;
+      },
+
+      /** Paints the whole list with the names that match the search box. */
+      render() {
+        const list = document.getElementById("insert-list");
+        const filter = document.getElementById("insert-search").value.trim().toLowerCase();
+        list.textContent = "";
+        const groups = [
+          { title: I18n.t("queries.insertTables"), kind: "table", items: Store.project.tables },
+          { title: I18n.t("queries.insertQueries"), kind: "query", items: Store.project.queries },
+        ];
+        let found = 0;
+        groups.forEach((group) => {
+          const visible = group.items.filter((item) => {
+            if (filter === "" || item.name.toLowerCase().includes(filter)) {
+              return true;
+            }
+            return group.kind === "table"
+              && item.fields.some((field) => field.name.toLowerCase().includes(filter));
+          });
+          if (visible.length === 0) {
+            return;
+          }
+          found += visible.length;
+          const title = document.createElement("div");
+          title.className = "insert-group";
+          title.textContent = group.title;
+          list.appendChild(title);
+          visible.forEach((item) => list.appendChild(UiQueryInsert.itemRow(group.kind, item, filter)));
+        });
+        if (found === 0) {
+          list.appendChild(UiQueryInsert.note(I18n.t("queries.insertNoResults", { text: filter })));
+        }
+        UiQueryInsert.highlight(-1);
+        // The list grows and shrinks with the search and with the unfolded
+        // names: it is put under the button again so it never leaves the window.
+        UiQueryInsert.place();
+      },
+
+      /** Names that can be picked, in screen order. */
+      picks() {
+        return [...document.querySelectorAll("#insert-list .insert-pick")];
+      },
+
+      /** Marks one of them as the chosen one (Enter writes it). */
+      highlight(index) {
+        const picks = UiQueryInsert.picks();
+        picks.forEach((pick, position) => {
+          pick.classList.toggle("active", position === index);
+        });
+        if (picks[index]) {
+          picks[index].scrollIntoView({ block: "nearest" });
+        }
+      },
+
+      /** Index of the chosen name, or -1 when none is. */
+      highlighted() {
+        return UiQueryInsert.picks().findIndex((pick) => pick.classList.contains("active"));
+      },
+
+      /** The arrows move over the names, Enter writes the chosen one and the
+       *  right and left arrows unfold and fold the name they are on. */
+      onSearchKey(event) {
+        const picks = UiQueryInsert.picks();
+        const current = UiQueryInsert.highlighted();
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          if (picks.length === 0) {
+            return;
+          }
+          event.preventDefault();
+          const step = event.key === "ArrowDown" ? 1 : -1;
+          const next = current < 0
+            ? (step > 0 ? 0 : picks.length - 1)
+            : (current + step + picks.length) % picks.length;
+          UiQueryInsert.highlight(next);
+          return;
+        }
+        if (event.key === "Enter") {
+          if (current < 0) {
+            return;
+          }
+          event.preventDefault();
+          UiQueryInsert.insert(picks[current].dataset.name);
+          return;
+        }
+        if ((event.key === "ArrowRight" || event.key === "ArrowLeft") && current >= 0) {
+          const arrow = picks[current].closest(".insert-row").querySelector(".insert-toggle");
+          if (!arrow) {
+            return;
+          }
+          event.preventDefault();
+          const unfolded = arrow.getAttribute("aria-expanded") === "true";
+          const opens = event.key === "ArrowRight" && !unfolded;
+          const closes = event.key === "ArrowLeft" && unfolded;
+          if (opens || closes) {
+            UiQueryInsert.unfold(arrow.dataset.kind, arrow.dataset.name);
+          }
+        }
+      },
+
+      /** Wires the button, the search box, the list and the ways out. */
+      bind() {
+        document.getElementById("btn-insert").addEventListener("click", () => UiQueryInsert.toggleOpen());
+        document.getElementById("insert-search").addEventListener("input", () => UiQueryInsert.render());
+        document.getElementById("insert-search").addEventListener("keydown", (event) => UiQueryInsert.onSearchKey(event));
+        document.getElementById("insert-list").addEventListener("click", (event) => {
+          const target = event.target.closest("button[data-action]");
+          if (!target) {
+            return;
+          }
+          if (target.dataset.action === "unfold") {
+            UiQueryInsert.unfold(target.dataset.kind, target.dataset.name);
+          } else {
+            UiQueryInsert.insert(target.dataset.name);
+          }
+        });
+        document.addEventListener("pointerdown", (event) => {
+          if (!UiQueryInsert.open || !(event.target instanceof Element)) {
+            return;
+          }
+          if (!event.target.closest("#insert-popup, #btn-insert")) {
+            UiQueryInsert.hide();
+          }
+        });
+        document.addEventListener("keydown", (event) => {
+          if (UiQueryInsert.open && event.key === "Escape") {
+            event.preventDefault();
+            UiQueryInsert.hide();
+            UiQueryInsert.editor().focus();
+          }
+        });
+        window.addEventListener("resize", () => {
+          if (UiQueryInsert.open) {
+            UiQueryInsert.place();
+          }
+        });
       },
     };
 
@@ -23061,6 +23573,219 @@ ORDER BY edificios DESC, sede;</pre>
       UiProject.updateDirtyIndicator();
     });
 
+    /* --- Cases T41: names for the SQL editor ----------------------------- */
+
+    /** Loads a small project in the query view, runs `body` and, whatever
+     *  happens, puts the previous project back. */
+    const conProyectoDeInsertar = (body) => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        query: Ui.state.activeQuery,
+        view: Ui.state.view,
+      };
+      Store.replaceProject({
+        name: "insertar",
+        testing: false,
+        tables: [
+          {
+            name: "campus",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "id_campus", description: null, type: "number" }],
+            rows: [{ id_campus: 1 }],
+          },
+          {
+            name: "salas",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [
+              { name: "code", description: null, type: "string" },
+              { name: "puestos", description: null, type: "number" },
+            ],
+            rows: [{ code: "K-101", puestos: 30 }],
+          },
+          {
+            name: "orden fiscal",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "importe", description: null, type: "number" }],
+            rows: [{ importe: 10 }],
+          },
+        ],
+        queries: [{ name: "salas_k", description: "", sql: "SELECT code FROM salas", assert: null }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        UiQueries.select("salas_k");
+        Store.dirty = false;
+        body();
+      } finally {
+        UiQueryInsert.hide();
+        Store.replaceProject(before.project);
+        Ui.state.activeQuery = before.query;
+        Ui.showView(before.view);
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
+      }
+    };
+
+    /** Puts a text in the editor with the caret at the end. */
+    const escribeEnElEditor = (text) => {
+      const editor = document.getElementById("query-sql");
+      editor.value = text;
+      editor.setSelectionRange(text.length, text.length);
+      return editor;
+    };
+
+    SelfTests.add("When_OpenInsertPicker_Expect_TablesAndQueriesListed", () => {
+      conProyectoDeInsertar(() => {
+        document.getElementById("btn-insert").click();
+        assertEqual(document.getElementById("insert-popup").hidden, false, "the list opens");
+        const groups = [...document.querySelectorAll("#insert-list .insert-group")]
+          .map((item) => item.textContent);
+        assertEqual(
+          groups.join("|"),
+          `${I18n.t("queries.insertTables")}|${I18n.t("queries.insertQueries")}`,
+          "one group for the tables and one for the queries",
+        );
+        const names = [...document.querySelectorAll("#insert-list .insert-pick")]
+          .map((item) => item.textContent);
+        ["campus", "salas", "orden fiscal", "salas_k"].forEach((name) => {
+          assert(names.includes(name), name + " is in the list: " + names.join(", "));
+        });
+        document.getElementById("btn-insert").click();
+        assertEqual(document.getElementById("insert-popup").hidden, true, "the button closes it again");
+      });
+    });
+
+    SelfTests.add("When_PickTableName_Expect_WrittenAtCaret", () => {
+      conProyectoDeInsertar(() => {
+        const editor = escribeEnElEditor("SELECT * FROM ");
+        document.getElementById("btn-insert").click();
+        [...document.querySelectorAll("#insert-list .insert-pick")]
+          .find((item) => item.dataset.kind === "table" && item.dataset.name === "salas")
+          .click();
+        assertEqual(editor.value, "SELECT * FROM salas", "the name is written at the caret");
+        assertEqual(document.getElementById("insert-popup").hidden, true, "the list closes when a name is picked");
+        assertEqual(Store.project.queries[0].sql, "SELECT * FROM salas", "the query keeps the text");
+        assertEqual(Store.dirty, true, "the project is marked with unsaved changes");
+      });
+    });
+
+    SelfTests.add("When_PickNameNeedingBrackets_Expect_Bracketed", () => {
+      conProyectoDeInsertar(() => {
+        const editor = escribeEnElEditor("SELECT * FROM ");
+        document.getElementById("btn-insert").click();
+        [...document.querySelectorAll("#insert-list .insert-pick")]
+          .find((item) => item.dataset.name === "orden fiscal")
+          .click();
+        assertEqual(editor.value, "SELECT * FROM [orden fiscal]", "a name with spaces goes between brackets");
+      });
+    });
+
+    SelfTests.add("When_UnfoldTableInInsertPicker_Expect_FieldsInsertable", () => {
+      conProyectoDeInsertar(() => {
+        const editor = escribeEnElEditor("SELECT  FROM salas");
+        editor.setSelectionRange(7, 7);
+        document.getElementById("btn-insert").click();
+        const arrow = document.querySelector("#insert-list .insert-toggle[data-name='salas']");
+        assertEqual(arrow.getAttribute("aria-expanded"), "false", "the fields start folded");
+        arrow.click();
+        const fields = [...document.querySelectorAll("#insert-list .insert-field .insert-pick")]
+          .map((item) => item.textContent);
+        assertEqual(fields.join(","), "code,puestos", "the fields of the table are listed");
+        assertEqual(
+          document.querySelector("#insert-list .insert-type").textContent,
+          "string",
+          "each field carries its type",
+        );
+        document.querySelector("#insert-list .insert-field .insert-pick[data-name='puestos']").click();
+        assertEqual(editor.value, "SELECT puestos FROM salas", "the field is written at the caret");
+        assertEqual(document.getElementById("insert-popup").hidden, true, "and the list closes");
+      });
+    });
+
+    SelfTests.add("When_SearchInInsertPicker_Expect_OnlyMatches", () => {
+      conProyectoDeInsertar(() => {
+        document.getElementById("btn-insert").click();
+        const search = document.getElementById("insert-search");
+        search.value = "sal";
+        search.dispatchEvent(new Event("input"));
+        const names = [...document.querySelectorAll("#insert-list .insert-pick")]
+          .map((item) => item.textContent);
+        assert(names.includes("salas") && names.includes("salas_k"), "the matches are kept: " + names.join(", "));
+        assert(!names.includes("campus"), "what does not match is left out");
+        search.value = "puestos";
+        search.dispatchEvent(new Event("input"));
+        const fields = [...document.querySelectorAll("#insert-list .insert-field .insert-pick")]
+          .map((item) => item.textContent);
+        assertEqual(fields.join(","), "puestos", "searching a field unfolds its table and leaves that field");
+        search.value = "zzz";
+        search.dispatchEvent(new Event("input"));
+        assertEqual(document.querySelectorAll("#insert-list .insert-pick").length, 0, "with no match no name is left");
+        assert(
+          document.querySelector("#insert-list .insert-note").textContent.includes("zzz"),
+          "and the list says so",
+        );
+      });
+    });
+
+    SelfTests.add("When_UnfoldQueryInInsertPicker_Expect_ColumnsOfResult", () => {
+      conProyectoDeInsertar(() => {
+        const editor = escribeEnElEditor("SELECT  FROM salas_k");
+        editor.setSelectionRange(7, 7);
+        document.getElementById("btn-insert").click();
+        document.querySelector("#insert-list .insert-toggle[data-name='salas_k']").click();
+        const fields = [...document.querySelectorAll("#insert-list .insert-field .insert-pick")]
+          .map((item) => item.textContent);
+        assertEqual(fields.join(","), "code", "the columns of the query result are listed");
+        document.querySelector("#insert-list .insert-field .insert-pick[data-name='code']").click();
+        assertEqual(editor.value, "SELECT code FROM salas_k", "the column is written at the caret");
+      });
+    });
+
+    SelfTests.add("When_EscapeInsertPicker_Expect_Closed", () => {
+      conProyectoDeInsertar(() => {
+        document.getElementById("btn-insert").click();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+        assertEqual(document.getElementById("insert-popup").hidden, true, "Escape closes the list");
+        document.getElementById("btn-insert").click();
+        document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+        assertEqual(document.getElementById("insert-popup").hidden, true, "a click outside closes it too");
+      });
+    });
+
+    SelfTests.add("When_FoldTableWhileSearchingItsField_Expect_FieldsHidden", () => {
+      conProyectoDeInsertar(() => {
+        document.getElementById("btn-insert").click();
+        const search = document.getElementById("insert-search");
+        const arrow = () => document.querySelector("#insert-list .insert-toggle[data-name='salas']");
+        search.value = "puestos";
+        search.dispatchEvent(new Event("input"));
+        assertEqual(arrow().getAttribute("aria-expanded"), "true", "the table opens to show the field that matches");
+        arrow().click();
+        assertEqual(arrow().getAttribute("aria-expanded"), "false", "the arrow closes it by hand");
+        assertEqual(document.querySelectorAll("#insert-list .insert-field").length, 0, "its fields are hidden");
+        search.value = "";
+        search.dispatchEvent(new Event("input"));
+        assertEqual(arrow().getAttribute("aria-expanded"), "false", "and it stays closed when the search is cleared");
+      });
+    });
+
+    SelfTests.add("When_CtrlSpaceInSqlEditor_Expect_PickerOpen", () => {
+      conProyectoDeInsertar(() => {
+        document.getElementById("query-sql").dispatchEvent(
+          new KeyboardEvent("keydown", { key: " ", code: "Space", ctrlKey: true, bubbles: true }),
+        );
+        assertEqual(document.getElementById("insert-popup").hidden, false, "Ctrl+Space opens the list");
+      });
+    });
+
     /* =====================================================================
        12 · INITIALISATION
        ===================================================================== */
@@ -23075,6 +23800,7 @@ ORDER BY edificios DESC, sede;</pre>
         UiSidebar.bind();
         UiFolders.bind();
         UiQueries.bind();
+        UiQueryInsert.bind();
         UiTableCsv.bind();
         UiImport.bind();
         UiUpdateTable.bind();
