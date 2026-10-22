@@ -8870,6 +8870,7 @@ ORDER BY edificios DESC, sede;</pre>
           state: state || SqlViews.newState(),
           groupKeys: new Set(),
           requiresGrouping: false,
+          outerRefs: new Set(),
           outputAliases: ast.columns.filter((col) => col.alias).map((col) => col.alias),
         };
         ast.groupBy.forEach((expr) => SqlValidator.walk(expr, "group", context, false));
@@ -8888,7 +8889,7 @@ ORDER BY edificios DESC, sede;</pre>
           }
         });
         ast.orderBy.forEach((item) => SqlValidator.validateOrderItem(item, context, SqlValidator.outputColumnCount(ast, sources)));
-        return { sources, outer: context.outer, hasAggregates: context.requiresGrouping };
+        return { sources, outer: context.outer, hasAggregates: context.requiresGrouping, outerRefs: context.outerRefs };
       },
 
       /** Resolves the sources of the FROM and the JOINs against the project: a
@@ -8941,6 +8942,18 @@ ORDER BY edificios DESC, sede;</pre>
         const outer = context.sources.concat(context.outer || []);
         const resolved = SqlValidator.validateSelect(inner, context.project, context.state, outer);
         node.resolved = resolved;
+        // It is correlated when it reads a column that its own sources do not
+        // provide: that row has to be at hand for every outer row. The
+        // references that the enclosing query cannot satisfy either travel up,
+        // so an outer select knows it is correlated too.
+        node.correlated = resolved.outerRefs.size > 0;
+        const ownAliases = new Set(resolved.sources.map((source) => source.alias.toLowerCase()));
+        const parentAliases = new Set(context.sources.map((source) => source.alias.toLowerCase()));
+        resolved.outerRefs.forEach((alias) => {
+          if (!ownAliases.has(alias) && !parentAliases.has(alias)) {
+            context.outerRefs.add(alias);
+          }
+        });
         if (singleColumn && SqlValidator.outputColumnCount(inner, resolved.sources) !== 1) {
           throw new SqlValidationError(
             I18n.t("sqlValidator.subqueryOneColumn"),
@@ -9114,6 +9127,7 @@ ORDER BY edificios DESC, sede;</pre>
           node.meta = target.table.fields.find((field) => field.name === canonical) || null;
           if (outerSource) {
             node.outer = true;
+            context.outerRefs.add(outerSource.alias.toLowerCase());
             return;
           }
         } else {
@@ -9135,6 +9149,7 @@ ORDER BY edificios DESC, sede;</pre>
               node.field = source.fields.get(node.name.toLowerCase());
               node.meta = source.table.fields.find((field) => field.name === node.field) || null;
               node.outer = true;
+              context.outerRefs.add(source.alias.toLowerCase());
               return;
             }
             throw SqlValidator.columnNotFoundAny(context.sources, node.name);
@@ -10278,9 +10293,17 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       /** Runs the plan of a subquery with the outer row at hand and returns the
-       *  projected items (each one carries its `values`). */
+       *  projected items (each one carries its `values`). An uncorrelated
+       *  subquery gives the same result for every row, so it is run once and
+       *  its items are reused. */
       subqueryItems(node, context) {
-        return SqlExecutor.evalOp(node.plan.root, [], context);
+        if (node.correlated) {
+          return SqlExecutor.evalOp(node.plan.root, [], context);
+        }
+        if (!node.cachedItems) {
+          node.cachedItems = SqlExecutor.evalOp(node.plan.root, [], context);
+        }
+        return node.cachedItems;
       },
 
       /** First column of every row of a subquery, in row order. */
@@ -17555,6 +17578,73 @@ ORDER BY edificios DESC, sede;</pre>
       const outcome = SqlEngine.runSafe("SELECT name, (SELECT COUNT(*) FROM departments) AS n FROM employees ORDER BY name", project);
       assert(outcome.ok, "valid query: " + (outcome.error && outcome.error.message));
       assertEqual(outcome.result.rows, [["Ana", 2], ["Luis", 2], ["Marta", 2], ["Pep", 2]], "a scalar subquery gives one value per row");
+    });
+
+    SelfTests.add("When_UncorrelatedSubquery_Expect_RunOnce", () => {
+      const project = buildSubqueryTestProject();
+      let scans = 0;
+      const counter = Model.createTable("counter", [{ name: "n" }]);
+      const rows = [{ n: 1 }, { n: 2 }];
+      Object.defineProperty(counter, "rows", {
+        get() {
+          scans += 1;
+          return rows;
+        },
+      });
+      project.tables.push(counter);
+      const outcome = SqlEngine.runSafe(
+        "SELECT e.name, (SELECT COUNT(*) FROM counter) AS n FROM employees AS e",
+        project,
+      );
+      assert(outcome.ok, "valid query: " + (outcome.error && outcome.error.message));
+      assertEqual(outcome.result.rows.length, 4, "one row per employee");
+      assertEqual(scans, 1, "the uncorrelated subquery is read once, not once per row");
+    });
+
+    SelfTests.add("When_CorrelatedSubquery_Expect_RunPerRow", () => {
+      const project = buildSubqueryTestProject();
+      let scans = 0;
+      const refs = Model.createTable("refs", [{ name: "k" }]);
+      const rows = [{ k: "Sales" }, { k: "IT" }];
+      Object.defineProperty(refs, "rows", {
+        get() {
+          scans += 1;
+          return rows;
+        },
+      });
+      project.tables.push(refs);
+      const outcome = SqlEngine.runSafe(
+        "SELECT e.name, (SELECT COUNT(*) FROM refs AS r WHERE r.k = e.department) AS n FROM employees AS e",
+        project,
+      );
+      assert(outcome.ok, "valid query: " + (outcome.error && outcome.error.message));
+      assertEqual(outcome.result.rows.length, 4, "one row per employee");
+      assertEqual(scans, 4, "a correlated subquery runs once per outer row");
+    });
+
+    SelfTests.add("When_ViewUsedSeveralTimes_Expect_MaterializedOnce", () => {
+      const project = buildSubqueryTestProject();
+      const original = SqlViews.materialize;
+      let calls = 0;
+      SqlViews.materialize = function materializeCounting(...args) {
+        const name = String(args[0].name).toLowerCase();
+        const state = args[2];
+        if (name === "sales staff" && !(state && state.cache.has(name))) {
+          calls += 1;
+        }
+        return original.apply(this, args);
+      };
+      try {
+        const outcome = SqlEngine.runSafe(
+          "SELECT v.name, (SELECT COUNT(*) FROM [sales staff]) AS a, (SELECT COUNT(*) FROM [sales staff] AS w) AS b FROM [sales staff] AS v ORDER BY v.name",
+          project,
+        );
+        assert(outcome.ok, "valid query: " + (outcome.error && outcome.error.message));
+        assertEqual(outcome.result.rows[0], ["Ana", 2, 2], "the view gives its values everywhere");
+        assertEqual(calls, 1, "the view is materialised once for the whole query");
+      } finally {
+        SqlViews.materialize = original;
+      }
     });
 
     SelfTests.add("When_ScalarSubqueryWithManyRows_Expect_Error", () => {
