@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>datilandia · Ayuda</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html {
+      font: 13px/1.5 system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      background: #fff;
+      color: #000;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 11px;
+      color: #333;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      margin: 8px 0 2px;
+      font-size: 11px;
+      color: #333;
+    }
+
+    .muted { color: #555; }
+
+    .mono { font-family: ui-monospace, Consolas, "Courier New", monospace; }
+
+    /* --- Barra superior ------------------------------------------------ */
+
+    #cabecera {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      padding: 5px 10px;
+      border-bottom: 1px solid #bbb;
+    }
+
+    #marca {
+      margin-right: 2px;
+      color: inherit;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #marca:hover,
+    #marca:focus-visible {
+      text-decoration: underline;
+    }
+
+    #cabecera .derecha {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .idioma {
+      display: inline-flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .volver {
+      color: #1a4f8a;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .volver:hover,
+    .volver:focus-visible {
+      text-decoration: underline;
+    }
+
+    /* --- Índice lateral y cuerpo --------------------------------------- */
+
+    #cuerpo {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    #indice {
+      width: 250px;
+      flex: none;
+      overflow: auto;
+      padding: 10px 8px 24px;
+      border-right: 1px solid #e2e2e2;
+    }
+
+    #indice nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    /* Cada apartado del índice es un enlace que parece una entrada de lista. */
+    .help-item {
+      display: block;
+      padding: 3px 6px;
+      border-left: 3px solid transparent;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .help-item:hover,
+    .help-item:focus-visible {
+      background: #f2f2f2;
+    }
+
+    .help-item.selected {
+      border-left-color: #1a4f8a;
+      background: #dce9f9;
+      font-weight: bold;
+    }
+
+    .help-grupo-name {
+      display: block;
+      padding: 10px 6px 2px;
+      color: #666;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    #indice nav ul ul {
+      margin-left: 7px;
+      padding-left: 7px;
+      border-left: 1px solid #e6e6e6;
+    }
+
+    main {
+      flex: 1;
+      min-width: 0;
+      overflow: auto;
+      padding: 10px 26px 60px;
+    }
+
+    /* --- Apartados ------------------------------------------------------ */
+
+    .help-bloque {
+      max-width: 1100px;
+      margin-bottom: 26px;
+      padding-left: 10px;
+      border-left: 2px solid #ddd;
+      scroll-margin-top: 8px;
+    }
+
+    .help-bloque > h3 {
+      margin: 0 0 4px;
+      color: #666;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .help-bloque ul {
+      margin: 2px 0 0;
+      padding-left: 18px;
+    }
+
+    .help-bloque li { margin: 2px 0; }
+
+    .help-bloque code {
+      padding: 0 3px;
+      background: #f2f2f2;
+      font: 12px ui-monospace, Consolas, "Courier New", monospace;
+    }
+
+    /* «Ayuda SQL»: explicación a la izquierda y ejemplos a la derecha. */
+    .help-sql-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0 22px;
+      align-items: start;
+    }
+
+    @media (max-width: 1000px) {
+      .help-sql-columns { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .help-sql-text section { margin-bottom: 10px; }
+
+    .help-sql-text h3,
+    .help-bloque .help-sql-subtitulo {
+      margin-top: 8px;
+      color: #333;
+      font-size: 13px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .help-sql-text p { margin: 3px 0; }
+
+    .help-sql-code h4 {
+      margin: 8px 0 2px;
+      color: #333;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Referencia del dialecto: término a la izquierda, explicación a la derecha. */
+    .sql-list {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      gap: 3px 12px;
+      margin: 4px 0 0;
+    }
+
+    .sql-list dt {
+      color: #333;
+      font: bold 11px ui-monospace, Consolas, "Courier New", monospace;
+    }
+
+    .sql-list dd { margin: 0; }
+
+    /* Ejemplos de consulta. */
+    .sql-ejemplo {
+      margin: 4px 0;
+      padding: 6px 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      font-size: 12px;
+    }
+
+    @media (max-width: 800px) {
+      #cuerpo { flex-direction: column; }
+      #indice {
+        width: auto;
+        max-height: 34vh;
+        border-right: 0;
+        border-bottom: 1px solid #e2e2e2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="cabecera">
+    <a data-i18n-title="help.brandTip" href="index.html" id="marca" title="Volver a datilandia">DATILANDIA</a>
+    <span class="muted">·</span>
+    <strong data-i18n="help.pageTitle">Ayuda</strong>
+    <span class="derecha">
+      <label class="idioma">
+        <span class="muted" data-i18n="help.language">Idioma</span>
+        <select id="help-language"></select>
+      </label>
+      <a class="volver" data-i18n="help.back" href="index.html">← Volver a datilandia</a>
+    </span>
+  </header>
+
+  <div id="cuerpo">
+    <aside id="indice">
+      <h2 data-i18n="help.index">Índice</h2>
+      <nav id="indice-lista" data-i18n-aria-label="markup.nav.helpSections" class="help-menu" aria-label="Apartados de la ayuda">
+            <ul>
+              <li><a data-i18n-title="markup.button.importCSVJSONFilesPasted" data-i18n="markup.button.importData2" class="help-item" title="Importar ficheros CSV y JSON, o texto pegado" href="#import">Importar datos</a></li>
+              <li><a data-i18n-title="markup.button.tablesRowsFieldsForeignKeys" data-i18n="markup.button.tablesRowsMetadata" class="help-item" title="Tablas, filas, campos y claves ajenas" href="#tables">Tablas, filas y metadatos</a></li>
+              <li><a data-i18n-title="markup.button.createRunExportQueries" data-i18n="markup.button.queries2" class="help-item" title="Crear, ejecutar y exportar consultas" href="#queries">Consultas</a></li>
+              <li><a data-i18n-title="markup.button.relationMatrixBetweenTablesQueries" data-i18n="markup.button.relations2" class="help-item" title="Matriz de relaciones entre tablas y consultas que las citan" href="#relations">Relaciones</a></li>
+              <li><a data-i18n-title="markup.button.historyVisitedPlaces" data-i18n="markup.button.history" class="help-item" title="Enlaces a los lugares que has visitado" href="#history">Histórico</a></li>
+              <li class="help-grupo">
+                <span data-i18n="markup.span.sqlHelp" class="help-grupo-name">Ayuda SQL</span>
+                <ul>
+                  <li><a data-i18n-title="markup.button.howQueryIsWrittenWhat" data-i18n="markup.button.generalShapeDialect" class="help-item" title="Cómo se escribe una consulta y qué admite el dialecto SQL" href="#sql-forma">Forma general y dialecto</a></li>
+                  <li><a data-i18n-title="markup.button.whereRowsComeFromTables" data-i18n="markup.button.tablesAliasesViews" class="help-item" title="De dónde salen las filas: tablas, consultas leídas como tablas y joins" href="#sql-tables">Tablas, alias y vistas</a></li>
+                  <li><a data-i18n-title="markup.button.whereComparisonsTextCombinedConditions" data-i18n="markup.button.filterRows" class="help-item" title="WHERE: comparaciones, texto, condiciones combinadas y subconsultas" href="#sql-filtrar">Filtrar filas</a></li>
+                  <li><a data-i18n-title="markup.button.aggregatesGROUPBYHAVINGORDER" data-i18n="markup.button.summariseSort" class="help-item" title="Agregados, GROUP BY, HAVING, ORDER BY y paginación" href="#sql-resumir">Resumir y ordenar</a></li>
+                  <li><a data-i18n-title="markup.button.numbersTextNullOperatorsFunctions" data-i18n="markup.button.valuesFunctions" class="help-item" title="Números, texto, null, operadores y funciones" href="#sql-values">Valores y funciones</a></li>
+                  <li><a data-i18n-title="markup.button.errorsPlanRenamesQueriesAsserted" data-i18n="markup.button.limitsTests" class="help-item" title="Errores, plan, renombrados y consultas con resultado asertado" href="#sql-limites">Límites y pruebas</a></li>
+                </ul>
+              </li>
+              <li><a data-i18n-title="markup.button.saveOpenProjectSettings" data-i18n="markup.button.projectSettings" class="help-item" title="Guardar, abrir y ajustes del proyecto" href="#project">Proyecto y ajustes</a></li>
+              <li><a data-i18n-title="markup.button.queriesAssertedResultTestBatteries" data-i18n="markup.button.testMode" class="help-item" title="Consultas con resultado asertado y baterías de pruebas" href="#test">Modo test</a></li>
+              <li><a data-i18n-title="markup.button.findReplaceTable" data-i18n="markup.button.findReplace" class="help-item" title="Buscar y reemplazar en la tabla" href="#search">Buscar y reemplazar</a></li>
+              <li><a data-i18n-title="markup.button.keyboardShortcuts" data-i18n="markup.button.shortcuts" class="help-item" title="Atajos de teclado" href="#atajos">Atajos</a></li>
+            </ul>
+          </nav>
+    </aside>
+
+    <main>
+
+            <section class="help-bloque" id="import">
+              <h3 data-i18n="markup.h3.importData">Importar datos</h3>
+              <ul>
+                <li data-i18n-html="markup.li.filesCSVJSONSeveralAt"><b>Ficheros</b>: CSV y JSON, varios a la vez y mezclados. Cada fichero crea una tabla con su nombre (minúsculas, con <code>_</code>) y deja un informe con lo leído y los problemas encontrados.</li>
+                <li data-i18n-html="markup.li.csvQuotesDoubledQuotesBOM"><b>CSV</b>: comillas, comillas duplicadas, BOM y saltos CRLF. El separador se detecta solo, o lo eliges: <code>,</code> <code>;</code> tabulador, espacio u otro.</li>
+                <li data-i18n-html="markup.li.jsonArrayObjectsSameKeys"><b>JSON</b>: un array de objetos con las mismas claves y valores simples.</li>
+                <li data-i18n-html="markup.li.pasteTextFormatIsDetected"><b>Pegar texto</b>: el formato se detecta solo (JSON si empieza por <code>[</code> o <code>{</code>; si no, CSV).</li>
+                <li data-i18n-html="markup.li.options1stRowHeaderInfer"><b>Opciones</b>: 1ª fila = cabecera, inferir tipos, omitir filas inválidas.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="tables">
+              <h3 data-i18n="markup.h3.tablesRowsMetadata">Tablas, filas y metadatos</h3>
+              <ul>
+                <li data-i18n-html="markup.li.createRenameDeleteTablesEach">Crear, renombrar y eliminar tablas, cada una con su <b>descripción</b>.</li>
+                <li data-i18n-html="markup.li.tableListFoldsUnderAllTables">La lista de tablas se puede <b>plegar</b> desde su cabecera <b>Todas las tablas</b>: queda solo el título con el número de tablas, y el estado se guarda en el proyecto.</li>
+                <li data-i18n="markup.li.addDeleteRowsEditAny">Añadir y borrar filas y editar cualquier celda; la fila en la que estás se marca en gris.</li>
+                <li data-i18n-html="markup.li.fieldsMetadataAddRenameDelete"><b>Campos y metadatos…</b>: añadir, renombrar y borrar campos, con descripción y <b>tipo</b> (<code>string</code>, <code>number</code>, <code>boolean</code>); marca con una casilla cuál es el <b>campo ID</b> de la tabla (solo uno) y cuáles son <b>claves ajenas</b>, eligiendo la tabla y el campo de destino. Todo se guarda en el proyecto.</li>
+                <li data-i18n-html="markup.li.idFieldIsAutoNumbered">El <b>campo ID es autonumérico</b>: cada fila nueva recibe el <b>siguiente número</b> y ninguno se repite ni se reutiliza al borrar filas. Por eso no se edita a mano: se puede buscar en él, pero no se reemplaza. Con <b>Crear campo ID autonumérico</b> añades uno nuevo (el nombre se escribe a su lado), al principio de la tabla, y numera <b>1..N</b> las filas que ya había. Marcar cualquier otro campo como ID también lo vuelve autonumérico.</li>
+                <li data-i18n-html="markup.li.lastColumnThatWindowIs">La última columna de esa ventana, <b>Es clave ajena</b>, es la vista <b>inversa</b> y de <b>solo lectura</b>: qué campos de otras tablas apuntan a ese campo, uno por línea (o un guion si ninguno). Se edita desde la fila del campo que es la clave ajena. El destino de una clave ajena puede ser <b>la propia tabla</b> (aparece al final de la lista), para relaciones <b>autorreferenciadas</b>.</li>
+                <li data-i18n-html="markup.li.tableViewForeignKeysAre">En la vista de la tabla, las <b>claves ajenas</b> se leen al pasar el ratón por su celda: la pista dice a qué tabla y campo apuntan y enseña el <b>registro relacionado</b> de la otra tabla (o avisa de que no existe), y el enlace <b>↗</b> abre la <b>consulta</b> con ese registro. Y si la tabla es el <b>destino</b> de alguna clave ajena, lleva una <b>columna por cada una</b> (<code>← tabla.campo</code>) con el <b>número</b> de filas de la otra tabla que traen cada fila: el propio número es un enlace que genera y ejecuta la <b>consulta</b> que las lista.</li>
+                <li data-i18n-html="markup.li.findReplaceTheySearchReplace"><b>Buscar…</b> y <b>Reemplazar…</b>: buscan y reemplazan en toda la tabla o en una columna, con los comodines <code>*</code> y <code>?</code> (apartado «Buscar y reemplazar»).</li>
+                <li data-i18n-html="markup.li.updateTableImportsCSVJSON"><b>Actualizar tabla…</b> sustituye <b>todos los datos</b> de la tabla importando un CSV o JSON (fichero o pegado): funciona como <b>Importar datos</b> pero sin tocar la tabla, sus campos, sus claves ajenas ni las consultas que la usan. Antes de borrar los datos <b>avisa</b> y comprueba que coincidan el número de campos, la cabecera (si la primera fila es cabecera) y los tipos; si algo no coincide, no cambia nada y explica por qué.</li>
+                <li data-i18n-html="markup.li.mergeTablesCreatesNewTable">El botón <b>Fusionar tablas…</b> de la cabecera crea una <b>tabla nueva</b> a partir de varias: escribe su nombre, marca al menos dos tablas y pulsa <b>Fusionar</b>. Los campos son la <b>unión</b> de todos, en el orden de la lista, y cada campo conserva la definición (nombre, tipo, descripción y claves ajenas) de la <b>primera tabla que lo ofrece</b>; las tablas pueden tener campos o tipos distintos. Las filas se <b>concatenan</b> en el orden de la lista y los campos que una tabla no tiene quedan <code>null</code>. Las tablas originales no se modifican y la nueva se añade al proyecto.</li>
+                <li data-i18n-html="markup.li.exportTableDataAsCSV"><b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.</li>
+                <li data-i18n-html="markup.li.renamingFollowsQueriesWhenName"><b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>.</li>
+                <li data-i18n-html="markup.li.deletingWarnsYouBeforeRemoving"><b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.</li>
+                <li data-i18n-html="markup.li.typeIsInferredImportIt">El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.</li>
+                <li data-i18n="markup.li.rowPagesTotalJumpFirst">Páginas de filas con el total y salto a la primera o a la última.</li>
+                <li data-i18n-html="markup.li.tableFoldersGroupTablesInOneLevel"><b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.</li>
+                <li data-i18n-html="markup.li.pressTablesQueriesTitleSidebar">Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.</li>
+                <li data-i18n-html="markup.li.downloadStructureJsonSummary">En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.</li>
+                <li data-i18n-html="markup.li.linkRelationsBetweenTablesQueries">El enlace <b>Relaciones entre tablas y consultas</b> abre la <b>matriz</b> de relaciones del proyecto: quién apunta a quién y qué consultas citan cada pareja de tablas. El detalle está en el apartado <b>Relaciones</b>.</li>
+                <li data-i18n-html="markup.li.widthLeftColumnIsVariable">El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 480 px o usa las flechas con el tirador enfocado.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="queries">
+              <h3 data-i18n="markup.h3.queries">Consultas</h3>
+              <ul>
+                <li data-i18n-html="markup.li.createGiveItNameDescription">Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>.</li>
+                <li data-i18n-html="markup.li.insertButtonSpeedsUpWriting"><b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos.</li>
+                <li data-i18n-html="markup.li.queryCanBeReadFrom">Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.</li>
+                <li data-i18n-html="markup.li.sidebarQueryThatSomeOther">En la barra lateral, la consulta que <b>alguna otra lee como tabla</b> lleva la marca <b>«vista»</b> en azul, o <b>«vista ×N»</b> si la leen N consultas. Pasa el ratón por su pista y te dice los dos sentidos: <b>«Lee como tabla (n): …»</b> (a quién lee ella) y <b>«La leen como tabla (n): …»</b> (quién la lee a ella). La marca es solo información: no cambia lo que comprueba la consulta.</li>
+                <li data-i18n-html="markup.li.querySummaryQueriesTitleSidebar">El <b>resumen de consultas</b> (el título <b>Consultas</b> de la barra lateral) lleva una columna <b>Vistas</b> con lo mismo, una línea por sentido (<code>lee: «…»</code> y <code>la leen: «…»</code>), o un guion si no hay ninguna. El <b>salpicadero</b> de la bienvenida cuenta en <b>Consultas como tabla</b> cuántas consultas del proyecto se leen así.</li>
+                <li data-i18n-html="markup.li.seeRelationsOpensWindowRelation"><b>Ver relaciones</b> abre una ventana con la <b>matriz de relaciones</b> entre las tablas del proyecto (las tablas en filas y columnas y, en cada cruce, la clave ajena que las une), como recordatorio mientras escribes la consulta (apartado <b>Relaciones</b>).</li>
+                <li data-i18n-html="markup.li.beforeResultYouWillSee">Antes del resultado verás el <b>plan</b> con el tiempo de cada paso; si algo falla, el error te dice <b>línea, columna y qué revisar</b>.</li>
+                <li data-i18n-html="markup.li.paginatedResultsTotalRowsPages">Resultados <b>paginados</b> (con total de filas y de páginas); clic en una fila para marcarla.</li>
+                <li data-i18n-html="markup.li.exportCSVOpensResultCSV"><b>Exportar CSV…</b> abre la ventana <b>Resultado en CSV</b> con la <b>previsualización</b> del resultado: <b>Copiar</b> lo lleva al portapapeles y <b>Descargar CSV</b> guarda el fichero con el nombre de la consulta (preguntando la carpeta, si el navegador tiene ventana de guardado).</li>
+                <li data-i18n-html="markup.li.csvIsWrittenBOMSo">El CSV se escribe con <b>BOM</b> para que Excel lo abra bien y con las opciones de esa misma ventana: <b>separador</b> (coma, punto y coma, tabulador, espacio u otro carácter), <b>cabecera</b> sí o no y <b>coma decimal</b> (<code>3,14</code> en vez de <code>3.14</code>; los textos no se tocan). Son las mismas opciones que las de <b>Ajustes</b> y se guardan dentro del proyecto.</li>
+                <li data-i18n-html="markup.li.previewShowsUp1000Rows">La previsualización muestra hasta 1000 filas y avisa cuando hay más, pero el <b>fichero descargado va completo</b>. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.</li>
+                <li data-i18n-html="markup.li.theyAreReadOnlyThey">Son <b>solo de lectura</b>: nunca cambian los datos. En pantalla hay un tope de filas; el CSV exportado va completo.</li>
+                <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
+                <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
+              
+                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="relations">
+              <h3 data-i18n="markup.h3.relationsBetweenTablesQueries">Relaciones entre tablas y consultas</h3>
+              <ul>
+                <li data-i18n-html="markup.li.sidebarLinkRelationsOpensMatrix">El enlace <b>Relaciones</b> de la barra lateral abre una <b>matriz</b> con las tablas del proyecto en <b>filas y columnas</b>. En cada casilla de cruce se ve lo que une la tabla de la fila con la de la columna.</li>
+                <li data-i18n-html="markup.li.insideCellGoForeignKeys">Dentro de la casilla van las <b>claves ajenas</b> de la tabla de la fila que apuntan a la de la columna, escritas como <code>campo → campo destino</code>. La <b>diagonal</b> recoge las <b>autorreferencias</b>: las claves ajenas de una tabla que apuntan a ella misma.</li>
+                <li data-i18n-html="markup.li.atEndCellGreyNumber">Al final de la casilla, en gris, el <b>número de consultas</b> que citan <b>las dos tablas</b> (con sus nombres en la pista del ratón). Se cuenta <b>una vez por pareja</b>, no en las dos casillas.</li>
+                <li data-i18n-html="markup.li.underEachForeignKeyGo">Bajo cada clave ajena van <b>siete cifras</b> con las filas del cruce, contadas sobre las dos tablas y nombradas con ellas: las de la tabla de la fila <b>cuya clave es null</b>, <b>cuya clave no casa con ninguna fila</b> de la de la columna o que <b>encuentran su fila</b> en ella, y las de la tabla de la columna <b>sin ninguna</b>, <b>con alguna</b>, <b>con una exactamente</b> o <b>con más de una</b> de la de la fila. El <b>orden</b> y qué significa cada una se explican en la <b>leyenda</b> de debajo de la matriz y en la pista de cada cifra.</li>
+                <li data-i18n-html="markup.li.everyFigureGreaterThan0">Cada cifra <b>mayor que 0</b> es un <b>enlace</b>: genera (o reutiliza) la <b>consulta</b> que devuelve exactamente esas filas, la deja seleccionada y la ejecuta, para que la compruebes.</li>
+                <li data-i18n-html="markup.li.pressTableNameOpensTable">Pulsa el <b>nombre de una tabla</b> en una cabecera de fila o de columna para <b>abrir esa tabla</b>.</li>
+                <li data-i18n-html="markup.li.rowHeadersStayFixedWhen">Las cabeceras de fila quedan <b>fijas</b> al desplazar la matriz a lo ancho de la pantalla.</li>
+                <li data-i18n-html="markup.li.seeRelationsButtonQueryEditor">El botón <b>Ver relaciones</b> del editor de consultas abre la misma matriz en una <b>ventana</b>, como recordatorio mientras escribes: <b>sin</b> la columna de consultas ni los enlaces de las cifras. Se cierra con <b>Esc</b> o con <b>Cerrar</b>.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="history">
+              <h3 data-i18n="markup.h3.history">Historial de lugares visitados</h3>
+              <ul>
+                <li data-i18n-html="markup.li.historyBarUnderTop">Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación).</li>
+                <li data-i18n-html="markup.li.pressPlaceGoBackTo">Pulsa un enlace para <b>volver a ese lugar</b>; el que está en pantalla queda resaltado. Volver a un lugar no lo repite (se mueve al final) y los enlaces a tablas o consultas que ya no existen desaparecen solos.</li>
+                <li data-i18n-html="markup.li.historyIsNotSaved">El histórico es de la sesión: <b>no se guarda</b> en el proyecto.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="project">
+              <h3 data-i18n="markup.h3.projectSettings">Proyecto y ajustes</h3>
+              <ul>
+                <li data-i18n-html="markup.li.newDiscardsCurrentProjectIt"><b>Nuevo</b> descarta el proyecto actual (te pregunta antes) y empieza uno <b>vacío</b> llamado «Sin título», abriendo <b>Ajustes</b> para que le pongas nombre.</li>
+                <li data-i18n-html="markup.li.saveProjectCtrlSOverwrites"><b>Guardar proyecto</b> (Ctrl+S) machaca su fichero; <b>Guardar proyecto como</b> pregunta dónde; al <b>abrir</b> otro, si hay cambios sin guardar te avisa antes de perderlos.</li>
+                <li data-i18n-html="markup.li.projectNameIsChangedSettings">El <b>nombre del proyecto</b> se cambia en <b>Ajustes</b>; en la barra superior solo se muestra.</li>
+                <li data-i18n-html="markup.li.whileThereArePendingChanges">Mientras haya cambios pendientes verás <b>«Cambios pendientes de guardar»</b> arriba a la derecha, y también te avisa si intentas cerrar la pestaña.</li>
+                <li data-i18n-html="markup.li.settingsRowsPerPageTables"><b>Ajustes</b>: filas por página de tablas y consultas y separador/cabecera por defecto al importar y al exportar. Todo eso se guarda dentro del propio proyecto.</li>
+                <li data-i18n-html="markup.li.jsonIsValidatedWhenIt">El JSON se valida al abrirlo: si algo no cuadra te dice exactamente qué, incluido el resultado asertado (<code>assert</code>) de cada consulta. La antigua propiedad <code>"testing"</code> se acepta pero se <b>ignora</b>: el modo test se deduce de las consultas.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="test">
+              <h3 data-i18n="markup.h3.testModeQueriesAssertedResult">Modo test: consultas con resultado asertado</h3>
+              <ul>
+                <li data-i18n-html="markup.li.projectIsTestModeWhen">Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, datilandia ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>"assert"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>"testing"</code> de los ficheros antiguos ya no hace falta.</li>
+                <li data-i18n-html="markup.li.assertIsExpectedResultThat">El <code>"assert"</code> es el resultado esperado de esa consulta: <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder: true</code> (mismo conjunto de filas, sin importar el orden). Basta con uno de los tres primeros para que la consulta se compruebe.</li>
+                <li data-i18n-html="markup.li.comparisonIsStrictNullOnly">La comparación es <b>estricta</b>: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Renombrar una tabla o un campo ajusta también los nombres asertados, pero <b>nunca los valores</b>.</li>
+                <li data-i18n-html="markup.li.reportOpensItsOwnWhen">El <b>informe</b> se abre solo al cargar: resumen (consultas, correctas, fallidas y sin assert), una fila por consulta —sus filas, si lleva assert y el resultado— y el <b>detalle de las diferencias</b>, con lo esperado y lo obtenido en cada fila o columna que no cuadra. Si una consulta no compila, se marca como fallida con el error.</li>
+                <li data-i18n-html="markup.li.editorSTurnIntoTest">El botón <b>Convertir en test</b> del editor de consultas ejecuta esa consulta, guarda su resultado como su <code>assert</code> (columnas y filas, valor a valor) y pone el <b>proyecto en modo test</b>. Si la consulta ya comprobaba un resultado, te pregunta antes de sustituirlo; con <b>Quitar test</b> (activo solo si la consulta comprueba algo) vuelve a dejarla sin comprobar, sin sacar al proyecto del modo test.</li>
+                <li data-i18n-html="markup.li.projectSTestModeIs">El <b>modo test</b> del proyecto se ve <b>arriba del todo a la derecha</b> de la barra superior (<b>modo test</b> o <b>sin test</b>), y en la barra lateral cada consulta lleva su <b>marca</b>: <b>test</b> si tiene resultado asertado y <b>sin test</b> si no. El resumen de consultas lo detalla en su columna <b>Assert</b>.</li>
+                <li data-i18n-html="markup.li.pressRowReportOpenThat">Pulsa una fila del informe para abrir esa consulta en el editor; <b>Re-ejecutar</b> lanza otra vez la batería y <b>Copiar informe</b> lo deja como texto (si el navegador no deja copiar, queda seleccionado para Ctrl+C).</li>
+                <li data-i18n-html="markup.li.testsButtonTopBarLaunches">El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.datilandia.runProjectTests()</code>.</li>
+                <li data-i18n-html="markup.li.selfTestsButtonTopBar">El botón <b>Auto-tests</b> de la barra superior comprueba <b>el propio programa</b> (motor SQL, utilidades, ficheros e interfaz), no tus datos: ejecuta la batería interna y abre el <b>Informe de auto-tests</b>.</li>
+                <li data-i18n-html="markup.li.thatReportCarriesCountOne">Ese informe lleva el <b>recuento</b>, una fila por caso —número, caso, resultado y detalle— y el bloque <b>Casos que fallan</b> con el motivo de cada uno. <b>Re-ejecutar</b> la lanza otra vez, <b>Copiar informe</b> lo deja como texto y <b>Esc</b> cierra la ventana.</li>
+                <li data-i18n-html="markup.li.batteryDoesNotTouchYour">La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.datilandia.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.</li>
+                <li data-i18n-html="markup.li.completeFormatAssertExampleAre">El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="search">
+              <h3 data-i18n="markup.h3.findReplaceTable">Buscar y reemplazar en la tabla</h3>
+              <ul>
+                <li data-i18n-html="markup.li.findReplaceTableBarSame"><b>Buscar…</b> y <b>Reemplazar…</b> (barra de la tabla): la misma ventana en dos modos; el modo reemplazo añade el campo con el texto nuevo y el botón <b>Reemplazar todo</b>.</li>
+                <li data-i18n-html="markup.li.patternIsPlainTextAny">El <b>patrón</b> es texto tal cual, con <code>*</code> para cualquier secuencia de caracteres y <code>?</code> para uno solo: <code>an*</code>, <code>*ana</code>, <code>?an?????</code>. La casilla <b>distinguir mayúsculas</b> decide si «ana» encuentra «Ana» (por defecto, sí lo encuentra).</li>
+                <li data-i18n-html="markup.li.scopeIsChosenSelectorAll">El alcance lo elige el selector <b>En:</b>: <b>todas las columnas</b> o una sola. Las celdas <code>null</code> no se buscan y, sin patrón, no se busca nada.</li>
+                <li data-i18n-html="markup.li.listUpdatesWhileYouType">El listado se actualiza <b>mientras escribes</b>, con una fila por celda —<b>Fila · Campo · Valor · Coincidencias</b>—, las coincidencias <b>resaltadas</b> dentro del valor y un resumen de coincidencias, celdas, filas y campos. Se listan hasta 500 coincidencias, pero el recuento es completo.</li>
+                <li data-i18n-html="markup.li.pressMatchWindowClosesLeave">Pulsa una coincidencia y la ventana se cierra para dejarte en esa <b>celda</b> (cambia de página, la selecciona y el foco queda listo para corregirla a mano).</li>
+                <li data-i18n-html="markup.li.whenReplacingItAsksYou">Al reemplazar, te pregunta antes con el <b>recuento</b> y el alcance, y sustituye <b>todas las ocurrencias</b>. El valor resultante se interpreta como al editar una celda (número, <code>true</code>/<code>false</code>, <code>null</code> o texto) y un reemplazo vacío borra lo encontrado.</li>
+                <li data-i18n-html="markup.li.autoNumberedIDFieldIs">El <b>campo ID</b> autonumérico nunca se modifica: se puede buscar en él, pero si eliges solo esa columna te avisa de que no se reemplaza.</li>
+                <li data-i18n-html="markup.li.wildcardsHaveNoEscapeLiteral">Los comodines no tienen escape: un <code>*</code> o un <code>?</code> literales no se pueden buscar.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="atajos">
+              <h3 data-i18n="markup.h3.shortcuts">Atajos</h3>
+              <ul>
+                <li data-i18n-html="markup.li.ctrlSSaveProject"><b>Ctrl+S</b>: guardar el proyecto.</li>
+                <li data-i18n-html="markup.li.ctrlEnterRunQueryImport"><b>Ctrl+Enter</b>: ejecutar la consulta (o importar el texto pegado).</li>
+                <li data-i18n-html="markup.li.ctrlSpaceOpensInsertList"><b>Ctrl+Space</b>: abrir la lista de tablas, consultas y campos para insertarlos en la consulta.</li>
+                <li data-i18n-html="markup.li.enterTableNameRenamesIt"><b>Enter</b> en el nombre de la tabla la renombra; en el nombre de un campo nuevo lo añade.</li>
+                <li data-i18n-html="markup.li.handleFocusedChangeWidthLeft"><b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.</li>
+                <li data-i18n-html="markup.li.escClosePopUpWindows"><b>Esc</b>: cerrar las ventanas emergentes.</li>
+              </ul>
+            </section>
+
+            <section class="help-bloque" id="sql-forma">
+              <h3 data-i18n="markup.h3.sqlHelpGeneralShapeDialect">Ayuda SQL · Forma general y dialecto</h3>
+              <div class="help-sql-columns">
+                <div class="help-sql-text">
+                  <section>
+                    <h3 data-i18n="markup.h3.generalShape">Forma general</h3>
+                    <pre class="sql-ejemplo mono">SELECT [DISTINCT] columnas
+FROM tabla [AS alias] [, otra AS alias]…
+[INNER|LEFT [OUTER] JOIN tabla AS alias ON condición]
+[WHERE condición]
+[GROUP BY expresión [, …]] [HAVING condición]
+[UNION [ALL] SELECT …]
+[ORDER BY expresión [ASC|DESC] [NULLS FIRST|LAST] [, …]]
+[LIMIT n [OFFSET m]]</pre>
+                    <p data-i18n-html="markup.p.youOnlyHaveWriteParts">Solo hay que escribir las partes que necesites, pero el orden es ese. Las palabras clave no distinguen mayúsculas de minúsculas. <code>FROM</code> es obligatorio: no hay <code>SELECT</code> sin tabla.</p>
+                  </section>
+                  <section>
+                    <h3>SELECT y DISTINCT</h3>
+                    <p data-i18n-html="markup.p.bringsAllColumnsIfNot"><code>*</code> trae todas las columnas; si no, una lista de columnas, expresiones o funciones separadas por comas. Cada elemento admite un alias, y el alias se escribe <b data-i18n-html="markup.b.alwaysAS">siempre con <code>AS</code></b>.</p>
+                    <p data-i18n-html="markup.p.distinctRemovesRepeatedRowsComparing"><code>DISTINCT</code> quita las filas repetidas comparando el conjunto de columnas seleccionadas.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.combiningQueriesUnion">Unir consultas: UNION y UNION ALL</h3>
+                    <p data-i18n-html="markup.p.unionStacksRowsTwoQueries"><code>UNION</code> <b>pega las filas</b> de dos consultas una debajo de otra: las dos tienen que devolver <b>el mismo número de columnas</b>, en el mismo orden. <code>UNION</code> quita las filas repetidas; <code>UNION ALL</code> las deja todas. Se pueden encadenar más de dos consultas.</p>
+                    <p data-i18n-html="markup.p.orderByLimitAfterUnionApply">El <code>ORDER BY</code> y el <code>LIMIT</code> que van <b>al final</b> ordenan y cortan el resultado entero de la unión; ahí solo valen las columnas del resultado, por su nombre (<code>AS</code>) o por su posición (<code>ORDER BY 2</code>).</p>
+                  </section>
+                </div>
+                <div class="help-sql-code">
+                  <h4 data-i18n="markup.h4.everythingFromOneTable">Todo de una tabla</h4>
+                  <pre class="sql-ejemplo mono">SELECT * FROM alumnos;</pre>
+                  <h4 data-i18n="markup.h4.columnsAliasesExpressions">Columnas, alias y expresiones</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre AS alumno,
+       edad,
+       edad + 1 AS el_que_viene,
+       UPPER(nombre) || ' (' || curso || ')' AS etiqueta
+FROM alumnos;</pre>
+                  <h4 data-i18n="markup.h4.withoutRepeatedRows">Sin filas repetidas</h4>
+                  <pre class="sql-ejemplo mono">SELECT DISTINCT curso
+FROM alumnos
+ORDER BY curso;</pre>
+                  <h4 data-i18n="markup.h4.combinedWithUnion">Dos cursos, uno debajo del otro</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre, curso FROM alumnos_2025
+UNION
+SELECT nombre, curso FROM alumnos_2026
+ORDER BY nombre;</pre>
+                  <h4 data-i18n="markup.h4.keepingRepeatsUnionAll">Con repetidos: UNION ALL</h4>
+                  <pre class="sql-ejemplo mono">SELECT curso FROM alumnos_2025
+UNION ALL
+SELECT curso FROM alumnos_2026
+ORDER BY 1;</pre>
+                </div>
+              </div>
+              <h3 data-i18n="markup.h3.whatDialectSupports" class="help-sql-subtitulo">Lo que admite el dialecto</h3>
+              <dl class="sql-list">
+                <dt>SELECT</dt>
+                <dd data-i18n-html="markup.dd.columnsExpressionsAliasesASDISTINCT">Columnas, expresiones y <code>*</code>, con alias <code>AS</code>, y <code>DISTINCT</code> para no repetir filas.</dd>
+                <dt>FROM</dt>
+                <dd data-i18n-html="markup.dd.oneTableSeveralSeparatedBy">Una tabla, o varias separadas por comas (join implícito) con alias: <code>FROM ciclos AS c, familias AS f</code>.</dd>
+                <dt data-i18n="markup.dt.queriesAsTables">Consultas como tablas</dt>
+                <dd data-i18n-html="markup.dd.fromNameAnyQueryProject">En el <code>FROM</code> vale el nombre de cualquier <b>consulta</b> del proyecto: se ejecuta y su resultado se lee como una tabla (<code>FROM ventas_2026 AS v</code>), sola o unida a tablas y a otras consultas. <b>Se pueden encadenar</b> (vista de vista) y la consulta que alguien lee así lleva la marca <b>«vista»</b> en la barra lateral. Si el nombre coincide con el de una tabla, gana la tabla.</dd>
+                <dt>JOIN</dt>
+                <dd data-i18n-html="markup.dd.innerJOINLEFTOUTERJOIN"><code>INNER JOIN</code> y <code>LEFT [OUTER] JOIN</code> con <code>ON</code>. Las igualdades entre tablas se resuelven con <b>hash join</b>, así que también va fino con tablas grandes.</dd>
+                <dt>WHERE</dt>
+                <dd><code>=</code> <code>==</code> <code>&lt;&gt;</code> <code>!=</code> <code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code>, <code>AND</code>, <code>OR</code>, <code>NOT</code>; <code>IS [NOT] NULL</code>; <code>[NOT] LIKE … [ESCAPE …]</code>; <code>[NOT] IN (…)</code>; <code>[NOT] BETWEEN … AND …</code>; <code>[NOT] IN (SELECT …)</code>, <code>[NOT] EXISTS (SELECT …)</code>, <code>= ANY (SELECT …)</code>, <code>&gt;= ALL (SELECT …)</code>.</dd>
+                <dt data-i18n="markup.dt.subqueries">Subconsultas</dt>
+                <dd data-i18n-html="markup.dd.subqueryIsSELECTInsideAnother">Un <code>SELECT</code> entre paréntesis dentro de otro: con <code>IN</code> y <code>NOT IN</code>, con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM otra)</code>). La subconsulta puede leer una <b>consulta como tabla</b>, y también va en el <code>FROM</code> con alias (<b>tabla derivada</b>): <code>FROM (SELECT …) AS t</code>. Si por dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Como valor (en el <code>SELECT</code> o comparada) tiene que devolver <b>una sola columna</b> y una sola fila.</dd>
+                <dt data-i18n="markup.dt.union">UNION</dt>
+                <dd data-i18n-html="markup.dd.unionConcatenatesRowsTwoSelects"><code>UNION</code> y <code>UNION ALL</code> ponen debajo las filas de dos <code>SELECT</code> (y de más, encadenados): las dos partes devuelven el mismo número de columnas y <code>UNION</code> quita las filas repetidas, mientras que <code>UNION ALL</code> las conserva. El <code>ORDER BY</code> y el <code>LIMIT</code> finales valen para el resultado entero.</dd>
+                <dt>GROUP BY / HAVING</dt>
+                <dd data-i18n-html="markup.dd.aggregatesCOUNTSUMAVGMIN">Agregados <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>, con <code>DISTINCT</code> dentro: <code>COUNT(DISTINCT puesto)</code>. <code>HAVING</code> filtra los grupos ya calculados.</dd>
+                <dt>ORDER BY</dt>
+                <dd data-i18n-html="markup.dd.severalColumnsASCDESCNULLS">Varias columnas, <code>ASC</code>/<code>DESC</code> y <code>NULLS FIRST</code>/<code>NULLS LAST</code>. Un número es la posición de una columna del resultado: <code>ORDER BY 2 DESC</code>. Los textos numéricos se ordenan y comparan <b>por valor</b>, y el sitio de los valores que faltan lo manda <code>NULLS FIRST/LAST</code> aunque la clave sea <code>DESC</code> (sin indicarlo: primero en <code>ASC</code>, al final en <code>DESC</code>).</dd>
+                <dt>LIMIT / OFFSET</dt>
+                <dd data-i18n-html="markup.dd.limit20OFFSET40MySQL"><code>LIMIT 20 OFFSET 40</code> o al estilo MySQL <code>LIMIT 40, 20</code> (primero el salto, después las filas).</dd>
+                <dt data-i18n="markup.dt.operators">Operadores</dt>
+                <dd data-i18n-html="markup.dd.concatenationParenthesesDivisionByZero"><code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenación <code>||</code> o <code>CONCAT(…)</code> y paréntesis. Una <b>división por cero</b> no falla: da <code>null</code>. Comentarios con <code>--</code> o <code>/* … */</code>.</dd>
+                <dt data-i18n="markup.dt.literalsIdentifiers">Literales e identificadores</dt>
+                <dd data-i18n-html="markup.dd.textTextAreBothText"><code>'texto'</code> y <code>"texto"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.</dd>
+                <dt data-i18n="markup.dt.functions">Funciones</dt>
+                <dd data-i18n-html="markup.dd.absROUNDXDecHalf"><code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>CONCAT(x, y, …)</code> (textos unidos; <code>null</code> si algún argumento lo es), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
+                <dt data-i18n="markup.dt.typesConversion">Tipos y conversión</dt>
+                <dd data-i18n-html="markup.dd.fieldTypeConvertsWhenQuerying">El <b>tipo del campo</b> convierte al consultar: un campo <code>number</code> con valores «31» responde a <code>= 31</code>, y uno <code>boolean</code> a <code>= true</code>. Los datos guardados no se tocan.</dd>
+                <dt data-i18n="markup.dt.readOnly">Solo lectura</dt>
+                <dd data-i18n-html="markup.dd.onlySELECTThereIsNo">Únicamente <code>SELECT</code>: no hay <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>.</dd>
+              </dl>
+              <p data-i18n-html="markup.p.otherSectionsThisSQLHelp" class="muted">Los demás apartados de esta <b>Ayuda SQL</b> explican cada parte con ejemplos; los errores y los límites, en <b>Límites y pruebas</b>.</p>
+            </section>
+
+            <section class="help-bloque" id="sql-tables">
+              <h3 data-i18n="markup.h3.sqlHelpTablesAliasesViews">Ayuda SQL · Tablas, alias y vistas</h3>
+              <div class="help-sql-columns">
+                <div class="help-sql-text">
+                  <section>
+                    <h3 data-i18n="markup.h3.fromTablesAliases">FROM: tablas y alias</h3>
+                    <p data-i18n-html="markup.p.oneTableCanBeQueried">Se puede consultar una tabla o varias separadas por comas. El alias (con <code>AS</code>) acorta las referencias y evita ambigüedades: <code>c.nombre</code>. Si no hay dudas, también vale el nombre del campo a secas.</p>
+                    <p data-i18n-html="markup.p.severalTablesSeparatedByCommas">Varias tablas por comas equivalen a un <b>join implícito</b>: si además comparas campos de las dos en el <code>WHERE</code>, el motor lo convierte en un join de verdad.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.queriesAsTables">Consultas como tablas</h3>
+                    <p data-i18n-html="markup.p.anyQueryProjectCanBe">Cualquier consulta del proyecto se puede leer desde otra <b>como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al ejecutar la consulta que la usa. Su resultado se trata como una tabla más (alias, <code>JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>…), con las columnas del <code>SELECT</code> de esa consulta —alias de salida incluidos— y una fila por fila del resultado.</p>
+                    <p data-i18n-html="markup.p.namesSpacesGoBracketsFROM">Los nombres con espacios van entre corchetes: <code>FROM [resumen de ventas] AS r</code>. Si un nombre coincide con una tabla y con una consulta, gana la <b>tabla</b>. Las consultas se pueden encadenar (una que lee otra que lee otra), pero no en círculo: ninguna puede leer su propio resultado, ni directa ni indirectamente; si lo intentas, el error te enseña la cadena completa.</p>
+                    <p data-i18n-html="markup.p.ifResultThatQueryRepeats">Si el resultado de esa consulta repite el nombre de una columna (por ejemplo <code>SELECT a.x, b.x FROM …</code>), al leerla como tabla <b>solo se ve el último valor</b>: dales alias distintos con <code>AS</code>.</p>
+                    <p data-i18n-html="markup.p.queryIsMaterialisedBeforeBeing">La consulta se <b>materializa</b> antes de leerla: se ejecuta entera —su <code>WHERE</code>, sus <code>JOIN</code>, su <code>GROUP BY</code>/<code>HAVING</code>, su <code>DISTINCT</code>, su <code>ORDER BY</code> y su <code>LIMIT</code>/<code>OFFSET</code>— y lo que ve la consulta de fuera es <b>su resultado ya hecho</b>. Por eso el <code>LIMIT</code> de una vista llega ya recortado, y una vista que agrupa se puede volver a agregar (doble agregación).</p>
+                    <p data-i18n-html="markup.p.queriesUsedAsTablesCanBeRead">Las consultas se pueden leer también <b>dentro de una subconsulta</b> y como <b>tabla derivada</b>: <code>WHERE id IN (SELECT id FROM [resumen de ventas])</code> y <code>FROM (SELECT …) AS t</code>. Y una consulta cuyo SQL lleva una subconsulta sigue valiendo como vista: se ejecuta entera, subconsulta incluida (apartado <b>Subconsultas</b>).</p>
+                    <p data-i18n-html="markup.p.typesAreKeptNumberField">Los <b>tipos se conservan</b>: un campo <code>number</code> sigue siendo número al leerlo desde fuera (se puede sumar, dividir o comparar con <code>= 31</code>), un <code>boolean</code> responde a <code>= true</code> y un <code>null</code> sigue siendo <code>null</code> (por eso valen <code>COALESCE</code>, <code>IS NULL</code> y <code>ORDER BY … NULLS FIRST</code>). Las columnas se llaman como los <b>alias de salida</b> de la vista.</p>
+                    <p data-i18n-html="markup.p.fromItIsValidAny">En el <code>FROM</code> vale <b>en cualquier posición</b>: sola, con alias, unida a una tabla o a otra consulta (<code>INNER JOIN</code> y <code>LEFT JOIN</code>, incluida la anti-unión <code>IS NULL</code>), separada por comas, y también con la proyección <code>alias.*</code>. La <b>misma vista dos veces</b> en la misma consulta son dos fuentes independientes (y se calcula una sola vez por ejecución). Una vista que no devuelve filas es una <b>tabla vacía</b>, no un error: <code>COUNT(*)</code> da 0.</p>
+                    <p data-i18n-html="markup.p.chainingThemIsWhatGives">Encadenarlas es lo que da la <b>vista de vista</b>: una consulta que lee a otra que lee a otra, tantos niveles como quieras. La marca <b>«vista»</b> de la barra lateral y la columna <b>Vistas</b> del resumen de consultas te dicen quién lee a quién.</p>
+                  </section>
+                  <section>
+                    <h3>JOIN</h3>
+                    <p data-i18n-html="markup.p.innerJOINLeavesOnlyRows"><code>INNER JOIN</code> deja solo las filas que casan en las dos tablas; <code>LEFT [OUTER] JOIN</code> deja todas las de la izquierda y rellena con <code>null</code> donde no hay pareja (útil para buscar «los que no tienen»).</p>
+                    <p data-i18n-html="markup.p.conditionGoesWhenItIs">La condición va en <code>ON</code>. Cuando es una igualdad entre campos, el planificador la resuelve con <b>hash join</b>, así que también va rápido con tablas grandes. <b>Sin condición obtienes el producto cartesiano</b>: todas las combinaciones.</p>
+                  </section>
+                </div>
+                <div class="help-sql-code">
+                  <h4 data-i18n="markup.h4.implicitJoinCommasAliases">Join implícito por comas, con alias</h4>
+                  <pre class="sql-ejemplo mono">SELECT c.nombre AS ciclo, f.descripcion AS familia
+FROM ciclos AS c, familias AS f
+WHERE c.codFamilia = f.codigo
+ORDER BY c.nombre;</pre>
+                  <h4>INNER JOIN</h4>
+                  <pre class="sql-ejemplo mono">SELECT c.nombre AS ciclo, f.descripcion AS familia
+FROM ciclos AS c
+INNER JOIN familias AS f ON c.codFamilia = f.codigo
+ORDER BY c.nombre;</pre>
+                  <h4 data-i18n="markup.h4.leftJOINAlsoThoseNo">LEFT JOIN: también los que no tienen pareja</h4>
+                  <pre class="sql-ejemplo mono">SELECT f.descripcion AS familia, COUNT(c.nombre) AS ciclos
+FROM familias AS f
+LEFT JOIN ciclos AS c ON c.codFamilia = f.codigo
+GROUP BY f.descripcion
+ORDER BY ciclos ASC, familia;</pre>
+                  <h4 data-i18n="markup.h4.cartesianProduct5Students3">Producto cartesiano: 5 alumnos × 3 ciclos = 15 filas</h4>
+                  <pre class="sql-ejemplo mono">SELECT a.nombre, c.nombre AS ciclo
+FROM alumnos AS a, ciclos AS c;</pre>
+                  <h4 data-i18n="markup.h4.queryReadFromAnotherAs">Consulta leída desde otra como si fuera una tabla</h4>
+                  <pre class="sql-ejemplo mono">SELECT r.sede, r.edificios
+FROM [Sedes con más edificios] AS r
+WHERE r.edificios &gt; 1
+ORDER BY r.edificios DESC;</pre>
+                  <h4 data-i18n="markup.h4.viewViewQueryThatReads">Vista de vista: una consulta que lee a otra que lee a otra</h4>
+                  <pre class="sql-ejemplo mono">SELECT nivel, hospitales, camas
+FROM [Niveles con dos o más hospitales]   -- esta, a su vez, lee otra consulta
+WHERE camas &gt;= 2000
+ORDER BY camas DESC;</pre>
+                  <h4 data-i18n="markup.h4.subqueryInFromDerivedTable">Subconsulta en el FROM: tabla derivada</h4>
+                  <pre class="sql-ejemplo mono">SELECT t.sede, t.edificios
+FROM (SELECT s.nombre AS sede, COUNT(e.id_edificio) AS edificios
+      FROM sedes AS s
+      INNER JOIN edificios AS e ON e.id_sede = s.id_sede
+      GROUP BY s.nombre) AS t
+WHERE t.edificios &gt;= 2
+ORDER BY t.edificios DESC;</pre>
+                  <h4 data-i18n="markup.h4.sameViewTwiceTwoAliases">La misma vista dos veces, con dos alias</h4>
+                  <pre class="sql-ejemplo mono">SELECT a.codigo AS aula_1, b.codigo AS aula_2, a.capacidad
+FROM [Aulas grandes] AS a
+INNER JOIN [Aulas grandes] AS b
+        ON b.capacidad = a.capacidad
+       AND b.codigo &gt; a.codigo
+ORDER BY a.capacidad DESC, a.codigo, b.codigo;</pre>
+                  <h4 data-i18n="markup.h4.antiJoinLEFTJOINThose">Anti-unión con LEFT JOIN: los que no aparecen en una vista</h4>
+                  <pre class="sql-ejemplo mono">SELECT e.nombre AS edificio
+FROM edificios AS e
+LEFT JOIN [Aulas y plazas por edificio] AS v ON v.id_edificio = e.id_edificio
+WHERE v.aulas IS NULL
+ORDER BY e.nombre;</pre>
+                  <h4 data-i18n="markup.h4.projectionAliasAsteriskOverView">Proyección con alias y asterisco sobre una vista</h4>
+                  <pre class="sql-ejemplo mono">SELECT v.*
+FROM [Aulas con proyector] AS v
+ORDER BY v.capacidad DESC;</pre>
+                </div>
+              </div>
+            </section>
+
+            <section class="help-bloque" id="sql-filtrar">
+              <h3 data-i18n="markup.h3.sqlHelpFilterRows">Ayuda SQL · Filtrar filas</h3>
+              <div class="help-sql-columns">
+                <div class="help-sql-text">
+                  <section>
+                    <h3 data-i18n="markup.h3.whereComparisons">WHERE: comparaciones</h3>
+                    <p data-i18n-html="markup.p.equalityLtGtDifferenceLt"><code>=</code> y <code>==</code> para igualdad; <code>&lt;&gt;</code> y <code>!=</code> para diferencia; <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> para orden.</p>
+                    <p data-i18n-html="markup.p.bewareMissingValuesNullNull">Ojo con los valores que faltan: <code>null = null</code> no es cierto. Se pregunta con <code>IS NULL</code> y <code>IS NOT NULL</code>. Un campo <code>number</code> con textos «31» responde igual a <code>= 31</code> (por el tipo del campo).</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.whereText">WHERE: texto</h3>
+                    <p data-i18n-html="markup.p.likeComparesWildcardsIsAnything"><code>LIKE</code> compara con comodines: <code>%</code> es «cualquier cosa» (también nada) y <code>_</code> es «un carácter». Con <code>ESCAPE '\'</code> puedes buscar un <code>%</code> literal.</p>
+                    <p data-i18n-html="markup.p.listChecksMembershipListValues"><code>IN (lista)</code> comprueba pertenencia a una lista de valores, y <code>BETWEEN a AND b</code> un rango <b>incluyendo los extremos</b>. Los tres se niegan con <code>NOT</code> delante.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.combiningConditions">Combinar condiciones</h3>
+                    <p data-i18n-html="markup.p.notParenthesesMakeClearWhat"><code>AND</code>, <code>OR</code> y <code>NOT</code>, con paréntesis para dejar claro qué va con qué: <code>(curso = 'A' OR curso = 'B') AND edad &gt;= 18</code>. Sin paréntesis, <code>AND</code> ata más fuerte que <code>OR</code>.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.subqueries">Subconsultas</h3>
+                    <p data-i18n-html="markup.p.subqueryIsSELECTInsideAnother"><b>Una subconsulta</b> es un <code>SELECT</code> dentro de otro. Se usa con <code>IN</code> (y <code>NOT IN</code>), con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>EXISTS</code> (y <code>NOT EXISTS</code>). Puede leer una <b>consulta usada como tabla</b> y también ponerse en el <code>FROM</code> con un alias (tabla derivada). Si dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Usada como valor, tiene que devolver una sola columna y una sola fila.</p>
+                  </section>
+                </div>
+                <div class="help-sql-code">
+                  <h4 data-i18n="markup.h4.compareFilter">Comparar y filtrar</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre, edad
+FROM alumnos
+WHERE curso = 'Grados D' AND edad &gt;= 18;</pre>
+                  <h4 data-i18n="markup.h4.textWildcardsListsRanges">Texto: comodines, listas y rangos</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre, curso, edad
+FROM alumnos
+WHERE nombre LIKE 'A%'              -- empieza por A
+   OR curso IN ('Grados A', 'Grados B')
+   OR edad BETWEEN 18 AND 25;       -- extremos incluidos</pre>
+                  <h4 data-i18n="markup.h4.searchWildcardAsText">Buscar el comodín como texto</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre
+FROM cursos
+WHERE nombre LIKE '100\%' ESCAPE '\';           -- un % literal</pre>
+                  <h4 data-i18n="markup.h4.missingValues">Valores que faltan</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre, COALESCE(edad, -1) AS edad
+FROM alumnos
+WHERE edad IS NULL OR telefono IS NOT NULL;</pre>
+                  <h4 data-i18n="markup.h4.subtractionNullValuesSafeComparisons">Resta de valores nulos y comparaciones seguras</h4>
+                  <pre class="sql-ejemplo mono">SELECT NULLIF(TRIM(IFNULL(telefono, '')), '') AS telefono,
+       nombre
+FROM alumnos
+WHERE NULLIF(TRIM(IFNULL(curso, '')), '') IS NOT NULL;</pre>
+                  <h4 data-i18n="markup.h4.subqueries">Subconsultas</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre
+FROM alumnos
+WHERE curso IN (SELECT nombre FROM cursos WHERE activo = TRUE)
+  AND EXISTS (SELECT 1 FROM matriculas
+              WHERE matriculas.id_alumno = alumnos.id);
+
+SELECT t.curso, t.total
+FROM (SELECT curso, COUNT(*) AS total
+      FROM alumnos
+      GROUP BY curso) AS t
+WHERE t.total &gt; ALL (SELECT 1 FROM cursos);</pre>
+                </div>
+              </div>
+            </section>
+
+            <section class="help-bloque" id="sql-resumir">
+              <h3 data-i18n="markup.h3.sqlHelpSummariseSort">Ayuda SQL · Resumir y ordenar</h3>
+              <div class="help-sql-columns">
+                <div class="help-sql-text">
+                  <section>
+                    <h3 data-i18n="markup.h3.aggregates">Agregados</h3>
+                    <p data-i18n-html="markup.p.countCountsRowsGroupCOUNT"><code>COUNT(*)</code> cuenta filas del grupo; <code>COUNT(campo)</code> cuenta solo los valores que no son <code>null</code>. <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code> resumen la columna y también ignoran los <code>null</code>.</p>
+                    <p data-i18n-html="markup.p.countDISTINCTFieldSameOther"><code>COUNT(DISTINCT campo)</code> (y lo mismo con los demás agregados) cuenta valores distintos dentro del grupo.</p>
+                  </section>
+                  <section>
+                    <h3>GROUP BY y HAVING</h3>
+                    <p data-i18n-html="markup.p.groupBYJoinsRowsThat"><code>GROUP BY</code> junta las filas que comparten los valores indicados (una o varias columnas o expresiones). Las columnas del <code>SELECT</code> que no estén dentro de un agregado tienen que aparecer en el <code>GROUP BY</code>.</p>
+                    <p data-i18n-html="markup.p.havingFiltersGroupsAlreadyComputed"><code>HAVING</code> filtra <b>grupos ya calculados</b> (por eso puede usar agregados, al contrario que <code>WHERE</code>, que filtra filas antes).</p>
+                  </section>
+                  <section>
+                    <h3>ORDER BY</h3>
+                    <p data-i18n-html="markup.p.severalKeysSeparatedByCommas">Varias claves separadas por comas, de la más importante a la menos. Cada una admite <code>ASC</code> (por defecto) o <code>DESC</code>, y <code>NULLS FIRST</code> / <code>NULLS LAST</code> para decidir dónde van los valores que faltan.</p>
+                    <p data-i18n-html="markup.p.itCanBeSortedBy">Se puede ordenar por una columna, por una expresión o por el <b>alias de salida</b>. Los textos que son números se ordenan <b>por valor</b>, así que «9» va antes que «10».</p>
+                    <p data-i18n-html="markup.p.whereMissingValuesGoIs">El sitio de los valores que faltan lo manda <code>NULLS FIRST</code>/<code>NULLS LAST</code> y no lo invierte <code>DESC</code>: sin decirlo, en <code>ASC</code> van primero y en <code>DESC</code> al final.</p>
+                  </section>
+                  <section>
+                    <h3>LIMIT y OFFSET</h3>
+                    <p data-i18n-html="markup.p.limitNKeepsFirstN"><code>LIMIT n</code> se queda con las n primeras filas del resultado ya ordenado, y <code>OFFSET m</code> se salta las m primeras: así se pagina. También se acepta el estilo MySQL <code>LIMIT m, n</code> (primero el salto).</p>
+                  </section>
+                </div>
+                <div class="help-sql-code">
+                  <h4 data-i18n="markup.h4.countGroup">Contar y agrupar</h4>
+                  <pre class="sql-ejemplo mono">SELECT curso, COUNT(*) AS alumnos, AVG(edad) AS edad_media
+FROM alumnos
+GROUP BY curso
+ORDER BY alumnos DESC;</pre>
+                  <h4 data-i18n="markup.h4.filterGroupsHAVING">Filtrar grupos con HAVING</h4>
+                  <pre class="sql-ejemplo mono">SELECT depto,
+       COUNT(*) AS n,
+       ROUND(AVG(salario), 2) AS media
+FROM empleados
+GROUP BY depto
+HAVING COUNT(*) &gt;= 3 AND AVG(salario) &gt; 1500
+ORDER BY media DESC;</pre>
+                  <h4 data-i18n="markup.h4.distinctValuesInsideAggregate">Valores distintos dentro de un agregado</h4>
+                  <pre class="sql-ejemplo mono">SELECT COUNT(DISTINCT puesto) AS puestos,
+       COUNT(*) AS empleados,
+       MIN(fecha) AS primera,
+       MAX(fecha) AS ultima
+FROM empleados
+WHERE activo = true;</pre>
+                  <h4 data-i18n="markup.h4.sortPaginate">Ordenar y paginar</h4>
+                  <pre class="sql-ejemplo mono">SELECT nombre, edad
+FROM alumnos
+ORDER BY edad DESC NULLS LAST, nombre ASC
+LIMIT 20 OFFSET 40;</pre>
+                  <h4 data-i18n="markup.h4.aggregatesOverViewDoubleAggregation">Agregados sobre una vista (doble agregación)</h4>
+                  <pre class="sql-ejemplo mono">SELECT COUNT(*) AS sedes,
+       SUM(estudiantes) AS estudiantes,
+       MIN(estudiantes) AS minimo,
+       MAX(estudiantes) AS maximo
+FROM [Estudiantes y correos por sede];   -- ya viene agrupada, una fila por sede</pre>
+                  <h4 data-i18n="markup.h4.paginationOverViewThatAlready">Paginación sobre una vista que ya trae su propio LIMIT</h4>
+                  <pre class="sql-ejemplo mono">SELECT codigo, capacidad
+FROM [Aulas grandes]           -- esta vista ya ordenó y recortó su resultado
+ORDER BY capacidad DESC, codigo
+LIMIT 3 OFFSET 2;</pre>
+                </div>
+              </div>
+            </section>
+
+            <section class="help-bloque" id="sql-values">
+              <h3 data-i18n="markup.h3.sqlHelpValuesFunctions">Ayuda SQL · Valores y funciones</h3>
+              <div class="help-sql-columns">
+                <div class="help-sql-text">
+                  <section>
+                    <h3 data-i18n="markup.h3.numbersTextNamesNull">Números, texto, nombres y null</h3>
+                    <p data-i18n-html="markup.p.numbersAreWrittenDecimalPoint">Los números se escriben con punto decimal (<code>3.5</code>). <code>'texto'</code> y <code>"texto"</code> son <b>exactamente lo mismo</b>: una cadena de texto. Para meter una comilla dentro, duplícala (<code>'d''Artagnan'</code>).</p>
+                    <p data-i18n-html="markup.p.ifNameColumnTableHas">Si el nombre de una columna o tabla lleva espacios o coincide con una palabra reservada, se escribe entre corchetes: <code>[importe neto]</code>. Además existen los valores <code>NULL</code>, <code>TRUE</code> y <code>FALSE</code>.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.operatorsComments">Operadores y comentarios</h3>
+                    <p data-i18n-html="markup.p.arithmeticGivesRemainderDivisionConcatenates">Aritmética con <code>+</code>, <code>-</code>, <code>*</code> y <code>/</code>; <code>%</code> da el resto de la división y <code>||</code> (o <code>CONCAT(…)</code>) concatena textos (números incluidos). Los paréntesis agrupan.</p>
+                    <p data-i18n-html="markup.p.dividingByZeroIsNot">Dividir por <b>cero</b> no es un error: el resultado de esa operación es <code>null</code>.</p>
+                    <p data-i18n-html="markup.p.commentsEndLineSeveralLines">Comentarios: <code>--</code> hasta el final de la línea y <code>/* … */</code> para varias líneas.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.functions">Funciones</h3>
+                    <p data-i18n-html="markup.p.absXAbsoluteValueROUND"><code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.</p>
+                    <p data-i18n-html="markup.p.theyCanBeNestedInside">Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.fieldTypesConversion">Tipos de campo y conversión</h3>
+                    <p data-i18n-html="markup.p.everyFieldProjectHasType">Cada campo del proyecto tiene un tipo (<code>string</code>, <code>number</code> o <code>boolean</code>) que se usa <b>al consultar</b>: un campo <code>number</code> convierte sus textos a número, así que <code>= 31</code>, <code>&gt; 20</code> y <code>SUM(campo)</code> funcionan aunque el dato se importara como texto; uno <code>boolean</code> responde a <code>= true</code>.</p>
+                    <p data-i18n-html="markup.p.conversionDoesNotTouchStored">La conversión no toca los datos guardados: solo afecta a la consulta. En un campo <code>string</code>, el texto <code>'31'</code> y el número <code>31</code> siguen siendo cosas distintas.</p>
+                  </section>
+                </div>
+                <div class="help-sql-code">
+                  <h4 data-i18n="markup.h4.textFunctionsSELECTWHERE">Funciones de texto en el SELECT y en el WHERE</h4>
+                  <pre class="sql-ejemplo mono">SELECT TRIM(nombre) AS nombre,
+       LENGTH(TRIM(nombre)) AS letras,
+       CONCAT(SUBSTR(nombre, 1, 3), '…') AS iniciales,
+       CONCAT(nombre, ' (', curso, ')') AS ficha,
+       LOWER(curso) AS curso
+FROM alumnos
+WHERE LOWER(SUBSTR(nombre, 1, 1)) = 'a'
+ORDER BY letras DESC;</pre>
+                  <h4 data-i18n="markup.h4.commentsQuotesNamesBrackets">Comentarios, comillas y nombres entre corchetes</h4>
+                  <pre class="sql-ejemplo mono">-- Ventas sin anular (nombre con espacios)
+SELECT [fecha pedido] AS fecha,
+       importe,
+       estado
+FROM ventas                  /* ERP table */
+WHERE estado &lt;&gt; 'anulada'
+  AND descripcion LIKE '%"oferta"%'   -- comillas en texto
+ORDER BY fecha DESC;</pre>
+                </div>
+              </div>
+            </section>
+
+            <section class="help-bloque" id="sql-limites">
+              <h3 data-i18n="markup.h3.sqlHelpLimitsChangesTests">Ayuda SQL · Límites, cambios y pruebas</h3>
+              <div class="help-sql-columns">
+                <div class="help-sql-text">
+                  <section>
+                    <h3 data-i18n="markup.h3.errorsPlanLimits">Errores, plan y límites</h3>
+                    <p data-i18n-html="markup.p.ifSomethingIsBadlyWritten">Si algo está mal escrito, el mensaje indica <b>línea y columna</b>, enseña el fragmento y sugiere el nombre más parecido. Al ejecutar, el <b>plan</b> muestra cada paso con su tiempo.</p>
+                    <p data-i18n-html="markup.p.queriesAreReadOnlyThere">Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas; para juntar resultados, <code>UNION</code>.</p>
+                    <p data-i18n-html="markup.p.oneSingleStatementRunsFinal">Se ejecuta <b>una sola sentencia</b>: el <code>;</code> final se acepta, pero no encadenes varias consultas separadas por <code>;</code> (todo lo que vaya después se considera un error de sobra).</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.changesDataQueries">Cambios en los datos y en las consultas</h3>
+                    <p data-i18n-html="markup.p.renamingTableFieldRewritesQueries">Renombrar una <b>tabla</b> o un <b>campo</b> reescribe las consultas del proyecto que lo usan: el <code>FROM</code>/<code>JOIN</code>, las columnas cualificadas (<code>tabla.campo</code>) y la columna suelta. Se respetan los <b>alias de salida</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>; un <code>ORDER BY</code> que apunta a un alias se queda como está.</p>
+                    <p data-i18n-html="markup.p.everyQuerySAssertFollows">El <code>assert</code> de cada consulta sigue al campo renombrado, salvo cuando el nombre lo produce un alias. El editor de la consulta abierta se actualiza al momento.</p>
+                    <p data-i18n-html="markup.p.deletingTableFieldRewritesNothing"><b>Borrar</b> una tabla o un campo no reescribe nada: te avisa de cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre inexistente.</p>
+                  </section>
+                  <section>
+                    <h3 data-i18n="markup.h3.testQueriesTestMode">Consultas de prueba (modo test)</h3>
+                    <p data-i18n-html="markup.p.projectIsTestOneWhen">Un proyecto es de <b>test</b> cuando alguna de sus consultas comprueba un resultado: al abrirlo se ejecutan todas las consultas y se comparan con su <code>"assert"</code>, y el informe se abre solo. La propiedad <code>"testing"</code> de los ficheros antiguos ya no hace falta (se ignora): el modo test se deduce de las consultas. Cada <code>assert</code> admite <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder</code> (comparar sin importar el orden).</p>
+                    <p data-i18n-html="markup.p.comparisonIsStrictNullOnly">La comparación es estricta: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Las consultas sin <code>assert</code> se ejecutan y se marcan como <b>sin comprobar</b>; las que no compilan, como <b>fallidas</b> con su error.</p>
+                    <p data-i18n-html="markup.p.testsButtonTopBarLaunches">El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.datilandia.runProjectTests()</code> devuelve el informe completo.</p>
+                    <p data-i18n-html="markup.p.editorSTurnIntoTest">El botón <b>Convertir en test</b> del editor guarda el resultado actual de esa consulta como su <code>assert</code> (las columnas y todas las filas, valor a valor; <code>rowCount: 0</code> si no devuelve ninguna) y pone el proyecto en modo test. En el fichero se escribe en forma compacta: <code>columns</code>, <code>rows</code> y, solo cuando aportan algo, <code>rowCount</code> e <code>ignoreOrder</code>. El modo test del proyecto y la marca de cada consulta se ven en la barra superior y en la barra lateral.</p>
+                    <p data-i18n-html="markup.p.editorSRemoveTestButton">El botón <b>Quitar test</b> del editor hace lo contrario con esa consulta: le quita el <code>assert</code> (te pregunta antes) y deja de comprobarse, aunque el <b>proyecto siga en modo test</b>. La consulta se sigue ejecutando a mano con <b>▶ Ejecutar</b>.</p>
+                    <p data-i18n-html="markup.p.selfTestsButtonLaunchesProgram">El botón <b>Auto-tests</b> lanza la batería interna del programa y abre su informe; sin ventana, <code>window.datilandia.selfTest()</code> devuelve el recuento y el detalle de cada caso.</p>
+                  </section>
+                </div>
+                <div class="help-sql-code">
+                  <h4 data-i18n="markup.h4.queryAssertedResultTestMode">Consulta con resultado asertado (modo test)</h4>
+                  <pre class="sql-ejemplo mono">SELECT s.nombre AS sede, COUNT(e.id_edificio) AS edificios
+FROM sedes AS s
+LEFT JOIN edificios AS e ON e.id_sede = s.id_sede
+GROUP BY s.nombre
+ORDER BY edificios DESC, sede;</pre>
+                  <h4 data-i18n="markup.h4.itsAssertProjectFile">Y su assert en el fichero del proyecto</h4>
+                  <pre class="sql-ejemplo mono">{
+  "name": "Sedes con más edificios",
+  "sql": "SELECT s.nombre AS sede, …",
+  "assert": {
+    "columns": ["sede", "edificios"],
+    "rows": [["Campus Norte", 3], ["Campus Sur", 2]],
+    "rowCount": 2,
+    "ignoreOrder": false
+  }
+}</pre>
+                  <h4 data-i18n="markup.h4.assertThatOnlyCountsRows">Un assert que solo cuenta filas o que no ordena</h4>
+                  <pre class="sql-ejemplo mono">{
+  "assert": {
+    "columns": ["codigo"],
+    "rowCount": 0
+  }
+}
+
+{
+  "assert": {
+    "rows": [["Anatomía Humana"], ["Farmacología"]],
+    "ignoreOrder": true
+  }
+}</pre>
+                </div>
+              </div>
+            </section>
+    </main>
+  </div>
+
+  <script id="i18n-messages">
+    /* Diccionario de la ayuda: las claves que usan estos apartados, en los dos idiomas. */
+    window.datilandia = window.datilandia || {};
+    window.datilandia.messages = {
+  "en": {
+    "markup.b.alwaysAS": "always with <code>AS</code>",
+    "markup.button.aggregatesGROUPBYHAVINGORDER": "Aggregates, GROUP BY, HAVING, ORDER BY and pagination",
+    "markup.button.createRunExportQueries": "Create, run and export queries",
+    "markup.button.errorsPlanRenamesQueriesAsserted": "Errors, plan, renames and queries with an asserted result",
+    "markup.button.filterRows": "Filter rows",
+    "markup.button.findReplace": "Find and replace",
+    "markup.button.findReplaceTable": "Find and replace in the table",
+    "markup.button.generalShapeDialect": "General shape and dialect",
+    "markup.button.history": "History",
+    "markup.button.historyVisitedPlaces": "Links to the places you have visited",
+    "markup.button.howQueryIsWrittenWhat": "How a query is written and what the SQL dialect supports",
+    "markup.button.importCSVJSONFilesPasted": "Import CSV and JSON files, or pasted text",
+    "markup.button.importData2": "Import data",
+    "markup.button.keyboardShortcuts": "Keyboard shortcuts",
+    "markup.button.limitsTests": "Limits and tests",
+    "markup.button.numbersTextNullOperatorsFunctions": "Numbers, text, null, operators and functions",
+    "markup.button.projectSettings": "Project and settings",
+    "markup.button.queries2": "Queries",
+    "markup.button.queriesAssertedResultTestBatteries": "Queries with an asserted result and test batteries",
+    "markup.button.relationMatrixBetweenTablesQueries": "Relation matrix between tables and the queries that cite them",
+    "markup.button.relations2": "Relations",
+    "markup.button.saveOpenProjectSettings": "Save, open and project settings",
+    "markup.button.shortcuts": "Shortcuts",
+    "markup.button.summariseSort": "Summarise and sort",
+    "markup.button.tablesAliasesViews": "Tables, aliases and views",
+    "markup.button.tablesRowsFieldsForeignKeys": "Tables, rows, fields and foreign keys",
+    "markup.button.tablesRowsMetadata": "Tables, rows and metadata",
+    "markup.button.testMode": "Test mode",
+    "markup.button.valuesFunctions": "Values and functions",
+    "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparisons, text, combined conditions and subqueries",
+    "markup.button.whereRowsComeFromTables": "Where the rows come from: tables, queries read as tables and joins",
+    "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (the half moves away from zero: 2.5 → 3 and −2.5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, start[, length])</code> (1 = first character; negative ones count from the end), <code>CONCAT(x, y, …)</code> (texts joined; <code>null</code> if any argument is), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
+    "markup.dd.aggregatesCOUNTSUMAVGMIN": "Aggregates <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code>, with <code>DISTINCT</code> inside: <code>COUNT(DISTINCT position)</code>. <code>HAVING</code> filters the groups already computed.",
+    "markup.dd.columnsExpressionsAliasesASDISTINCT": "Columns, expressions and <code>*</code>, with aliases <code>AS</code>, and <code>DISTINCT</code> to avoid repeating rows.",
+    "markup.dd.concatenationParenthesesDivisionByZero": "<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenation <code>||</code> or <code>CONCAT(…)</code> and parentheses. A <b>division by zero</b> does not fail: it gives <code>null</code>. Comments with <code>--</code> or <code>/* … */</code>.",
+    "markup.dd.fieldTypeConvertsWhenQuerying": "The <b>field type</b> converts when querying: a <code>number</code> field with «31» values responds to <code>= 31</code>, and a <code>boolean</code> one to <code>= true</code>. The stored data is not touched.",
+    "markup.dd.fromNameAnyQueryProject": "In the <code>FROM</code> the name of any <b>query</b> of the project is valid: it is run and its result is read as a table (<code>FROM sales_2026 AS v</code>), alone or joined to tables and to other queries. They <b>can be chained</b> (view of a view) and the query that somebody reads that way carries the <b>«view»</b> mark in the sidebar. If the name matches that of a table, the table wins.",
+    "markup.dd.innerJOINLEFTOUTERJOIN": "<code>INNER JOIN</code> and <code>LEFT [OUTER] JOIN</code> with <code>ON</code>. Equalities between tables are resolved with a <b>hash join</b>, so it is also smooth with big tables.",
+    "markup.dd.limit20OFFSET40MySQL": "<code>LIMIT 20 OFFSET 40</code> or MySQL style <code>LIMIT 40, 20</code> (first the skip, then the rows).",
+    "markup.dd.oneTableSeveralSeparatedBy": "One table, or several separated by commas (implicit join) with aliases: <code>FROM cycles AS c, families AS f</code>.",
+    "markup.dd.onlySELECTThereIsNo": "Only <code>SELECT</code>: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>.",
+    "markup.dd.severalColumnsASCDESCNULLS": "Several columns, <code>ASC</code>/<code>DESC</code> and <code>NULLS FIRST</code>/<code>NULLS LAST</code>. A number is the position of a column of the result: <code>ORDER BY 2 DESC</code>. Numeric texts are sorted and compared <b>by value</b>, and where the missing values go is decided by <code>NULLS FIRST/LAST</code> even if the key is <code>DESC</code> (without saying it: first in <code>ASC</code>, at the end in <code>DESC</code>).",
+    "markup.dd.subqueryIsSELECTInsideAnother": "A <code>SELECT</code> in brackets inside another one: with <code>IN</code> and <code>NOT IN</code>, with a comparison and <code>ANY</code>/<code>SOME</code> or <code>ALL</code>, and with <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM another)</code>). The subquery can read a <b>query as a table</b>, and it can also go in the <code>FROM</code> with an alias (<b>derived table</b>): <code>FROM (SELECT …) AS t</code>. If it names outer columns inside it is <b>correlated</b> and runs row by row. Used as a value (in the <code>SELECT</code> or compared) it must return <b>a single column</b> and a single row.",
+    "markup.dd.textTextAreBothText": "<code>'text'</code> and <code>\"text\"</code> are <b>both text</b> (to include the quote, double it); <code>[Name with spaces]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
+    "markup.dd.unionConcatenatesRowsTwoSelects": "<code>UNION</code> and <code>UNION ALL</code> stack the rows of two <code>SELECT</code>s (and of more, chained): both sides return the same number of columns and <code>UNION</code> drops the repeated rows, while <code>UNION ALL</code> keeps them. The final <code>ORDER BY</code> and <code>LIMIT</code> apply to the whole result.",
+    "markup.dt.functions": "Functions",
+    "markup.dt.literalsIdentifiers": "Literals and identifiers",
+    "markup.dt.operators": "Operators",
+    "markup.dt.queriesAsTables": "Queries as tables",
+    "markup.dt.readOnly": "Read-only",
+    "markup.dt.subqueries": "Subqueries",
+    "markup.dt.typesConversion": "Types and conversion",
+    "markup.dt.union": "UNION",
+    "markup.h3.aggregates": "Aggregates",
+    "markup.h3.changesDataQueries": "Changes in the data and in the queries",
+    "markup.h3.combiningConditions": "Combining conditions",
+    "markup.h3.combiningQueriesUnion": "Combining queries: UNION and UNION ALL",
+    "markup.h3.errorsPlanLimits": "Errors, plan and limits",
+    "markup.h3.fieldTypesConversion": "Field types and conversion",
+    "markup.h3.findReplaceTable": "Find and replace in the table",
+    "markup.h3.fromTablesAliases": "FROM: tables and aliases",
+    "markup.h3.functions": "Functions",
+    "markup.h3.generalShape": "General shape",
+    "markup.h3.history": "History of visited places",
+    "markup.h3.importData": "Import data",
+    "markup.h3.numbersTextNamesNull": "Numbers, text, names and null",
+    "markup.h3.operatorsComments": "Operators and comments",
+    "markup.h3.projectSettings": "Project and settings",
+    "markup.h3.queries": "Queries",
+    "markup.h3.queriesAsTables": "Queries as tables",
+    "markup.h3.relationsBetweenTablesQueries": "Relations between tables and queries",
+    "markup.h3.shortcuts": "Shortcuts",
+    "markup.h3.sqlHelpFilterRows": "SQL help · Filter rows",
+    "markup.h3.sqlHelpGeneralShapeDialect": "SQL help · General shape and dialect",
+    "markup.h3.sqlHelpLimitsChangesTests": "SQL help · Limits, changes and tests",
+    "markup.h3.sqlHelpSummariseSort": "SQL help · Summarise and sort",
+    "markup.h3.sqlHelpTablesAliasesViews": "SQL help · Tables, aliases and views",
+    "markup.h3.sqlHelpValuesFunctions": "SQL help · Values and functions",
+    "markup.h3.subqueries": "Subqueries",
+    "markup.h3.tablesRowsMetadata": "Tables, rows and metadata",
+    "markup.h3.testModeQueriesAssertedResult": "Test mode: queries with an asserted result",
+    "markup.h3.testQueriesTestMode": "Test queries (test mode)",
+    "markup.h3.whatDialectSupports": "What the dialect supports",
+    "markup.h3.whereComparisons": "WHERE: comparisons",
+    "markup.h3.whereText": "WHERE: text",
+    "markup.h4.aggregatesOverViewDoubleAggregation": "Aggregates over a view (double aggregation)",
+    "markup.h4.antiJoinLEFTJOINThose": "Anti-join with LEFT JOIN: those that do not appear in a view",
+    "markup.h4.assertThatOnlyCountsRows": "An assert that only counts rows or that does not sort",
+    "markup.h4.cartesianProduct5Students3": "Cartesian product: 5 students × 3 cycles = 15 rows",
+    "markup.h4.columnsAliasesExpressions": "Columns, aliases and expressions",
+    "markup.h4.combinedWithUnion": "Two courses, one under the other",
+    "markup.h4.commentsQuotesNamesBrackets": "Comments, quotes and names in brackets",
+    "markup.h4.compareFilter": "Compare and filter",
+    "markup.h4.countGroup": "Count and group",
+    "markup.h4.distinctValuesInsideAggregate": "Distinct values inside an aggregate",
+    "markup.h4.everythingFromOneTable": "Everything from one table",
+    "markup.h4.filterGroupsHAVING": "Filter groups with HAVING",
+    "markup.h4.implicitJoinCommasAliases": "Implicit join with commas, with aliases",
+    "markup.h4.itsAssertProjectFile": "And its assert in the project file",
+    "markup.h4.keepingRepeatsUnionAll": "With repeats: UNION ALL",
+    "markup.h4.leftJOINAlsoThoseNo": "LEFT JOIN: also those with no pair",
+    "markup.h4.missingValues": "Missing values",
+    "markup.h4.paginationOverViewThatAlready": "Pagination over a view that already brings its own LIMIT",
+    "markup.h4.projectionAliasAsteriskOverView": "Projection with an alias and an asterisk over a view",
+    "markup.h4.queryAssertedResultTestMode": "Query with an asserted result (test mode)",
+    "markup.h4.queryReadFromAnotherAs": "A query read from another as if it were a table",
+    "markup.h4.sameViewTwiceTwoAliases": "The same view twice, with two aliases",
+    "markup.h4.searchWildcardAsText": "Search for the wildcard as text",
+    "markup.h4.sortPaginate": "Sort and paginate",
+    "markup.h4.subqueries": "Subqueries",
+    "markup.h4.subqueryInFromDerivedTable": "Subquery in the FROM: derived table",
+    "markup.h4.subtractionNullValuesSafeComparisons": "Subtraction of null values and safe comparisons",
+    "markup.h4.textFunctionsSELECTWHERE": "Text functions in the SELECT and in the WHERE",
+    "markup.h4.textWildcardsListsRanges": "Text: wildcards, lists and ranges",
+    "markup.h4.viewViewQueryThatReads": "View of a view: a query that reads another that reads another",
+    "markup.h4.withoutRepeatedRows": "Without repeated rows",
+    "markup.li.addDeleteRowsEditAny": "Add and delete rows and edit any cell; the row you are in is marked in grey.",
+    "markup.li.assertIsExpectedResultThat": "The <code>\"assert\"</code> is the expected result of that query: <code>columns</code> (names and order of the columns), <code>rows</code> (the expected rows, value by value), <code>rowCount</code> (only how many rows) and <code>ignoreOrder: true</code> (same set of rows, whatever the order). One of the first three is enough for the query to be checked.",
+    "markup.li.atEndCellGreyNumber": "At the end of the cell, in grey, the <b>number of queries</b> that cite <b>both tables</b> (with their names in the mouse hint). It is counted <b>once per pair</b>, not in both cells.",
+    "markup.li.autoNumberedIDFieldIs": "The auto-numbered <b>ID field</b> is never changed: it can be searched in, but if you choose only that column it warns you that it is not replaced.",
+    "markup.li.batteryDoesNotTouchYour": "The battery <b>does not touch your project</b>: every case runs over test data and leaves everything as it was. It runs with <b>no project loaded</b>: with a project open it warns and closes it (unsaved changes are lost). Without a window: <code>window.datilandia.selfTest()</code> returns the report with the total, the passes, the failures and the detail of every case.",
+    "markup.li.beforeResultYouWillSee": "Before the result you will see the <b>plan</b> with the time of each step; if something fails, the error tells you <b>line, column and what to check</b>.",
+    "markup.li.comparisonIsStrictNullOnly": "The comparison is <b>strict</b>: <code>null</code> only matches <code>null</code>, a number is not a text and <code>1</code> is not <code>true</code>. Renaming a table or a field also adjusts the asserted names, but <b>never the values</b>.",
+    "markup.li.completeFormatAssertExampleAre": "The complete format of the assert and an example are in the <b>SQL help</b> sections of this page.",
+    "markup.li.createGiveItNameDescription": "Create with <b>+</b>, give it a name and a description, and run with <b>▶ Run</b> or <b>Ctrl+Enter</b>.",
+    "markup.li.createRenameDeleteTablesEach": "Create, rename and delete tables, each one with its <b>description</b>.",
+    "markup.li.createTableFromResultCreatesNew": "<b>Create table…</b> creates a <b>new table</b> with the columns and rows of the result on screen and asks for its name; the button is enabled when the query has a result with rows. The query does not change; if the result repeats column names, a numeric suffix is added.",
+    "markup.li.csvIsWrittenBOMSo": "The CSV is written with a <b>BOM</b> so that Excel opens it well and with the options of that same window: <b>delimiter</b> (comma, semicolon, tab, space or another character), <b>header</b> yes or no and <b>decimal comma</b> (<code>3,14</code> instead of <code>3.14</code>; texts are not touched). They are the same options as the ones in <b>Settings</b> and they are saved inside the project.",
+    "markup.li.csvQuotesDoubledQuotesBOM": "<b>CSV</b>: quotes, doubled quotes, BOM and CRLF line breaks. The delimiter is detected on its own, or you choose it: <code>,</code> <code>;</code> tab, space or another one.",
+    "markup.li.ctrlEnterRunQueryImport": "<b>Ctrl+Enter</b>: run the query (or import the pasted text).",
+    "markup.li.ctrlSSaveProject": "<b>Ctrl+S</b>: save the project.",
+    "markup.li.ctrlSpaceOpensInsertList": "<b>Ctrl+Space</b>: open the list of tables, queries and fields to insert them in the query.",
+    "markup.li.deletingWarnsYouBeforeRemoving": "<b>Deleting warns you</b>: before removing a table or a field it tells you how many queries use it and which ones, and afterwards it reminds you of the ones left citing a name that no longer exists.",
+    "markup.li.downloadStructureJsonSummary": "In the <b>Project tables</b> summary, <b>View structure JSON…</b> opens a window with the structure of every table, the same one shown by <b>Structure JSON…</b> for each table (without the rows); inside that window, <b>Download structure JSON</b> saves the JSON to a file.",
+    "markup.li.editorSTurnIntoTest": "The editor's <b>Turn into a test</b> button runs that query, saves its result as its <code>assert</code> (columns and rows, value by value) and puts the <b>project in test mode</b>. If the query already checked a result, it asks you before replacing it; with <b>Remove test</b> (only active if the query checks something) it goes back to checking nothing, without taking the project out of test mode.",
+    "markup.li.enterTableNameRenamesIt": "<b>Enter</b> in the table name renames it; in the name of a new field it adds it.",
+    "markup.li.escClosePopUpWindows": "<b>Esc</b>: close the pop-up windows.",
+    "markup.li.everyFigureGreaterThan0": "Every figure <b>greater than 0</b> is a <b>link</b>: it builds (or reuses) the <b>query</b> that returns exactly those rows, leaves it selected and runs it, so that you can check it.",
+    "markup.li.everyQueryCanCarryIts": "Every query can carry its <b>asserted result</b> for <b>test mode</b>: when the project is opened it is run and compared with it (section «Test mode»). The editor's <b>Turn into a test</b> button saves the result you have on screen as that expected result.",
+    "markup.li.exportCSVOpensResultCSV": "<b>Export CSV…</b> opens the <b>Result in CSV</b> window with the <b>preview</b> of the result: <b>Copy</b> takes it to the clipboard and <b>Download CSV</b> saves the file with the query name (asking for the folder, if the browser has a save dialog).",
+    "markup.li.exportTableDataAsCSV": "<b>Export CSV…</b> opens the data of the table as <b>CSV text in a window</b>, with <b>Copy</b> and <b>Download CSV</b> and the same separator, header and decimal-comma options as the result of a query.",
+    "markup.li.fieldsMetadataAddRenameDelete": "<b>Fields and metadata…</b>: add, rename and delete fields, with description and <b>type</b> (<code>string</code>, <code>number</code>, <code>boolean</code>); tick a checkbox to say which one is the table's <b>ID field</b> (only one) and which ones are <b>foreign keys</b>, choosing the target table and field. Everything is saved in the project.",
+    "markup.li.filesCSVJSONSeveralAt": "<b>Files</b>: CSV and JSON, several at once and mixed. Each file creates a table with its name (lower case, with <code>_</code>) and leaves a report with what was read and the problems found.",
+    "markup.li.findReplaceTableBarSame": "<b>Find…</b> and <b>Replace…</b> (table bar): the same window in two modes; the replace mode adds the field with the new text and the <b>Replace all</b> button.",
+    "markup.li.findReplaceTheySearchReplace": "<b>Find…</b> and <b>Replace…</b>: they search and replace in the whole table or in one column, with the wildcards <code>*</code> and <code>?</code> (section «Find and replace»).",
+    "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>D</b> button of its header (it copies the folder with all its queries) or delete it from there; every query of the list also carries its own actions on the right: the <b>▲</b> and <b>▼</b> arrows move it up or down <b>inside its folder</b> (they are greyed out at the ends), the <b>D</b> duplicates it, the <b>colour swatch</b> paints its row with a pastel colour (only in the sidebar; the file keeps it in <code>color</code>) and the <b>✕</b> deletes it after a confirmation; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>. When a project is <b>opened</b> every folder starts <b>folded</b> (the «No folder» group is left as it is).",
+    "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> and <b>→</b> with the handle focused: change the width of the left column; <b>Home</b> and <b>End</b> take it to the ends.",
+    "markup.li.historyBarUnderTop": "Under the top bar there is a <b>history bar</b>: a rounded link to every place you have passed through (home, a table, a query, a summary, the relations or the import panel).",
+    "markup.li.historyIsNotSaved": "The history belongs to the session: it is <b>not saved</b> in the project.",
+    "markup.li.idFieldIsAutoNumbered": "The <b>ID field is auto-numbered</b>: every new row gets the <b>next number</b> and none is repeated or reused when rows are deleted. That is why it is not edited by hand: it can be searched in, but it is not replaced. With <b>Create auto-numbered ID field</b> you add a new one (the name is written next to it), at the start of the table, and it numbers the rows that were already there <b>1..N</b>. Marking any other field as ID also makes it auto-numbered.",
+    "markup.li.insertButtonSpeedsUpWriting": "<b>Insert table, query or field…</b> (above the editor, or <b>Ctrl+Space</b> inside it) opens a <b>list</b> with the project's tables and queries: click a name to write it <b>at the cursor</b> (with brackets when the name needs them) or press <b>▸</b> to see its <b>fields</b> and click one. The <b>search box</b> filters the list and the fields.",
+    "markup.li.insideCellGoForeignKeys": "Inside the cell go the <b>foreign keys</b> of the row's table that point to the column's, written as <code>field → target field</code>. The <b>diagonal</b> holds the <b>self-references</b>: the foreign keys of a table that point to itself.",
+    "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: an array of objects with the same keys and simple values.",
+    "markup.li.jsonIsValidatedWhenIt": "The JSON is validated when it is opened: if something does not add up it tells you exactly what, including the asserted result (<code>assert</code>) of every query. The old <code>\"testing\"</code> property is accepted but <b>ignored</b>: test mode is worked out from the queries.",
+    "markup.li.lastColumnThatWindowIs": "The last column of that window, <b>Is a foreign key</b>, is the <b>inverse</b> and <b>read-only</b> view: which fields of other tables point to that field, one per line (or a dash if there are none). It is edited from the row of the field that is the foreign key. The target of a foreign key can be <b>its own table</b> (it appears at the end of the list), for <b>self-referencing</b> relations.",
+    "markup.li.linkRelationsBetweenTablesQueries": "The link <b>Relations between tables and queries</b> opens the project's relation <b>matrix</b>: who points to whom and which queries cite each pair of tables. The detail is in the <b>Relations</b> section.",
+    "markup.li.listUpdatesWhileYouType": "The list updates <b>while you type</b>, with one row per cell —<b>Row · Field · Value · Matches</b>—, the matches <b>highlighted</b> inside the value and a summary of matches, cells, rows and fields. Up to 500 matches are listed, but the count is complete.",
+    "markup.li.mergeTablesCreatesNewTable": "The <b>Merge tables…</b> button in the header creates a <b>new table</b> from several: give it a name, tick at least two tables and press <b>Merge</b>. The fields are the <b>union</b> of all of them, in the order of the list, and each field keeps the definition (name, type, description and foreign keys) of the <b>first table that has it</b>; tables may have different fields or types. Rows are <b>concatenated</b> in the order of the list and fields a table does not have are left <code>null</code>. The original tables are not changed and the new one is added to the project.",
+    "markup.li.newDiscardsCurrentProjectIt": "<b>New</b> discards the current project (it asks you first) and starts an <b>empty</b> one called «Untitled», opening <b>Settings</b> so that you can name it.",
+    "markup.li.options1stRowHeaderInfer": "<b>Options</b>: 1st row = header, infer types, skip invalid rows.",
+    "markup.li.paginatedResultsTotalRowsPages": "<b>Paginated</b> results (with the total of rows and pages); click a row to mark it.",
+    "markup.li.pasteTextFormatIsDetected": "<b>Paste text</b>: the format is detected on its own (JSON if it starts with <code>[</code> or <code>{</code>; if not, CSV).",
+    "markup.li.patternIsPlainTextAny": "The <b>pattern</b> is plain text, with <code>*</code> for any sequence of characters and <code>?</code> for just one: <code>an*</code>, <code>*ana</code>, <code>?an?????</code>. The <b>match case</b> checkbox decides whether «ana» finds «Ana» (by default it does).",
+    "markup.li.pressMatchWindowClosesLeave": "Press a match and the window closes to leave you on that <b>cell</b> (it changes the page, selects it and the focus is ready to fix it by hand).",
+    "markup.li.pressPlaceGoBackTo": "Press a link to <b>go back to that place</b>; the one on screen is highlighted. Going back to a place does not repeat it (it moves to the end) and the links to tables or queries that no longer exist disappear on their own.",
+    "markup.li.pressRowReportOpenThat": "Press a row of the report to open that query in the editor; <b>Run again</b> launches the battery once more and <b>Copy report</b> leaves it as text (if the browser does not allow copying, it stays selected for Ctrl+C).",
+    "markup.li.pressTableNameOpensTable": "Press a <b>table name</b> in a row or column header to <b>open that table</b>.",
+    "markup.li.pressTablesQueriesTitleSidebar": "Press the <b>Tables</b> or <b>Queries</b> title in the sidebar to see the full list with its <b>properties</b> on the right: description, rows, ID field and fields with their type; in the queries, their assert and the test result. Every row of the summary opens that item.",
+    "markup.li.previewShowsUp1000Rows": "The preview shows up to 1000 rows and warns when there are more, but the <b>downloaded file is complete</b>. The query has to be <b>run</b> first: with no result, the window reminds you.",
+    "markup.li.projectIsTestModeWhen": "A project is in <b>test mode</b> when <b>some of its queries checks a result</b> (it has an <code>assert</code>): when it is <b>opened</b>, datilandia runs <b>every query</b> and compares each result with that query's <code>\"assert\"</code>. If no query checks anything, the project is not a test one and nothing runs on its own. There is nothing to declare: the <code>\"testing\"</code> property of old files is no longer needed.",
+    "markup.li.projectNameIsChangedSettings": "The <b>project name</b> is changed in <b>Settings</b>; in the top bar it is only shown.",
+    "markup.li.projectSTestModeIs": "The project's <b>test mode</b> is shown <b>at the very top right</b> of the top bar (<b>test mode</b> or <b>no tests</b>), and in the sidebar every query carries its <b>mark</b>: <b>test</b> if it has an asserted result and <b>no tests</b> if not. The query summary goes into detail in its <b>Assert</b> column.",
+    "markup.li.queryCanBeReadFrom": "A query can <b>be read from another one as if it were a table</b>: write its name in the <code>FROM</code> and the engine runs it straight away (section <b>SQL help</b>, «Queries as tables»). Also, when you <b>rename it</b>, the queries that use it are rewritten and, if you <b>delete it</b>, it warns you which ones are left hanging.",
+    "markup.li.querySummaryQueriesTitleSidebar": "The <b>query summary</b> (the <b>Queries</b> title in the sidebar) carries a <b>Views</b> column with the same thing, one line per direction (<code>reads: «…»</code> and <code>read by: «…»</code>), or a dash if there is none. The <b>dashboard</b> of the welcome page counts in <b>Queries used as tables</b> how many queries of the project are read that way.",
+    "markup.li.renamingFollowsQueriesWhenName": "<b>Renaming follows the queries</b>: when the name of a table or of a field changes, the queries rewrite themselves (<code>FROM table</code>, <code>table.field</code>, the bare column and the asserted names), also in the editor that is open. <b>Aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected.",
+    "markup.li.reportOpensItsOwnWhen": "The <b>report</b> opens on its own when loading: a summary (queries, passed, failed and without an assert), one row per query —its rows, whether it carries an assert and the result— and the <b>detail of the differences</b>, with what was expected and what was obtained in every row or column that does not add up. If a query does not compile, it is marked as failed with the error.",
+    "markup.li.rowHeadersStayFixedWhen": "The row headers stay <b>fixed</b> when the matrix is scrolled across the width of the screen.",
+    "markup.li.rowPagesTotalJumpFirst": "Row pages with the total and a jump to the first or the last one.",
+    "markup.li.saveProjectCtrlSOverwrites": "<b>Save project</b> (Ctrl+S) overwrites its file; <b>Save project as</b> asks where; when <b>opening</b> another one, if there are unsaved changes it warns you before losing them.",
+    "markup.li.scopeIsChosenSelectorAll": "The scope is chosen with the <b>In:</b> selector: <b>all the columns</b> or just one. <code>null</code> cells are not searched and, without a pattern, nothing is searched.",
+    "markup.li.seeRelationsButtonQueryEditor": "The <b>See relations</b> button of the query editor opens the same matrix in a <b>window</b>, as a reminder while you write: <b>without</b> the queries column or the links of the figures. It closes with <b>Esc</b> or with <b>Close</b>.",
+    "markup.li.seeRelationsOpensWindowRelation": "<b>See relations</b> opens a window with the <b>relation matrix</b> between the project's tables (the tables in rows and columns and, at each crossing, the foreign key that joins them), as a reminder while you write the query (section <b>Relations</b>).",
+    "markup.li.selfTestsButtonTopBar": "The <b>Self-tests</b> button of the top bar checks <b>the program itself</b> (SQL engine, utilities, files and interface), not your data: it runs the internal battery and opens the <b>Self-test report</b>.",
+    "markup.li.settingsRowsPerPageTables": "<b>Settings</b>: rows per page of tables and queries and the default delimiter/header when importing and exporting. All of that is saved inside the project itself.",
+    "markup.li.sidebarLinkRelationsOpensMatrix": "The sidebar link <b>Relations</b> opens a <b>matrix</b> with the project's tables in <b>rows and columns</b>. In each crossing cell you see what joins the table of the row with the one of the column.",
+    "markup.li.sidebarQueryThatSomeOther": "In the sidebar, the query that <b>some other one reads as a table</b> carries the <b>«view»</b> mark in blue, or <b>«view ×N»</b> if N queries read it. Hover over its hint and it tells you both directions: <b>«Reads as a table (n): …»</b> (whom it reads) and <b>«Read as a table by (n): …»</b> (who reads it). The mark is only information: it does not change what the query checks.",
+    "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header renames, deletes and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
+    "markup.li.tableListFoldsUnderAllTables": "The list of tables can be <b>folded</b> from its <b>All tables</b> header: only the title with the number of tables is left, and the state is saved in the project.",
+    "markup.li.tableViewForeignKeysAre": "In the table view, <b>foreign keys</b> are read by hovering over their cell: the hint says which table and field they point to and shows the <b>related record</b> of the other table (or warns that it does not exist), and the link <b>↗</b> opens the <b>query</b> with that record. And if the table is the <b>target</b> of some foreign key, it carries <b>one column for each of them</b> (<code>← table.field</code>) with the <b>number</b> of rows of the other table that bring each row: the number itself is a link that builds and runs the <b>query</b> that lists them.",
+    "markup.li.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>only appears if the project has some test</b> (some query with an <code>assert</code>). Without opening windows: <code>window.datilandia.runProjectTests()</code>.",
+    "markup.li.thatReportCarriesCountOne": "That report carries the <b>count</b>, one row per case —number, case, result and detail— and the <b>Failing cases</b> block with the reason of each one. <b>Run again</b> launches it once more, <b>Copy report</b> leaves it as text and <b>Esc</b> closes the window.",
+    "markup.li.theyAreReadOnlyThey": "They are <b>read-only</b>: they never change the data. On screen there is a cap on rows; the exported CSV is complete.",
+    "markup.li.typeIsInferredImportIt": "The type is <b>inferred on import</b>, it can be <b>changed by hand</b> and it is saved in the project. <code>null</code> is not a type: it is missing information. <code>number</code> accepts decimals.",
+    "markup.li.underEachForeignKeyGo": "Under each foreign key go <b>seven figures</b> with the rows of the crossing, counted over the two tables and named after them: those of the row's table <b>whose key is null</b>, <b>whose key matches no row</b> of the column's or <b>that find their row</b> in it, and those of the column's table <b>with none</b>, <b>with some</b>, <b>with exactly one</b> or <b>with more than one</b> of the row's. The <b>order</b> and what each one means are explained in the <b>legend</b> below the matrix and in the hint of every figure.",
+    "markup.li.updateTableImportsCSVJSON": "<b>Update table…</b> replaces <b>all the data</b> of the table by importing a CSV or JSON (file or pasted): it works like <b>Import data</b> but does not touch the table, its fields, its foreign keys or the queries that use it. Before deleting the data it <b>warns you</b> and checks that the number of fields matches, that the header matches (if the first row is a header) and that the types match; if something does not match, it changes nothing and says why.",
+    "markup.li.whenReplacingItAsksYou": "When replacing, it asks you first with the <b>count</b> and the scope, and replaces <b>every occurrence</b>. The resulting value is interpreted as when editing a cell (number, <code>true</code>/<code>false</code>, <code>null</code> or text) and an empty replacement deletes what was found.",
+    "markup.li.whileThereArePendingChanges": "While there are pending changes you will see <b>«Unsaved changes»</b> at the top right, and it also warns you if you try to close the tab.",
+    "markup.li.widthLeftColumnIsVariable": "The width of the left column is <b>variable</b>: drag the <b>handle</b> between the sidebar and the view (from 140 to 480 px), double-click to go back to 480 px or use the arrows with the handle focused.",
+    "markup.li.wildcardsHaveNoEscapeLiteral": "The wildcards have no escape: a literal <code>*</code> or <code>?</code> cannot be searched for.",
+    "markup.nav.helpSections": "Help sections",
+    "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>CONCAT(a, b, …)</code> joins texts, with <code>null</code> if any argument is · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal.",
+    "markup.p.anyQueryProjectCanBe": "Any query of the project can be read from another <b>as if it were a table</b>: write its name in the <code>FROM</code> and the engine runs it when the query that uses it runs. Its result is treated as one more table (alias, <code>JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>…), with the columns of that query's <code>SELECT</code> —output aliases included— and one row per row of the result.",
+    "markup.p.arithmeticGivesRemainderDivisionConcatenates": "Arithmetic with <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code>; <code>%</code> gives the remainder of the division and <code>||</code> (or <code>CONCAT(…)</code>) concatenates texts (numbers included). Parentheses group.",
+    "markup.p.bewareMissingValuesNullNull": "Beware of the missing values: <code>null = null</code> is not true. It is asked with <code>IS NULL</code> and <code>IS NOT NULL</code>. A <code>number</code> field with «31» texts responds the same to <code>= 31</code> (because of the field type).",
+    "markup.p.bringsAllColumnsIfNot": "<code>*</code> brings all the columns; if not, a list of columns, expressions or functions separated by commas. Every item takes an alias, and the alias is written <b>always with <code>AS</code></b>.",
+    "markup.p.chainingThemIsWhatGives": "Chaining them is what gives <b>view of a view</b>: a query that reads another that reads another, as many levels as you want. The <b>«view»</b> mark of the sidebar and the <b>Views</b> column of the query summary tell you who reads whom.",
+    "markup.p.commentsEndLineSeveralLines": "Comments: <code>--</code> to the end of the line and <code>/* … */</code> for several lines.",
+    "markup.p.comparisonIsStrictNullOnly": "The comparison is strict: <code>null</code> only matches <code>null</code>, a number is not a text and <code>1</code> is not <code>true</code>. Queries without an <code>assert</code> run and are marked as <b>unchecked</b>; those that do not compile, as <b>failed</b> with their error.",
+    "markup.p.conditionGoesWhenItIs": "The condition goes in <code>ON</code>. When it is an equality between fields, the planner resolves it with a <b>hash join</b>, so it is also fast with big tables. <b>Without a condition you get the Cartesian product</b>: every combination.",
+    "markup.p.conversionDoesNotTouchStored": "The conversion does not touch the stored data: it only affects the query. In a <code>string</code> field, the text <code>'31'</code> and the number <code>31</code> are still different things.",
+    "markup.p.countCountsRowsGroupCOUNT": "<code>COUNT(*)</code> counts rows of the group; <code>COUNT(field)</code> counts only the values that are not <code>null</code>. <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code> summarise the column and also ignore the <code>null</code>s.",
+    "markup.p.countDISTINCTFieldSameOther": "<code>COUNT(DISTINCT field)</code> (and the same with the other aggregates) counts distinct values inside the group.",
+    "markup.p.deletingTableFieldRewritesNothing": "<b>Deleting</b> a table or a field rewrites nothing: it tells you how many queries use it and which ones, and afterwards it reminds you of the ones left citing a name that does not exist.",
+    "markup.p.distinctRemovesRepeatedRowsComparing": "<code>DISTINCT</code> removes the repeated rows comparing the set of selected columns.",
+    "markup.p.dividingByZeroIsNot": "Dividing by <b>zero</b> is not an error: the result of that operation is <code>null</code>.",
+    "markup.p.editorSRemoveTestButton": "The editor's <b>Remove test</b> button does the opposite with that query: it removes its <code>assert</code> (it asks you first) and it stops being checked, although the <b>project stays in test mode</b>. The query is still run by hand with <b>▶ Run</b>.",
+    "markup.p.editorSTurnIntoTest": "The editor's <b>Turn into a test</b> button saves the current result of that query as its <code>assert</code> (the columns and every row, value by value; <code>rowCount: 0</code> if it returns none) and puts the project in test mode. In the file it is written in a compact form: <code>columns</code>, <code>rows</code> and, only when they add something, <code>rowCount</code> and <code>ignoreOrder</code>. The test mode of the project and the mark of every query are shown in the top bar and in the sidebar.",
+    "markup.p.equalityLtGtDifferenceLt": "<code>=</code> and <code>==</code> for equality; <code>&lt;&gt;</code> and <code>!=</code> for difference; <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> for order.",
+    "markup.p.everyFieldProjectHasType": "Every field of the project has a type (<code>string</code>, <code>number</code> or <code>boolean</code>) that is used <b>when querying</b>: a <code>number</code> field converts its texts to a number, so <code>= 31</code>, <code>&gt; 20</code> and <code>SUM(field)</code> work even if the data was imported as text; a <code>boolean</code> one responds to <code>= true</code>.",
+    "markup.p.everyQuerySAssertFollows": "Every query's <code>assert</code> follows the renamed field, except when the name comes from an alias. The editor of the open query updates straight away.",
+    "markup.p.fromItIsValidAny": "In the <code>FROM</code> it is valid <b>in any position</b>: alone, with an alias, joined to a table or to another query (<code>INNER JOIN</code> and <code>LEFT JOIN</code>, including the anti-join <code>IS NULL</code>), separated by commas, and also with the projection <code>alias.*</code>. The <b>same view twice</b> in the same query are two independent sources (and it is computed only once per run). A view that returns no rows is an <b>empty table</b>, not an error: <code>COUNT(*)</code> gives 0.",
+    "markup.p.groupBYJoinsRowsThat": "<code>GROUP BY</code> joins the rows that share the given values (one or several columns or expressions). The columns of the <code>SELECT</code> that are not inside an aggregate have to appear in the <code>GROUP BY</code>.",
+    "markup.p.havingFiltersGroupsAlreadyComputed": "<code>HAVING</code> filters <b>groups already computed</b> (that is why it can use aggregates, unlike <code>WHERE</code>, which filters rows beforehand).",
+    "markup.p.ifNameColumnTableHas": "If the name of a column or table has spaces or matches a reserved word, it is written in brackets: <code>[net amount]</code>. There are also the values <code>NULL</code>, <code>TRUE</code> and <code>FALSE</code>.",
+    "markup.p.ifResultThatQueryRepeats": "If the result of that query repeats the name of a column (for instance <code>SELECT a.x, b.x FROM …</code>), when reading it as a table <b>only the last value is seen</b>: give them different aliases with <code>AS</code>.",
+    "markup.p.ifSomethingIsBadlyWritten": "If something is badly written, the message gives <b>line and column</b>, shows the fragment and suggests the closest name. When running, the <b>plan</b> shows every step with its time.",
+    "markup.p.innerJOINLeavesOnlyRows": "<code>INNER JOIN</code> leaves only the rows that match in both tables; <code>LEFT [OUTER] JOIN</code> leaves all of the left one and fills with <code>null</code> where there is no pair (useful to find «those who do not have»).",
+    "markup.p.itCanBeSortedBy": "It can be sorted by a column, by an expression or by the <b>output alias</b>. Texts that are numbers are sorted <b>by value</b>, so «9» goes before «10».",
+    "markup.p.likeComparesWildcardsIsAnything": "<code>LIKE</code> compares with wildcards: <code>%</code> is «anything» (including nothing) and <code>_</code> is «one character». With <code>ESCAPE '\\'</code> you can search for a literal <code>%</code>.",
+    "markup.p.limitNKeepsFirstN": "<code>LIMIT n</code> keeps the first n rows of the result already sorted, and <code>OFFSET m</code> skips the first m: that is how you paginate. The MySQL style <code>LIMIT m, n</code> is also accepted (the skip first).",
+    "markup.p.listChecksMembershipListValues": "<code>IN (list)</code> checks membership of a list of values, and <code>BETWEEN a AND b</code> a range <b>including the ends</b>. All three are negated with <code>NOT</code> in front.",
+    "markup.p.namesSpacesGoBracketsFROM": "Names with spaces go in brackets: <code>FROM [sales summary] AS r</code>. If a name matches both a table and a query, the <b>table</b> wins. Queries can be chained (one that reads another that reads another), but not in a circle: none can read its own result, neither directly nor indirectly; if you try, the error shows you the whole chain.",
+    "markup.p.notParenthesesMakeClearWhat": "<code>AND</code>, <code>OR</code> and <code>NOT</code>, with parentheses to make clear what goes with what: <code>(course = 'A' OR course = 'B') AND age &gt;= 18</code>. Without parentheses, <code>AND</code> binds tighter than <code>OR</code>.",
+    "markup.p.numbersAreWrittenDecimalPoint": "Numbers are written with a decimal point (<code>3.5</code>). <code>'text'</code> and <code>\"text\"</code> are <b>exactly the same</b>: a string of text. To put a quote inside, double it (<code>'d''Artagnan'</code>).",
+    "markup.p.oneSingleStatementRunsFinal": "<b>One single statement</b> runs: the final <code>;</code> is accepted, but do not chain several queries separated by <code>;</code> (everything after it is treated as a spurious error).",
+    "markup.p.oneTableCanBeQueried": "One table can be queried, or several separated by commas. The alias (with <code>AS</code>) shortens the references and avoids ambiguities: <code>c.name</code>. If there is no doubt, the bare field name is also valid.",
+    "markup.p.orderByLimitAfterUnionApply": "The <code>ORDER BY</code> and <code>LIMIT</code> written <b>at the end</b> sort and cut the whole result of the union; there only the columns of the result count, by their name (<code>AS</code>) or by their position (<code>ORDER BY 2</code>).",
+    "markup.p.otherSectionsThisSQLHelp": "The other sections of this <b>SQL help</b> explain every part with examples; errors and limits, in <b>Limits and tests</b>.",
+    "markup.p.projectIsTestOneWhen": "A project is a <b>test</b> one when some of its queries checks a result: when it is opened all the queries run and are compared with their <code>\"assert\"</code>, and the report opens on its own. The <code>\"testing\"</code> property of old files is no longer needed (it is ignored): test mode is worked out from the queries. Every <code>assert</code> takes <code>columns</code> (names and order of the columns), <code>rows</code> (the expected rows, value by value), <code>rowCount</code> (only how many rows) and <code>ignoreOrder</code> (compare whatever the order).",
+    "markup.p.queriesAreReadOnlyThere": "Queries are read-only: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and neither <code>CASE</code>. Joins and subqueries are used to cross tables; <code>UNION</code> to stack results.",
+    "markup.p.queriesUsedAsTablesCanBeRead": "Queries can also be read <b>inside a subquery</b> and as a <b>derived table</b>: <code>WHERE id IN (SELECT id FROM [sales summary])</code> and <code>FROM (SELECT …) AS t</code>. And a query whose SQL carries a subquery still works as a view: it runs whole, subquery included (section <b>Subqueries</b>).",
+    "markup.p.queryIsMaterialisedBeforeBeing": "The query is <b>materialised</b> before being read: it runs entirely —its <code>WHERE</code>, its <code>JOIN</code>, its <code>GROUP BY</code>/<code>HAVING</code>, its <code>DISTINCT</code>, its <code>ORDER BY</code> and its <code>LIMIT</code>/<code>OFFSET</code>— and what the outer query sees is <b>its finished result</b>. That is why the <code>LIMIT</code> of a view arrives already trimmed, and a view that groups can be aggregated again (double aggregation).",
+    "markup.p.renamingTableFieldRewritesQueries": "Renaming a <b>table</b> or a <b>field</b> rewrites the queries of the project that use it: the <code>FROM</code>/<code>JOIN</code>, the qualified columns (<code>table.field</code>) and the bare column. <b>Output aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected; an <code>ORDER BY</code> pointing at an alias stays as it is.",
+    "markup.p.selfTestsButtonLaunchesProgram": "The <b>Self-tests</b> button launches the program's internal battery and opens its report; without a window, <code>window.datilandia.selfTest()</code> returns the count and the detail of every case.",
+    "markup.p.severalKeysSeparatedByCommas": "Several keys separated by commas, from the most important to the least. Each one takes <code>ASC</code> (by default) or <code>DESC</code>, and <code>NULLS FIRST</code> / <code>NULLS LAST</code> to decide where the missing values go.",
+    "markup.p.severalTablesSeparatedByCommas": "Several tables separated by commas are equivalent to an <b>implicit join</b>: if you also compare fields of both in the <code>WHERE</code>, the engine turns it into a real join.",
+    "markup.p.subqueryIsSELECTInsideAnother": "A <b>subquery</b> is a <code>SELECT</code> inside another one. It is used with <code>IN</code> (and <code>NOT IN</code>), with a comparison and <code>ANY</code>/<code>SOME</code> or <code>ALL</code>, and with <code>EXISTS</code> (and <code>NOT EXISTS</code>). It can read a <b>query used as a table</b> and it can also go in the <code>FROM</code> with an alias (derived table). If it names outer columns inside it is <b>correlated</b> and runs row by row. Used as a value it must return a single column and a single row.",
+    "markup.p.testsButtonTopBarLaunches": "The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>is only shown if the project has some test</b>. To launch it without opening windows, with any project: <code>window.datilandia.runProjectTests()</code> returns the complete report.",
+    "markup.p.theyCanBeNestedInside": "They can be nested inside each other and used both in the <code>SELECT</code> and in the <code>WHERE</code>, <code>GROUP BY</code> or <code>ORDER BY</code>. If the argument is <code>null</code>, the result is usually <code>null</code>.",
+    "markup.p.typesAreKeptNumberField": "The <b>types are kept</b>: a <code>number</code> field is still a number when read from outside (it can be added, divided or compared with <code>= 31</code>), a <code>boolean</code> responds to <code>= true</code> and a <code>null</code> is still <code>null</code> (that is why <code>COALESCE</code>, <code>IS NULL</code> and <code>ORDER BY … NULLS FIRST</code> work). The columns are named as the <b>output aliases</b> of the view.",
+    "markup.p.unionStacksRowsTwoQueries": "<code>UNION</code> <b>glues the rows</b> of two queries one under the other: both must return <b>the same number of columns</b>, in the same order. <code>UNION</code> drops the repeated rows; <code>UNION ALL</code> keeps them all. More than two queries can be chained.",
+    "markup.p.whereMissingValuesGoIs": "Where the missing values go is decided by <code>NULLS FIRST</code>/<code>NULLS LAST</code> and <code>DESC</code> does not flip it: without saying it, in <code>ASC</code> they go first and in <code>DESC</code> at the end.",
+    "markup.p.youOnlyHaveWriteParts": "You only have to write the parts you need, but the order is that one. Keywords are not case-sensitive. <code>FROM</code> is compulsory: there is no <code>SELECT</code> without a table.",
+    "markup.span.sqlHelp": "SQL help",
+    "help.pageTitle": "Help",
+    "help.index": "Contents",
+    "help.back": "← Back to datilandia",
+    "help.language": "Language",
+    "help.brandTip": "Back to datilandia"
+  },
+  "es": {
+    "markup.b.alwaysAS": "siempre con <code>AS</code>",
+    "markup.button.aggregatesGROUPBYHAVINGORDER": "Agregados, GROUP BY, HAVING, ORDER BY y paginación",
+    "markup.button.createRunExportQueries": "Crear, ejecutar y exportar consultas",
+    "markup.button.errorsPlanRenamesQueriesAsserted": "Errores, plan, renombrados y consultas con resultado asertado",
+    "markup.button.filterRows": "Filtrar filas",
+    "markup.button.findReplace": "Buscar y reemplazar",
+    "markup.button.findReplaceTable": "Buscar y reemplazar en la tabla",
+    "markup.button.generalShapeDialect": "Forma general y dialecto",
+    "markup.button.history": "Histórico",
+    "markup.button.historyVisitedPlaces": "Enlaces a los lugares que has visitado",
+    "markup.button.howQueryIsWrittenWhat": "Cómo se escribe una consulta y qué admite el dialecto SQL",
+    "markup.button.importCSVJSONFilesPasted": "Importar ficheros CSV y JSON, o texto pegado",
+    "markup.button.importData2": "Importar datos",
+    "markup.button.keyboardShortcuts": "Atajos de teclado",
+    "markup.button.limitsTests": "Límites y pruebas",
+    "markup.button.numbersTextNullOperatorsFunctions": "Números, texto, null, operadores y funciones",
+    "markup.button.projectSettings": "Proyecto y ajustes",
+    "markup.button.queries2": "Consultas",
+    "markup.button.queriesAssertedResultTestBatteries": "Consultas con resultado asertado y baterías de pruebas",
+    "markup.button.relationMatrixBetweenTablesQueries": "Matriz de relaciones entre tablas y consultas que las citan",
+    "markup.button.relations2": "Relaciones",
+    "markup.button.saveOpenProjectSettings": "Guardar, abrir y ajustes del proyecto",
+    "markup.button.shortcuts": "Atajos",
+    "markup.button.summariseSort": "Resumir y ordenar",
+    "markup.button.tablesAliasesViews": "Tablas, alias y vistas",
+    "markup.button.tablesRowsFieldsForeignKeys": "Tablas, filas, campos y claves ajenas",
+    "markup.button.tablesRowsMetadata": "Tablas, filas y metadatos",
+    "markup.button.testMode": "Modo test",
+    "markup.button.valuesFunctions": "Valores y funciones",
+    "markup.button.whereComparisonsTextCombinedConditions": "WHERE: comparaciones, texto, condiciones combinadas y subconsultas",
+    "markup.button.whereRowsComeFromTables": "De dónde salen las filas: tablas, consultas leídas como tablas y joins",
+    "markup.dd.absROUNDXDecHalf": "<code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>CONCAT(x, y, …)</code> (textos unidos; <code>null</code> si algún argumento lo es), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.",
+    "markup.dd.aggregatesCOUNTSUMAVGMIN": "Agregados <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>, con <code>DISTINCT</code> dentro: <code>COUNT(DISTINCT puesto)</code>. <code>HAVING</code> filtra los grupos ya calculados.",
+    "markup.dd.columnsExpressionsAliasesASDISTINCT": "Columnas, expresiones y <code>*</code>, con alias <code>AS</code>, y <code>DISTINCT</code> para no repetir filas.",
+    "markup.dd.concatenationParenthesesDivisionByZero": "<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code>, concatenación <code>||</code> o <code>CONCAT(…)</code> y paréntesis. Una <b>división por cero</b> no falla: da <code>null</code>. Comentarios con <code>--</code> o <code>/* … */</code>.",
+    "markup.dd.fieldTypeConvertsWhenQuerying": "El <b>tipo del campo</b> convierte al consultar: un campo <code>number</code> con valores «31» responde a <code>= 31</code>, y uno <code>boolean</code> a <code>= true</code>. Los datos guardados no se tocan.",
+    "markup.dd.fromNameAnyQueryProject": "En el <code>FROM</code> vale el nombre de cualquier <b>consulta</b> del proyecto: se ejecuta y su resultado se lee como una tabla (<code>FROM ventas_2026 AS v</code>), sola o unida a tablas y a otras consultas. <b>Se pueden encadenar</b> (vista de vista) y la consulta que alguien lee así lleva la marca <b>«vista»</b> en la barra lateral. Si el nombre coincide con el de una tabla, gana la tabla.",
+    "markup.dd.innerJOINLEFTOUTERJOIN": "<code>INNER JOIN</code> y <code>LEFT [OUTER] JOIN</code> con <code>ON</code>. Las igualdades entre tablas se resuelven con <b>hash join</b>, así que también va fino con tablas grandes.",
+    "markup.dd.limit20OFFSET40MySQL": "<code>LIMIT 20 OFFSET 40</code> o al estilo MySQL <code>LIMIT 40, 20</code> (primero el salto, después las filas).",
+    "markup.dd.oneTableSeveralSeparatedBy": "Una tabla, o varias separadas por comas (join implícito) con alias: <code>FROM ciclos AS c, familias AS f</code>.",
+    "markup.dd.onlySELECTThereIsNo": "Únicamente <code>SELECT</code>: no hay <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>.",
+    "markup.dd.severalColumnsASCDESCNULLS": "Varias columnas, <code>ASC</code>/<code>DESC</code> y <code>NULLS FIRST</code>/<code>NULLS LAST</code>. Un número es la posición de una columna del resultado: <code>ORDER BY 2 DESC</code>. Los textos numéricos se ordenan y comparan <b>por valor</b>, y el sitio de los valores que faltan lo manda <code>NULLS FIRST/LAST</code> aunque la clave sea <code>DESC</code> (sin indicarlo: primero en <code>ASC</code>, al final en <code>DESC</code>).",
+    "markup.dd.subqueryIsSELECTInsideAnother": "Un <code>SELECT</code> entre paréntesis dentro de otro: con <code>IN</code> y <code>NOT IN</code>, con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>[NOT] EXISTS</code> (<code>WHERE id IN (SELECT id FROM otra)</code>). La subconsulta puede leer una <b>consulta como tabla</b>, y también va en el <code>FROM</code> con alias (<b>tabla derivada</b>): <code>FROM (SELECT …) AS t</code>. Si por dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Como valor (en el <code>SELECT</code> o comparada) tiene que devolver <b>una sola columna</b> y una sola fila.",
+    "markup.dd.textTextAreBothText": "<code>'texto'</code> y <code>\"texto\"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
+    "markup.dd.unionConcatenatesRowsTwoSelects": "<code>UNION</code> y <code>UNION ALL</code> ponen debajo las filas de dos <code>SELECT</code> (y de más, encadenados): las dos partes devuelven el mismo número de columnas y <code>UNION</code> quita las filas repetidas, mientras que <code>UNION ALL</code> las conserva. El <code>ORDER BY</code> y el <code>LIMIT</code> finales valen para el resultado entero.",
+    "markup.dt.functions": "Funciones",
+    "markup.dt.literalsIdentifiers": "Literales e identificadores",
+    "markup.dt.operators": "Operadores",
+    "markup.dt.queriesAsTables": "Consultas como tablas",
+    "markup.dt.readOnly": "Solo lectura",
+    "markup.dt.subqueries": "Subconsultas",
+    "markup.dt.typesConversion": "Tipos y conversión",
+    "markup.dt.union": "UNION",
+    "markup.h3.aggregates": "Agregados",
+    "markup.h3.changesDataQueries": "Cambios en los datos y en las consultas",
+    "markup.h3.combiningConditions": "Combinar condiciones",
+    "markup.h3.combiningQueriesUnion": "Unir consultas: UNION y UNION ALL",
+    "markup.h3.errorsPlanLimits": "Errores, plan y límites",
+    "markup.h3.fieldTypesConversion": "Tipos de campo y conversión",
+    "markup.h3.findReplaceTable": "Buscar y reemplazar en la tabla",
+    "markup.h3.fromTablesAliases": "FROM: tablas y alias",
+    "markup.h3.functions": "Funciones",
+    "markup.h3.generalShape": "Forma general",
+    "markup.h3.history": "Historial de lugares visitados",
+    "markup.h3.importData": "Importar datos",
+    "markup.h3.numbersTextNamesNull": "Números, texto, nombres y null",
+    "markup.h3.operatorsComments": "Operadores y comentarios",
+    "markup.h3.projectSettings": "Proyecto y ajustes",
+    "markup.h3.queries": "Consultas",
+    "markup.h3.queriesAsTables": "Consultas como tablas",
+    "markup.h3.relationsBetweenTablesQueries": "Relaciones entre tablas y consultas",
+    "markup.h3.shortcuts": "Atajos",
+    "markup.h3.sqlHelpFilterRows": "Ayuda SQL · Filtrar filas",
+    "markup.h3.sqlHelpGeneralShapeDialect": "Ayuda SQL · Forma general y dialecto",
+    "markup.h3.sqlHelpLimitsChangesTests": "Ayuda SQL · Límites, cambios y pruebas",
+    "markup.h3.sqlHelpSummariseSort": "Ayuda SQL · Resumir y ordenar",
+    "markup.h3.sqlHelpTablesAliasesViews": "Ayuda SQL · Tablas, alias y vistas",
+    "markup.h3.sqlHelpValuesFunctions": "Ayuda SQL · Valores y funciones",
+    "markup.h3.subqueries": "Subconsultas",
+    "markup.h3.tablesRowsMetadata": "Tablas, filas y metadatos",
+    "markup.h3.testModeQueriesAssertedResult": "Modo test: consultas con resultado asertado",
+    "markup.h3.testQueriesTestMode": "Consultas de prueba (modo test)",
+    "markup.h3.whatDialectSupports": "Lo que admite el dialecto",
+    "markup.h3.whereComparisons": "WHERE: comparaciones",
+    "markup.h3.whereText": "WHERE: texto",
+    "markup.h4.aggregatesOverViewDoubleAggregation": "Agregados sobre una vista (doble agregación)",
+    "markup.h4.antiJoinLEFTJOINThose": "Anti-unión con LEFT JOIN: los que no aparecen en una vista",
+    "markup.h4.assertThatOnlyCountsRows": "Un assert que solo cuenta filas o que no ordena",
+    "markup.h4.cartesianProduct5Students3": "Producto cartesiano: 5 alumnos × 3 ciclos = 15 filas",
+    "markup.h4.columnsAliasesExpressions": "Columnas, alias y expresiones",
+    "markup.h4.combinedWithUnion": "Dos cursos, uno debajo del otro",
+    "markup.h4.commentsQuotesNamesBrackets": "Comentarios, comillas y nombres entre corchetes",
+    "markup.h4.compareFilter": "Comparar y filtrar",
+    "markup.h4.countGroup": "Contar y agrupar",
+    "markup.h4.distinctValuesInsideAggregate": "Valores distintos dentro de un agregado",
+    "markup.h4.everythingFromOneTable": "Todo de una tabla",
+    "markup.h4.filterGroupsHAVING": "Filtrar grupos con HAVING",
+    "markup.h4.implicitJoinCommasAliases": "Join implícito por comas, con alias",
+    "markup.h4.itsAssertProjectFile": "Y su assert en el fichero del proyecto",
+    "markup.h4.keepingRepeatsUnionAll": "Con repetidos: UNION ALL",
+    "markup.h4.leftJOINAlsoThoseNo": "LEFT JOIN: también los que no tienen pareja",
+    "markup.h4.missingValues": "Valores que faltan",
+    "markup.h4.paginationOverViewThatAlready": "Paginación sobre una vista que ya trae su propio LIMIT",
+    "markup.h4.projectionAliasAsteriskOverView": "Proyección con alias y asterisco sobre una vista",
+    "markup.h4.queryAssertedResultTestMode": "Consulta con resultado asertado (modo test)",
+    "markup.h4.queryReadFromAnotherAs": "Consulta leída desde otra como si fuera una tabla",
+    "markup.h4.sameViewTwiceTwoAliases": "La misma vista dos veces, con dos alias",
+    "markup.h4.searchWildcardAsText": "Buscar el comodín como texto",
+    "markup.h4.sortPaginate": "Ordenar y paginar",
+    "markup.h4.subqueries": "Subconsultas",
+    "markup.h4.subqueryInFromDerivedTable": "Subconsulta en el FROM: tabla derivada",
+    "markup.h4.subtractionNullValuesSafeComparisons": "Resta de valores nulos y comparaciones seguras",
+    "markup.h4.textFunctionsSELECTWHERE": "Funciones de texto en el SELECT y en el WHERE",
+    "markup.h4.textWildcardsListsRanges": "Texto: comodines, listas y rangos",
+    "markup.h4.viewViewQueryThatReads": "Vista de vista: una consulta que lee a otra que lee a otra",
+    "markup.h4.withoutRepeatedRows": "Sin filas repetidas",
+    "markup.li.addDeleteRowsEditAny": "Añadir y borrar filas y editar cualquier celda; la fila en la que estás se marca en gris.",
+    "markup.li.assertIsExpectedResultThat": "El <code>\"assert\"</code> es el resultado esperado de esa consulta: <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder: true</code> (mismo conjunto de filas, sin importar el orden). Basta con uno de los tres primeros para que la consulta se compruebe.",
+    "markup.li.atEndCellGreyNumber": "Al final de la casilla, en gris, el <b>número de consultas</b> que citan <b>las dos tablas</b> (con sus nombres en la pista del ratón). Se cuenta <b>una vez por pareja</b>, no en las dos casillas.",
+    "markup.li.autoNumberedIDFieldIs": "El <b>campo ID</b> autonumérico nunca se modifica: se puede buscar en él, pero si eliges solo esa columna te avisa de que no se reemplaza.",
+    "markup.li.batteryDoesNotTouchYour": "La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.datilandia.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.",
+    "markup.li.beforeResultYouWillSee": "Antes del resultado verás el <b>plan</b> con el tiempo de cada paso; si algo falla, el error te dice <b>línea, columna y qué revisar</b>.",
+    "markup.li.comparisonIsStrictNullOnly": "La comparación es <b>estricta</b>: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Renombrar una tabla o un campo ajusta también los nombres asertados, pero <b>nunca los valores</b>.",
+    "markup.li.completeFormatAssertExampleAre": "El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.",
+    "markup.li.createGiveItNameDescription": "Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>.",
+    "markup.li.createRenameDeleteTablesEach": "Crear, renombrar y eliminar tablas, cada una con su <b>descripción</b>.",
+    "markup.li.createTableFromResultCreatesNew": "<b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.",
+    "markup.li.csvIsWrittenBOMSo": "El CSV se escribe con <b>BOM</b> para que Excel lo abra bien y con las opciones de esa misma ventana: <b>separador</b> (coma, punto y coma, tabulador, espacio u otro carácter), <b>cabecera</b> sí o no y <b>coma decimal</b> (<code>3,14</code> en vez de <code>3.14</code>; los textos no se tocan). Son las mismas opciones que las de <b>Ajustes</b> y se guardan dentro del proyecto.",
+    "markup.li.csvQuotesDoubledQuotesBOM": "<b>CSV</b>: comillas, comillas duplicadas, BOM y saltos CRLF. El separador se detecta solo, o lo eliges: <code>,</code> <code>;</code> tabulador, espacio u otro.",
+    "markup.li.ctrlEnterRunQueryImport": "<b>Ctrl+Enter</b>: ejecutar la consulta (o importar el texto pegado).",
+    "markup.li.ctrlSSaveProject": "<b>Ctrl+S</b>: guardar el proyecto.",
+    "markup.li.ctrlSpaceOpensInsertList": "<b>Ctrl+Space</b>: abrir la lista de tablas, consultas y campos para insertarlos en la consulta.",
+    "markup.li.deletingWarnsYouBeforeRemoving": "<b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.",
+    "markup.li.downloadStructureJsonSummary": "En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.",
+    "markup.li.editorSTurnIntoTest": "El botón <b>Convertir en test</b> del editor de consultas ejecuta esa consulta, guarda su resultado como su <code>assert</code> (columnas y filas, valor a valor) y pone el <b>proyecto en modo test</b>. Si la consulta ya comprobaba un resultado, te pregunta antes de sustituirlo; con <b>Quitar test</b> (activo solo si la consulta comprueba algo) vuelve a dejarla sin comprobar, sin sacar al proyecto del modo test.",
+    "markup.li.enterTableNameRenamesIt": "<b>Enter</b> en el nombre de la tabla la renombra; en el nombre de un campo nuevo lo añade.",
+    "markup.li.escClosePopUpWindows": "<b>Esc</b>: cerrar las ventanas emergentes.",
+    "markup.li.everyFigureGreaterThan0": "Cada cifra <b>mayor que 0</b> es un <b>enlace</b>: genera (o reutiliza) la <b>consulta</b> que devuelve exactamente esas filas, la deja seleccionada y la ejecuta, para que la compruebes.",
+    "markup.li.everyQueryCanCarryIts": "Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.",
+    "markup.li.exportCSVOpensResultCSV": "<b>Exportar CSV…</b> abre la ventana <b>Resultado en CSV</b> con la <b>previsualización</b> del resultado: <b>Copiar</b> lo lleva al portapapeles y <b>Descargar CSV</b> guarda el fichero con el nombre de la consulta (preguntando la carpeta, si el navegador tiene ventana de guardado).",
+    "markup.li.exportTableDataAsCSV": "<b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.",
+    "markup.li.fieldsMetadataAddRenameDelete": "<b>Campos y metadatos…</b>: añadir, renombrar y borrar campos, con descripción y <b>tipo</b> (<code>string</code>, <code>number</code>, <code>boolean</code>); marca con una casilla cuál es el <b>campo ID</b> de la tabla (solo uno) y cuáles son <b>claves ajenas</b>, eligiendo la tabla y el campo de destino. Todo se guarda en el proyecto.",
+    "markup.li.filesCSVJSONSeveralAt": "<b>Ficheros</b>: CSV y JSON, varios a la vez y mezclados. Cada fichero crea una tabla con su nombre (minúsculas, con <code>_</code>) y deja un informe con lo leído y los problemas encontrados.",
+    "markup.li.findReplaceTableBarSame": "<b>Buscar…</b> y <b>Reemplazar…</b> (barra de la tabla): la misma ventana en dos modos; el modo reemplazo añade el campo con el texto nuevo y el botón <b>Reemplazar todo</b>.",
+    "markup.li.findReplaceTheySearchReplace": "<b>Buscar…</b> y <b>Reemplazar…</b>: buscan y reemplazan en toda la tabla o en una columna, con los comodines <code>*</code> y <code>?</code> (apartado «Buscar y reemplazar»).",
+    "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).",
+    "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.",
+    "markup.li.historyBarUnderTop": "Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación).",
+    "markup.li.historyIsNotSaved": "El histórico es de la sesión: <b>no se guarda</b> en el proyecto.",
+    "markup.li.idFieldIsAutoNumbered": "El <b>campo ID es autonumérico</b>: cada fila nueva recibe el <b>siguiente número</b> y ninguno se repite ni se reutiliza al borrar filas. Por eso no se edita a mano: se puede buscar en él, pero no se reemplaza. Con <b>Crear campo ID autonumérico</b> añades uno nuevo (el nombre se escribe a su lado), al principio de la tabla, y numera <b>1..N</b> las filas que ya había. Marcar cualquier otro campo como ID también lo vuelve autonumérico.",
+    "markup.li.insertButtonSpeedsUpWriting": "<b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos.",
+    "markup.li.insideCellGoForeignKeys": "Dentro de la casilla van las <b>claves ajenas</b> de la tabla de la fila que apuntan a la de la columna, escritas como <code>campo → campo destino</code>. La <b>diagonal</b> recoge las <b>autorreferencias</b>: las claves ajenas de una tabla que apuntan a ella misma.",
+    "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: un array de objetos con las mismas claves y valores simples.",
+    "markup.li.jsonIsValidatedWhenIt": "El JSON se valida al abrirlo: si algo no cuadra te dice exactamente qué, incluido el resultado asertado (<code>assert</code>) de cada consulta. La antigua propiedad <code>\"testing\"</code> se acepta pero se <b>ignora</b>: el modo test se deduce de las consultas.",
+    "markup.li.lastColumnThatWindowIs": "La última columna de esa ventana, <b>Es clave ajena</b>, es la vista <b>inversa</b> y de <b>solo lectura</b>: qué campos de otras tablas apuntan a ese campo, uno por línea (o un guion si ninguno). Se edita desde la fila del campo que es la clave ajena. El destino de una clave ajena puede ser <b>la propia tabla</b> (aparece al final de la lista), para relaciones <b>autorreferenciadas</b>.",
+    "markup.li.linkRelationsBetweenTablesQueries": "El enlace <b>Relaciones entre tablas y consultas</b> abre la <b>matriz</b> de relaciones del proyecto: quién apunta a quién y qué consultas citan cada pareja de tablas. El detalle está en el apartado <b>Relaciones</b>.",
+    "markup.li.listUpdatesWhileYouType": "El listado se actualiza <b>mientras escribes</b>, con una fila por celda —<b>Fila · Campo · Valor · Coincidencias</b>—, las coincidencias <b>resaltadas</b> dentro del valor y un resumen de coincidencias, celdas, filas y campos. Se listan hasta 500 coincidencias, pero el recuento es completo.",
+    "markup.li.mergeTablesCreatesNewTable": "El botón <b>Fusionar tablas…</b> de la cabecera crea una <b>tabla nueva</b> a partir de varias: escribe su nombre, marca al menos dos tablas y pulsa <b>Fusionar</b>. Los campos son la <b>unión</b> de todos, en el orden de la lista, y cada campo conserva la definición (nombre, tipo, descripción y claves ajenas) de la <b>primera tabla que lo ofrece</b>; las tablas pueden tener campos o tipos distintos. Las filas se <b>concatenan</b> en el orden de la lista y los campos que una tabla no tiene quedan <code>null</code>. Las tablas originales no se modifican y la nueva se añade al proyecto.",
+    "markup.li.newDiscardsCurrentProjectIt": "<b>Nuevo</b> descarta el proyecto actual (te pregunta antes) y empieza uno <b>vacío</b> llamado «Sin título», abriendo <b>Ajustes</b> para que le pongas nombre.",
+    "markup.li.options1stRowHeaderInfer": "<b>Opciones</b>: 1ª fila = cabecera, inferir tipos, omitir filas inválidas.",
+    "markup.li.paginatedResultsTotalRowsPages": "Resultados <b>paginados</b> (con total de filas y de páginas); clic en una fila para marcarla.",
+    "markup.li.pasteTextFormatIsDetected": "<b>Pegar texto</b>: el formato se detecta solo (JSON si empieza por <code>[</code> o <code>{</code>; si no, CSV).",
+    "markup.li.patternIsPlainTextAny": "El <b>patrón</b> es texto tal cual, con <code>*</code> para cualquier secuencia de caracteres y <code>?</code> para uno solo: <code>an*</code>, <code>*ana</code>, <code>?an?????</code>. La casilla <b>distinguir mayúsculas</b> decide si «ana» encuentra «Ana» (por defecto, sí lo encuentra).",
+    "markup.li.pressMatchWindowClosesLeave": "Pulsa una coincidencia y la ventana se cierra para dejarte en esa <b>celda</b> (cambia de página, la selecciona y el foco queda listo para corregirla a mano).",
+    "markup.li.pressPlaceGoBackTo": "Pulsa un enlace para <b>volver a ese lugar</b>; el que está en pantalla queda resaltado. Volver a un lugar no lo repite (se mueve al final) y los enlaces a tablas o consultas que ya no existen desaparecen solos.",
+    "markup.li.pressRowReportOpenThat": "Pulsa una fila del informe para abrir esa consulta en el editor; <b>Re-ejecutar</b> lanza otra vez la batería y <b>Copiar informe</b> lo deja como texto (si el navegador no deja copiar, queda seleccionado para Ctrl+C).",
+    "markup.li.pressTableNameOpensTable": "Pulsa el <b>nombre de una tabla</b> en una cabecera de fila o de columna para <b>abrir esa tabla</b>.",
+    "markup.li.pressTablesQueriesTitleSidebar": "Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.",
+    "markup.li.previewShowsUp1000Rows": "La previsualización muestra hasta 1000 filas y avisa cuando hay más, pero el <b>fichero descargado va completo</b>. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.",
+    "markup.li.projectIsTestModeWhen": "Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, datilandia ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>\"assert\"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta.",
+    "markup.li.projectNameIsChangedSettings": "El <b>nombre del proyecto</b> se cambia en <b>Ajustes</b>; en la barra superior solo se muestra.",
+    "markup.li.projectSTestModeIs": "El <b>modo test</b> del proyecto se ve <b>arriba del todo a la derecha</b> de la barra superior (<b>modo test</b> o <b>sin test</b>), y en la barra lateral cada consulta lleva su <b>marca</b>: <b>test</b> si tiene resultado asertado y <b>sin test</b> si no. El resumen de consultas lo detalla en su columna <b>Assert</b>.",
+    "markup.li.queryCanBeReadFrom": "Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.",
+    "markup.li.querySummaryQueriesTitleSidebar": "El <b>resumen de consultas</b> (el título <b>Consultas</b> de la barra lateral) lleva una columna <b>Vistas</b> con lo mismo, una línea por sentido (<code>lee: «…»</code> y <code>la leen: «…»</code>), o un guion si no hay ninguna. El <b>salpicadero</b> de la bienvenida cuenta en <b>Consultas como tabla</b> cuántas consultas del proyecto se leen así.",
+    "markup.li.renamingFollowsQueriesWhenName": "<b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>.",
+    "markup.li.reportOpensItsOwnWhen": "El <b>informe</b> se abre solo al cargar: resumen (consultas, correctas, fallidas y sin assert), una fila por consulta —sus filas, si lleva assert y el resultado— y el <b>detalle de las diferencias</b>, con lo esperado y lo obtenido en cada fila o columna que no cuadra. Si una consulta no compila, se marca como fallida con el error.",
+    "markup.li.rowHeadersStayFixedWhen": "Las cabeceras de fila quedan <b>fijas</b> al desplazar la matriz a lo ancho de la pantalla.",
+    "markup.li.rowPagesTotalJumpFirst": "Páginas de filas con el total y salto a la primera o a la última.",
+    "markup.li.saveProjectCtrlSOverwrites": "<b>Guardar proyecto</b> (Ctrl+S) machaca su fichero; <b>Guardar proyecto como</b> pregunta dónde; al <b>abrir</b> otro, si hay cambios sin guardar te avisa antes de perderlos.",
+    "markup.li.scopeIsChosenSelectorAll": "El alcance lo elige el selector <b>En:</b>: <b>todas las columnas</b> o una sola. Las celdas <code>null</code> no se buscan y, sin patrón, no se busca nada.",
+    "markup.li.seeRelationsButtonQueryEditor": "El botón <b>Ver relaciones</b> del editor de consultas abre la misma matriz en una <b>ventana</b>, como recordatorio mientras escribes: <b>sin</b> la columna de consultas ni los enlaces de las cifras. Se cierra con <b>Esc</b> o con <b>Cerrar</b>.",
+    "markup.li.seeRelationsOpensWindowRelation": "<b>Ver relaciones</b> abre una ventana con la <b>matriz de relaciones</b> entre las tablas del proyecto (las tablas en filas y columnas y, en cada cruce, la clave ajena que las une), como recordatorio mientras escribes la consulta (apartado <b>Relaciones</b>).",
+    "markup.li.selfTestsButtonTopBar": "El botón <b>Auto-tests</b> de la barra superior comprueba <b>el propio programa</b> (motor SQL, utilidades, ficheros e interfaz), no tus datos: ejecuta la batería interna y abre el <b>Informe de auto-tests</b>.",
+    "markup.li.settingsRowsPerPageTables": "<b>Ajustes</b>: filas por página de tablas y consultas y separador/cabecera por defecto al importar y al exportar. Todo eso se guarda dentro del propio proyecto.",
+    "markup.li.sidebarLinkRelationsOpensMatrix": "El enlace <b>Relaciones</b> de la barra lateral abre una <b>matriz</b> con las tablas del proyecto en <b>filas y columnas</b>. En cada casilla de cruce se ve lo que une la tabla de la fila con la de la columna.",
+    "markup.li.sidebarQueryThatSomeOther": "En la barra lateral, la consulta que <b>alguna otra lee como tabla</b> lleva la marca <b>«vista»</b> en azul, o <b>«vista ×N»</b> si la leen N consultas. Pasa el ratón por su pista y te dice los dos sentidos: <b>«Lee como tabla (n): …»</b> (a quién lee ella) y <b>«La leen como tabla (n): …»</b> (quién la lee a ella). La marca es solo información: no cambia lo que comprueba la consulta.",
+    "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
+    "markup.li.tableListFoldsUnderAllTables": "La lista de tablas se puede <b>plegar</b> desde su cabecera <b>Todas las tablas</b>: queda solo el título con el número de tablas, y el estado se guarda en el proyecto.",
+    "markup.li.tableViewForeignKeysAre": "En la vista de la tabla, las <b>claves ajenas</b> se leen al pasar el ratón por su celda: la pista dice a qué tabla y campo apuntan y enseña el <b>registro relacionado</b> de la otra tabla (o avisa de que no existe), y el enlace <b>↗</b> abre la <b>consulta</b> con ese registro. Y si la tabla es el <b>destino</b> de alguna clave ajena, lleva una <b>columna por cada una</b> (<code>← tabla.campo</code>) con el <b>número</b> de filas de la otra tabla que traen cada fila: el propio número es un enlace que genera y ejecuta la <b>consulta</b> que las lista.",
+    "markup.li.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.datilandia.runProjectTests()</code>.",
+    "markup.li.thatReportCarriesCountOne": "Ese informe lleva el <b>recuento</b>, una fila por caso —número, caso, resultado y detalle— y el bloque <b>Casos que fallan</b> con el motivo de cada uno. <b>Re-ejecutar</b> la lanza otra vez, <b>Copiar informe</b> lo deja como texto y <b>Esc</b> cierra la ventana.",
+    "markup.li.theyAreReadOnlyThey": "Son <b>solo de lectura</b>: nunca cambian los datos. En pantalla hay un tope de filas; el CSV exportado va completo.",
+    "markup.li.typeIsInferredImportIt": "El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.",
+    "markup.li.underEachForeignKeyGo": "Bajo cada clave ajena van <b>siete cifras</b> con las filas del cruce, contadas sobre las dos tablas y nombradas con ellas: las de la tabla de la fila <b>cuya clave es null</b>, <b>cuya clave no casa con ninguna fila</b> de la de la columna o que <b>encuentran su fila</b> en ella, y las de la tabla de la columna <b>sin ninguna</b>, <b>con alguna</b>, <b>con una exactamente</b> o <b>con más de una</b> de la de la fila. El <b>orden</b> y qué significa cada una se explican en la <b>leyenda</b> de debajo de la matriz y en la pista de cada cifra.",
+    "markup.li.updateTableImportsCSVJSON": "<b>Actualizar tabla…</b> sustituye <b>todos los datos</b> de la tabla importando un CSV o JSON (fichero o pegado): funciona como <b>Importar datos</b> pero sin tocar la tabla, sus campos, sus claves ajenas ni las consultas que la usan. Antes de borrar los datos <b>avisa</b> y comprueba que coincidan el número de campos, la cabecera (si la primera fila es cabecera) y los tipos; si algo no coincide, no cambia nada y explica por qué.",
+    "markup.li.whenReplacingItAsksYou": "Al reemplazar, te pregunta antes con el <b>recuento</b> y el alcance, y sustituye <b>todas las ocurrencias</b>. El valor resultante se interpreta como al editar una celda (número, <code>true</code>/<code>false</code>, <code>null</code> o texto) y un reemplazo vacío borra lo encontrado.",
+    "markup.li.whileThereArePendingChanges": "Mientras haya cambios pendientes verás <b>«Cambios pendientes de guardar»</b> arriba a la derecha, y también te avisa si intentas cerrar la pestaña.",
+    "markup.li.widthLeftColumnIsVariable": "El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 480 px o usa las flechas con el tirador enfocado.",
+    "markup.li.wildcardsHaveNoEscapeLiteral": "Los comodines no tienen escape: un <code>*</code> o un <code>?</code> literales no se pueden buscar.",
+    "markup.nav.helpSections": "Apartados de la ayuda",
+    "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.",
+    "markup.p.anyQueryProjectCanBe": "Cualquier consulta del proyecto se puede leer desde otra <b>como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al ejecutar la consulta que la usa. Su resultado se trata como una tabla más (alias, <code>JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>…), con las columnas del <code>SELECT</code> de esa consulta —alias de salida incluidos— y una fila por fila del resultado.",
+    "markup.p.arithmeticGivesRemainderDivisionConcatenates": "Aritmética con <code>+</code>, <code>-</code>, <code>*</code> y <code>/</code>; <code>%</code> da el resto de la división y <code>||</code> (o <code>CONCAT(…)</code>) concatena textos (números incluidos). Los paréntesis agrupan.",
+    "markup.p.bewareMissingValuesNullNull": "Ojo con los valores que faltan: <code>null = null</code> no es cierto. Se pregunta con <code>IS NULL</code> y <code>IS NOT NULL</code>. Un campo <code>number</code> con textos «31» responde igual a <code>= 31</code> (por el tipo del campo).",
+    "markup.p.bringsAllColumnsIfNot": "<code>*</code> trae todas las columnas; si no, una lista de columnas, expresiones o funciones separadas por comas. Cada elemento admite un alias, y el alias se escribe <b>siempre con <code>AS</code></b>.",
+    "markup.p.chainingThemIsWhatGives": "Encadenarlas es lo que da la <b>vista de vista</b>: una consulta que lee a otra que lee a otra, tantos niveles como quieras. La marca <b>«vista»</b> de la barra lateral y la columna <b>Vistas</b> del resumen de consultas te dicen quién lee a quién.",
+    "markup.p.commentsEndLineSeveralLines": "Comentarios: <code>--</code> hasta el final de la línea y <code>/* … */</code> para varias líneas.",
+    "markup.p.comparisonIsStrictNullOnly": "La comparación es estricta: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Las consultas sin <code>assert</code> se ejecutan y se marcan como <b>sin comprobar</b>; las que no compilan, como <b>fallidas</b> con su error.",
+    "markup.p.conditionGoesWhenItIs": "La condición va en <code>ON</code>. Cuando es una igualdad entre campos, el planificador la resuelve con <b>hash join</b>, así que también va rápido con tablas grandes. <b>Sin condición obtienes el producto cartesiano</b>: todas las combinaciones.",
+    "markup.p.conversionDoesNotTouchStored": "La conversión no toca los datos guardados: solo afecta a la consulta. En un campo <code>string</code>, el texto <code>'31'</code> y el número <code>31</code> siguen siendo cosas distintas.",
+    "markup.p.countCountsRowsGroupCOUNT": "<code>COUNT(*)</code> cuenta filas del grupo; <code>COUNT(campo)</code> cuenta solo los valores que no son <code>null</code>. <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code> resumen la columna y también ignoran los <code>null</code>.",
+    "markup.p.countDISTINCTFieldSameOther": "<code>COUNT(DISTINCT campo)</code> (y lo mismo con los demás agregados) cuenta valores distintos dentro del grupo.",
+    "markup.p.deletingTableFieldRewritesNothing": "<b>Borrar</b> una tabla o un campo no reescribe nada: te avisa de cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre inexistente.",
+    "markup.p.distinctRemovesRepeatedRowsComparing": "<code>DISTINCT</code> quita las filas repetidas comparando el conjunto de columnas seleccionadas.",
+    "markup.p.dividingByZeroIsNot": "Dividir por <b>cero</b> no es un error: el resultado de esa operación es <code>null</code>.",
+    "markup.p.editorSRemoveTestButton": "El botón <b>Quitar test</b> del editor hace lo contrario con esa consulta: le quita el <code>assert</code> (te pregunta antes) y deja de comprobarse, aunque el <b>proyecto siga en modo test</b>. La consulta se sigue ejecutando a mano con <b>▶ Ejecutar</b>.",
+    "markup.p.editorSTurnIntoTest": "El botón <b>Convertir en test</b> del editor guarda el resultado actual de esa consulta como su <code>assert</code> (las columnas y todas las filas, valor a valor; <code>rowCount: 0</code> si no devuelve ninguna) y pone el proyecto en modo test. En el fichero se escribe en forma compacta: <code>columns</code>, <code>rows</code> y, solo cuando aportan algo, <code>rowCount</code> e <code>ignoreOrder</code>. El modo test del proyecto y la marca de cada consulta se ven en la barra superior y en la barra lateral.",
+    "markup.p.equalityLtGtDifferenceLt": "<code>=</code> y <code>==</code> para igualdad; <code>&lt;&gt;</code> y <code>!=</code> para diferencia; <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> para orden.",
+    "markup.p.everyFieldProjectHasType": "Cada campo del proyecto tiene un tipo (<code>string</code>, <code>number</code> o <code>boolean</code>) que se usa <b>al consultar</b>: un campo <code>number</code> convierte sus textos a número, así que <code>= 31</code>, <code>&gt; 20</code> y <code>SUM(campo)</code> funcionan aunque el dato se importara como texto; uno <code>boolean</code> responde a <code>= true</code>.",
+    "markup.p.everyQuerySAssertFollows": "El <code>assert</code> de cada consulta sigue al campo renombrado, salvo cuando el nombre lo produce un alias. El editor de la consulta abierta se actualiza al momento.",
+    "markup.p.fromItIsValidAny": "En el <code>FROM</code> vale <b>en cualquier posición</b>: sola, con alias, unida a una tabla o a otra consulta (<code>INNER JOIN</code> y <code>LEFT JOIN</code>, incluida la anti-unión <code>IS NULL</code>), separada por comas, y también con la proyección <code>alias.*</code>. La <b>misma vista dos veces</b> en la misma consulta son dos fuentes independientes (y se calcula una sola vez por ejecución). Una vista que no devuelve filas es una <b>tabla vacía</b>, no un error: <code>COUNT(*)</code> da 0.",
+    "markup.p.groupBYJoinsRowsThat": "<code>GROUP BY</code> junta las filas que comparten los valores indicados (una o varias columnas o expresiones). Las columnas del <code>SELECT</code> que no estén dentro de un agregado tienen que aparecer en el <code>GROUP BY</code>.",
+    "markup.p.havingFiltersGroupsAlreadyComputed": "<code>HAVING</code> filtra <b>grupos ya calculados</b> (por eso puede usar agregados, al contrario que <code>WHERE</code>, que filtra filas antes).",
+    "markup.p.ifNameColumnTableHas": "Si el nombre de una columna o tabla lleva espacios o coincide con una palabra reservada, se escribe entre corchetes: <code>[importe neto]</code>. Además existen los valores <code>NULL</code>, <code>TRUE</code> y <code>FALSE</code>.",
+    "markup.p.ifResultThatQueryRepeats": "Si el resultado de esa consulta repite el nombre de una columna (por ejemplo <code>SELECT a.x, b.x FROM …</code>), al leerla como tabla <b>solo se ve el último valor</b>: dales alias distintos con <code>AS</code>.",
+    "markup.p.ifSomethingIsBadlyWritten": "Si algo está mal escrito, el mensaje indica <b>línea y columna</b>, enseña el fragmento y sugiere el nombre más parecido. Al ejecutar, el <b>plan</b> muestra cada paso con su tiempo.",
+    "markup.p.innerJOINLeavesOnlyRows": "<code>INNER JOIN</code> deja solo las filas que casan en las dos tablas; <code>LEFT [OUTER] JOIN</code> deja todas las de la izquierda y rellena con <code>null</code> donde no hay pareja (útil para buscar «los que no tienen»).",
+    "markup.p.itCanBeSortedBy": "Se puede ordenar por una columna, por una expresión o por el <b>alias de salida</b>. Los textos que son números se ordenan <b>por valor</b>, así que «9» va antes que «10».",
+    "markup.p.likeComparesWildcardsIsAnything": "<code>LIKE</code> compara con comodines: <code>%</code> es «cualquier cosa» (también nada) y <code>_</code> es «un carácter». Con <code>ESCAPE '\\'</code> puedes buscar un <code>%</code> literal.",
+    "markup.p.limitNKeepsFirstN": "<code>LIMIT n</code> se queda con las n primeras filas del resultado ya ordenado, y <code>OFFSET m</code> se salta las m primeras: así se pagina. También se acepta el estilo MySQL <code>LIMIT m, n</code> (primero el salto).",
+    "markup.p.listChecksMembershipListValues": "<code>IN (lista)</code> comprueba pertenencia a una lista de valores, y <code>BETWEEN a AND b</code> un rango <b>incluyendo los extremos</b>. Los tres se niegan con <code>NOT</code> delante.",
+    "markup.p.namesSpacesGoBracketsFROM": "Los nombres con espacios van entre corchetes: <code>FROM [resumen de ventas] AS r</code>. Si un nombre coincide con una tabla y con una consulta, gana la <b>tabla</b>. Las consultas se pueden encadenar (una que lee otra que lee otra), pero no en círculo: ninguna puede leer su propio resultado, ni directa ni indirectamente; si lo intentas, el error te enseña la cadena completa.",
+    "markup.p.notParenthesesMakeClearWhat": "<code>AND</code>, <code>OR</code> y <code>NOT</code>, con paréntesis para dejar claro qué va con qué: <code>(curso = 'A' OR curso = 'B') AND edad &gt;= 18</code>. Sin paréntesis, <code>AND</code> ata más fuerte que <code>OR</code>.",
+    "markup.p.numbersAreWrittenDecimalPoint": "Los números se escriben con punto decimal (<code>3.5</code>). <code>'texto'</code> y <code>\"texto\"</code> son <b>exactamente lo mismo</b>: una cadena de texto. Para meter una comilla dentro, duplícala (<code>'d''Artagnan'</code>).",
+    "markup.p.oneSingleStatementRunsFinal": "Se ejecuta <b>una sola sentencia</b>: el <code>;</code> final se acepta, pero no encadenes varias consultas separadas por <code>;</code> (todo lo que vaya después se considera un error de sobra).",
+    "markup.p.oneTableCanBeQueried": "Se puede consultar una tabla o varias separadas por comas. El alias (con <code>AS</code>) acorta las referencias y evita ambigüedades: <code>c.nombre</code>. Si no hay dudas, también vale el nombre del campo a secas.",
+    "markup.p.orderByLimitAfterUnionApply": "El <code>ORDER BY</code> y el <code>LIMIT</code> que van <b>al final</b> ordenan y cortan el resultado entero de la unión; ahí solo valen las columnas del resultado, por su nombre (<code>AS</code>) o por su posición (<code>ORDER BY 2</code>).",
+    "markup.p.otherSectionsThisSQLHelp": "Los demás apartados de esta <b>Ayuda SQL</b> explican cada parte con ejemplos; los errores y los límites, en <b>Límites y pruebas</b>.",
+    "markup.p.projectIsTestOneWhen": "Un proyecto es de <b>test</b> cuando alguna de sus consultas comprueba un resultado: al abrirlo se ejecutan todas las consultas y se comparan con su <code>\"assert\"</code>, y el informe se abre solo. La propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta (se ignora): el modo test se deduce de las consultas. Cada <code>assert</code> admite <code>columns</code> (nombres y orden de las columnas), <code>rows</code> (las filas esperadas, valor a valor), <code>rowCount</code> (solo cuántas filas) e <code>ignoreOrder</code> (comparar sin importar el orden).",
+    "markup.p.queriesAreReadOnlyThere": "Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas; para juntar resultados, <code>UNION</code>.",
+    "markup.p.queriesUsedAsTablesCanBeRead": "Las consultas se pueden leer también <b>dentro de una subconsulta</b> y como <b>tabla derivada</b>: <code>WHERE id IN (SELECT id FROM [resumen de ventas])</code> y <code>FROM (SELECT …) AS t</code>. Y una consulta cuyo SQL lleva una subconsulta sigue valiendo como vista: se ejecuta entera, subconsulta incluida (apartado <b>Subconsultas</b>).",
+    "markup.p.queryIsMaterialisedBeforeBeing": "La consulta se <b>materializa</b> antes de leerla: se ejecuta entera —su <code>WHERE</code>, sus <code>JOIN</code>, su <code>GROUP BY</code>/<code>HAVING</code>, su <code>DISTINCT</code>, su <code>ORDER BY</code> y su <code>LIMIT</code>/<code>OFFSET</code>— y lo que ve la consulta de fuera es <b>su resultado ya hecho</b>. Por eso el <code>LIMIT</code> de una vista llega ya recortado, y una vista que agrupa se puede volver a agregar (doble agregación).",
+    "markup.p.renamingTableFieldRewritesQueries": "Renombrar una <b>tabla</b> o un <b>campo</b> reescribe las consultas del proyecto que lo usan: el <code>FROM</code>/<code>JOIN</code>, las columnas cualificadas (<code>tabla.campo</code>) y la columna suelta. Se respetan los <b>alias de salida</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>; un <code>ORDER BY</code> que apunta a un alias se queda como está.",
+    "markup.p.selfTestsButtonLaunchesProgram": "El botón <b>Auto-tests</b> lanza la batería interna del programa y abre su informe; sin ventana, <code>window.datilandia.selfTest()</code> devuelve el recuento y el detalle de cada caso.",
+    "markup.p.severalKeysSeparatedByCommas": "Varias claves separadas por comas, de la más importante a la menos. Cada una admite <code>ASC</code> (por defecto) o <code>DESC</code>, y <code>NULLS FIRST</code> / <code>NULLS LAST</code> para decidir dónde van los valores que faltan.",
+    "markup.p.severalTablesSeparatedByCommas": "Varias tablas por comas equivalen a un <b>join implícito</b>: si además comparas campos de las dos en el <code>WHERE</code>, el motor lo convierte en un join de verdad.",
+    "markup.p.subqueryIsSELECTInsideAnother": "Una <b>subconsulta</b> es un <code>SELECT</code> dentro de otro. Se usa con <code>IN</code> (y <code>NOT IN</code>), con un comparador y <code>ANY</code>/<code>SOME</code> o <code>ALL</code>, y con <code>EXISTS</code> (y <code>NOT EXISTS</code>). Puede leer una <b>consulta usada como tabla</b> y también ponerse en el <code>FROM</code> con un alias (tabla derivada). Si dentro nombra columnas de fuera es <b>correlacionada</b> y se evalúa fila a fila. Usada como valor, tiene que devolver una sola columna y una sola fila.",
+    "markup.p.testsButtonTopBarLaunches": "El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo se muestra si el proyecto tiene algún test</b>. Para lanzarla sin abrir ventanas, con cualquier proyecto: <code>window.datilandia.runProjectTests()</code> devuelve el informe completo.",
+    "markup.p.theyCanBeNestedInside": "Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.",
+    "markup.p.typesAreKeptNumberField": "Los <b>tipos se conservan</b>: un campo <code>number</code> sigue siendo número al leerlo desde fuera (se puede sumar, dividir o comparar con <code>= 31</code>), un <code>boolean</code> responde a <code>= true</code> y un <code>null</code> sigue siendo <code>null</code> (por eso valen <code>COALESCE</code>, <code>IS NULL</code> y <code>ORDER BY … NULLS FIRST</code>). Las columnas se llaman como los <b>alias de salida</b> de la vista.",
+    "markup.p.unionStacksRowsTwoQueries": "<code>UNION</code> <b>pega las filas</b> de dos consultas una debajo de otra: las dos tienen que devolver <b>el mismo número de columnas</b>, en el mismo orden. <code>UNION</code> quita las filas repetidas; <code>UNION ALL</code> las deja todas. Se pueden encadenar más de dos consultas.",
+    "markup.p.whereMissingValuesGoIs": "El sitio de los valores que faltan lo manda <code>NULLS FIRST</code>/<code>NULLS LAST</code> y no lo invierte <code>DESC</code>: sin decirlo, en <code>ASC</code> van primero y en <code>DESC</code> al final.",
+    "markup.p.youOnlyHaveWriteParts": "Solo hay que escribir las partes que necesites, pero el orden es ese. Las palabras clave no distinguen mayúsculas de minúsculas. <code>FROM</code> es obligatorio: no hay <code>SELECT</code> sin tabla.",
+    "markup.span.sqlHelp": "Ayuda SQL",
+    "help.pageTitle": "Ayuda",
+    "help.index": "Índice",
+    "help.back": "← Volver a datilandia",
+    "help.language": "Idioma",
+    "help.brandTip": "Volver a datilandia"
+  }
+};
+  </script>
+  <script>
+    (function () {
+      "use strict";
+      var messages = window.datilandia.messages;
+      var STORAGE_KEY = "datilandia.help.language";
+      var LANGUAGES = { en: "English", es: "Español" };
+      var language = "en";
+
+      function t(key) {
+        var text = messages[language][key];
+        if (text === undefined) text = messages.en[key];
+        return text === undefined ? key : text;
+      }
+
+      function applyDom(root) {
+        root.querySelectorAll("[data-i18n]").forEach(function (element) {
+          element.textContent = t(element.dataset.i18n);
+        });
+        root.querySelectorAll("[data-i18n-html]").forEach(function (element) {
+          element.innerHTML = t(element.dataset.i18nHtml);
+        });
+        ["title", "placeholder", "aria-label"].forEach(function (attribute) {
+          var marker = "data-i18n-" + attribute;
+          root.querySelectorAll("[" + marker + "]").forEach(function (element) {
+            element.setAttribute(attribute, t(element.getAttribute(marker)));
+          });
+        });
+      }
+
+      function saved() {
+        try {
+          return localStorage.getItem(STORAGE_KEY);
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function remember(code) {
+        try {
+          localStorage.setItem(STORAGE_KEY, code);
+        } catch (error) {
+          /* sin almacenamiento: el idioma solo dura esta visita */
+        }
+      }
+
+      function initialLanguage() {
+        var fromUrl = new URLSearchParams(location.search).get("lang");
+        if (fromUrl && LANGUAGES[fromUrl]) return fromUrl;
+        var stored = saved();
+        if (stored && LANGUAGES[stored]) return stored;
+        return "en";
+      }
+
+      function setLanguage(code) {
+        language = LANGUAGES[code] ? code : "en";
+        document.documentElement.lang = language;
+        document.title = "datilandia · " + t("help.pageTitle");
+        applyDom(document);
+        document.getElementById("help-language").value = language;
+      }
+
+      function buildLanguagePicker() {
+        var select = document.getElementById("help-language");
+        Object.keys(LANGUAGES).forEach(function (code) {
+          var option = document.createElement("option");
+          option.value = code;
+          option.textContent = LANGUAGES[code];
+          select.appendChild(option);
+        });
+        select.addEventListener("change", function () {
+          setLanguage(select.value);
+          remember(language);
+        });
+      }
+
+      /* El apartado que se está leyendo se marca en el índice. */
+      function followScroll() {
+        var links = Array.prototype.slice.call(document.querySelectorAll(".help-item"));
+        var bySection = {};
+        links.forEach(function (link) {
+          bySection[link.getAttribute("href").slice(1)] = link;
+        });
+        var mark = function (id) {
+          links.forEach(function (link) {
+            var active = link === bySection[id];
+            link.classList.toggle("selected", active);
+            if (active) {
+              link.setAttribute("aria-current", "true");
+            } else {
+              link.removeAttribute("aria-current");
+            }
+          });
+        };
+        var observer = new IntersectionObserver(function (entries) {
+          var visible = entries
+            .filter(function (entry) { return entry.isIntersecting; })
+            .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+          if (visible.length) mark(visible[0].target.id);
+        }, { root: document.querySelector("main"), rootMargin: "0px 0px -70% 0px" });
+        document.querySelectorAll(".help-bloque").forEach(function (section) {
+          observer.observe(section);
+        });
+      }
+
+      buildLanguagePicker();
+      setLanguage(initialLanguage());
+      followScroll();
+    })();
+  </script>
+</body>
+</html>
