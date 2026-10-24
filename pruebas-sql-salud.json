@@ -10324,7 +10324,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A02 · Hospitales: camas en centenas",
@@ -10374,7 +10375,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A03 · Hospitales grandes (>= 800 camas)",
@@ -10404,7 +10406,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A04 · Hospitales universitarios con teléfono",
@@ -10429,7 +10432,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A05 · Pacientes sin teléfono",
@@ -10505,7 +10509,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A06 · Correos de médicos en mayúsculas",
@@ -10650,7 +10655,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A07 · Apellidos que empiezan por G",
@@ -10684,7 +10690,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A08 · Medicamentos que no empiezan por A",
@@ -10794,7 +10801,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A09 · Intervenciones de riesgo alto o medio",
@@ -10944,7 +10952,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A10 · Especialidades que no son Central ni Quirúrgica",
@@ -10994,7 +11003,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A11 · Analíticas con glucosa entre 100 y 200",
@@ -11084,7 +11094,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A12 · Ingresos urgentes con 2 a 5 días previstos",
@@ -11160,7 +11171,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A13 · Categorías de médico (DISTINCT)",
@@ -11185,7 +11197,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A14 · Tipos y estados de cita (DISTINCT de dos columnas)",
@@ -11259,7 +11272,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A15 · Totales de facturación",
@@ -11283,7 +11297,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A16 · Facturas por método de pago",
@@ -11318,7 +11333,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A17 · Citas por estado",
@@ -11348,7 +11364,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A18 · Estados de cita con más de 10 citas",
@@ -11370,7 +11387,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A19 · Pacientes con tres o más ingresos",
@@ -11416,7 +11434,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A20 · Pacientes por inicial del apellido",
@@ -11490,7 +11509,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A21 · Glucosa de un paciente, de mayor a menor",
@@ -11510,7 +11530,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A22 · Glucosa de un paciente, de menor a mayor",
@@ -11532,7 +11553,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A23 · Pacientes más mayores, página 2",
@@ -11577,7 +11599,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A24 · Cuatro pacientes desde el octavo",
@@ -11607,7 +11630,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A25 · Ficha de tres pacientes",
@@ -11637,7 +11661,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A26 · Valores ausentes: COALESCE y ROUND",
@@ -11722,7 +11747,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A27 · Teléfono de seguro normalizado",
@@ -11760,7 +11786,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A28 · Medicamentos orales frente al resto",
@@ -11814,7 +11841,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A29 · Ninguna cita supera las dos horas",
@@ -11828,7 +11856,8 @@
         "rows": [],
         "rowCount": 0
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A30 · Precio medio por presentación",
@@ -11858,7 +11887,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A31 · Pacientes y correos por ciudad",
@@ -11884,7 +11914,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A32 · Pacientes por grupo sanguíneo",
@@ -11930,7 +11961,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A33 · Enfermeros por turno",
@@ -11960,7 +11992,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A34 · Habitaciones con baño y más de una cama",
@@ -12025,7 +12058,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A35 · Diagnósticos crónicos moderados o graves",
@@ -12070,7 +12104,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A36 · Intervenciones exitosas por quirófano",
@@ -12122,7 +12157,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A37 · Medicamentos con stock bajo",
@@ -12167,7 +12203,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A38 · Médicos veteranos que no investigan",
@@ -12243,7 +12280,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A39 · Seguros con cobertura alta",
@@ -12268,7 +12306,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A40 · Alergias graves",
@@ -12386,7 +12425,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A41 · Nombres de diagnóstico más largos",
@@ -12441,7 +12481,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A42 · Código CIE por prefijo",
@@ -12496,7 +12537,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A43 · Pacientes con grupos sanguíneos concretos",
@@ -12591,7 +12633,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A44 · Citas de la primera mitad de 2025",
@@ -12679,7 +12722,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A45 · Pacientes sin grupo sanguíneo",
@@ -12719,7 +12763,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A46 · Fichas de pacientes con CONCAT",
@@ -12761,7 +12806,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "B01 · Hospitales con sus servicios",
@@ -12836,7 +12882,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B02 · Servicios con su hospital y especialidad",
@@ -12911,7 +12958,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B03 · Hospitales sin servicios",
@@ -12927,7 +12975,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B04 · Especialidades sin médicos",
@@ -12943,7 +12992,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B05 · Join implícito: médicos y servicios",
@@ -12978,7 +13028,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B06 · Médicos con su especialidad",
@@ -13084,7 +13135,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B07 · Especialidades con al menos tres médicos",
@@ -13118,7 +13170,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B08 · Pacientes por seguro",
@@ -13163,7 +13216,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B09 · Habitaciones por hospital",
@@ -13213,7 +13267,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B10 · Ingresos con paciente, habitación y médico",
@@ -13405,7 +13460,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B11 · Citas con paciente y médico",
@@ -13597,7 +13653,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B12 · Visitas con su médico",
@@ -13733,7 +13790,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B13 · Intervenciones con paciente y cirujano",
@@ -13827,7 +13885,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B14 · Producto cartesiano especialidades × hospitales",
@@ -14149,7 +14208,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B15 · Los cinco medicamentos más caros",
@@ -14189,7 +14249,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B16 · Especialidades con médicos distintos",
@@ -14259,7 +14320,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B17 · Experiencia por categoría",
@@ -14299,7 +14361,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B18 · Tratamientos activos con paciente y diagnóstico",
@@ -14435,7 +14498,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B19 · Analíticas anormales con paciente y médico",
@@ -14592,7 +14656,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B20 · Facturas no pagadas con paciente",
@@ -14716,7 +14781,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B21 · Ingresos activos con su habitación",
@@ -14804,7 +14870,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B22 · Enfermeros y su servicio",
@@ -14940,7 +15007,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B23 · Visitas con su diagnóstico principal",
@@ -15106,7 +15174,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B24 · Prescripciones con medicamento y tratamiento",
@@ -15298,7 +15367,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B25 · Tratamientos por diagnóstico",
@@ -15393,7 +15463,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B26 · Coste de tratamientos por médico",
@@ -15458,7 +15529,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B27 · Intervenciones por nivel de riesgo",
@@ -15488,7 +15560,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B28 · Pacientes con seguro y ciudad",
@@ -15628,7 +15701,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B29 · Alergias con medicamento implicado",
@@ -15794,7 +15868,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B30 · Camas por hospital (solo con habitaciones)",
@@ -15839,7 +15914,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B31 · Ingresos por mes",
@@ -15949,7 +16025,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B32 · Facturación por año",
@@ -15979,7 +16056,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B33 · Médicos con más visitas",
@@ -16033,7 +16111,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B34 · Citas canceladas por médico",
@@ -16075,7 +16154,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B35 · Diagnósticos por especialidad",
@@ -16133,7 +16213,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B36 · Medicamentos por tratamiento",
@@ -16223,7 +16304,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B37 · Intervenciones por quirófano",
@@ -16275,7 +16357,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B38 · Pacientes crónicos con tratamientos activos",
@@ -16313,7 +16396,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B39 · Especialidades con más visitas",
@@ -16367,7 +16451,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B40 · Visitas por tipo de cita",
@@ -16401,7 +16486,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B41 · Habitaciones ocupadas y libres por hospital",
@@ -16471,7 +16557,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B42 · Ingresos urgentes por hospital",
@@ -16509,7 +16596,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B43 · Cobertura media de facturas por seguro",
@@ -16554,7 +16642,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B44 · Analíticas por tipo y resultado",
@@ -16589,7 +16678,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B45 · Diagnósticos graves con tratamientos",
@@ -16639,7 +16729,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "C01 · Historial de un paciente",
@@ -16661,7 +16752,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C02 · Visitas con dos o más diagnósticos",
@@ -16776,7 +16868,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C03 · Diagnósticos más frecuentes",
@@ -16830,7 +16923,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C04 · Tratamientos con más de dos medicamentos",
@@ -16904,7 +16998,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C05 · Medicamentos más prescritos",
@@ -16958,7 +17053,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C06 · Pacientes con más facturas",
@@ -17023,7 +17119,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C07 · Pacientes que nunca han tenido cita",
@@ -17057,7 +17154,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C08 · Médicos sin ninguna cita",
@@ -17082,7 +17180,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C09 · Habitaciones sin ingresos",
@@ -17124,7 +17223,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C10 · Nadie tiene dos seguros (rowCount)",
@@ -17137,7 +17237,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C11 · Pacientes sin analíticas",
@@ -17162,7 +17263,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C12 · Visitas de un paciente sin importar el orden",
@@ -17182,7 +17284,8 @@
         ],
         "ignoreOrder": true
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C13 · Especialidad con más ingresos",
@@ -17216,7 +17319,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C14 · Medicamentos con más alergias",
@@ -17270,7 +17374,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C15 · Diagnósticos sin tratamientos",
@@ -17286,7 +17391,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C16 · Médicos con más intervenciones",
@@ -17351,7 +17457,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C17 · Tratamientos sin prescripciones",
@@ -17367,7 +17474,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C18 · Prescripciones de un tratamiento",
@@ -17392,7 +17500,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C19 · Seguros con sus pacientes",
@@ -17430,7 +17539,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C20 · Supervisores de enfermería por servicio",
@@ -17460,7 +17570,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C21 · Pacientes con más de cinco visitas",
@@ -17482,7 +17593,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C22 · Hospitales con más ingresos",
@@ -17520,7 +17632,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C23 · Especialidades con más médicos",
@@ -17574,7 +17687,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C24 · Facturas que superan el 75% de cobertura",
@@ -17689,7 +17803,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C25 · Citas de un día concreto",
@@ -17717,7 +17832,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C26 · Intervenciones sin ingreso asociado",
@@ -17762,7 +17878,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C27 · Pacientes alérgicos a un medicamento que toman",
@@ -17780,7 +17897,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C28 · Ingresos por especialidad del médico",
@@ -17840,7 +17958,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C29 · Facturación por tipo de seguro",
@@ -17870,7 +17989,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C30 · Diagnóstico principal más frecuente por gravedad",
@@ -17935,7 +18055,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C31 · Pacientes con más de un diagnóstico distinto",
@@ -18005,7 +18126,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C32 · Hospitales con analíticas anormales",
@@ -18039,7 +18161,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C33 · Media de coste por tipo de visita",
@@ -18064,7 +18187,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C34 · Stock total por vía de administración",
@@ -18104,7 +18228,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C35 · Ranking de pacientes por gasto en tratamientos",
@@ -18154,7 +18279,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "D01 · Ingresos sin paciente",
@@ -18176,7 +18302,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D02 · Ingresos sin médico",
@@ -18194,7 +18321,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D03 · Citas sin paciente",
@@ -18220,7 +18348,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D04 · Citas sin médico",
@@ -18238,7 +18367,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D05 · Pacientes con seguro inexistente",
@@ -18256,7 +18386,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D06 · Prescripciones sin medicamento",
@@ -18274,7 +18405,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D07 · Tratamientos sin paciente",
@@ -18292,7 +18424,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D08 · Visitas espontáneas sin cita",
@@ -18367,7 +18500,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D09 · Pacientes sin seguro",
@@ -18402,7 +18536,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D10 · Diagnósticos sin especialidad",
@@ -18420,7 +18555,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D11 · Facturas pagadas sin método de pago",
@@ -18442,7 +18578,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D12 · Facturas sin pagar con método de pago",
@@ -18488,7 +18625,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D13 · Relaciones visita-diagnóstico huérfanas",
@@ -18506,7 +18644,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D14 · Habitaciones sin camas",
@@ -18528,7 +18667,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D15 · Citas atendidas sin visita registrada",
@@ -18554,7 +18694,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D16 · Diagnósticos secundarios marcados como principales",
@@ -18572,7 +18713,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D17 · Intervenciones sin ingreso previo",
@@ -18617,7 +18759,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D18 · Costes de tratamiento nulos o negativos",
@@ -18635,7 +18778,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D19 · Duración de intervención fuera de rango",
@@ -18665,7 +18809,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D20 · Prescripciones con dosis sospechosa",
@@ -18687,7 +18832,8 @@
           ]
         ]
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "E01 · Vista sencilla: SELECT * de otra consulta",
@@ -18717,7 +18863,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E02 · Aritmética sobre columnas de una vista",
@@ -18751,7 +18898,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E03 · WHERE y DISTINCT sobre una vista",
@@ -18767,7 +18915,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E04 · Agregados sobre una vista",
@@ -18791,7 +18940,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E05 · Niveles con dos o más hospitales grandes",
@@ -18811,7 +18961,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E06 · Vista unida a una tabla base (INNER JOIN)",
@@ -18857,7 +19008,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E07 · Dos vistas unidas por especialidad",
@@ -18897,7 +19049,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E08 · Tabla LEFT JOIN vista con IS NULL",
@@ -18913,7 +19066,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E09 · Vista de vista (dos niveles de consulta)",
@@ -18933,7 +19087,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E10 · La misma vista dos veces (auto-unión)",
@@ -18983,7 +19138,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E11 · Join implícito por comas con una vista",
@@ -19008,7 +19164,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E12 · ORDER BY por alias y LIMIT sobre una vista",
@@ -19034,7 +19191,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E13 · Booleano a través de una vista",
@@ -19059,7 +19217,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E14 · Nulos a través de una vista (COALESCE)",
@@ -19097,7 +19256,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E15 · Agregados sobre una vista ya agregada",
@@ -19119,7 +19279,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E16 · Vista que lee una consulta con LIMIT",
@@ -19137,7 +19298,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E17 · Vista de un resultado vacío",
@@ -19153,7 +19315,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E18 · LIMIT y OFFSET sobre una vista",
@@ -19183,7 +19346,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E19 · Filtro con LIKE sobre una vista",
@@ -19208,7 +19372,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E20 · Vista de una vista que une dos vistas",
@@ -19243,7 +19408,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E21 · LEFT JOIN entre dos vistas",
@@ -19283,7 +19449,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E22 · Proyección con alias y asterisco sobre una vista",
@@ -19328,7 +19495,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E23 · Vista que lee una consulta con varias tablas",
@@ -19344,7 +19512,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E24 · Agrupar por un booleano de una vista",
@@ -19369,7 +19538,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "F01 · Seguros de los pacientes de Madrid (IN con subconsulta)",
@@ -19391,7 +19561,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F02 · Medicamentos sin ninguna prescripción (NOT IN con subconsulta)",
@@ -19409,7 +19580,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F03 · Especialidades sin ningún diagnóstico (NOT IN con subconsulta)",
@@ -19435,7 +19607,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F04 · Hospitales con una habitación UCI (EXISTS)",
@@ -19473,7 +19646,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F05 · Hospitales sin ninguna habitación UCI (NOT EXISTS)",
@@ -19491,7 +19665,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F06 · Pacientes con una intervención de riesgo alto (EXISTS correlacionada)",
@@ -19541,7 +19716,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F07 · Médicos de Dermatología con más experiencia que algún médico de Cardiología (> ANY)",
@@ -19561,7 +19737,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F08 · El médico con más experiencia de cada especialidad (>= ALL correlacionada)",
@@ -19636,7 +19813,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F09 · Crónicos de una ciudad con seguro privado (<> ALL)",
@@ -19682,7 +19860,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F10 · Hospitales universitarios",
@@ -19707,7 +19886,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F11 · Habitaciones de los hospitales universitarios leídas desde la vista (subconsulta sobre una vista)",
@@ -19769,7 +19949,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F12 · Coste medio por día de los ingresos de 700 o más (tabla derivada)",
@@ -19787,7 +19968,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F13 · Hospitales con diez ingresos o más (tabla derivada y JOIN)",
@@ -19812,7 +19994,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F14 · Visitas de cada paciente de una ciudad (subconsulta escalar en el SELECT)",
@@ -19857,7 +20040,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F15 · Ingresos más caros que la media (subconsulta escalar en el WHERE)",
@@ -19979,7 +20163,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F16 · Especialidades con tres o más diagnósticos",
@@ -20001,7 +20186,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F17 · La vista anterior leída como tabla",
@@ -20023,7 +20209,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F18 · Médicos de las especialidades con algún diagnóstico grave (subconsultas anidadas)",
@@ -20101,7 +20288,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F19 · Médicos de Oncología menos el más experto (NOT con ALL)",
@@ -20121,7 +20309,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F20 · Habitaciones de los hospitales universitarios (= ANY)",
@@ -20140,7 +20329,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F21 · Médicos con más experiencia que algún médico de Cardiología (> SOME)",
@@ -20254,7 +20444,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "G01 · Nombres de hospitales y de aseguradoras, sin repetir",
@@ -20306,7 +20497,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G02 · El país de cada hospital, dos veces (UNION ALL)",
@@ -20361,7 +20553,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G03 · Cada país una vez (UNION)",
@@ -20383,7 +20576,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G04 · Una unión leída como tabla",
@@ -20399,7 +20593,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G05 · Unión con alias, ORDER BY y LIMIT",
@@ -20427,7 +20622,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     }
   ],
   "settings": {

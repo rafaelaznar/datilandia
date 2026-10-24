@@ -10324,7 +10324,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A02 · Hospitals: beds in hundreds",
@@ -10374,7 +10375,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A03 · Large hospitals (>= 800 beds)",
@@ -10404,7 +10406,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A04 · University hospitals with a phone",
@@ -10429,7 +10432,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A05 · Patients without a phone",
@@ -10505,7 +10509,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A06 · Doctor emails in upper case",
@@ -10650,7 +10655,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A07 · Last names that start with G",
@@ -10684,7 +10690,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A08 · Drugs that do not start with A",
@@ -10794,7 +10801,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A09 · Surgeries of high or medium risk",
@@ -10944,7 +10952,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A10 · Specialties that are neither Central nor Surgical",
@@ -10994,7 +11003,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A11 · Lab tests with glucose between 100 and 200",
@@ -11084,7 +11094,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A12 · Emergency admissions with 2 to 5 expected days",
@@ -11160,7 +11171,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A13 · Doctor categories (DISTINCT)",
@@ -11185,7 +11197,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A14 · Appointment types and statuses (DISTINCT of two columns)",
@@ -11259,7 +11272,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A15 · Billing totals",
@@ -11283,7 +11297,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A16 · Invoices by payment method",
@@ -11318,7 +11333,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A17 · Appointments by status",
@@ -11348,7 +11364,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A18 · Appointment statuses with more than 10 appointments",
@@ -11370,7 +11387,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A19 · Patients with three or more admissions",
@@ -11416,7 +11434,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A20 · Patients by the initial of the last name",
@@ -11490,7 +11509,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A21 · Glucose of one patient, from highest to lowest",
@@ -11510,7 +11530,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A22 · Glucose of one patient, from lowest to highest",
@@ -11532,7 +11553,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A23 · Oldest patients, page 2",
@@ -11577,7 +11599,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A24 · Four patients from the eighth on",
@@ -11607,7 +11630,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A25 · Record of three patients",
@@ -11637,7 +11661,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A26 · Missing values: COALESCE and ROUND",
@@ -11722,7 +11747,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A27 · Normalised insurer phone",
@@ -11760,7 +11786,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A28 · Oral drugs against the rest",
@@ -11814,7 +11841,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A29 · No appointment lasts more than two hours",
@@ -11828,7 +11856,8 @@
         "rows": [],
         "rowCount": 0
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A30 · Average price by presentation",
@@ -11858,7 +11887,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A31 · Patients and emails by city",
@@ -11884,7 +11914,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A32 · Patients by blood group",
@@ -11930,7 +11961,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A33 · Nurses by shift",
@@ -11960,7 +11992,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A34 · Rooms with a bathroom and more than one bed",
@@ -12025,7 +12058,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A35 · Chronic diagnoses, moderate or severe",
@@ -12070,7 +12104,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A36 · Successful surgeries by operating room",
@@ -12122,7 +12157,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A37 · Drugs with low stock",
@@ -12167,7 +12203,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A38 · Veteran doctors who do not do research",
@@ -12243,7 +12280,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A39 · Insurers with high coverage",
@@ -12268,7 +12306,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A40 · Severe allergies",
@@ -12386,7 +12425,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A41 · Longest diagnosis names",
@@ -12441,7 +12481,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A42 · ICD code by prefix",
@@ -12496,7 +12537,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A43 · Patients with specific blood groups",
@@ -12591,7 +12633,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A44 · Appointments in the first half of 2025",
@@ -12679,7 +12722,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A45 · Patients without a blood group",
@@ -12719,7 +12763,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A46 · Patient records with CONCAT",
@@ -12761,7 +12806,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "B01 · Hospitals with their services",
@@ -12836,7 +12882,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B02 · Services with their hospital and specialty",
@@ -12911,7 +12958,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B03 · Hospitals without services",
@@ -12927,7 +12975,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B04 · Specialties without doctors",
@@ -12943,7 +12992,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B05 · Implicit join: doctors and services",
@@ -12978,7 +13028,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B06 · Doctors with their specialty",
@@ -13084,7 +13135,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B07 · Specialties with at least three doctors",
@@ -13118,7 +13170,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B08 · Patients by insurer",
@@ -13163,7 +13216,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B09 · Rooms by hospital",
@@ -13213,7 +13267,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B10 · Admissions with patient, room and doctor",
@@ -13405,7 +13460,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B11 · Appointments with patient and doctor",
@@ -13597,7 +13653,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B12 · Visits with their doctor",
@@ -13733,7 +13790,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B13 · Surgeries with patient and surgeon",
@@ -13827,7 +13885,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B14 · Cartesian product specialties × hospitals",
@@ -14149,7 +14208,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B15 · The five most expensive drugs",
@@ -14189,7 +14249,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B16 · Specialties with distinct doctors",
@@ -14259,7 +14320,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B17 · Experience by category",
@@ -14299,7 +14361,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B18 · Active treatments with patient and diagnosis",
@@ -14435,7 +14498,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B19 · Abnormal lab tests with patient and doctor",
@@ -14592,7 +14656,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B20 · Unpaid invoices with their patient",
@@ -14716,7 +14781,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B21 · Active admissions with their room",
@@ -14804,7 +14870,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B22 · Nurses and their service",
@@ -14940,7 +15007,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B23 · Visits with their main diagnosis",
@@ -15106,7 +15174,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B24 · Prescriptions with drug and treatment",
@@ -15298,7 +15367,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B25 · Treatments by diagnosis",
@@ -15393,7 +15463,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B26 · Cost of treatments by doctor",
@@ -15458,7 +15529,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B27 · Surgeries by risk level",
@@ -15488,7 +15560,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B28 · Patients with insurer and city",
@@ -15628,7 +15701,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B29 · Allergies with the drug involved",
@@ -15794,7 +15868,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B30 · Beds by hospital (only those with rooms)",
@@ -15839,7 +15914,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B31 · Admissions by month",
@@ -15949,7 +16025,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B32 · Billing by year",
@@ -15979,7 +16056,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B33 · Doctors with more visits",
@@ -16033,7 +16111,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B34 · Cancelled appointments by doctor",
@@ -16075,7 +16154,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B35 · Diagnoses by specialty",
@@ -16133,7 +16213,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B36 · Drugs by treatment",
@@ -16223,7 +16304,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B37 · Surgeries by operating room",
@@ -16275,7 +16357,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B38 · Chronic patients with active treatments",
@@ -16313,7 +16396,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B39 · Specialties with more visits",
@@ -16367,7 +16451,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B40 · Visits by appointment type",
@@ -16401,7 +16486,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B41 · Occupied and free rooms by hospital",
@@ -16471,7 +16557,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B42 · Emergency admissions by hospital",
@@ -16509,7 +16596,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B43 · Average coverage of invoices by insurer",
@@ -16554,7 +16642,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B44 · Lab tests by type and result",
@@ -16589,7 +16678,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B45 · Severe diagnoses with treatments",
@@ -16639,7 +16729,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "C01 · History of one patient",
@@ -16661,7 +16752,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C02 · Visits with two or more diagnoses",
@@ -16776,7 +16868,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C03 · Most frequent diagnoses",
@@ -16830,7 +16923,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C04 · Treatments with more than two drugs",
@@ -16904,7 +16998,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C05 · Most prescribed drugs",
@@ -16958,7 +17053,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C06 · Patients with more invoices",
@@ -17023,7 +17119,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C07 · Patients who never had an appointment",
@@ -17057,7 +17154,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C08 · Doctors without any appointment",
@@ -17082,7 +17180,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C09 · Rooms without admissions",
@@ -17124,7 +17223,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C10 · Nobody has two insurers (rowCount)",
@@ -17137,7 +17237,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C11 · Patients without lab tests",
@@ -17162,7 +17263,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C12 · Visits of one patient regardless of the order",
@@ -17182,7 +17284,8 @@
         ],
         "ignoreOrder": true
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C13 · Specialty with more admissions",
@@ -17216,7 +17319,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C14 · Drugs with more allergies",
@@ -17270,7 +17374,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C15 · Diagnoses without treatments",
@@ -17286,7 +17391,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C16 · Doctors with more surgeries",
@@ -17351,7 +17457,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C17 · Treatments without prescriptions",
@@ -17367,7 +17474,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C18 · Prescriptions of one treatment",
@@ -17392,7 +17500,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C19 · Insurers with their patients",
@@ -17430,7 +17539,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C20 · Nursing supervisors by service",
@@ -17460,7 +17570,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C21 · Patients with more than five visits",
@@ -17482,7 +17593,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C22 · Hospitals with more admissions",
@@ -17520,7 +17632,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C23 · Specialties with more doctors",
@@ -17574,7 +17687,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C24 · Invoices that go over 75% of the coverage",
@@ -17689,7 +17803,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C25 · Appointments of one specific day",
@@ -17717,7 +17832,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C26 · Surgeries without a linked admission",
@@ -17762,7 +17878,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C27 · Patients allergic to a drug they take",
@@ -17780,7 +17897,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C28 · Admissions by the specialty of the doctor",
@@ -17840,7 +17958,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C29 · Billing by insurer type",
@@ -17870,7 +17989,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C30 · Most frequent main diagnosis by severity",
@@ -17935,7 +18055,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C31 · Patients with more than one distinct diagnosis",
@@ -18005,7 +18126,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C32 · Hospitals with abnormal lab tests",
@@ -18039,7 +18161,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C33 · Average cost by type of visit",
@@ -18064,7 +18187,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C34 · Total stock by route of administration",
@@ -18104,7 +18228,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C35 · Ranking of patients by spending on treatments",
@@ -18154,7 +18279,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "D01 · Admissions without a patient",
@@ -18176,7 +18302,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D02 · Admissions without a doctor",
@@ -18194,7 +18321,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D03 · Appointments without a patient",
@@ -18220,7 +18348,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D04 · Appointments without a doctor",
@@ -18238,7 +18367,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D05 · Patients with an insurer that does not exist",
@@ -18256,7 +18386,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D06 · Prescriptions without a drug",
@@ -18274,7 +18405,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D07 · Treatments without a patient",
@@ -18292,7 +18424,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D08 · Walk-in visits without an appointment",
@@ -18367,7 +18500,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D09 · Patients without an insurer",
@@ -18402,7 +18536,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D10 · Diagnoses without a specialty",
@@ -18420,7 +18555,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D11 · Paid invoices without a payment method",
@@ -18442,7 +18578,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D12 · Unpaid invoices with a payment method",
@@ -18488,7 +18625,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D13 · Orphan visit-diagnosis relationships",
@@ -18506,7 +18644,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D14 · Rooms without beds",
@@ -18528,7 +18667,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D15 · Attended appointments without a registered visit",
@@ -18554,7 +18694,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D16 · Secondary diagnoses marked as main",
@@ -18572,7 +18713,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D17 · Surgeries without a previous admission",
@@ -18617,7 +18759,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D18 · Treatment costs that are null or negative",
@@ -18635,7 +18778,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D19 · Surgery duration out of range",
@@ -18665,7 +18809,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D20 · Prescriptions with a suspicious dose",
@@ -18687,7 +18832,8 @@
           ]
         ]
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "E01 · Simple view: SELECT * of another query",
@@ -18717,7 +18863,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E02 · Arithmetic on the columns of a view",
@@ -18751,7 +18898,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E03 · WHERE and DISTINCT on a view",
@@ -18767,7 +18915,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E04 · Aggregates on a view",
@@ -18791,7 +18940,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E05 · Levels with two or more large hospitals",
@@ -18811,7 +18961,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E06 · A view joined to a base table (INNER JOIN)",
@@ -18857,7 +19008,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E07 · Two views joined by specialty",
@@ -18897,7 +19049,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E08 · Table LEFT JOIN view with IS NULL",
@@ -18913,7 +19066,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E09 · View of a view (two levels of query)",
@@ -18933,7 +19087,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E10 · The same view twice (self join)",
@@ -18983,7 +19138,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E11 · Implicit join with commas and a view",
@@ -19008,7 +19164,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E12 · ORDER BY an alias and LIMIT on a view",
@@ -19034,7 +19191,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E13 · A boolean through a view",
@@ -19059,7 +19217,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E14 · Nulls through a view (COALESCE)",
@@ -19097,7 +19256,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E15 · Aggregates on a view that is already aggregated",
@@ -19119,7 +19279,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E16 · A view that reads a query with LIMIT",
@@ -19137,7 +19298,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E17 · View of an empty result",
@@ -19153,7 +19315,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E18 · LIMIT and OFFSET on a view",
@@ -19183,7 +19346,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E19 · LIKE filter on a view",
@@ -19208,7 +19372,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E20 · A view of a view that joins two views",
@@ -19243,7 +19408,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E21 · LEFT JOIN between two views",
@@ -19283,7 +19449,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E22 · Projection with an alias and a star on a view",
@@ -19328,7 +19495,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E23 · A view that reads a query with several tables",
@@ -19344,7 +19512,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E24 · Group by a boolean of a view",
@@ -19369,7 +19538,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "F01 · Insurers of the patients of Madrid (IN with a subquery)",
@@ -19391,7 +19561,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F02 · Drugs with no prescription (NOT IN with a subquery)",
@@ -19409,7 +19580,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F03 · Specialties with no diagnosis (NOT IN with a subquery)",
@@ -19435,7 +19607,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F04 · Hospitals with an ICU room (EXISTS)",
@@ -19473,7 +19646,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F05 · Hospitals with no ICU room (NOT EXISTS)",
@@ -19491,7 +19665,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F06 · Patients with a high-risk surgery (EXISTS, correlated)",
@@ -19541,7 +19716,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F07 · Dermatology doctors with more experience than some Cardiology doctor (> ANY)",
@@ -19561,7 +19737,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F08 · The most experienced doctor of each specialty (>= ALL, correlated)",
@@ -19636,7 +19813,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F09 · Chronic patients of a city with a private insurer (<> ALL)",
@@ -19682,7 +19860,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F10 · University hospitals",
@@ -19707,7 +19886,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F11 · Rooms of the university hospitals read from the view (subquery over a view)",
@@ -19769,7 +19949,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F12 · Average cost per day of admissions of 700 or more (derived table)",
@@ -19787,7 +19968,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F13 · Hospitals with ten or more admissions (derived table and JOIN)",
@@ -19812,7 +19994,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F14 · Visits of every patient of a city (scalar subquery in SELECT)",
@@ -19857,7 +20040,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F15 · Admissions more expensive than the average (scalar subquery in WHERE)",
@@ -19979,7 +20163,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F16 · Specialties with three or more diagnoses",
@@ -20001,7 +20186,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F17 · The previous view read as a table",
@@ -20023,7 +20209,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F18 · Doctors of the specialties with a severe diagnosis (nested subqueries)",
@@ -20101,7 +20288,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F19 · Oncology doctors but the most experienced (NOT with ALL)",
@@ -20121,7 +20309,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F20 · Rooms of the university hospitals (= ANY)",
@@ -20140,7 +20329,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F21 · Doctors with more experience than some Cardiology doctor (> SOME)",
@@ -20254,7 +20444,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "G01 · Hospital and insurer names, without repeats",
@@ -20306,7 +20497,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G02 · The country of every hospital, twice (UNION ALL)",
@@ -20361,7 +20553,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G03 · Every country once (UNION)",
@@ -20383,7 +20576,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G04 · A union read as a table",
@@ -20399,7 +20593,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G05 · Union with output alias, ORDER BY and LIMIT",
@@ -20427,7 +20622,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     }
   ],
   "settings": {

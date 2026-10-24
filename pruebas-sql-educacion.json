@@ -1874,7 +1874,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A02 · Proyección con alias y aritmética",
@@ -1914,7 +1915,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A03 · Aulas grandes (>= 55 plazas)",
@@ -1954,7 +1956,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A04 · Aulas con proyector",
@@ -2008,7 +2011,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A05 · Docentes no investigadores con carga alta",
@@ -2042,7 +2046,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A06 · Estudiantes sin teléfono",
@@ -2088,7 +2093,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A07 · Docentes con despacho (IS NOT NULL) en mayúsculas",
@@ -2158,7 +2164,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A08 · Apellidos que empiezan por G",
@@ -2184,7 +2191,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A09 · Correos institucionales que no empiezan por a",
@@ -2224,7 +2232,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A10 · Tres aulas concretas (IN) y resto de la división",
@@ -2254,7 +2263,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A11 · Estudios que no son de informática ni educación (NOT IN)",
@@ -2284,7 +2294,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A12 · Matrículas aprobadas entre 7 y 8 (BETWEEN)",
@@ -2350,7 +2361,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A13 · Asignaturas de primero y segundo con pocos créditos",
@@ -2410,7 +2422,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A14 · Categorías de docente (DISTINCT)",
@@ -2435,7 +2448,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A15 · Combinaciones nivel/oficialidad (DISTINCT de dos columnas)",
@@ -2461,7 +2475,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A16 · Totales del expediente (COUNT, DISTINCT, MIN, MAX, SUM)",
@@ -2489,7 +2504,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A17 · Matrículas por estado",
@@ -2519,7 +2535,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A18 · Matrículas por curso académico (HAVING)",
@@ -2541,7 +2558,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A19 · Estudiantes con tres o más matrículas",
@@ -2595,7 +2613,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A20 · Aulas por inicial del código (GROUP BY con expresión)",
@@ -2645,7 +2664,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A21 · Notas de la asignatura 6, de mayor a menor (NULLS LAST)",
@@ -2675,7 +2695,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A22 · Notas de la asignatura 6, de menor a mayor (nulls primero)",
@@ -2705,7 +2726,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A23 · Estudiantes más mayores, página 2 (LIMIT/OFFSET)",
@@ -2740,7 +2762,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A24 · Cuatro estudiantes desde el cuarto (LIMIT estilo MySQL)",
@@ -2770,7 +2793,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A25 · Ficha de tres estudiantes (concatenación y funciones de texto)",
@@ -2800,7 +2824,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A26 · Notas ausentes: COALESCE, IFNULL, NULLIF y ROUND",
@@ -2852,7 +2877,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A27 · Teléfono de sede normalizado",
@@ -2887,7 +2913,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A28 · Pizarras que no son digitales (comentario y corchetes)",
@@ -2922,7 +2949,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A29 · Docentes que no son asociados (NOT)",
@@ -2972,7 +3000,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A30 · Consulta sin resultados",
@@ -2985,7 +3014,8 @@
         "rows": [],
         "rowCount": 0
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A31 · Nota media por asignatura (HAVING y ORDER BY por alias)",
@@ -3061,7 +3091,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A32 · Estudiantes y correos por sede",
@@ -3096,7 +3127,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "A33 · Fichas con CONCAT (texto y números)",
@@ -3146,7 +3178,8 @@
           ]
         ]
       },
-      "folder": "A · Básicas y agregados"
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
     },
     {
       "name": "B01 · Sedes con sus edificios (INNER JOIN)",
@@ -3210,7 +3243,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B02 · Tres tablas: aulas grandes de la sede 1",
@@ -3244,7 +3278,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B03 · Sedes sin edificios (LEFT JOIN sin pareja)",
@@ -3257,7 +3292,8 @@
         "rows": [],
         "rowCount": 0
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B03b · Edificios sin aulas",
@@ -3275,7 +3311,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B04 · Docentes sin asignaturas",
@@ -3305,7 +3342,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B05 · Join implícito por comas (aulas de la sede 2)",
@@ -3335,7 +3373,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B06 · Asignaturas y créditos por estudio (join por código de texto)",
@@ -3387,7 +3426,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B07 · Estudios con al menos tres asignaturas (LEFT JOIN + HAVING)",
@@ -3417,7 +3457,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B08 · Aulas y plazas por edificio",
@@ -3475,7 +3516,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B09 · Aulas por edificio, incluidos los que no tienen (LEFT JOIN)",
@@ -3530,7 +3572,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B10 · Carga docente: asignaturas y horas presenciales",
@@ -3600,7 +3643,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B11 · Docentes con dos asignaturas y 12 créditos o más (HAVING doble)",
@@ -3634,7 +3678,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B12 · Asignaturas sin idioma definido, con estudio y docente",
@@ -3679,7 +3724,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B13 · Estudiantes, correos y teléfonos por sede",
@@ -3724,7 +3770,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B14 · Producto cartesiano (6 estudios × 4 sedes)",
@@ -3762,7 +3809,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B15 · Las cinco aulas más grandes (JOIN + ORDER BY alias + LIMIT)",
@@ -3802,7 +3850,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B16 · Docentes distintos por estudio (COUNT DISTINCT)",
@@ -3847,7 +3896,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B17 · Horas de docencia por categoría (MIN y MAX)",
@@ -3887,7 +3937,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B18 · Asignaturas básicas de primero y segundo con su docente",
@@ -3951,7 +4002,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B19 · Matrículas y nota media por nivel (Grado / Máster)",
@@ -3976,7 +4028,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B20 · Asignaturas optativas y su estudio",
@@ -4022,7 +4075,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B21 · Estudiantes de máster con su titulación",
@@ -4067,7 +4121,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "B22 · Jornada diaria del profesorado investigador",
@@ -4112,7 +4167,8 @@
           ]
         ]
       },
-      "folder": "B · Uniones (join)"
+      "folder": "B · Uniones (join)",
+      "color": "#fde8cd"
     },
     {
       "name": "C01 · Expediente completo de una estudiante (M:M resuelta)",
@@ -4157,7 +4213,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C02 · Asignaturas con cuatro o más estudiantes (grupo grande)",
@@ -4212,7 +4269,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C03 · Carga de cada estudiante (asignaturas y créditos)",
@@ -4376,7 +4434,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C04 · Notas de un estudiante con COALESCE",
@@ -4406,7 +4465,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C05 · Matrículas todavía sin nota (IS NULL)",
@@ -4458,7 +4518,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C06 · Matrículas con sobresaliente (nota >= 9)",
@@ -4503,7 +4564,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C07 · Estudiantes sin ninguna matrícula (LEFT JOIN y media nula)",
@@ -4541,7 +4603,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C08 · Asignaturas sin ninguna matrícula",
@@ -4566,7 +4629,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C09 · Cobertura: estudiantes con matrícula por estudio",
@@ -4604,7 +4668,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C10 · Nadie cursa asignaturas de dos estudios (solo rowCount)",
@@ -4617,7 +4682,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C11 · Matrículas convalidadas",
@@ -4669,7 +4735,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C12 · Asignaturas de un estudiante sin importar el orden (ignoreOrder)",
@@ -4692,7 +4759,8 @@
         ],
         "ignoreOrder": true
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C13 · Asignaturas con más matrículas (ORDER BY de un agregado)",
@@ -4726,7 +4794,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C14 · Nombres de asignatura más largos (ORDER BY de una función)",
@@ -4760,7 +4829,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C15 · Estudiantes con más créditos matriculados (ORDER BY alias + LIMIT)",
@@ -4800,7 +4870,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C16 · Nota media de las asignaturas de Informática",
@@ -4840,7 +4911,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C17 · Becados en Anatomía Humana",
@@ -4865,7 +4937,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C18 · Matrículas por estudio y curso académico",
@@ -4940,7 +5013,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C19 · Asignaturas con sobresalientes",
@@ -4974,7 +5048,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "C20 · Media por estudiante de Informática con dos o más notas",
@@ -5009,7 +5084,8 @@
           ]
         ]
       },
-      "folder": "C · Consultas relacionadas"
+      "folder": "C · Consultas relacionadas",
+      "color": "#fbf6c9"
     },
     {
       "name": "D01 · Matrículas sin estudiante (integridad de la 1:M)",
@@ -5022,7 +5098,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D02 · Matrículas sin asignatura (integridad de la otra 1:M)",
@@ -5035,7 +5112,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D03 · Asignaturas sin estudio (integridad del código de texto)",
@@ -5048,7 +5126,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D04 · Asignaturas sin docente",
@@ -5061,7 +5140,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D05 · Aulas sin edificio",
@@ -5074,7 +5154,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D06 · Edificios sin sede",
@@ -5087,7 +5168,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D07 · Estudiantes sin sede o sin estudio",
@@ -5099,7 +5181,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D08 · Matrículas repetidas del mismo par estudiante/asignatura",
@@ -5113,7 +5196,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D09 · Notas fuera del rango 0–10",
@@ -5126,7 +5210,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D10 · Estados de matrícula inventados",
@@ -5139,7 +5224,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D11 · Matrículas superadas sin nota",
@@ -5153,7 +5239,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D12 · Matrículas calificadas que no están superadas",
@@ -5167,7 +5254,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "D13 · Aulas sin plazas",
@@ -5181,7 +5269,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integridad"
+      "folder": "D · Integridad",
+      "color": "#dcf1d4"
     },
     {
       "name": "E01 · Vista sencilla: SELECT * de otra consulta",
@@ -5221,7 +5310,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E02 · Aritmética sobre columnas de una vista",
@@ -5267,7 +5357,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E03 · WHERE y DISTINCT sobre una vista",
@@ -5286,7 +5377,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E04 · Agregados sobre una vista",
@@ -5310,7 +5402,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E05 · Plantas con dos o más aulas grandes",
@@ -5330,7 +5423,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E06 · Vista unida a una tabla base (INNER JOIN)",
@@ -5394,7 +5488,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E07 · Dos vistas unidas por asignatura",
@@ -5439,7 +5534,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E08 · Tabla LEFT JOIN vista con IS NULL",
@@ -5457,7 +5553,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E09 · Vista de vista (dos niveles de consulta)",
@@ -5477,7 +5574,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E10 · La misma vista dos veces (auto-unión)",
@@ -5497,7 +5595,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E11 · Join implícito por comas con una vista",
@@ -5549,7 +5648,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E12 · ORDER BY por alias y LIMIT sobre una vista",
@@ -5575,7 +5675,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E13 · Booleano a través de una vista",
@@ -5593,7 +5694,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E14 · Nulos a través de una vista (COALESCE)",
@@ -5623,7 +5725,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E15 · Agregados sobre una vista ya agregada",
@@ -5645,7 +5748,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E16 · Vista que lee una consulta con LIMIT",
@@ -5663,7 +5767,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E17 · Vista de un resultado vacío",
@@ -5679,7 +5784,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E18 · LIMIT y OFFSET sobre una vista",
@@ -5705,7 +5811,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E19 · Filtro con LIKE sobre una vista",
@@ -5723,7 +5830,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E20 · Vista de una vista que une dos vistas",
@@ -5758,7 +5866,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E21 · LEFT JOIN entre dos vistas",
@@ -5813,7 +5922,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E22 · Proyección con alias y asterisco sobre una vista",
@@ -5867,7 +5977,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E23 · Vista que lee una consulta con tres tablas",
@@ -5883,7 +5994,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "E24 · Agrupar por un booleano de una vista",
@@ -5905,7 +6017,8 @@
           ]
         ]
       },
-      "folder": "E · Vistas"
+      "folder": "E · Vistas",
+      "color": "#d3ecf3"
     },
     {
       "name": "F01 · Estudiantes con matrícula activa (IN con subconsulta)",
@@ -5963,7 +6076,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F02 · Estudiantes sin ninguna matrícula (NOT IN con subconsulta)",
@@ -5989,7 +6103,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F03 · Asignaturas sin ninguna matrícula (NOT IN con subconsulta)",
@@ -6011,7 +6126,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F04 · Sedes con un edificio de más de cuatro plantas (EXISTS)",
@@ -6033,7 +6149,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F05 · Sedes sin edificios de más de cuatro plantas (NOT EXISTS)",
@@ -6055,7 +6172,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F06 · Estudios con algún estudiante becado (EXISTS correlacionada)",
@@ -6085,7 +6203,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F07 · Matrículas de Bases de Datos mejores que alguna nota de Estructuras (> ANY)",
@@ -6107,7 +6226,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F08 · Los créditos más altos del primer curso (>= ALL)",
@@ -6127,7 +6247,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F09 · Asignaturas sin docente investigador (<> ALL)",
@@ -6161,7 +6282,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F10 · Estudiantes becados",
@@ -6221,7 +6343,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F11 · Becados leídos desde la vista (subconsulta sobre una vista)",
@@ -6271,7 +6394,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F12 · Nota media por asignatura de 8 o más (tabla derivada)",
@@ -6301,7 +6425,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F13 · Asignaturas con cuatro o más matrículas (tabla derivada y JOIN)",
@@ -6356,7 +6481,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F14 · Matrículas de cada estudiante de una sede (subconsulta escalar en el SELECT)",
@@ -6386,7 +6512,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F15 · Asignaturas por encima de la media de créditos (subconsulta escalar en el WHERE)",
@@ -6456,7 +6583,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F16 · Estudios con cinco estudiantes o más",
@@ -6478,7 +6606,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F17 · La vista anterior leída como tabla",
@@ -6500,7 +6629,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F18 · Asignaturas de estudios con algún becado (subconsultas anidadas)",
@@ -6562,7 +6692,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F19 · Asignaturas que no llegan a los créditos máximos (NOT con ALL)",
@@ -6636,7 +6767,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F20 · Edificios de la sede principal (= ANY)",
@@ -6652,7 +6784,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "F21 · Asignaturas con más créditos que alguna de Educación Primaria (> SOME)",
@@ -6718,7 +6851,8 @@
           ]
         ]
       },
-      "folder": "F · Subconsultas"
+      "folder": "F · Subconsultas",
+      "color": "#dde5fa"
     },
     {
       "name": "G01 · Nombres de campus y de titulaciones, sin repetir",
@@ -6761,7 +6895,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G02 · El país de cada campus, dos veces (UNION ALL)",
@@ -6798,7 +6933,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G03 · Cada país una vez (UNION)",
@@ -6817,7 +6953,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G04 · Una unión leída como tabla",
@@ -6833,7 +6970,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     },
     {
       "name": "G05 · Unión con alias, ORDER BY y LIMIT",
@@ -6861,7 +6999,8 @@
           ]
         ]
       },
-      "folder": "G · Uniones"
+      "folder": "G · Uniones",
+      "color": "#e8ddf7"
     }
   ],
   "settings": {

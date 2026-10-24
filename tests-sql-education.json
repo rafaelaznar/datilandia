@@ -1874,7 +1874,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A02 · Projection with aliases and arithmetic",
@@ -1914,7 +1915,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A03 · Large classrooms (>= 55 seats)",
@@ -1954,7 +1956,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A04 · Classrooms with a projector",
@@ -2008,7 +2011,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A05 · Teachers who do not research and have a heavy load",
@@ -2042,7 +2046,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A06 · Students with no phone",
@@ -2088,7 +2093,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A07 · Teachers with an office (IS NOT NULL) in upper case",
@@ -2158,7 +2164,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A08 · Last names that start with G",
@@ -2184,7 +2191,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A09 · Institutional addresses that do not start with a",
@@ -2224,7 +2232,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A10 · Three given classrooms (IN) and the remainder of the division",
@@ -2254,7 +2263,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A11 · Degrees that are neither computing nor education (NOT IN)",
@@ -2284,7 +2294,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A12 · Enrollments passed with a grade between 7 and 8 (BETWEEN)",
@@ -2350,7 +2361,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A13 · First and second year subjects with few credits",
@@ -2410,7 +2422,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A14 · Teacher categories (DISTINCT)",
@@ -2435,7 +2448,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A15 · Level/officialness combinations (DISTINCT of two columns)",
@@ -2461,7 +2475,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A16 · Totals of the records (COUNT, DISTINCT, MIN, MAX, SUM)",
@@ -2489,7 +2504,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A17 · Enrollments by status",
@@ -2519,7 +2535,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A18 · Enrollments by academic year (HAVING)",
@@ -2541,7 +2558,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A19 · Students with three or more enrollments",
@@ -2595,7 +2613,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A20 · Classrooms by the first letter of the code (GROUP BY with an expression)",
@@ -2645,7 +2664,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A21 · Grades of subject 6, from highest to lowest (NULLS LAST)",
@@ -2675,7 +2695,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A22 · Grades of subject 6, from lowest to highest (nulls first)",
@@ -2705,7 +2726,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A23 · Oldest students, page 2 (LIMIT/OFFSET)",
@@ -2740,7 +2762,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A24 · Four students starting at the fourth (MySQL style LIMIT)",
@@ -2770,7 +2793,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A25 · Record of three students (concatenation and text functions)",
@@ -2800,7 +2824,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A26 · Missing grades: COALESCE, IFNULL, NULLIF and ROUND",
@@ -2852,7 +2877,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A27 · Campus phone normalised",
@@ -2887,7 +2913,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A28 · Boards that are not digital (comment and brackets)",
@@ -2922,7 +2949,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A29 · Teachers who are not associates (NOT)",
@@ -2972,7 +3000,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A30 · A query with no results",
@@ -2985,7 +3014,8 @@
         "rows": [],
         "rowCount": 0
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A31 · Average grade per subject (HAVING and ORDER BY by alias)",
@@ -3061,7 +3091,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A32 · Students and addresses per campus",
@@ -3096,7 +3127,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "A33 · Records with CONCAT (text and numbers)",
@@ -3146,7 +3178,8 @@
           ]
         ]
       },
-      "folder": "A · Basics and aggregation"
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
     },
     {
       "name": "B01 · Campuses with their buildings (INNER JOIN)",
@@ -3210,7 +3243,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B02 · Three tables: large classrooms of campus 1",
@@ -3244,7 +3278,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B03 · Campuses with no buildings (LEFT JOIN with no pair)",
@@ -3257,7 +3292,8 @@
         "rows": [],
         "rowCount": 0
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B03b · Buildings with no classrooms",
@@ -3275,7 +3311,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B04 · Teachers with no subjects",
@@ -3305,7 +3342,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B05 · Implicit join with commas (classrooms of campus 2)",
@@ -3335,7 +3373,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B06 · Subjects and credits per degree (join by a text code)",
@@ -3387,7 +3426,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B07 · Degrees with at least three subjects (LEFT JOIN + HAVING)",
@@ -3417,7 +3457,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B08 · Classrooms and seats per building",
@@ -3475,7 +3516,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B09 · Classrooms per building, including those with none (LEFT JOIN)",
@@ -3530,7 +3572,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B10 · Teaching load: subjects and classroom hours",
@@ -3600,7 +3643,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B11 · Teachers with two subjects and 12 credits or more (double HAVING)",
@@ -3634,7 +3678,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B12 · Subjects with no language set, with their degree and teacher",
@@ -3679,7 +3724,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B13 · Students, addresses and phones per campus",
@@ -3724,7 +3770,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B14 · Cartesian product (6 degrees × 4 campuses)",
@@ -3762,7 +3809,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B15 · The five largest classrooms (JOIN + ORDER BY alias + LIMIT)",
@@ -3802,7 +3850,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B16 · Distinct teachers per degree (COUNT DISTINCT)",
@@ -3847,7 +3896,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B17 · Teaching hours per category (MIN and MAX)",
@@ -3887,7 +3937,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B18 · Basic subjects of years one and two with their teacher",
@@ -3951,7 +4002,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B19 · Enrollments and average grade per level (Bachelor / Master)",
@@ -3976,7 +4028,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B20 · Optional subjects and their degree",
@@ -4022,7 +4075,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B21 · Master students with their degree",
@@ -4067,7 +4121,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "B22 · Daily schedule of the research staff",
@@ -4112,7 +4167,8 @@
           ]
         ]
       },
-      "folder": "B · Joins"
+      "folder": "B · Joins",
+      "color": "#fde8cd"
     },
     {
       "name": "C01 · Full record of one student (M:M resolved)",
@@ -4157,7 +4213,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C02 · Subjects with four or more students (large group)",
@@ -4212,7 +4269,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C03 · Load of every student (subjects and credits)",
@@ -4376,7 +4434,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C04 · Grades of one student with COALESCE",
@@ -4406,7 +4465,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C05 · Enrollments not graded yet (IS NULL)",
@@ -4458,7 +4518,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C06 · Enrollments with distinction (grade >= 9)",
@@ -4503,7 +4564,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C07 · Students with no enrollment (LEFT JOIN and null average)",
@@ -4541,7 +4603,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C08 · Subjects with no enrollment",
@@ -4566,7 +4629,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C09 · Coverage: students with enrollments per degree",
@@ -4604,7 +4668,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C10 · Nobody takes subjects of two degrees (only rowCount)",
@@ -4617,7 +4682,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C11 · Recognised enrollments",
@@ -4669,7 +4735,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C12 · Subjects of one student whatever the order (ignoreOrder)",
@@ -4692,7 +4759,8 @@
         ],
         "ignoreOrder": true
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C13 · Subjects with more enrollments (ORDER BY of an aggregate)",
@@ -4726,7 +4794,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C14 · Longest subject names (ORDER BY of a function)",
@@ -4760,7 +4829,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C15 · Students with more credits enrolled (ORDER BY alias + LIMIT)",
@@ -4800,7 +4870,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C16 · Average grade of the Computing subjects",
@@ -4840,7 +4911,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C17 · Scholarship holders in Human Anatomy",
@@ -4865,7 +4937,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C18 · Enrollments per degree and academic year",
@@ -4940,7 +5013,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C19 · Subjects with distinctions",
@@ -4974,7 +5048,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "C20 · Average per Computing student with two or more grades",
@@ -5009,7 +5084,8 @@
           ]
         ]
       },
-      "folder": "C · Related queries"
+      "folder": "C · Related queries",
+      "color": "#fbf6c9"
     },
     {
       "name": "D01 · Enrollments with no student (integrity of the 1:M)",
@@ -5022,7 +5098,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D02 · Enrollments with no subject (integrity of the other 1:M)",
@@ -5035,7 +5112,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D03 · Subjects with no degree (integrity of the text code)",
@@ -5048,7 +5126,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D04 · Subjects with no teacher",
@@ -5061,7 +5140,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D05 · Classrooms with no building",
@@ -5074,7 +5154,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D06 · Buildings with no campus",
@@ -5087,7 +5168,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D07 · Students with no campus or with no degree",
@@ -5099,7 +5181,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D08 · Repeated enrollments of the same student/subject pair",
@@ -5113,7 +5196,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D09 · Grades outside the 0–10 range",
@@ -5126,7 +5210,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D10 · Invented enrollment statuses",
@@ -5139,7 +5224,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D11 · Passed enrollments with no grade",
@@ -5153,7 +5239,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D12 · Graded enrollments that are not passed",
@@ -5167,7 +5254,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "D13 · Classrooms with no seats",
@@ -5181,7 +5269,8 @@
         ],
         "rowCount": 0
       },
-      "folder": "D · Integrity"
+      "folder": "D · Integrity",
+      "color": "#dcf1d4"
     },
     {
       "name": "E01 · Simple view: SELECT * of another query",
@@ -5221,7 +5310,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E02 · Arithmetic over the columns of a view",
@@ -5267,7 +5357,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E03 · WHERE and DISTINCT over a view",
@@ -5286,7 +5377,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E04 · Aggregates over a view",
@@ -5310,7 +5402,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E05 · Floors with two or more large classrooms",
@@ -5330,7 +5423,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E06 · View joined to a base table (INNER JOIN)",
@@ -5394,7 +5488,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E07 · Two views joined by subject",
@@ -5439,7 +5534,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E08 · Table LEFT JOIN view with IS NULL",
@@ -5457,7 +5553,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E09 · View of a view (two levels of query)",
@@ -5477,7 +5574,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E10 · The same view twice (self-join)",
@@ -5497,7 +5595,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E11 · Implicit join with commas including a view",
@@ -5549,7 +5648,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E12 · ORDER BY by alias and LIMIT over a view",
@@ -5575,7 +5675,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E13 · Boolean going through a view",
@@ -5593,7 +5694,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E14 · Nulls going through a view (COALESCE)",
@@ -5623,7 +5725,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E15 · Aggregates over a view that is already aggregated",
@@ -5645,7 +5748,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E16 · A view that reads a query with LIMIT",
@@ -5663,7 +5767,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E17 · A view of an empty result",
@@ -5679,7 +5784,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E18 · LIMIT and OFFSET over a view",
@@ -5705,7 +5811,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E19 · LIKE filter over a view",
@@ -5723,7 +5830,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E20 · A view of a view that joins two views",
@@ -5758,7 +5866,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E21 · LEFT JOIN between two views",
@@ -5813,7 +5922,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E22 · Projection with an alias and an asterisk over a view",
@@ -5867,7 +5977,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E23 · A view that reads a query with three tables",
@@ -5883,7 +5994,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "E24 · Group by a boolean of a view",
@@ -5905,7 +6017,8 @@
           ]
         ]
       },
-      "folder": "E · Views"
+      "folder": "E · Views",
+      "color": "#d3ecf3"
     },
     {
       "name": "F01 · Students with an active enrollment (IN with a subquery)",
@@ -5963,7 +6076,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F02 · Students with no enrollment (NOT IN with a subquery)",
@@ -5989,7 +6103,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F03 · Subjects with no enrollment (NOT IN with a subquery)",
@@ -6011,7 +6126,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F04 · Campuses with a building of more than four floors (EXISTS)",
@@ -6033,7 +6149,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F05 · Campuses with no building of more than four floors (NOT EXISTS)",
@@ -6055,7 +6172,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F06 · Degrees with a scholarship student (EXISTS, correlated)",
@@ -6085,7 +6203,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F07 · Databases enrollments better than some Data Structures grade (> ANY)",
@@ -6107,7 +6226,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F08 · The highest credits of the first year (>= ALL)",
@@ -6127,7 +6247,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F09 · Subjects with no researcher teacher (<> ALL)",
@@ -6161,7 +6282,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F10 · Students with a scholarship",
@@ -6221,7 +6343,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F11 · Scholarship students read from the view (subquery over a view)",
@@ -6271,7 +6394,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F12 · Average grade per subject of 8 or more (derived table)",
@@ -6301,7 +6425,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F13 · Subjects with four or more enrollments (derived table and JOIN)",
@@ -6356,7 +6481,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F14 · Enrollments of every student of a campus (scalar subquery in SELECT)",
@@ -6386,7 +6512,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F15 · Subjects above the average credits (scalar subquery in WHERE)",
@@ -6456,7 +6583,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F16 · Degrees with five or more students",
@@ -6478,7 +6606,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F17 · The previous view read as a table",
@@ -6500,7 +6629,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F18 · Subjects of degrees with a scholarship student (nested subqueries)",
@@ -6562,7 +6692,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F19 · Subjects that do not reach the top credits (NOT with ALL)",
@@ -6636,7 +6767,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F20 · Buildings of the main campus (= ANY)",
@@ -6652,7 +6784,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "F21 · Subjects with more credits than some Primary Education one (> SOME)",
@@ -6718,7 +6851,8 @@
           ]
         ]
       },
-      "folder": "F · Subqueries"
+      "folder": "F · Subqueries",
+      "color": "#dde5fa"
     },
     {
       "name": "G01 · Campus and degree names, without repeats",
@@ -6761,7 +6895,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G02 · The country of every campus, twice (UNION ALL)",
@@ -6798,7 +6933,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G03 · Every country once (UNION)",
@@ -6817,7 +6953,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G04 · A union read as a table",
@@ -6833,7 +6970,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     },
     {
       "name": "G05 · Union with output alias, ORDER BY and LIMIT",
@@ -6861,7 +6999,8 @@
           ]
         ]
       },
-      "folder": "G · Unions"
+      "folder": "G · Unions",
+      "color": "#e8ddf7"
     }
   ],
   "settings": {

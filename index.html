@@ -234,7 +234,7 @@
     }
 
     #sidebar {
-      width: 195px;
+      width: 480px;
       flex: none;
       overflow: auto;
       padding: 0 2px 8px;
@@ -444,6 +444,95 @@
     .row-actions .duplicate-query:hover,
     .row-actions .duplicate-query:focus-visible {
       color: #000;
+    }
+
+    /*  The rest of the actions of a query row: the arrows that move it inside
+        its folder, the swatch of its background colour and the «✕» that deletes
+        it. They are as small as the «D», so the row stays readable.  */
+    .row-actions .move-query,
+    .row-actions .color-query,
+    .row-actions .delete-query {
+      padding: 0 1px;
+      font-size: 9px;
+      line-height: 1;
+      color: #555;
+    }
+
+    .row-actions .move-query:not(:disabled):hover,
+    .row-actions .move-query:focus-visible,
+    .row-actions .delete-query:hover,
+    .row-actions .delete-query:focus-visible {
+      color: #000;
+    }
+
+    /*  The arrow that cannot move the query any further (it is the first or the
+        last one of its folder) is left greyed out.  */
+    .row-actions .move-query:disabled {
+      color: #bbb;
+      cursor: default;
+    }
+
+    /*  Swatch of the background colour of the query: it shows the colour of its
+        row and opens the pastel palette.  */
+    .row-actions .color-query {
+      align-self: center;
+      width: 10px;
+      height: 10px;
+      min-width: 0;
+      padding: 0;
+      border: 1px solid #888;
+      border-radius: 2px;
+      background: transparent;
+    }
+
+    .row-actions .color-query:hover,
+    .row-actions .color-query:focus-visible {
+      border-color: #000;
+    }
+
+    /*  The pastel colour paints the row of the list and nothing else. When that
+        row is the open query the selection is a blue frame, so it is seen over
+        the colour.  */
+    #list-queries li.has-color.selected {
+      outline: 1px solid #1a4f8a;
+      outline-offset: -1px;
+    }
+
+    /* Pastel palette that the swatch of a query opens. */
+    #query-color-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      display: flex;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid #888;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    #query-color-popup button {
+      width: 18px;
+      height: 18px;
+      min-width: 0;
+      padding: 0;
+      border: 1px solid #999;
+      border-radius: 2px;
+    }
+
+    #query-color-popup button.chosen {
+      outline: 2px solid #1a4f8a;
+      outline-offset: -2px;
+    }
+
+    /*  The one that takes the colour away says so in words: it is not a colour,
+        it is the «no colour» option.  */
+    #query-color-popup button.color-none {
+      width: auto;
+      padding: 0 4px;
+      font-size: 9px;
+      color: #555;
     }
 
     /* Mark of the queries that another query reads as a table. */
@@ -1642,8 +1731,8 @@
 
     <!-- Handle to change the width of the left column -->
     <div data-i18n-aria-label="markup.div.widthLeftColumn" data-i18n-title="markup.div.dragChangeWidthMinimum140" id="separador-sidebar" role="separator" aria-orientation="vertical" tabindex="0"
-         aria-label="Ancho de la columna izquierda" aria-valuemin="140" aria-valuemax="480" aria-valuenow="195"
-         title="Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 195 px; con el foco, las flechas del teclado"></div>
+         aria-label="Ancho de la columna izquierda" aria-valuemin="140" aria-valuemax="480" aria-valuenow="480"
+         title="Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 480 px; con el foco, las flechas del teclado"></div>
 
     <main id="principal">
       <!-- Welcome view: title, description and help, navigable by sections -->
@@ -1750,7 +1839,7 @@
                 <li data-i18n-html="markup.li.pressTablesQueriesTitleSidebar">Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.</li>
                 <li data-i18n-html="markup.li.downloadStructureJsonSummary">En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.</li>
                 <li data-i18n-html="markup.li.linkRelationsBetweenTablesQueries">El enlace <b>Relaciones entre tablas y consultas</b> abre la <b>matriz</b> de relaciones del proyecto: quién apunta a quién y qué consultas citan cada pareja de tablas. El detalle está en el apartado <b>Relaciones</b>.</li>
-                <li data-i18n-html="markup.li.widthLeftColumnIsVariable">El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 195 px o usa las flechas con el tirador enfocado.</li>
+                <li data-i18n-html="markup.li.widthLeftColumnIsVariable">El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 480 px o usa las flechas con el tirador enfocado.</li>
               </ul>
             </section>
 
@@ -1772,7 +1861,7 @@
                 <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
                 <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
               
-                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además su propio <b>D</b> para duplicarla; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.</li>
+                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).</li>
               </ul>
             </section>
 
@@ -2730,13 +2819,18 @@ ORDER BY edificios DESC, sede;</pre>
     </div>
   </dialog>
 
+  <!-- Pastel palette of the queries of the sidebar: it lives outside the views,
+       because the sidebar paints it while the welcome page or the table is on
+       screen, and a view that is hidden would hide it too -->
+  <div id="query-color-popup" role="dialog" data-i18n-aria-label="queries.colorTitle" aria-label="Color pastel de fondo" hidden></div>
+
   <script id="i18n-messages">
     /* Interface messages: one flat dictionary per language, keyed by symbolic keys.
        A message is a string with {placeholders}, or { one, other } when it depends on a count. */
     window.datilandia = window.datilandia || {};
     window.datilandia.messages = {
       en: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>D</b> button of its header (it copies the folder with all its queries) or delete it from there; every query of the list also carries its own <b>D</b> to duplicate it; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>D</b> button of its header (it copies the folder with all its queries) or delete it from there; every query of the list also carries its own actions on the right: the <b>▲</b> and <b>▼</b> arrows move it up or down <b>inside its folder</b> (they are greyed out at the ends), the <b>D</b> duplicates it, the <b>colour swatch</b> paints its row with a pastel colour (only in the sidebar; the file keeps it in <code>color</code>) and the <b>✕</b> deletes it after a confirmation; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>. When a project is <b>opened</b> every folder starts <b>folded</b> (the «No folder» group is left as it is).",
         "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header renames, deletes and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
@@ -2784,6 +2878,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.flagInvalid": "{label}: must be true or false.",
         "persistence.folderNameInvalid": "{label}: every folder name must be a non-empty text.",
         "persistence.duplicateFolder": "{label}: the folder “{name}” appears twice.",
+        "persistence.queryColorInvalid": "{queryLabel}: the colour must be one of the pastel colours.",
         "persistence.queryFolderInvalid": "{queryLabel}: the folder must be a non-empty text.",
         "persistence.tableFolderInvalid": "{tableLabel}: the folder must be a non-empty text.",
         "markup.b.alwaysAS": "always with <code>AS</code>",
@@ -2962,7 +3057,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dd.severalColumnsASCDESCNULLS": "Several columns, <code>ASC</code>/<code>DESC</code> and <code>NULLS FIRST</code>/<code>NULLS LAST</code>. A number is the position of a column of the result: <code>ORDER BY 2 DESC</code>. Numeric texts are sorted and compared <b>by value</b>, and where the missing values go is decided by <code>NULLS FIRST/LAST</code> even if the key is <code>DESC</code> (without saying it: first in <code>ASC</code>, at the end in <code>DESC</code>).",
         "markup.dd.textTextAreBothText": "<code>'text'</code> and <code>\"text\"</code> are <b>both text</b> (to include the quote, double it); <code>[Name with spaces]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
         "markup.dd.unionConcatenatesRowsTwoSelects": "<code>UNION</code> and <code>UNION ALL</code> stack the rows of two <code>SELECT</code>s (and of more, chained): both sides return the same number of columns and <code>UNION</code> drops the repeated rows, while <code>UNION ALL</code> keeps them. The final <code>ORDER BY</code> and <code>LIMIT</code> apply to the whole result.",
-        "markup.div.dragChangeWidthMinimum140": "Drag to change the width (minimum 140 px, maximum 480 px); double-click to go back to 195 px; when it has the focus, the keyboard arrows",
+        "markup.div.dragChangeWidthMinimum140": "Drag to change the width (minimum 140 px, maximum 480 px); double-click to go back to 480 px; when it has the focus, the keyboard arrows",
         "markup.div.widthLeftColumn": "Width of the left column",
         "markup.dt.fields": "Fields",
         "markup.dt.fieldsEveryTable": "Fields in every table",
@@ -3157,7 +3252,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.underEachForeignKeyGo": "Under each foreign key go <b>seven figures</b> with the rows of the crossing, counted over the two tables and named after them: those of the row's table <b>whose key is null</b>, <b>whose key matches no row</b> of the column's or <b>that find their row</b> in it, and those of the column's table <b>with none</b>, <b>with some</b>, <b>with exactly one</b> or <b>with more than one</b> of the row's. The <b>order</b> and what each one means are explained in the <b>legend</b> below the matrix and in the hint of every figure.",
         "markup.li.whenReplacingItAsksYou": "When replacing, it asks you first with the <b>count</b> and the scope, and replaces <b>every occurrence</b>. The resulting value is interpreted as when editing a cell (number, <code>true</code>/<code>false</code>, <code>null</code> or text) and an empty replacement deletes what was found.",
         "markup.li.whileThereArePendingChanges": "While there are pending changes you will see <b>«Unsaved changes»</b> at the top right, and it also warns you if you try to close the tab.",
-        "markup.li.widthLeftColumnIsVariable": "The width of the left column is <b>variable</b>: drag the <b>handle</b> between the sidebar and the view (from 140 to 480 px), double-click to go back to 195 px or use the arrows with the handle focused.",
+        "markup.li.widthLeftColumnIsVariable": "The width of the left column is <b>variable</b>: drag the <b>handle</b> between the sidebar and the view (from 140 to 480 px), double-click to go back to 480 px or use the arrows with the handle focused.",
         "markup.li.wildcardsHaveNoEscapeLiteral": "The wildcards have no escape: a literal <code>*</code> or <code>?</code> cannot be searched for.",
         "markup.nav.helpSections": "Help sections",
         "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>CONCAT(a, b, …)</code> joins texts, with <code>null</code> if any argument is · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal.",
@@ -3479,6 +3574,19 @@ ORDER BY edificios DESC, sede;</pre>
         "projectTests.summaryLine": "Tests · {parts}",
         "projectTests.unexpectedRow": "Row {n}: no row was expected (got {row}).",
         "projectTests.withoutAssertSuffix": " · no assert",
+        "queries.colorBlue": "Blue",
+        "queries.colorCleared": "“{name}” has no colour any more.",
+        "queries.colorLemon": "Lemon",
+        "queries.colorLilac": "Lilac",
+        "queries.colorMint": "Mint",
+        "queries.colorNone": "No colour",
+        "queries.colorPeach": "Peach",
+        "queries.colorRose": "Rose",
+        "queries.colorSet": "“{name}” painted with a pastel colour.",
+        "queries.colorSky": "Sky",
+        "queries.colorSmoke": "Smoke",
+        "queries.colorTip": "Background colour of the query “{name}”",
+        "queries.colorTitle": "Pastel background colour",
         "queries.confirmRemove": "Delete query “{name}”?{warning}",
         "queries.confirmRemoveTest": "Remove the asserted result of “{name}”?\n\nThe query will still run, but it will not be checked in the project report.",
         "queries.confirmReplaceAssert": "“{name}” already checks an asserted result ({assert}).\n\nReplace it with the current result ({rows})?",
@@ -3497,6 +3605,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.csvStatus": "Result as CSV: change the separator, press “Copy” or “Download CSV”, or close with Esc.",
         "queries.csvTruncated": "Showing the first {max} of {total} rows (the exported file includes them all).",
         "queries.defaultSql": "SELECT * FROM table",
+        "queries.deleteTip": "Delete the query “{name}”",
         "queries.descriptionUpdated": "Description of “{name}” updated.",
         "queries.duplicateTip": "Duplicate the query “{name}”",
         "queries.duplicated": "Query “{name}” duplicated as “{copy}”.",
@@ -3531,6 +3640,10 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.inserted": "“{name}” written at the cursor.",
         "queries.keptAssert": "The asserted result of “{name}” is kept.",
         "queries.keptPreviousAssert": "The previous asserted result of “{name}” is kept.",
+        "queries.movedDown": "“{name}” moved down.",
+        "queries.moveDownTip": "Move down the query “{name}”",
+        "queries.movedUp": "“{name}” moved up.",
+        "queries.moveUpTip": "Move up the query “{name}”",
         "queries.nameEmpty": "The query name cannot be empty.",
         "queries.nameExists": "A query “{name}” already exists.",
         "queries.openToConvert": "Open a project query to be able to turn it into a test.",
@@ -3838,7 +3951,7 @@ ORDER BY edificios DESC, sede;</pre>
         "utils.zeroRowsPerPage": "0 rows · {perPage} per page",
       },
       es: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además su propio <b>D</b> para duplicarla; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).",
         "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
@@ -3886,6 +3999,7 @@ ORDER BY edificios DESC, sede;</pre>
         "persistence.flagInvalid": "{label}: debe ser true o false.",
         "persistence.folderNameInvalid": "{label}: cada nombre de carpeta debe ser un texto no vacío.",
         "persistence.duplicateFolder": "{label}: la carpeta «{name}» aparece dos veces.",
+        "persistence.queryColorInvalid": "{queryLabel}: el color debe ser uno de los colores pastel.",
         "persistence.queryFolderInvalid": "{queryLabel}: la carpeta debe ser un texto no vacío.",
         "persistence.tableFolderInvalid": "{tableLabel}: la carpeta debe ser un texto no vacío.",
         "markup.b.alwaysAS": "siempre con <code>AS</code>",
@@ -4064,7 +4178,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.dd.severalColumnsASCDESCNULLS": "Varias columnas, <code>ASC</code>/<code>DESC</code> y <code>NULLS FIRST</code>/<code>NULLS LAST</code>. Un número es la posición de una columna del resultado: <code>ORDER BY 2 DESC</code>. Los textos numéricos se ordenan y comparan <b>por valor</b>, y el sitio de los valores que faltan lo manda <code>NULLS FIRST/LAST</code> aunque la clave sea <code>DESC</code> (sin indicarlo: primero en <code>ASC</code>, al final en <code>DESC</code>).",
         "markup.dd.textTextAreBothText": "<code>'texto'</code> y <code>\"texto\"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.",
         "markup.dd.unionConcatenatesRowsTwoSelects": "<code>UNION</code> y <code>UNION ALL</code> ponen debajo las filas de dos <code>SELECT</code> (y de más, encadenados): las dos partes devuelven el mismo número de columnas y <code>UNION</code> quita las filas repetidas, mientras que <code>UNION ALL</code> las conserva. El <code>ORDER BY</code> y el <code>LIMIT</code> finales valen para el resultado entero.",
-        "markup.div.dragChangeWidthMinimum140": "Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 195 px; con el foco, las flechas del teclado",
+        "markup.div.dragChangeWidthMinimum140": "Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 480 px; con el foco, las flechas del teclado",
         "markup.div.widthLeftColumn": "Ancho de la columna izquierda",
         "markup.dt.fields": "Campos",
         "markup.dt.fieldsEveryTable": "Campos de todas las tablas",
@@ -4259,7 +4373,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.underEachForeignKeyGo": "Bajo cada clave ajena van <b>siete cifras</b> con las filas del cruce, contadas sobre las dos tablas y nombradas con ellas: las de la tabla de la fila <b>cuya clave es null</b>, <b>cuya clave no casa con ninguna fila</b> de la de la columna o que <b>encuentran su fila</b> en ella, y las de la tabla de la columna <b>sin ninguna</b>, <b>con alguna</b>, <b>con una exactamente</b> o <b>con más de una</b> de la de la fila. El <b>orden</b> y qué significa cada una se explican en la <b>leyenda</b> de debajo de la matriz y en la pista de cada cifra.",
         "markup.li.whenReplacingItAsksYou": "Al reemplazar, te pregunta antes con el <b>recuento</b> y el alcance, y sustituye <b>todas las ocurrencias</b>. El valor resultante se interpreta como al editar una celda (número, <code>true</code>/<code>false</code>, <code>null</code> o texto) y un reemplazo vacío borra lo encontrado.",
         "markup.li.whileThereArePendingChanges": "Mientras haya cambios pendientes verás <b>«Cambios pendientes de guardar»</b> arriba a la derecha, y también te avisa si intentas cerrar la pestaña.",
-        "markup.li.widthLeftColumnIsVariable": "El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 195 px o usa las flechas con el tirador enfocado.",
+        "markup.li.widthLeftColumnIsVariable": "El ancho de la columna izquierda es <b>variable</b>: arrastra el <b>tirador</b> entre la barra lateral y la vista (de 140 a 480 px), haz doble clic para volver a 480 px o usa las flechas con el tirador enfocado.",
         "markup.li.wildcardsHaveNoEscapeLiteral": "Los comodines no tienen escape: un <code>*</code> o un <code>?</code> literales no se pueden buscar.",
         "markup.nav.helpSections": "Apartados de la ayuda",
         "markup.p.absXAbsoluteValueROUND": "<code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.",
@@ -4581,6 +4695,19 @@ ORDER BY edificios DESC, sede;</pre>
         "projectTests.summaryLine": "Pruebas · {parts}",
         "projectTests.unexpectedRow": "Fila {n}: no se esperaba ninguna fila (se obtuvo {row}).",
         "projectTests.withoutAssertSuffix": " · sin assert",
+        "queries.colorBlue": "Azul",
+        "queries.colorCleared": "«{name}» ya no tiene color.",
+        "queries.colorLemon": "Limón",
+        "queries.colorLilac": "Lila",
+        "queries.colorMint": "Menta",
+        "queries.colorNone": "Sin color",
+        "queries.colorPeach": "Melocotón",
+        "queries.colorRose": "Rosa",
+        "queries.colorSet": "«{name}» pintada con un color pastel.",
+        "queries.colorSky": "Cielo",
+        "queries.colorSmoke": "Humo",
+        "queries.colorTip": "Color de fondo de la consulta «{name}»",
+        "queries.colorTitle": "Color pastel de fondo",
         "queries.confirmRemove": "¿Eliminar la consulta «{name}»?{warning}",
         "queries.confirmRemoveTest": "¿Quitar el resultado asertado de «{name}»?\n\nLa consulta seguirá ejecutándose, pero no se comprobará en el informe del proyecto.",
         "queries.confirmReplaceAssert": "«{name}» ya comprueba un resultado asertado ({assert}).\n\n¿Sustituirlo por el resultado actual ({rows})?",
@@ -4599,6 +4726,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.csvStatus": "Resultado en CSV: ajusta el separador, pulsa «Copiar» o «Descargar CSV», o cierra con Esc.",
         "queries.csvTruncated": "Mostrando las primeras {max} de {total} filas (el fichero exportado incluye todas).",
         "queries.defaultSql": "SELECT * FROM tabla",
+        "queries.deleteTip": "Borrar la consulta «{name}»",
         "queries.descriptionUpdated": "Descripción de «{name}» actualizada.",
         "queries.duplicateTip": "Duplicar la consulta «{name}»",
         "queries.duplicated": "Consulta «{name}» duplicada como «{copy}».",
@@ -4633,6 +4761,10 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.inserted": "«{name}» escrito en el cursor.",
         "queries.keptAssert": "Se mantiene el resultado asertado de «{name}».",
         "queries.keptPreviousAssert": "Se mantiene el resultado asertado anterior de «{name}».",
+        "queries.movedDown": "Consulta «{name}» bajada.",
+        "queries.moveDownTip": "Bajar la consulta «{name}»",
+        "queries.movedUp": "Consulta «{name}» subida.",
+        "queries.moveUpTip": "Subir la consulta «{name}»",
         "queries.nameEmpty": "El nombre de la consulta no puede estar vacío.",
         "queries.nameExists": "Ya existe una consulta «{name}».",
         "queries.openToConvert": "Abre una consulta del proyecto para poder convertirla en test.",
@@ -5493,6 +5625,50 @@ ORDER BY edificios DESC, sede;</pre>
       /** Puts a query in a folder: `moveToFolder` for the list of the queries. */
       moveQueryToFolder(project, queryName, folder) {
         return Model.moveToFolder(project, queryName, folder, "queries");
+      },
+
+      /* --- Pastel colours of the queries -------------------------------- */
+
+      /** Pastel colours a query can take as background of its row of the
+       *  sidebar, with the text that names each one. The project file only
+       *  stores colours of this list. */
+      PASTEL_COLORS: [
+        { hex: "#fce4e4", label: "queries.colorRose" },
+        { hex: "#fde8cd", label: "queries.colorPeach" },
+        { hex: "#fbf6c9", label: "queries.colorLemon" },
+        { hex: "#dcf1d4", label: "queries.colorMint" },
+        { hex: "#d3ecf3", label: "queries.colorSky" },
+        { hex: "#dde5fa", label: "queries.colorBlue" },
+        { hex: "#e8ddf7", label: "queries.colorLilac" },
+        { hex: "#e6e6e6", label: "queries.colorSmoke" },
+      ],
+
+      /** Whether a text is one of the pastel colours of the list. */
+      isPastelColor(value) {
+        const wanted = String(value === undefined || value === null ? "" : value).toLowerCase();
+        return Model.PASTEL_COLORS.some((color) => color.hex === wanted);
+      },
+
+      /** Moves a query one place up (-1) or down (1) inside the folder it is
+       *  shown in: the list follows the order of the project, so it swaps it
+       *  with the query before or after it in that folder. The ends of the
+       *  folder stay put and it never leaves it. */
+      moveQuery(project, name, step) {
+        const query = project.queries.find((candidate) => candidate.name === name);
+        if (!query) {
+          return { ok: false, error: I18n.t("queries.unknown", { name: name }) };
+        }
+        const group = Model.itemsInFolder(project, query.folder || null, "queries");
+        const from = group.indexOf(query);
+        const to = from + (step < 0 ? -1 : 1);
+        if (from < 0 || to < 0 || to >= group.length) {
+          return { ok: false, error: "" };
+        }
+        const at = project.queries.indexOf(query);
+        const atOther = project.queries.indexOf(group[to]);
+        project.queries[at] = group[to];
+        project.queries[atOther] = query;
+        return { ok: true, error: "" };
       },
 
       /* --- Duplicating queries and their folders ------------------------- */
@@ -6983,10 +7159,18 @@ ORDER BY edificios DESC, sede;</pre>
             errors.push(I18n.t("persistence.queryFolderInvalid", { queryLabel: `${label} ("${raw.name}")` }));
             folder = null;
           }
+          let color = raw.color === undefined || raw.color === null ? null : raw.color;
+          if (color !== null && !Model.isPastelColor(color)) {
+            errors.push(I18n.t("persistence.queryColorInvalid", { queryLabel: `${label} ("${raw.name}")` }));
+            color = null;
+          }
           const expected = Persistence.parseAssert(raw.assert, label, raw.name, errors);
           const query = { name: raw.name, description, sql: raw.sql, assert: expected };
           if (folder !== null) {
             query.folder = folder.trim();
+          }
+          if (color !== null) {
+            query.color = String(color).toLowerCase();
           }
           queries.push(query);
         });
@@ -11192,11 +11376,27 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       renderSidebarQueries() {
+        // The palette hangs under a swatch of this list: repainting it leaves
+        // that swatch behind, so the palette goes with it.
+        UiQueries.closeColor();
         const list = document.getElementById("list-queries");
         list.textContent = "";
         const usage = SqlViews.usage(Store.project);
         const shape = Ui.projectShape(Store.project);
         UiFolders.render("queries", list, (query, folder) => Ui.queryItem(query, usage, shape, folder));
+      },
+
+      /** Button of a row of the sidebar: a symbol, the query it belongs to and a
+       *  tip that also names the action for whoever does not see the symbol. */
+      rowButton(symbol, className, name, tip) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `panel-action ${className}`;
+        button.textContent = symbol;
+        button.dataset.name = name;
+        button.title = tip;
+        button.setAttribute("aria-label", tip);
+        return button;
       },
 
       /** One query of the sidebar list: its name, its test mark and its view
@@ -11235,15 +11435,29 @@ ORDER BY edificios DESC, sede;</pre>
         const actions = document.createElement("span");
         actions.className = "row-actions";
         actions.appendChild(marcas);
-        const duplicate = document.createElement("button");
-        duplicate.type = "button";
-        duplicate.className = "panel-action duplicate-query";
-        duplicate.textContent = "D";
-        duplicate.dataset.name = query.name;
-        duplicate.title = I18n.t("queries.duplicateTip", { name: query.name });
-        duplicate.setAttribute("aria-label", duplicate.title);
-        actions.appendChild(duplicate);
+        // The order inside the folder is the order of the project: an arrow is
+        // left out when the query is already at the end it leads to.
+        const group = Model.itemsInFolder(Store.project, folder || null, "queries");
+        const position = group.indexOf(query);
+        const up = Ui.rowButton("▲", "move-query", query.name, I18n.t("queries.moveUpTip", { name: query.name }));
+        up.dataset.step = "-1";
+        up.disabled = position <= 0;
+        actions.appendChild(up);
+        const down = Ui.rowButton("▼", "move-query", query.name, I18n.t("queries.moveDownTip", { name: query.name }));
+        down.dataset.step = "1";
+        down.disabled = position < 0 || position >= group.length - 1;
+        actions.appendChild(down);
+        actions.appendChild(Ui.rowButton("D", "duplicate-query", query.name, I18n.t("queries.duplicateTip", { name: query.name })));
+        const color = Ui.rowButton("", "color-query", query.name, I18n.t("queries.colorTip", { name: query.name }));
+        color.style.background = query.color || "transparent";
+        color.setAttribute("aria-haspopup", "dialog");
+        actions.appendChild(color);
+        actions.appendChild(Ui.rowButton("✕", "delete-query", query.name, I18n.t("queries.deleteTip", { name: query.name })));
         item.appendChild(actions);
+        if (query.color) {
+          item.style.background = query.color;
+          item.classList.add("has-color");
+        }
         return item;
       },
 
@@ -12950,11 +13164,11 @@ ORDER BY edificios DESC, sede;</pre>
       /** Minimum, maximum and starting width and arrow step, in pixels. */
       MIN: 140,
       MAX: 480,
-      DEFAULT: 195,
+      DEFAULT: 480,
       STEP: 16,
 
       /** Current width and drag state. */
-      ancho: 195,
+      ancho: 480,
       arrastrando: false,
       originX: 0,
       originAncho: 0,
@@ -13273,10 +13487,30 @@ ORDER BY edificios DESC, sede;</pre>
       /** Row cap of the CSV text (the exported file is complete). */
       MAX_ROWS: 1000,
 
+      /** Query whose pastel palette is open (null when it is closed) and the
+       *  swatch it was opened from. */
+      colorQuery: null,
+      colorButton: null,
+
       /** Wires the events of the queries view. */
       bind() {
         document.getElementById("btn-new-query").addEventListener("click", () => UiQueries.create());
         document.getElementById("list-queries").addEventListener("click", (event) => {
+          const move = event.target.closest("button.move-query");
+          if (move) {
+            UiQueries.move(move.dataset.name, Number(move.dataset.step));
+            return;
+          }
+          const swatch = event.target.closest("button.color-query");
+          if (swatch) {
+            UiQueries.openColor(swatch.dataset.name, swatch);
+            return;
+          }
+          const removeMark = event.target.closest("button.delete-query");
+          if (removeMark) {
+            UiQueries.removeQuery(removeMark.dataset.name);
+            return;
+          }
           const duplicate = event.target.closest("button.duplicate-query");
           if (duplicate) {
             UiQueries.duplicate(duplicate.dataset.name);
@@ -13343,6 +13577,34 @@ ORDER BY edificios DESC, sede;</pre>
             UiQueries.selectResultRow(Number(row.dataset.index));
           }
         });
+        document.getElementById("query-color-popup").addEventListener("click", (event) => {
+          const swatch = event.target.closest("button[data-color]");
+          if (swatch) {
+            UiQueries.setColor(UiQueries.colorQuery, swatch.dataset.color);
+          }
+        });
+        document.addEventListener("pointerdown", (event) => {
+          if (UiQueries.colorQuery === null || !(event.target instanceof Element)) {
+            return;
+          }
+          if (!event.target.closest("#query-color-popup, button.color-query")) {
+            UiQueries.closeColor();
+          }
+        });
+        document.addEventListener("keydown", (event) => {
+          if (UiQueries.colorQuery !== null && event.key === "Escape") {
+            event.preventDefault();
+            UiQueries.closeColor();
+          }
+        });
+        window.addEventListener("resize", () => {
+          if (UiQueries.colorQuery !== null) {
+            UiQueries.placeColorPopup();
+          }
+        });
+        //  The palette hangs under a swatch of the sidebar: when the list
+        //  scrolls it would point at another row, so it closes.
+        document.getElementById("sidebar").addEventListener("scroll", () => UiQueries.closeColor());
         UiQueries.updateCreateTableButton();
       },
 
@@ -13385,6 +13647,115 @@ ORDER BY edificios DESC, sede;</pre>
         setStatus(I18n.t("queries.duplicated", { name: name, copy: result.query.name }));
       },
 
+      /** Moves a query one place up or down inside its folder, with the arrows
+       *  of its row of the list. */
+      move(name, step) {
+        const result = Model.moveQuery(Store.project, name, step);
+        if (!result.ok) {
+          if (result.error) {
+            setStatus(result.error);
+          }
+          return;
+        }
+        UiProject.markDirty();
+        Ui.renderSidebarQueries();
+        setStatus(I18n.t(step < 0 ? "queries.movedUp" : "queries.movedDown", { name: name }));
+      },
+
+      /** Element of the pastel palette. */
+      colorPopup() {
+        return document.getElementById("query-color-popup");
+      },
+
+      /** Paints the palette with the pastel colours and the «no colour» option,
+       *  in the language of the interface. */
+      renderColorPopup() {
+        const popup = UiQueries.colorPopup();
+        popup.textContent = "";
+        Model.PASTEL_COLORS.forEach((color) => {
+          const swatch = document.createElement("button");
+          swatch.type = "button";
+          swatch.dataset.color = color.hex;
+          swatch.style.background = color.hex;
+          const label = I18n.t(color.label);
+          swatch.title = label;
+          swatch.setAttribute("aria-label", label);
+          popup.appendChild(swatch);
+        });
+        const none = document.createElement("button");
+        none.type = "button";
+        none.className = "color-none";
+        none.dataset.color = "";
+        none.textContent = I18n.t("queries.colorNone");
+        none.title = I18n.t("queries.colorNone");
+        none.setAttribute("aria-label", I18n.t("queries.colorNone"));
+        popup.appendChild(none);
+      },
+
+      /** Opens the palette under the swatch of that query, with the colour that
+       *  the query has just now marked. */
+      openColor(name, button) {
+        UiQueries.renderColorPopup();
+        const query = Store.project.queries.find((candidate) => candidate.name === name);
+        const current = (query && query.color) || "";
+        UiQueries.colorQuery = name;
+        UiQueries.colorButton = button;
+        const popup = UiQueries.colorPopup();
+        popup.querySelectorAll("button[data-color]").forEach((swatch) => {
+          swatch.classList.toggle("chosen", swatch.dataset.color === current);
+        });
+        popup.hidden = false;
+        UiQueries.placeColorPopup();
+        const first = popup.querySelector("button");
+        if (first) {
+          first.focus();
+        }
+      },
+
+      /** Puts the palette under the swatch, inside the window. */
+      placeColorPopup() {
+        const box = UiQueries.colorButton.getBoundingClientRect();
+        const popup = UiQueries.colorPopup();
+        const width = popup.offsetWidth;
+        const height = popup.offsetHeight;
+        const left = Math.max(4, Math.min(box.left, window.innerWidth - width - 4));
+        const top = box.bottom + 2 + height > window.innerHeight - 4
+          ? Math.max(4, box.top - height - 2)
+          : box.bottom + 2;
+        popup.style.left = `${left}px`;
+        popup.style.top = `${top}px`;
+      },
+
+      /** Closes the palette. */
+      closeColor() {
+        if (UiQueries.colorQuery === null) {
+          return;
+        }
+        UiQueries.colorQuery = null;
+        UiQueries.colorButton = null;
+        UiQueries.colorPopup().hidden = true;
+      },
+
+      /** Paints the row of a query with a pastel colour ("" takes it away). It
+       *  only changes the background of the list, never the SQL nor the result. */
+      setColor(name, hex) {
+        const query = Store.project.queries.find((candidate) => candidate.name === name);
+        if (!query) {
+          return;
+        }
+        if (hex === "") {
+          delete query.color;
+        } else if (Model.isPastelColor(hex)) {
+          query.color = hex;
+        } else {
+          return;
+        }
+        UiQueries.closeColor();
+        UiProject.markDirty();
+        Ui.renderSidebarQueries();
+        setStatus(I18n.t(hex === "" ? "queries.colorCleared" : "queries.colorSet", { name: name }));
+      },
+
       /** Opens a query generated by the program (the figures of the
        *  relationship matrix, the related rows of the table view): it creates it
        *  when it does not exist, brings it up to date when it did, selects it
@@ -13405,6 +13776,16 @@ ORDER BY edificios DESC, sede;</pre>
 
       remove() {
         const query = UiQueries.activeQueryOrNull();
+        if (query) {
+          UiQueries.removeQuery(query.name);
+        }
+      },
+
+      /** Deletes the query with that name, with its «✕», after the
+       *  confirmation. When it is the open one the view is emptied, as
+       *  «Delete query» does. */
+      removeQuery(name) {
+        const query = Store.project.queries.find((candidate) => candidate.name === name);
         if (!query) {
           return;
         }
@@ -13423,16 +13804,21 @@ ORDER BY edificios DESC, sede;</pre>
         if (!window.confirm(I18n.t("queries.confirmRemove", { name: query.name, warning: warning }))) {
           return;
         }
+        const wasActive = Ui.state.activeQuery === name;
         Store.project.queries = Store.project.queries.filter((candidate) => candidate !== query);
         UiProject.markDirty();
-        Ui.state.activeQuery = null;
+        if (wasActive) {
+          Ui.state.activeQuery = null;
+        }
         Ui.renderSidebarQueries();
-        UiQueries.updateTestControls();
-        Ui.showView("vacio");
         const orphans = affected.length === 0
           ? ""
           : I18n.t("queries.orphans", { count: affected.length, names: SqlRename.listNames(affected) });
-        setStatus(I18n.t("queries.removed", { name: query.name, orphans: orphans }));
+        if (wasActive) {
+          UiQueries.updateTestControls();
+          Ui.showView("vacio");
+        }
+        setStatus(I18n.t("queries.removed", { name: name, orphans: orphans }));
       },
 
       /** Selects a query and loads its content into the editor. */
@@ -15899,6 +16285,9 @@ ORDER BY edificios DESC, sede;</pre>
           return false;
         }
         Store.replaceProject(result.project);
+        // Every folder starts folded: the sidebar opens with the list of
+        // folders and their colours, not with hundreds of queries.
+        UiFolders.foldEveryFolder();
         Settings.apply();
         UiProject.discardSessionState();
         UiProject.markClean();
@@ -16263,6 +16652,16 @@ ORDER BY edificios DESC, sede;</pre>
       refresh(kind) {
         UiFolders.repaint(kind);
         UiFolders.fillEditorOptions(kind);
+      },
+
+      /** Folds every folder of both lists: the project is opened with its
+       *  folders closed, so the whole list of folders fits in the sidebar at
+       *  once. The «no folder» group is a group, not a folder, and is left as
+       *  it is. */
+      foldEveryFolder() {
+        UiFolders.KINDS.forEach((kind) => {
+          Model.foldersOf(Store.project, kind).forEach((name) => Model.foldFolder(Store.project, name, kind));
+        });
       },
 
       /** Item of that kind that is open in its editor (null when there is none). */
@@ -20525,6 +20924,14 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(UiSidebar.setWidth(antes), antes, "the starting width is restored");
     });
 
+    SelfTests.add("When_AppStarts_Expect_SidebarAtItsWidest", () => {
+      assertEqual(UiSidebar.DEFAULT, UiSidebar.MAX, "the sidebar starts as wide as it can");
+      assertEqual(UiSidebar.DEFAULT, 480, "480 px");
+      const handle = document.getElementById("separador-sidebar");
+      assertEqual(handle.getAttribute("aria-valuemax"), String(UiSidebar.DEFAULT), "the handle announces that width as its maximum");
+      assertEqual(handle.getAttribute("aria-valuemin"), "140", "and the minimum is left as it was");
+    });
+
     /* --- Cases T6c: search and replace in the table --------------------- */
 
     /** Minimal table with names and notes for the search cases. */
@@ -23495,6 +23902,224 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.queriesInFolder(project, "Sales").map((query) => query.name), ["q1", "q4"], "the queries of a folder, in project order");
       assertEqual(Model.queriesInFolder(project, null).map((query) => query.name), ["q3"], "and the ones without folder");
       assertEqual(Model.queriesInFolder(project, "2026").length, 1, "one query in the other folder");
+    });
+
+    SelfTests.add("When_OpenProject_Expect_EveryFolderFolded", () => {
+      const before = {
+        project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery,
+        table: Ui.state.activeTable, view: Ui.state.view,
+      };
+      const text = JSON.stringify({
+        format: Persistence.FORMAT,
+        version: Persistence.VERSION,
+        name: "folded",
+        folders: ["Sales", "2026"],
+        tableFolders: ["Staff"],
+        tables: [{ name: "c", fields: [{ name: "id", type: "number" }], rows: [{ id: 1 }], folder: "Staff" }],
+        queries: [
+          { name: "q1", sql: "SELECT * FROM c", folder: "Sales" },
+          { name: "q2", sql: "SELECT * FROM c", folder: "2026" },
+          { name: "q3", sql: "SELECT * FROM c" },
+        ],
+        settings: {},
+      });
+      assertEqual(UiProject.openText(text, "folded.json"), true, "the project opens");
+      assertEqual(Model.foldedOf(Store.project, "queries"), ["Sales", "2026"], "every folder of the queries starts folded");
+      assertEqual(Model.foldedOf(Store.project, "tables"), ["Staff"], "and every folder of the tables too");
+      assertEqual(queryItem("q1").hidden, true, "the queries of the folders stay out of sight");
+      assertEqual(queryItem("q2").hidden, true, "all of them");
+      assertEqual(queryItem("q3").hidden, false, "the ones without a folder are still seen: the group is not a folder");
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      Ui.state.activeTable = before.table;
+      UiProject.showName();
+      Ui.showView(before.view);
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    /* --- Cases T12: actions of the queries of the sidebar --------------- */
+
+    /** Project of the cases below: two queries in the same folder. */
+    function twoQueryFolderProject() {
+      const project = folderProject();
+      project.queries.push({ name: "q4", description: "", sql: "SELECT * FROM c", assert: null, folder: "Sales" });
+      return project;
+    }
+
+    SelfTests.add("When_MoveQueryInsideItsFolder_Expect_OnlyThatFolderChanges", () => {
+      const project = twoQueryFolderProject();
+      assertEqual(Model.moveQuery(project, "q4", -1).ok, true, "a query moves up inside its folder");
+      assertEqual(Model.itemsInFolder(project, "Sales", "queries").map((query) => query.name), ["q4", "q1"], "it swaps with the one before it");
+      assertEqual(project.queries.map((query) => query.name), ["q4", "q2", "q3", "q1"], "the order of the project moves with it");
+      assertEqual(Model.moveQuery(project, "q4", 1).ok, true, "and comes back down");
+      assertEqual(Model.itemsInFolder(project, "Sales", "queries").map((query) => query.name), ["q1", "q4"], "to its place");
+      assertEqual(Model.moveQuery(project, "q1", -1).ok, false, "the first one of the folder cannot go up");
+      assertEqual(Model.moveQuery(project, "q4", 1).ok, false, "nor can the last one go down");
+      assertEqual(Model.moveQuery(project, "q2", 1).ok, false, "a folder with a single query does not move");
+      assertEqual(Model.moveQuery(project, "q3", -1).ok, false, "nor does the «no folder» group with a single query");
+      assertEqual(Model.moveQuery(project, "nope", 1).ok, false, "an unknown query is rejected");
+      assert(Model.moveQuery(project, "nope", 1).error !== "", "and the rejection says why");
+      assertEqual(project.queries.map((query) => query.name), ["q1", "q2", "q3", "q4"], "nothing else moved");
+    });
+
+    SelfTests.add("When_ClickMoveArrows_Expect_QueryMovesInsideItsFolder", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery };
+      Store.replaceProject(twoQueryFolderProject());
+      Store.dirty = false;
+      Ui.renderSidebarQueries();
+      const arrows = (name) => [...queryItem(name).querySelectorAll("button.move-query")];
+      assertEqual(arrows("q1").map((button) => button.textContent), ["▲", "▼"], "every query carries the two arrows");
+      assertEqual(arrows("q1")[0].disabled, true, "the first one of its folder cannot go up");
+      assertEqual(arrows("q1")[1].disabled, false, "but it can go down");
+      assertEqual(arrows("q4")[1].disabled, true, "the last one cannot go down");
+      arrows("q1")[1].click();
+      assertEqual(Model.itemsInFolder(Store.project, "Sales", "queries").map((query) => query.name), ["q4", "q1"], "the arrow swaps it with the next one of the folder");
+      assertEqual(queryItem("q1").dataset.folder, "Sales", "and the query stays in its folder");
+      assertEqual(Store.dirty, true, "the project is left pending save");
+      assertEqual(arrows("q1")[0].disabled, false, "now it can go back up");
+      arrows("q1")[0].click();
+      assertEqual(Model.itemsInFolder(Store.project, "Sales", "queries").map((query) => query.name), ["q1", "q4"], "and the other arrow undoes it");
+      assert(document.getElementById("status").textContent.includes("q1"), "the status names the query: " + document.getElementById("status").textContent);
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_PickPastelColour_Expect_RowPainted", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery };
+      Store.replaceProject(twoQueryFolderProject());
+      Store.dirty = false;
+      Ui.renderSidebarQueries();
+      const swatch = queryItem("q1").querySelector("button.color-query");
+      assert(swatch !== null, "every query carries its colour swatch");
+      assertEqual(swatch.getAttribute("aria-label"), swatch.title, "with the name of the action for whoever does not see the colour");
+      swatch.click();
+      const popup = document.getElementById("query-color-popup");
+      assertEqual(popup.hidden, false, "the swatch opens the pastel palette");
+      const pastels = [...popup.querySelectorAll("button[data-color]:not(.color-none)")];
+      assertEqual(pastels.length, 8, "with the eight pastel colours");
+      const chosen = pastels[2];
+      chosen.click();
+      assertEqual(Store.project.queries.find((query) => query.name === "q1").color, chosen.dataset.color, "the colour is written in the query");
+      assertEqual(getComputedStyle(queryItem("q1")).backgroundColor, getComputedStyle(chosen).backgroundColor, "and paints its row of the list");
+      assertEqual(popup.hidden, true, "and the palette closes");
+      assertEqual(Store.dirty, true, "the project is left pending save");
+      queryItem("q1").querySelector("button.color-query").click();
+      assertEqual([...popup.querySelectorAll("button[data-color]")].some((item) => item.classList.contains("chosen")), true, "the palette marks the colour of the query");
+      popup.querySelector("button.color-none").click();
+      assertEqual(Store.project.queries.find((query) => query.name === "q1").color, undefined, "the «no colour» option takes it away");
+      assertEqual(queryItem("q1").style.background, "", "and the row is left without colour");
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_PaletteOpensFromAnyView_Expect_Shown", () => {
+      const before = {
+        project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery, view: Ui.state.view,
+      };
+      Store.replaceProject(twoQueryFolderProject());
+      Ui.renderSidebarQueries();
+      // The sidebar is always on screen, so its palette has to be too, even
+      // with the welcome page showing instead of the query editor.
+      Ui.showView("vacio");
+      queryItem("q1").querySelector("button.color-query").click();
+      const popup = document.getElementById("query-color-popup");
+      assertEqual(popup.hidden, false, "the swatch opens the palette");
+      assert(popup.closest("[hidden]") === null, "the palette does not hang from a hidden view");
+      assert(popup.getBoundingClientRect().height > 0, "and it takes room on screen");
+      UiQueries.closeColor();
+      assertEqual(popup.hidden, true, "and it closes");
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.showView(before.view);
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_ClickDeleteMark_Expect_ConfirmedAndRemoved", () => {
+      const before = {
+        project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery, confirm: window.confirm,
+      };
+      Store.replaceProject(twoQueryFolderProject());
+      Store.dirty = false;
+      UiQueries.select("q4");
+      const mark = queryItem("q1").querySelector("button.delete-query");
+      assert(mark !== null, "every query carries its «✕»");
+      assertEqual(mark.textContent, "✕", "with the symbol of the action");
+      window.confirm = () => false;
+      mark.click();
+      assertEqual(Store.project.queries.some((query) => query.name === "q1"), true, "saying no keeps the query");
+      window.confirm = () => true;
+      queryItem("q1").querySelector("button.delete-query").click();
+      assertEqual(Store.project.queries.some((query) => query.name === "q1"), false, "saying yes deletes it");
+      assertEqual(Ui.state.activeQuery, "q4", "the open query is kept when another one is deleted");
+      assertEqual(Store.dirty, true, "the project is left pending save");
+      assertEqual(queryItem("q1"), null, "and the row is gone from the list");
+      queryItem("q4").querySelector("button.delete-query").click();
+      assertEqual(Ui.state.activeQuery, null, "deleting the open one leaves no query open");
+      assertEqual(document.getElementById("view-vacio").hidden, false, "and the view is emptied");
+      window.confirm = before.confirm;
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_QueryWithPastelColour_Expect_KeptInFile", () => {
+      const project = folderProject();
+      project.queries[0].color = "#dcf1d4";
+      const loaded = Persistence.parseProject(Persistence.serializeProject(project));
+      assertEqual(loaded.ok, true, "the project is written and read back");
+      assertEqual(loaded.project.queries[0].color, "#dcf1d4", "the pastel colour travels in the file");
+      assertEqual(loaded.project.queries[1].color, undefined, "and a query without colour has no key");
+    });
+
+    SelfTests.add("When_QueryWithUnknownColour_Expect_Rejected", () => {
+      const project = folderProject();
+      project.queries[0].color = "red";
+      const loaded = Persistence.parseProject(Persistence.serializeProject(project));
+      assertEqual(loaded.ok, false, "a colour outside the pastel list is rejected");
+      assertEqual(loaded.errors.length, 1, "with one error");
+      assert(loaded.errors[0].includes("q1"), "that names the query: " + loaded.errors[0]);
+    });
+
+    SelfTests.add("When_ChangeLanguage_ExpectQueryMarksTold", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery };
+      Store.replaceProject(twoQueryFolderProject());
+      Ui.renderSidebarQueries();
+      SelfTests.inLanguage("en", () => {
+        Ui.renderSidebarQueries();
+        assertEqual(queryItem("q1").querySelector("button.move-query").title, "Move up the query “q1”", "the arrow says where it moves the query");
+        assertEqual(queryItem("q1").querySelectorAll("button.move-query")[1].title, "Move down the query “q1”", "both of them");
+        assertEqual(queryItem("q1").querySelector("button.color-query").title, "Background colour of the query “q1”", "the swatch says what it paints");
+        assertEqual(queryItem("q1").querySelector("button.delete-query").title, "Delete the query “q1”", "and the «✕» what it deletes");
+      });
+      SelfTests.inLanguage("es", () => {
+        Ui.renderSidebarQueries();
+        assertEqual(queryItem("q1").querySelector("button.move-query").title, "Subir la consulta «q1»", "in Spanish too");
+        assertEqual(queryItem("q1").querySelectorAll("button.move-query")[1].title, "Bajar la consulta «q1»", "both of them");
+        assertEqual(queryItem("q1").querySelector("button.color-query").title, "Color de fondo de la consulta «q1»", "the swatch");
+        assertEqual(queryItem("q1").querySelector("button.delete-query").title, "Borrar la consulta «q1»", "and the «✕»");
+      });
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
     });
 
     /* --- Cases T13: updating the data of a table ------------------------ */
