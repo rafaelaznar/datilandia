@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Health and hospitals (20 tables, 196 queries)",
+  "name": "SQL tests · Health and hospitals (20 tables, 209 queries)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -12803,6 +12803,526 @@
           [
             "Beatriz Díaz Ruiz",
             null
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A47 · Global admission totals with every aggregate (no GROUP BY)",
+      "description": "Aggregates without GROUP BY over the 50 admissions: 28 patients and 9 different reasons; total 30404, minimum 192, maximum 950 and rounded average 608.08.",
+      "sql": "SELECT COUNT(*) AS admissions, COUNT(cost_per_day) AS with_cost, COUNT(DISTINCT id_patient) AS patients, COUNT(DISTINCT reason) AS reasons, SUM(cost_per_day) AS total_cost, MIN(cost_per_day) AS minimum, MAX(cost_per_day) AS maximum, ROUND(AVG(cost_per_day), 2) AS average FROM admissions",
+      "assert": {
+        "columns": [
+          "admissions",
+          "with_cost",
+          "patients",
+          "reasons",
+          "total_cost",
+          "minimum",
+          "maximum",
+          "average"
+        ],
+        "rows": [
+          [
+            50,
+            50,
+            28,
+            9,
+            30404,
+            192,
+            950,
+            608.08
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A48 · Invoices by payment method with COUNT of a column and HAVING (column with NULL)",
+      "description": "GROUP BY on a column with nulls: COALESCE labels the group without a method and COUNT(payment_method) leaves it at zero; HAVING keeps the groups adding up to 65000 or more.",
+      "sql": "SELECT COALESCE(payment_method, 'no method') AS method, COUNT(*) AS invoices, COUNT(payment_method) AS with_method, COUNT(DISTINCT id_patient) AS patients, SUM(amount) AS total, ROUND(AVG(amount), 2) AS average FROM invoices GROUP BY payment_method HAVING SUM(amount) >= 65000 ORDER BY total DESC",
+      "assert": {
+        "columns": [
+          "method",
+          "invoices",
+          "with_method",
+          "patients",
+          "total",
+          "average"
+        ],
+        "rows": [
+          [
+            "transfer",
+            18,
+            18,
+            14,
+            77938,
+            4329.89
+          ],
+          [
+            "no method",
+            14,
+            0,
+            12,
+            71141,
+            5081.5
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A49 · Appointments by doctor and status (GROUP BY of two columns with HAVING)",
+      "description": "Two grouping columns with COUNT(*) and MIN and MAX of the duration: only three doctor-status combinations reach 4 appointments.",
+      "sql": "SELECT id_doctor, status, COUNT(*) AS appointments, MIN(duration_min) AS minimum, MAX(duration_min) AS maximum FROM appointments GROUP BY id_doctor, status HAVING COUNT(*) >= 4 ORDER BY appointments DESC, id_doctor, status",
+      "assert": {
+        "columns": [
+          "id_doctor",
+          "status",
+          "appointments",
+          "minimum",
+          "maximum"
+        ],
+        "rows": [
+          [
+            6,
+            "pending",
+            4,
+            15,
+            60
+          ],
+          [
+            19,
+            "pending",
+            4,
+            15,
+            60
+          ],
+          [
+            30,
+            "pending",
+            4,
+            15,
+            60
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A50 · Patients by blood group (COUNT(*) versus COUNT of a column)",
+      "description": "The unknown group shows up in COUNT(*) but at zero in COUNT(blood_group); COUNT(DISTINCT city) counts different cities per group and the HAVING requires 3 patients.",
+      "sql": "SELECT COALESCE(blood_group, 'unknown') AS blood_group, COUNT(*) AS patients, COUNT(blood_group) AS with_group, COUNT(DISTINCT city) AS cities FROM patients GROUP BY blood_group HAVING COUNT(*) >= 3 ORDER BY patients DESC, blood_group",
+      "assert": {
+        "columns": [
+          "blood_group",
+          "patients",
+          "with_group",
+          "cities"
+        ],
+        "rows": [
+          [
+            "A-",
+            9,
+            9,
+            5
+          ],
+          [
+            "B+",
+            8,
+            8,
+            7
+          ],
+          [
+            "B-",
+            5,
+            5,
+            5
+          ],
+          [
+            "unknown",
+            5,
+            0,
+            4
+          ],
+          [
+            "AB+",
+            4,
+            4,
+            4
+          ],
+          [
+            "A+",
+            3,
+            3,
+            2
+          ],
+          [
+            "O+",
+            3,
+            3,
+            2
+          ],
+          [
+            "O-",
+            3,
+            3,
+            2
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A51 · Admissions per doctor with every numeric aggregate (double HAVING)",
+      "description": "COUNT(*), SUM, MIN, MAX and AVG of the cost per doctor; HAVING combines COUNT(*) and AVG: three admissions at least and an average of 600 or more.",
+      "sql": "SELECT id_doctor, COUNT(*) AS admissions, SUM(cost_per_day) AS total_cost, MIN(cost_per_day) AS minimum, MAX(cost_per_day) AS maximum, ROUND(AVG(cost_per_day), 2) AS average FROM admissions GROUP BY id_doctor HAVING COUNT(*) >= 3 AND AVG(cost_per_day) >= 600 ORDER BY total_cost DESC, id_doctor",
+      "assert": {
+        "columns": [
+          "id_doctor",
+          "admissions",
+          "total_cost",
+          "minimum",
+          "maximum",
+          "average"
+        ],
+        "rows": [
+          [
+            23,
+            4,
+            2406,
+            294,
+            950,
+            601.5
+          ],
+          [
+            8,
+            3,
+            2164,
+            511,
+            831,
+            721.33
+          ],
+          [
+            3,
+            3,
+            2110,
+            490,
+            830,
+            703.33
+          ],
+          [
+            28,
+            3,
+            1938,
+            472,
+            834,
+            646
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A52 · Rooms by hospital and occupancy (GROUP BY of two columns with SUM)",
+      "description": "Grouping by hospital and occupancy with COUNT(*) and SUM(num_beds); HAVING keeps only the groups of 4 rooms or more.",
+      "sql": "SELECT id_hospital, occupied, COUNT(*) AS rooms, SUM(num_beds) AS beds FROM rooms GROUP BY id_hospital, occupied HAVING COUNT(*) >= 4 ORDER BY id_hospital, occupied",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "occupied",
+          "rooms",
+          "beds"
+        ],
+        "rows": [
+          [
+            1,
+            true,
+            6,
+            8
+          ],
+          [
+            2,
+            true,
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A53 · Surgeries by risk with every function (HAVING SUM)",
+      "description": "COUNT(*), COUNT(DISTINCT operating_room), SUM, MIN, MAX and AVG by risk; the HAVING on the sum leaves out the high risk.",
+      "sql": "SELECT risk, COUNT(*) AS surgeries, COUNT(DISTINCT operating_room) AS operating_rooms, SUM(cost) AS total_cost, MIN(duration_min) AS min_duration, MAX(duration_min) AS max_duration, ROUND(AVG(cost), 0) AS average_cost FROM surgeries GROUP BY risk HAVING SUM(cost) > 65000 ORDER BY total_cost DESC",
+      "assert": {
+        "columns": [
+          "risk",
+          "surgeries",
+          "operating_rooms",
+          "total_cost",
+          "min_duration",
+          "max_duration",
+          "average_cost"
+        ],
+        "rows": [
+          [
+            "medium",
+            14,
+            6,
+            93776,
+            45,
+            320,
+            6698
+          ],
+          [
+            "low",
+            13,
+            6,
+            70411,
+            45,
+            320,
+            5416
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A54 · Labs by type with COUNT(DISTINCT) and AVG (HAVING COUNT DISTINCT)",
+      "description": "Per lab type: COUNT(*) of rows, COUNT(DISTINCT id_patient) of patients and two rounded AVGs; HAVING requires 15 different patients.",
+      "sql": "SELECT type, COUNT(*) AS labs, COUNT(DISTINCT id_patient) AS patients, ROUND(AVG(glucose), 1) AS average_glucose, ROUND(AVG(cholesterol), 1) AS average_cholesterol FROM labs GROUP BY type HAVING COUNT(DISTINCT id_patient) >= 15 ORDER BY labs DESC",
+      "assert": {
+        "columns": [
+          "type",
+          "labs",
+          "patients",
+          "average_glucose",
+          "average_cholesterol"
+        ],
+        "rows": [
+          [
+            "blood",
+            44,
+            33,
+            148.4,
+            218.9
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A55 · Prescriptions per drug with SUM, MIN, MAX and AVG (HAVING COUNT)",
+      "description": "Per drug, COUNT(*) with SUM of the amounts and MIN, MAX and AVG of the duration; HAVING requires 8 prescriptions or more.",
+      "sql": "SELECT id_drug, COUNT(*) AS prescriptions, SUM(amount) AS units, MIN(duration_days) AS min_days, MAX(duration_days) AS max_days, ROUND(AVG(duration_days), 1) AS average_days FROM prescriptions GROUP BY id_drug HAVING COUNT(*) >= 8 ORDER BY units DESC, id_drug",
+      "assert": {
+        "columns": [
+          "id_drug",
+          "prescriptions",
+          "units",
+          "min_days",
+          "max_days",
+          "average_days"
+        ],
+        "rows": [
+          [
+            7,
+            8,
+            26,
+            15,
+            81,
+            44.4
+          ],
+          [
+            22,
+            9,
+            23,
+            12,
+            87,
+            56
+          ],
+          [
+            12,
+            8,
+            18,
+            19,
+            90,
+            58.8
+          ],
+          [
+            24,
+            9,
+            18,
+            3,
+            120,
+            52.7
+          ],
+          [
+            8,
+            8,
+            17,
+            12,
+            86,
+            50.6
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A56 · Treatments per year with SUM and AVG (GROUP BY with an expression and HAVING)",
+      "description": "GROUP BY on the year of the start date: COUNT(*), COUNT(DISTINCT id_patient), SUM and rounded AVG of the cost; HAVING keeps the years with 10 treatments or more.",
+      "sql": "SELECT SUBSTR(start_date, 1, 4) AS year, COUNT(*) AS treatments, COUNT(DISTINCT id_patient) AS patients, SUM(cost) AS total_cost, ROUND(AVG(cost), 0) AS average_cost FROM treatments GROUP BY SUBSTR(start_date, 1, 4) HAVING COUNT(*) >= 10 ORDER BY year",
+      "assert": {
+        "columns": [
+          "year",
+          "treatments",
+          "patients",
+          "total_cost",
+          "average_cost"
+        ],
+        "rows": [
+          [
+            "2023",
+            25,
+            18,
+            22734,
+            909
+          ],
+          [
+            "2024",
+            15,
+            13,
+            12225,
+            815
+          ],
+          [
+            "2025",
+            21,
+            15,
+            15207,
+            724
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A57 · Aggregates over the grouped column itself (COUNT of status)",
+      "description": "COUNT(status) matches COUNT(*) and COUNT(DISTINCT status) is 1 in every group; MAX(id_appointment) and COUNT(duration_min) summarise the other columns.",
+      "sql": "SELECT status, COUNT(*) AS total, COUNT(status) AS with_status, COUNT(DISTINCT status) AS statuses, MAX(id_appointment) AS last_id, COUNT(duration_min) AS with_duration FROM appointments GROUP BY status ORDER BY total DESC, status",
+      "assert": {
+        "columns": [
+          "status",
+          "total",
+          "with_status",
+          "statuses",
+          "last_id",
+          "with_duration"
+        ],
+        "rows": [
+          [
+            "pending",
+            47,
+            47,
+            1,
+            69,
+            47
+          ],
+          [
+            "attended",
+            11,
+            11,
+            1,
+            70,
+            11
+          ],
+          [
+            "cancelled",
+            7,
+            7,
+            1,
+            66,
+            7
+          ],
+          [
+            "no-show",
+            5,
+            5,
+            1,
+            63,
+            5
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A58 · HAVING with aggregates that are not in the SELECT",
+      "description": "HAVING with COUNT(*) and MIN(duration_min) outside the SELECT: only the pending appointments have more than 10 appointments and go below 20 minutes.",
+      "sql": "SELECT status FROM appointments GROUP BY status HAVING COUNT(*) >= 10 AND MIN(duration_min) < 20 ORDER BY status",
+      "assert": {
+        "columns": [
+          "status"
+        ],
+        "rows": [
+          [
+            "pending"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A59 · Emergency admissions by reason (WHERE, GROUP BY and HAVING)",
+      "description": "WHERE keeps only the emergencies and then groups by reason: COUNT(*) of admissions and COUNT(cost_per_day) of those with a cost, with HAVING of 4 or more.",
+      "sql": "SELECT reason, COUNT(*) AS admissions, COUNT(cost_per_day) AS with_cost FROM admissions WHERE is_emergency = true GROUP BY reason HAVING COUNT(*) >= 4 ORDER BY admissions DESC, reason",
+      "assert": {
+        "columns": [
+          "reason",
+          "admissions",
+          "with_cost"
+        ],
+        "rows": [
+          [
+            "Respiratory failure",
+            7,
+            7
+          ],
+          [
+            "Scheduled surgery",
+            6,
+            6
+          ],
+          [
+            "Ischaemic stroke",
+            5,
+            5
+          ],
+          [
+            "Epileptic seizure",
+            4,
+            4
+          ],
+          [
+            "Pneumonia",
+            4,
+            4
           ]
         ]
       },

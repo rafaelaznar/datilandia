@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 196 consultas)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 209 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -12803,6 +12803,526 @@
           [
             "Beatriz Díaz Ruiz",
             null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A47 · Totales globales de ingresos con todas las funciones (sin GROUP BY)",
+      "description": "Agregados sin GROUP BY sobre los 50 ingresos: 28 pacientes y 9 motivos distintos; suma 30404, mínimo 192, máximo 950 y media redondeada 608,08.",
+      "sql": "SELECT COUNT(*) AS ingresos, COUNT(coste_dia) AS con_coste, COUNT(DISTINCT id_paciente) AS pacientes, COUNT(DISTINCT motivo) AS motivos, SUM(coste_dia) AS suma, MIN(coste_dia) AS minima, MAX(coste_dia) AS maxima, ROUND(AVG(coste_dia), 2) AS media FROM ingresos",
+      "assert": {
+        "columns": [
+          "ingresos",
+          "con_coste",
+          "pacientes",
+          "motivos",
+          "suma",
+          "minima",
+          "maxima",
+          "media"
+        ],
+        "rows": [
+          [
+            50,
+            50,
+            28,
+            9,
+            30404,
+            192,
+            950,
+            608.08
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A48 · Facturas por método de pago con COUNT de columna y HAVING (columna con NULL)",
+      "description": "GROUP BY sobre una columna con nulos: COALESCE etiqueta el grupo sin método y COUNT(metodo_pago) lo deja a cero; HAVING se queda con los grupos que suman 65000 o más.",
+      "sql": "SELECT COALESCE(metodo_pago, 'sin método') AS metodo, COUNT(*) AS facturas, COUNT(metodo_pago) AS con_metodo, COUNT(DISTINCT id_paciente) AS pacientes, SUM(importe) AS total, ROUND(AVG(importe), 2) AS media FROM facturas GROUP BY metodo_pago HAVING SUM(importe) >= 65000 ORDER BY total DESC",
+      "assert": {
+        "columns": [
+          "metodo",
+          "facturas",
+          "con_metodo",
+          "pacientes",
+          "total",
+          "media"
+        ],
+        "rows": [
+          [
+            "Transferencia",
+            18,
+            18,
+            14,
+            77938,
+            4329.89
+          ],
+          [
+            "sin método",
+            14,
+            0,
+            12,
+            71141,
+            5081.5
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A49 · Citas por médico y estado (GROUP BY de dos columnas con HAVING)",
+      "description": "Dos columnas de agrupación con COUNT(*) y MIN y MAX de la duración: solo tres combinaciones médico-estado llegan a 4 citas.",
+      "sql": "SELECT id_medico, estado, COUNT(*) AS citas, MIN(duracion_min) AS minima, MAX(duracion_min) AS maxima FROM citas GROUP BY id_medico, estado HAVING COUNT(*) >= 4 ORDER BY citas DESC, id_medico, estado",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "estado",
+          "citas",
+          "minima",
+          "maxima"
+        ],
+        "rows": [
+          [
+            6,
+            "Pendiente",
+            4,
+            15,
+            60
+          ],
+          [
+            19,
+            "Pendiente",
+            4,
+            15,
+            60
+          ],
+          [
+            30,
+            "Pendiente",
+            4,
+            15,
+            60
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A50 · Pacientes por grupo sanguíneo (COUNT(*) frente a COUNT de columna)",
+      "description": "El grupo desconocido sale con COUNT(*) pero con COUNT(grupo_sanguineo) a cero; COUNT(DISTINCT ciudad) cuenta ciudades distintas por grupo y el HAVING pide 3 pacientes.",
+      "sql": "SELECT COALESCE(grupo_sanguineo, 'desconocido') AS grupo, COUNT(*) AS pacientes, COUNT(grupo_sanguineo) AS con_grupo, COUNT(DISTINCT ciudad) AS ciudades FROM pacientes GROUP BY grupo_sanguineo HAVING COUNT(*) >= 3 ORDER BY pacientes DESC, grupo",
+      "assert": {
+        "columns": [
+          "grupo",
+          "pacientes",
+          "con_grupo",
+          "ciudades"
+        ],
+        "rows": [
+          [
+            "A-",
+            9,
+            9,
+            5
+          ],
+          [
+            "B+",
+            8,
+            8,
+            7
+          ],
+          [
+            "B-",
+            5,
+            5,
+            5
+          ],
+          [
+            "desconocido",
+            5,
+            0,
+            4
+          ],
+          [
+            "AB+",
+            4,
+            4,
+            4
+          ],
+          [
+            "A+",
+            3,
+            3,
+            2
+          ],
+          [
+            "O+",
+            3,
+            3,
+            2
+          ],
+          [
+            "O-",
+            3,
+            3,
+            2
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A51 · Ingresos por médico con todas las funciones numéricas (HAVING doble)",
+      "description": "COUNT(*), SUM, MIN, MAX y AVG del coste por médico; HAVING combina COUNT(*) y AVG: tres ingresos como mínimo y media de 600 o más.",
+      "sql": "SELECT id_medico, COUNT(*) AS ingresos, SUM(coste_dia) AS coste_total, MIN(coste_dia) AS minima, MAX(coste_dia) AS maxima, ROUND(AVG(coste_dia), 2) AS media FROM ingresos GROUP BY id_medico HAVING COUNT(*) >= 3 AND AVG(coste_dia) >= 600 ORDER BY coste_total DESC, id_medico",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "ingresos",
+          "coste_total",
+          "minima",
+          "maxima",
+          "media"
+        ],
+        "rows": [
+          [
+            23,
+            4,
+            2406,
+            294,
+            950,
+            601.5
+          ],
+          [
+            8,
+            3,
+            2164,
+            511,
+            831,
+            721.33
+          ],
+          [
+            3,
+            3,
+            2110,
+            490,
+            830,
+            703.33
+          ],
+          [
+            28,
+            3,
+            1938,
+            472,
+            834,
+            646
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A52 · Habitaciones por hospital y ocupación (GROUP BY de dos columnas con SUM)",
+      "description": "Agrupación por hospital y ocupación con COUNT(*) y SUM(num_camas); HAVING deja solo los grupos de 4 habitaciones o más.",
+      "sql": "SELECT id_hospital, ocupada, COUNT(*) AS habitaciones, SUM(num_camas) AS camas FROM habitaciones GROUP BY id_hospital, ocupada HAVING COUNT(*) >= 4 ORDER BY id_hospital, ocupada",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "ocupada",
+          "habitaciones",
+          "camas"
+        ],
+        "rows": [
+          [
+            1,
+            true,
+            6,
+            8
+          ],
+          [
+            2,
+            true,
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A53 · Intervenciones por riesgo con todas las funciones (HAVING SUM)",
+      "description": "COUNT(*), COUNT(DISTINCT quirofano), SUM, MIN, MAX y AVG por riesgo; HAVING sobre la suma descarta el riesgo alto.",
+      "sql": "SELECT riesgo, COUNT(*) AS intervenciones, COUNT(DISTINCT quirofano) AS quirofanos, SUM(coste) AS coste_total, MIN(duracion_min) AS min_duracion, MAX(duracion_min) AS max_duracion, ROUND(AVG(coste), 0) AS coste_medio FROM intervenciones GROUP BY riesgo HAVING SUM(coste) > 65000 ORDER BY coste_total DESC",
+      "assert": {
+        "columns": [
+          "riesgo",
+          "intervenciones",
+          "quirofanos",
+          "coste_total",
+          "min_duracion",
+          "max_duracion",
+          "coste_medio"
+        ],
+        "rows": [
+          [
+            "Medio",
+            14,
+            6,
+            93776,
+            45,
+            320,
+            6698
+          ],
+          [
+            "Bajo",
+            13,
+            6,
+            70411,
+            45,
+            320,
+            5416
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A54 · Analíticas por tipo con COUNT(DISTINCT) y AVG (HAVING COUNT DISTINCT)",
+      "description": "Por tipo de analítica: COUNT(*) de filas, COUNT(DISTINCT id_paciente) de pacientes y dos AVG redondeados; HAVING exige 15 pacientes distintos.",
+      "sql": "SELECT tipo, COUNT(*) AS analiticas, COUNT(DISTINCT id_paciente) AS pacientes, ROUND(AVG(glucosa), 1) AS glucosa_media, ROUND(AVG(colesterol), 1) AS colesterol_medio FROM analiticas GROUP BY tipo HAVING COUNT(DISTINCT id_paciente) >= 15 ORDER BY analiticas DESC",
+      "assert": {
+        "columns": [
+          "tipo",
+          "analiticas",
+          "pacientes",
+          "glucosa_media",
+          "colesterol_medio"
+        ],
+        "rows": [
+          [
+            "Sangre",
+            44,
+            33,
+            148.4,
+            218.9
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A55 · Prescripciones por medicamento con SUM, MIN, MAX y AVG (HAVING COUNT)",
+      "description": "Por medicamento, COUNT(*) con SUM de unidades y MIN, MAX y AVG de la duración; HAVING pide 8 prescripciones o más.",
+      "sql": "SELECT id_medicamento, COUNT(*) AS prescripciones, SUM(cantidad) AS unidades, MIN(duracion_dias) AS min_dias, MAX(duracion_dias) AS max_dias, ROUND(AVG(duracion_dias), 1) AS media_dias FROM prescripciones GROUP BY id_medicamento HAVING COUNT(*) >= 8 ORDER BY unidades DESC, id_medicamento",
+      "assert": {
+        "columns": [
+          "id_medicamento",
+          "prescripciones",
+          "unidades",
+          "min_dias",
+          "max_dias",
+          "media_dias"
+        ],
+        "rows": [
+          [
+            7,
+            8,
+            26,
+            15,
+            81,
+            44.4
+          ],
+          [
+            22,
+            9,
+            23,
+            12,
+            87,
+            56
+          ],
+          [
+            12,
+            8,
+            18,
+            19,
+            90,
+            58.8
+          ],
+          [
+            24,
+            9,
+            18,
+            3,
+            120,
+            52.7
+          ],
+          [
+            8,
+            8,
+            17,
+            12,
+            86,
+            50.6
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A56 · Tratamientos por año con SUM y AVG (GROUP BY con expresión y HAVING)",
+      "description": "GROUP BY sobre el año de inicio: COUNT(*), COUNT(DISTINCT id_paciente), SUM y AVG redondeado del coste; HAVING deja los años con 10 tratamientos o más.",
+      "sql": "SELECT SUBSTR(fecha_inicio, 1, 4) AS anio, COUNT(*) AS tratamientos, COUNT(DISTINCT id_paciente) AS pacientes, SUM(coste) AS coste_total, ROUND(AVG(coste), 0) AS coste_medio FROM tratamientos GROUP BY SUBSTR(fecha_inicio, 1, 4) HAVING COUNT(*) >= 10 ORDER BY anio",
+      "assert": {
+        "columns": [
+          "anio",
+          "tratamientos",
+          "pacientes",
+          "coste_total",
+          "coste_medio"
+        ],
+        "rows": [
+          [
+            "2023",
+            25,
+            18,
+            22734,
+            909
+          ],
+          [
+            "2024",
+            15,
+            13,
+            12225,
+            815
+          ],
+          [
+            "2025",
+            21,
+            15,
+            15207,
+            724
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A57 · Agregados sobre la propia columna agrupada (COUNT de estado)",
+      "description": "COUNT(estado) coincide con COUNT(*) y COUNT(DISTINCT estado) vale 1 en cada grupo; MAX(id_cita) y COUNT(duracion_min) resumen el resto de columnas.",
+      "sql": "SELECT estado, COUNT(*) AS filas, COUNT(estado) AS con_estado, COUNT(DISTINCT estado) AS estados, MAX(id_cita) AS ultima, COUNT(duracion_min) AS con_duracion FROM citas GROUP BY estado ORDER BY filas DESC, estado",
+      "assert": {
+        "columns": [
+          "estado",
+          "filas",
+          "con_estado",
+          "estados",
+          "ultima",
+          "con_duracion"
+        ],
+        "rows": [
+          [
+            "Pendiente",
+            47,
+            47,
+            1,
+            69,
+            47
+          ],
+          [
+            "Atendida",
+            11,
+            11,
+            1,
+            70,
+            11
+          ],
+          [
+            "Cancelada",
+            7,
+            7,
+            1,
+            66,
+            7
+          ],
+          [
+            "No presentado",
+            5,
+            5,
+            1,
+            63,
+            5
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A58 · HAVING con agregados que no salen en el SELECT",
+      "description": "HAVING con COUNT(*) y MIN(duracion_min) fuera del SELECT: solo las citas pendientes pasan de 10 citas y bajan de 20 minutos.",
+      "sql": "SELECT estado FROM citas GROUP BY estado HAVING COUNT(*) >= 10 AND MIN(duracion_min) < 20 ORDER BY estado",
+      "assert": {
+        "columns": [
+          "estado"
+        ],
+        "rows": [
+          [
+            "Pendiente"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A59 · Ingresos urgentes por motivo (WHERE, GROUP BY y HAVING)",
+      "description": "WHERE deja solo las urgencias y luego agrupa por motivo: COUNT(*) de ingresos y COUNT(coste_dia) de los que tienen coste, con HAVING de 4 o más.",
+      "sql": "SELECT motivo, COUNT(*) AS ingresos, COUNT(coste_dia) AS con_coste FROM ingresos WHERE es_urgente = true GROUP BY motivo HAVING COUNT(*) >= 4 ORDER BY ingresos DESC, motivo",
+      "assert": {
+        "columns": [
+          "motivo",
+          "ingresos",
+          "con_coste"
+        ],
+        "rows": [
+          [
+            "Insuficiencia respiratoria",
+            7,
+            7
+          ],
+          [
+            "Cirugía programada",
+            6,
+            6
+          ],
+          [
+            "Ictus isquémico",
+            5,
+            5
+          ],
+          [
+            "Crisis epiléptica",
+            4,
+            4
+          ],
+          [
+            "Neumonía",
+            4,
+            4
           ]
         ]
       },

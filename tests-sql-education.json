@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 139 queries)",
+  "name": "SQL tests · Education (8 tables, 152 queries)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -3175,6 +3175,458 @@
             "Lucía Moreno Pascual",
             "MSW-7",
             null
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A34 · Global totals with every aggregate (no GROUP BY)",
+      "description": "Aggregates without GROUP BY, one of each kind: 48 enrollments, 32 graded, 21 students and 3 different statuses; total 234, minimum 5, maximum 10 and rounded average 7.31.",
+      "sql": "SELECT COUNT(*) AS enrollments, COUNT(grade) AS graded, COUNT(DISTINCT id_student) AS students, COUNT(DISTINCT status) AS statuses, SUM(grade) AS total_grade, MIN(grade) AS minimum, MAX(grade) AS maximum, ROUND(AVG(grade), 2) AS average FROM enrollments",
+      "assert": {
+        "columns": [
+          "enrollments",
+          "graded",
+          "students",
+          "statuses",
+          "total_grade",
+          "minimum",
+          "maximum",
+          "average"
+        ],
+        "rows": [
+          [
+            48,
+            32,
+            21,
+            3,
+            234,
+            5,
+            10,
+            7.31
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A35 · Every aggregate by status (GROUP BY)",
+      "description": "GROUP BY status with COUNT(*), COUNT(DISTINCT), SUM, MIN, MAX and AVG: only the 32 passed have grades; active and cancelled give NULL in the grade aggregates.",
+      "sql": "SELECT status, COUNT(*) AS total, COUNT(DISTINCT id_student) AS students, SUM(grade) AS total_grade, MIN(grade) AS minimum, MAX(grade) AS maximum, ROUND(AVG(grade), 2) AS average FROM enrollments GROUP BY status ORDER BY total DESC, status",
+      "assert": {
+        "columns": [
+          "status",
+          "total",
+          "students",
+          "total_grade",
+          "minimum",
+          "maximum",
+          "average"
+        ],
+        "rows": [
+          [
+            "passed",
+            32,
+            19,
+            234,
+            5,
+            10,
+            7.31
+          ],
+          [
+            "active",
+            13,
+            11,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "cancelled",
+            3,
+            3,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A36 · Subjects with four enrollments and a high average (double HAVING)",
+      "description": "HAVING with two aggregates at once: subjects with at least 4 enrollments and an average of 7 or more; four subjects meet both thresholds.",
+      "sql": "SELECT id_subject, COUNT(*) AS enrollments, COUNT(grade) AS graded, ROUND(AVG(grade), 2) AS average FROM enrollments GROUP BY id_subject HAVING COUNT(*) >= 4 AND AVG(grade) >= 7 ORDER BY average DESC, id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "enrollments",
+          "graded",
+          "average"
+        ],
+        "rows": [
+          [
+            1,
+            5,
+            5,
+            8.2
+          ],
+          [
+            6,
+            4,
+            3,
+            7.5
+          ],
+          [
+            5,
+            4,
+            4,
+            7.25
+          ],
+          [
+            8,
+            4,
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A37 · Students and contact details per campus (COUNT of columns with NULL)",
+      "description": "COUNT(*) counts rows and COUNT(column) only the non-null values: campus 2 has 6 students but fewer e-mails and phones. HAVING keeps the campuses with 5 students or more.",
+      "sql": "SELECT id_campus, COUNT(*) AS students, COUNT(email) AS with_email, COUNT(phone) AS with_phone FROM students GROUP BY id_campus HAVING COUNT(*) >= 5 ORDER BY students DESC, id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "students",
+          "with_email",
+          "with_phone"
+        ],
+        "rows": [
+          [
+            1,
+            9,
+            7,
+            7
+          ],
+          [
+            2,
+            6,
+            4,
+            3
+          ],
+          [
+            3,
+            6,
+            5,
+            5
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A38 · Teachers by category with distinct offices (HAVING COUNT DISTINCT)",
+      "description": "COUNT(office) ignores nulls and COUNT(DISTINCT office) counts distinct offices: the three assistant teachers have no office and are filtered out by the HAVING.",
+      "sql": "SELECT category, COUNT(*) AS teachers, COUNT(office) AS with_office, COUNT(DISTINCT office) AS offices FROM teachers GROUP BY category HAVING COUNT(DISTINCT office) >= 2 ORDER BY offices DESC, category",
+      "assert": {
+        "columns": [
+          "category",
+          "teachers",
+          "with_office",
+          "offices"
+        ],
+        "rows": [
+          [
+            "Senior lecturer",
+            4,
+            4,
+            4
+          ],
+          [
+            "Full professor",
+            3,
+            3,
+            3
+          ],
+          [
+            "Assistant",
+            2,
+            2,
+            2
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A39 · Enrollments by academic year and status (GROUP BY of two columns)",
+      "description": "Grouping by two columns with HAVING: only two combinations reach 10 enrollments; the active one has no grades and its total is NULL.",
+      "sql": "SELECT academic_year, status, COUNT(*) AS total, SUM(grade) AS total_grade FROM enrollments GROUP BY academic_year, status HAVING COUNT(*) >= 10 ORDER BY academic_year, status",
+      "assert": {
+        "columns": [
+          "academic_year",
+          "status",
+          "total",
+          "total_grade"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            "passed",
+            26,
+            184
+          ],
+          [
+            "2025-2026",
+            "active",
+            13,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A40 · Subjects averaging above 7.5 among graded enrollments (WHERE and HAVING)",
+      "description": "WHERE removes enrollments without a grade before grouping and HAVING filters the groups by their average: four subjects remain, one of them with a single grade.",
+      "sql": "SELECT id_subject, COUNT(*) AS enrollments, ROUND(AVG(grade), 2) AS average FROM enrollments WHERE grade IS NOT NULL GROUP BY id_subject HAVING AVG(grade) > 7.5 ORDER BY average DESC, id_subject",
+      "assert": {
+        "columns": [
+          "id_subject",
+          "enrollments",
+          "average"
+        ],
+        "rows": [
+          [
+            11,
+            2,
+            8.5
+          ],
+          [
+            1,
+            5,
+            8.2
+          ],
+          [
+            10,
+            2,
+            8
+          ],
+          [
+            14,
+            1,
+            8
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A41 · Classrooms per floor with SUM, MIN and MAX (HAVING SUM)",
+      "description": "Per floor, COUNT(*), SUM, MIN and MAX of the capacity; HAVING keeps the floors adding up to 100 seats or more.",
+      "sql": "SELECT floor, COUNT(*) AS classrooms, SUM(capacity) AS seats, MIN(capacity) AS minimum, MAX(capacity) AS maximum FROM classrooms GROUP BY floor HAVING SUM(capacity) >= 100 ORDER BY seats DESC",
+      "assert": {
+        "columns": [
+          "floor",
+          "classrooms",
+          "seats",
+          "minimum",
+          "maximum"
+        ],
+        "rows": [
+          [
+            1,
+            10,
+            404,
+            18,
+            70
+          ],
+          [
+            3,
+            3,
+            155,
+            25,
+            80
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A42 · Weekly teacher hours by category with MIN, MAX and AVG (HAVING AVG)",
+      "description": "MIN, MAX and rounded AVG of the weekly hours by category; the HAVING requires an average of 10 hours or more.",
+      "sql": "SELECT category, COUNT(*) AS teachers, MIN(weekly_hours) AS min_hours, MAX(weekly_hours) AS max_hours, ROUND(AVG(weekly_hours), 1) AS average_hours FROM teachers GROUP BY category HAVING AVG(weekly_hours) >= 10 ORDER BY average_hours DESC",
+      "assert": {
+        "columns": [
+          "category",
+          "teachers",
+          "min_hours",
+          "max_hours",
+          "average_hours"
+        ],
+        "rows": [
+          [
+            "Senior lecturer",
+            4,
+            16,
+            20,
+            18
+          ],
+          [
+            "Full professor",
+            3,
+            14,
+            18,
+            15.7
+          ],
+          [
+            "Assistant",
+            2,
+            10,
+            12,
+            11
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A43 · Students by birth year (GROUP BY with an expression and HAVING)",
+      "description": "GROUP BY on the year of the date (SUBSTR) with COUNT(*) and COUNT(phone); HAVING requires at least two students per year.",
+      "sql": "SELECT SUBSTR(birth_date, 1, 4) AS year, COUNT(*) AS students, COUNT(phone) AS with_phone FROM students GROUP BY SUBSTR(birth_date, 1, 4) HAVING COUNT(*) >= 2 ORDER BY year",
+      "assert": {
+        "columns": [
+          "year",
+          "students",
+          "with_phone"
+        ],
+        "rows": [
+          [
+            "2001",
+            6,
+            5
+          ],
+          [
+            "2002",
+            6,
+            2
+          ],
+          [
+            "2003",
+            6,
+            4
+          ],
+          [
+            "2004",
+            6,
+            5
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A44 · Aggregates over the grouped column itself (COUNT of status)",
+      "description": "Aggregates over the grouped column and over others: COUNT(status) matches COUNT(*) and COUNT(DISTINCT status) is 1; graded only shows up in the passed rows.",
+      "sql": "SELECT status, COUNT(*) AS total, COUNT(status) AS with_status, COUNT(DISTINCT status) AS statuses, MAX(id_enrollment) AS last_id, COUNT(grade) AS graded FROM enrollments GROUP BY status ORDER BY total DESC, status",
+      "assert": {
+        "columns": [
+          "status",
+          "total",
+          "with_status",
+          "statuses",
+          "last_id",
+          "graded"
+        ],
+        "rows": [
+          [
+            "passed",
+            32,
+            32,
+            1,
+            47,
+            32
+          ],
+          [
+            "active",
+            13,
+            13,
+            1,
+            36,
+            0
+          ],
+          [
+            "cancelled",
+            3,
+            3,
+            1,
+            48,
+            0
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A45 · HAVING with aggregates that are not in the SELECT",
+      "description": "The HAVING uses COUNT(*) and SUM(grade), which do not appear in the SELECT: only the passed enrollments meet both thresholds.",
+      "sql": "SELECT status FROM enrollments GROUP BY status HAVING COUNT(*) >= 13 AND SUM(grade) > 200 ORDER BY status",
+      "assert": {
+        "columns": [
+          "status"
+        ],
+        "rows": [
+          [
+            "passed"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A46 · Students with an e-mail per campus (WHERE, GROUP BY and HAVING)",
+      "description": "WHERE filters before grouping: per campus, COUNT(*) of students with an institutional e-mail and COUNT(phone) of those with a phone; HAVING requires 4 or more.",
+      "sql": "SELECT id_campus, COUNT(*) AS students, COUNT(phone) AS with_phone FROM students WHERE email LIKE '%@alu.es' GROUP BY id_campus HAVING COUNT(*) >= 4 ORDER BY students DESC, id_campus",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "students",
+          "with_phone"
+        ],
+        "rows": [
+          [
+            1,
+            7,
+            5
+          ],
+          [
+            3,
+            5,
+            4
+          ],
+          [
+            2,
+            4,
+            1
           ]
         ]
       },

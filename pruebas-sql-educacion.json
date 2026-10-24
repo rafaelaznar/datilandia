@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 139 consultas)",
+  "name": "Pruebas SQL · Educación (8 tablas, 152 consultas)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -3175,6 +3175,458 @@
             "Lucía Moreno Pascual",
             "MSW-7",
             null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A34 · Totales globales con todas las funciones (sin GROUP BY)",
+      "description": "Agregados sin GROUP BY, uno de cada tipo: 48 matrículas, 32 con nota, 21 estudiantes y 3 estados distintos; suma 234, mínimo 5, máximo 10 y media redondeada 7,31.",
+      "sql": "SELECT COUNT(*) AS matriculas, COUNT(nota) AS calificadas, COUNT(DISTINCT id_estudiante) AS estudiantes, COUNT(DISTINCT estado) AS estados, SUM(nota) AS suma, MIN(nota) AS minima, MAX(nota) AS maxima, ROUND(AVG(nota), 2) AS media FROM matriculas",
+      "assert": {
+        "columns": [
+          "matriculas",
+          "calificadas",
+          "estudiantes",
+          "estados",
+          "suma",
+          "minima",
+          "maxima",
+          "media"
+        ],
+        "rows": [
+          [
+            48,
+            32,
+            21,
+            3,
+            234,
+            5,
+            10,
+            7.31
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A35 · Todas las funciones por estado (GROUP BY)",
+      "description": "GROUP BY estado con COUNT(*), COUNT(DISTINCT), SUM, MIN, MAX y AVG: solo las 32 superadas tienen notas; activas y anuladas dan NULL en los agregados de nota.",
+      "sql": "SELECT estado, COUNT(*) AS total, COUNT(DISTINCT id_estudiante) AS estudiantes, SUM(nota) AS suma, MIN(nota) AS minima, MAX(nota) AS maxima, ROUND(AVG(nota), 2) AS media FROM matriculas GROUP BY estado ORDER BY total DESC, estado",
+      "assert": {
+        "columns": [
+          "estado",
+          "total",
+          "estudiantes",
+          "suma",
+          "minima",
+          "maxima",
+          "media"
+        ],
+        "rows": [
+          [
+            "superada",
+            32,
+            19,
+            234,
+            5,
+            10,
+            7.31
+          ],
+          [
+            "activa",
+            13,
+            11,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "anulada",
+            3,
+            3,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A36 · Asignaturas con cuatro matrículas y media alta (HAVING doble)",
+      "description": "HAVING con dos agregados a la vez: asignaturas con al menos 4 matrículas y media de 7 o más; cuatro asignaturas cumplen ambos umbrales.",
+      "sql": "SELECT id_asignatura, COUNT(*) AS matriculas, COUNT(nota) AS calificadas, ROUND(AVG(nota), 2) AS media FROM matriculas GROUP BY id_asignatura HAVING COUNT(*) >= 4 AND AVG(nota) >= 7 ORDER BY media DESC, id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "matriculas",
+          "calificadas",
+          "media"
+        ],
+        "rows": [
+          [
+            1,
+            5,
+            5,
+            8.2
+          ],
+          [
+            6,
+            4,
+            3,
+            7.5
+          ],
+          [
+            5,
+            4,
+            4,
+            7.25
+          ],
+          [
+            8,
+            4,
+            4,
+            7
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A37 · Estudiantes y contactos por sede (COUNT de columnas con NULL)",
+      "description": "COUNT(*) cuenta filas y COUNT(columna) solo los valores no nulos: la sede 2 tiene 6 estudiantes pero 4 correos y 3 teléfonos. HAVING deja las sedes con 5 estudiantes o más.",
+      "sql": "SELECT id_sede, COUNT(*) AS estudiantes, COUNT(email) AS con_email, COUNT(telefono) AS con_telefono FROM estudiantes GROUP BY id_sede HAVING COUNT(*) >= 5 ORDER BY estudiantes DESC, id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "estudiantes",
+          "con_email",
+          "con_telefono"
+        ],
+        "rows": [
+          [
+            1,
+            9,
+            7,
+            7
+          ],
+          [
+            2,
+            6,
+            4,
+            3
+          ],
+          [
+            3,
+            6,
+            5,
+            5
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A38 · Docentes por categoría con despachos distintos (HAVING COUNT DISTINCT)",
+      "description": "COUNT(despacho) ignora los nulos y COUNT(DISTINCT despacho) cuenta despachos distintos: los tres asociados no tienen despacho y quedan fuera por el HAVING.",
+      "sql": "SELECT categoria, COUNT(*) AS docentes, COUNT(despacho) AS con_despacho, COUNT(DISTINCT despacho) AS despachos FROM docentes GROUP BY categoria HAVING COUNT(DISTINCT despacho) >= 2 ORDER BY despachos DESC, categoria",
+      "assert": {
+        "columns": [
+          "categoria",
+          "docentes",
+          "con_despacho",
+          "despachos"
+        ],
+        "rows": [
+          [
+            "Titular",
+            4,
+            4,
+            4
+          ],
+          [
+            "Catedrática",
+            3,
+            3,
+            3
+          ],
+          [
+            "Ayudante",
+            2,
+            2,
+            2
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A39 · Matrículas por curso y estado (GROUP BY de dos columnas)",
+      "description": "Agrupación por dos columnas con HAVING: solo dos combinaciones llegan a 10 matrículas; la de activas no tiene notas y su suma es NULL.",
+      "sql": "SELECT curso_academico, estado, COUNT(*) AS total, SUM(nota) AS suma FROM matriculas GROUP BY curso_academico, estado HAVING COUNT(*) >= 10 ORDER BY curso_academico, estado",
+      "assert": {
+        "columns": [
+          "curso_academico",
+          "estado",
+          "total",
+          "suma"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            "superada",
+            26,
+            184
+          ],
+          [
+            "2025-2026",
+            "activa",
+            13,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A40 · Asignaturas con media superior a 7,5 entre las calificadas (WHERE y HAVING)",
+      "description": "WHERE quita las matrículas sin nota antes de agrupar y HAVING filtra los grupos por su media: quedan cuatro asignaturas, una con una sola calificación.",
+      "sql": "SELECT id_asignatura, COUNT(*) AS matriculas, ROUND(AVG(nota), 2) AS media FROM matriculas WHERE nota IS NOT NULL GROUP BY id_asignatura HAVING AVG(nota) > 7.5 ORDER BY media DESC, id_asignatura",
+      "assert": {
+        "columns": [
+          "id_asignatura",
+          "matriculas",
+          "media"
+        ],
+        "rows": [
+          [
+            11,
+            2,
+            8.5
+          ],
+          [
+            1,
+            5,
+            8.2
+          ],
+          [
+            10,
+            2,
+            8
+          ],
+          [
+            14,
+            1,
+            8
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A41 · Aulas por planta con SUM, MIN y MAX (HAVING SUM)",
+      "description": "Por planta, COUNT(*), SUM, MIN y MAX de la capacidad; HAVING deja las plantas que suman 100 plazas o más.",
+      "sql": "SELECT planta, COUNT(*) AS aulas, SUM(capacidad) AS plazas, MIN(capacidad) AS minima, MAX(capacidad) AS maxima FROM aulas GROUP BY planta HAVING SUM(capacidad) >= 100 ORDER BY plazas DESC",
+      "assert": {
+        "columns": [
+          "planta",
+          "aulas",
+          "plazas",
+          "minima",
+          "maxima"
+        ],
+        "rows": [
+          [
+            1,
+            10,
+            404,
+            18,
+            70
+          ],
+          [
+            3,
+            3,
+            155,
+            25,
+            80
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A42 · Horas docentes por categoría con MIN, MAX y AVG (HAVING AVG)",
+      "description": "MIN, MAX y AVG redondeado de las horas semanales por categoría; el HAVING exige una media de 10 horas o más.",
+      "sql": "SELECT categoria, COUNT(*) AS docentes, MIN(horas_semanales) AS min_horas, MAX(horas_semanales) AS max_horas, ROUND(AVG(horas_semanales), 1) AS media_horas FROM docentes GROUP BY categoria HAVING AVG(horas_semanales) >= 10 ORDER BY media_horas DESC",
+      "assert": {
+        "columns": [
+          "categoria",
+          "docentes",
+          "min_horas",
+          "max_horas",
+          "media_horas"
+        ],
+        "rows": [
+          [
+            "Titular",
+            4,
+            16,
+            20,
+            18
+          ],
+          [
+            "Catedrática",
+            3,
+            14,
+            18,
+            15.7
+          ],
+          [
+            "Ayudante",
+            2,
+            10,
+            12,
+            11
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A43 · Estudiantes por año de nacimiento (GROUP BY con expresión y HAVING)",
+      "description": "GROUP BY sobre el año de la fecha (SUBSTR) con COUNT(*) y COUNT(telefono); HAVING exige al menos dos estudiantes por año.",
+      "sql": "SELECT SUBSTR(fecha_nacimiento, 1, 4) AS anio, COUNT(*) AS estudiantes, COUNT(telefono) AS con_telefono FROM estudiantes GROUP BY SUBSTR(fecha_nacimiento, 1, 4) HAVING COUNT(*) >= 2 ORDER BY anio",
+      "assert": {
+        "columns": [
+          "anio",
+          "estudiantes",
+          "con_telefono"
+        ],
+        "rows": [
+          [
+            "2001",
+            6,
+            5
+          ],
+          [
+            "2002",
+            6,
+            2
+          ],
+          [
+            "2003",
+            6,
+            4
+          ],
+          [
+            "2004",
+            6,
+            5
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A44 · Agregados sobre la propia columna agrupada (COUNT de estado)",
+      "description": "Agregados sobre la columna agrupada y sobre otras: COUNT(estado) coincide con COUNT(*) y COUNT(DISTINCT estado) vale 1; las calificadas solo aparecen en las superadas.",
+      "sql": "SELECT estado, COUNT(*) AS filas, COUNT(estado) AS con_estado, COUNT(DISTINCT estado) AS estados, MAX(id_matricula) AS ultima, COUNT(nota) AS calificadas FROM matriculas GROUP BY estado ORDER BY filas DESC, estado",
+      "assert": {
+        "columns": [
+          "estado",
+          "filas",
+          "con_estado",
+          "estados",
+          "ultima",
+          "calificadas"
+        ],
+        "rows": [
+          [
+            "superada",
+            32,
+            32,
+            1,
+            47,
+            32
+          ],
+          [
+            "activa",
+            13,
+            13,
+            1,
+            36,
+            0
+          ],
+          [
+            "anulada",
+            3,
+            3,
+            1,
+            48,
+            0
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A45 · HAVING con agregados que no salen en el SELECT",
+      "description": "El HAVING usa COUNT(*) y SUM(nota), que no aparecen en el SELECT: solo las superadas pasan los dos umbrales.",
+      "sql": "SELECT estado FROM matriculas GROUP BY estado HAVING COUNT(*) >= 13 AND SUM(nota) > 200 ORDER BY estado",
+      "assert": {
+        "columns": [
+          "estado"
+        ],
+        "rows": [
+          [
+            "superada"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A46 · Estudiantes con correo por sede (WHERE, GROUP BY y HAVING)",
+      "description": "WHERE filtra antes de agrupar: por sede, COUNT(*) de estudiantes con correo institucional y COUNT(telefono) de los que tienen teléfono; HAVING pide 4 o más.",
+      "sql": "SELECT id_sede, COUNT(*) AS estudiantes, COUNT(telefono) AS con_telefono FROM estudiantes WHERE email LIKE '%@alu.es' GROUP BY id_sede HAVING COUNT(*) >= 4 ORDER BY estudiantes DESC, id_sede",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "estudiantes",
+          "con_telefono"
+        ],
+        "rows": [
+          [
+            1,
+            7,
+            5
+          ],
+          [
+            3,
+            5,
+            4
+          ],
+          [
+            2,
+            4,
+            1
           ]
         ]
       },
