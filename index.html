@@ -1605,6 +1605,42 @@
       color: #666;
     }
 
+    /* Desplegables de consultas relacionadas: las que leen la consulta abierta
+       como tabla y las que la abierta lee. */
+    #related-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      min-width: 160px;
+      max-width: 340px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #888;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    .related-pick {
+      padding: 3px 8px;
+      border: 0;
+      background: none;
+      color: #000;
+      font: inherit;
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+      text-align: start;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .related-pick:hover {
+      background: #dce9f9;
+    }
+
     /* --- 8. Import panel ---------------------------------------- */
 
     #import-log {
@@ -1847,7 +1883,7 @@
               <h3 data-i18n="markup.h3.queries">Consultas</h3>
               <ul>
                 <li data-i18n-html="markup.li.createGiveItNameDescription">Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>.</li>
-                <li data-i18n-html="markup.li.insertButtonSpeedsUpWriting"><b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos.</li>
+                <li data-i18n-html="markup.li.insertButtonSpeedsUpWriting"><b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos. A su lado, <b>La leen como tabla (n)</b> y <b>Lee como tabla (n)</b> despliegan las consultas que leen la abierta como tabla y las que ella lee, para saltar de una a otra; cada botón aparece solo cuando hay alguna.</li>
                 <li data-i18n-html="markup.li.queryCanBeReadFrom">Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.</li>
                 <li data-i18n-html="markup.li.sidebarQueryThatSomeOther">En la barra lateral, la consulta que <b>alguna otra lee como tabla</b> lleva la marca <b>«vista»</b> en azul, o <b>«vista ×N»</b> si la leen N consultas. Pasa el ratón por su pista y te dice los dos sentidos: <b>«Lee como tabla (n): …»</b> (a quién lee ella) y <b>«La leen como tabla (n): …»</b> (quién la lee a ella). La marca es solo información: no cambia lo que comprueba la consulta.</li>
                 <li data-i18n-html="markup.li.querySummaryQueriesTitleSidebar">El <b>resumen de consultas</b> (el título <b>Consultas</b> de la barra lateral) lleva una columna <b>Vistas</b> con lo mismo, una línea por sentido (<code>lee: «…»</code> y <code>la leen: «…»</code>), o un guion si no hay ninguna. El <b>salpicadero</b> de la bienvenida cuenta en <b>Consultas como tabla</b> cuántas consultas del proyecto se leen así.</li>
@@ -1882,7 +1918,7 @@
             <section class="help-bloque" data-help="history">
               <h3 data-i18n="markup.h3.history">Historial de lugares visitados</h3>
               <ul>
-                <li data-i18n-html="markup.li.historyBarUnderTop">Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación).</li>
+                <li data-i18n-html="markup.li.historyBarUnderTop">Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación). Al volver a una tabla o a una consulta, se <b>revela en la barra lateral</b>: se abre su carpeta si estaba plegada y la lista se desplaza hasta ella.</li>
                 <li data-i18n-html="markup.li.pressPlaceGoBackTo">Pulsa un enlace para <b>volver a ese lugar</b>; el que está en pantalla queda resaltado. Volver a un lugar no lo repite (se mueve al final) y los enlaces a tablas o consultas que ya no existen desaparecen solos.</li>
                 <li data-i18n-html="markup.li.historyIsNotSaved">El histórico es de la sesión: <b>no se guarda</b> en el proyecto.</li>
               </ul>
@@ -2419,12 +2455,16 @@ ORDER BY edificios DESC, sede;</pre>
         <div class="toolbar">
           <button data-i18n-title="queries.insertTip" data-i18n="queries.insertButton" id="btn-insert" type="button" title="Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space)">Insertar tabla, consulta o campo…</button>
           <span data-i18n="queries.insertHint" class="muted">Pulsa un nombre para escribirlo en el cursor; ▸ despliega sus campos.</span>
+          <span class="sep" id="related-sep"></span>
+          <button aria-expanded="false" aria-haspopup="dialog" id="btn-query-readers" type="button" hidden>La leen como tabla</button>
+          <button aria-expanded="false" aria-haspopup="dialog" id="btn-query-sources" type="button" hidden>Lee como tabla</button>
         </div>
         <textarea data-i18n-aria-label="markup.textarea.sqlQuery" data-i18n-title="markup.textarea.sqlQuerySELECTOnly" id="query-sql" rows="8" spellcheck="false" aria-label="Consulta SQL" title="Consulta SQL (solo SELECT)"></textarea>
         <div id="insert-popup" role="dialog" data-i18n-aria-label="queries.insertTitle" aria-label="Insertar en el cursor" hidden>
           <input data-i18n-aria-label="queries.insertSearchAria" data-i18n-placeholder="queries.insertSearchPlaceholder" id="insert-search" type="text" autocomplete="off" spellcheck="false" aria-label="Buscar una tabla, una consulta o un campo" placeholder="Buscar una tabla, una consulta o un campo…">
           <div id="insert-list" data-i18n-aria-label="queries.insertListAria" aria-label="Tablas, consultas y campos"></div>
         </div>
+        <div id="related-popup" role="dialog" aria-label="Consultas relacionadas" hidden></div>
         <div id="query-plan" class="muted"></div>
         <div id="query-error" hidden></div>
         <div id="query-paginacion" class="toolbar" hidden>
@@ -3207,7 +3247,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.exportTableDataAsCSV": "<b>Export CSV…</b> opens the data of the table as <b>CSV text in a window</b>, with <b>Copy</b> and <b>Download CSV</b> and the same separator, header and decimal-comma options as the result of a query.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> and <b>→</b> with the handle focused: change the width of the left column; <b>Home</b> and <b>End</b> take it to the ends.",
         "markup.li.idFieldIsAutoNumbered": "The <b>ID field is auto-numbered</b>: every new row gets the <b>next number</b> and none is repeated or reused when rows are deleted. That is why it is not edited by hand: it can be searched in, but it is not replaced. With <b>Create auto-numbered ID field</b> you add a new one (the name is written next to it), at the start of the table, and it numbers the rows that were already there <b>1..N</b>. Marking any other field as ID also makes it auto-numbered.",
-        "markup.li.insertButtonSpeedsUpWriting": "<b>Insert table, query or field…</b> (above the editor, or <b>Ctrl+Space</b> inside it) opens a <b>list</b> with the project's tables and queries: click a name to write it <b>at the cursor</b> (with brackets when the name needs them) or press <b>▸</b> to see its <b>fields</b> and click one. The <b>search box</b> filters the list and the fields.",
+        "markup.li.insertButtonSpeedsUpWriting": "<b>Insert table, query or field…</b> (above the editor, or <b>Ctrl+Space</b> inside it) opens a <b>list</b> with the project's tables and queries: click a name to write it <b>at the cursor</b> (with brackets when the name needs them) or press <b>▸</b> to see its <b>fields</b> and click one. The <b>search box</b> filters the list and the fields. Next to it, <b>Read as a table by (n)</b> and <b>Reads as tables (n)</b> drop down the queries that read the open one as a table and the ones it reads, to jump from one to another; each button shows only while there is any.",
         "markup.li.insideCellGoForeignKeys": "Inside the cell go the <b>foreign keys</b> of the row's table that point to the column's, written as <code>field → target field</code>. The <b>diagonal</b> holds the <b>self-references</b>: the foreign keys of a table that point to itself.",
         "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: an array of objects with the same keys and simple values.",
         "markup.li.jsonIsValidatedWhenIt": "The JSON is validated when it is opened: if something does not add up it tells you exactly what, including the asserted result (<code>assert</code>) of every query. The old <code>\"testing\"</code> property is accepted but <b>ignored</b>: test mode is worked out from the queries.",
@@ -3232,7 +3272,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.renamingFollowsQueriesWhenName": "<b>Renaming follows the queries</b>: when the name of a table or of a field changes, the queries rewrite themselves (<code>FROM table</code>, <code>table.field</code>, the bare column and the asserted names), also in the editor that is open. <b>Aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected.",
         "markup.li.reportOpensItsOwnWhen": "The <b>report</b> opens on its own when loading: a summary (queries, passed, failed and without an assert), one row per query —its rows, whether it carries an assert and the result— and the <b>detail of the differences</b>, with what was expected and what was obtained in every row or column that does not add up. If a query does not compile, it is marked as failed with the error.",
         "markup.li.rowHeadersStayFixedWhen": "The row headers stay <b>fixed</b> when the matrix is scrolled across the width of the screen.",
-        "markup.li.historyBarUnderTop": "Under the top bar there is a <b>history bar</b>: a rounded link to every place you have passed through (home, a table, a query, a summary, the relations or the import panel).",
+        "markup.li.historyBarUnderTop": "Under the top bar there is a <b>history bar</b>: a rounded link to every place you have passed through (home, a table, a query, a summary, the relations or the import panel). When you go back to a table or a query it is <b>revealed in the sidebar</b>: its folder opens if it was folded and the list scrolls to it.",
         "markup.li.pressPlaceGoBackTo": "Press a link to <b>go back to that place</b>; the one on screen is highlighted. Going back to a place does not repeat it (it moves to the end) and the links to tables or queries that no longer exist disappear on their own.",
         "markup.li.historyIsNotSaved": "The history belongs to the session: it is <b>not saved</b> in the project.",
         "markup.li.rowPagesTotalJumpFirst": "Row pages with the total and a jump to the first or the last one.",
@@ -3650,9 +3690,14 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.orphans": " {count} query(s) are left citing a query that no longer exists: {names}.",
         "queries.planLine": "Plan · {ms} ms: {steps}",
         "queries.planStep": "{n}) {label} → {rows} row(s)",
+        "queries.readersButton": {"one":"Read as a table by (1)","other":"Read as a table by ({count})"},
+        "queries.readersTip": "Jump to one of the queries that read “{name}” as a table",
+        "queries.relatedPickTip": "Open the query “{name}”",
         "queries.removed": "Query “{name}” deleted.{orphans}",
         "queries.renamed": "Query renamed: “{old}” → “{new}”{note}.",
         "queries.selected": "Query “{name}”. Press ▶ Run or Ctrl+Enter.",
+        "queries.sourcesButton": "Reads as tables ({count})",
+        "queries.sourcesTip": "Jump to one of the queries that “{name}” reads as a table",
         "queries.suffixedName": "query_{n}",
         "queries.testRemovedNoTests": "“{name}” no longer checks an asserted result: the project is left without tests.",
         "queries.testRemovedStillTest": "“{name}” no longer checks an asserted result; the project stays in test mode.",
@@ -4328,7 +4373,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.exportTableDataAsCSV": "<b>Exportar CSV…</b> abre los datos de la tabla como <b>texto CSV en una ventana</b>, con <b>Copiar</b> y <b>Descargar CSV</b> y las mismas opciones de separador, cabecera y coma decimal que el resultado de una consulta.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.",
         "markup.li.idFieldIsAutoNumbered": "El <b>campo ID es autonumérico</b>: cada fila nueva recibe el <b>siguiente número</b> y ninguno se repite ni se reutiliza al borrar filas. Por eso no se edita a mano: se puede buscar en él, pero no se reemplaza. Con <b>Crear campo ID autonumérico</b> añades uno nuevo (el nombre se escribe a su lado), al principio de la tabla, y numera <b>1..N</b> las filas que ya había. Marcar cualquier otro campo como ID también lo vuelve autonumérico.",
-        "markup.li.insertButtonSpeedsUpWriting": "<b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos.",
+        "markup.li.insertButtonSpeedsUpWriting": "<b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos. A su lado, <b>La leen como tabla (n)</b> y <b>Lee como tabla (n)</b> despliegan las consultas que leen la abierta como tabla y las que ella lee, para saltar de una a otra; cada botón aparece solo cuando hay alguna.",
         "markup.li.insideCellGoForeignKeys": "Dentro de la casilla van las <b>claves ajenas</b> de la tabla de la fila que apuntan a la de la columna, escritas como <code>campo → campo destino</code>. La <b>diagonal</b> recoge las <b>autorreferencias</b>: las claves ajenas de una tabla que apuntan a ella misma.",
         "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: un array de objetos con las mismas claves y valores simples.",
         "markup.li.jsonIsValidatedWhenIt": "El JSON se valida al abrirlo: si algo no cuadra te dice exactamente qué, incluido el resultado asertado (<code>assert</code>) de cada consulta. La antigua propiedad <code>\"testing\"</code> se acepta pero se <b>ignora</b>: el modo test se deduce de las consultas.",
@@ -4353,7 +4398,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.renamingFollowsQueriesWhenName": "<b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>.",
         "markup.li.reportOpensItsOwnWhen": "El <b>informe</b> se abre solo al cargar: resumen (consultas, correctas, fallidas y sin assert), una fila por consulta —sus filas, si lleva assert y el resultado— y el <b>detalle de las diferencias</b>, con lo esperado y lo obtenido en cada fila o columna que no cuadra. Si una consulta no compila, se marca como fallida con el error.",
         "markup.li.rowHeadersStayFixedWhen": "Las cabeceras de fila quedan <b>fijas</b> al desplazar la matriz a lo ancho de la pantalla.",
-        "markup.li.historyBarUnderTop": "Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación).",
+        "markup.li.historyBarUnderTop": "Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación). Al volver a una tabla o a una consulta, se <b>revela en la barra lateral</b>: se abre su carpeta si estaba plegada y la lista se desplaza hasta ella.",
         "markup.li.pressPlaceGoBackTo": "Pulsa un enlace para <b>volver a ese lugar</b>; el que está en pantalla queda resaltado. Volver a un lugar no lo repite (se mueve al final) y los enlaces a tablas o consultas que ya no existen desaparecen solos.",
         "markup.li.historyIsNotSaved": "El histórico es de la sesión: <b>no se guarda</b> en el proyecto.",
         "markup.li.rowPagesTotalJumpFirst": "Páginas de filas con el total y salto a la primera o a la última.",
@@ -4771,9 +4816,14 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.orphans": " Quedan {count} consulta(s) citando una consulta que ya no existe: {names}.",
         "queries.planLine": "Plan · {ms} ms: {steps}",
         "queries.planStep": "{n}) {label} → {rows} fila(s)",
+        "queries.readersButton": {"one":"La lee como tabla (1)","other":"La leen como tabla ({count})"},
+        "queries.readersTip": "Saltar a una de las consultas que leen «{name}» como tabla",
+        "queries.relatedPickTip": "Abrir la consulta «{name}»",
         "queries.removed": "Consulta «{name}» eliminada.{orphans}",
         "queries.renamed": "Consulta renombrada: «{old}» → «{new}»{note}.",
         "queries.selected": "Consulta «{name}». Pulsa ▶ Ejecutar o Ctrl+Enter.",
+        "queries.sourcesButton": "Lee como tabla ({count})",
+        "queries.sourcesTip": "Saltar a una de las consultas que «{name}» lee como tabla",
         "queries.suffixedName": "consulta_{n}",
         "queries.testRemovedNoTests": "«{name}» ya no comprueba ningún resultado asertado: el proyecto se queda sin tests.",
         "queries.testRemovedStillTest": "«{name}» ya no comprueba ningún resultado asertado; el proyecto sigue en modo test.",
@@ -11382,6 +11432,7 @@ ORDER BY edificios DESC, sede;</pre>
         const list = document.getElementById("list-queries");
         list.textContent = "";
         const usage = SqlViews.usage(Store.project);
+        UiQueryLinks.update(usage);
         const shape = Ui.projectShape(Store.project);
         UiFolders.render("queries", list, (query, folder) => Ui.queryItem(query, usage, shape, folder));
       },
@@ -11504,6 +11555,7 @@ ORDER BY edificios DESC, sede;</pre>
         Ui.state.selectedRow = null;
         Ui.state.page = 0;
         Ui.renderAll();
+        UiFolders.reveal("tables", name);
         Ui.showView("table");
         setStatus(I18n.t("ui.tableSummaryTip", { name: name, rowCount: table.rows.length, fieldCount: table.fields.length }));
       },
@@ -13828,8 +13880,10 @@ ORDER BY edificios DESC, sede;</pre>
           return;
         }
         UiQueryInsert.hide();
+        UiQueryLinks.hide();
         Ui.state.activeQuery = name;
         Ui.renderSidebarQueries();
+        UiFolders.reveal("queries", name);
         Ui.showView("query");
         document.getElementById("query-name").value = query.name;
         document.getElementById("query-description").value = query.description || "";
@@ -13934,6 +13988,7 @@ ORDER BY edificios DESC, sede;</pre>
         if (value !== query.sql) {
           query.sql = value;
           UiProject.markDirty();
+          UiQueryLinks.update();
         }
       },
 
@@ -13949,6 +14004,7 @@ ORDER BY edificios DESC, sede;</pre>
         if (currentSql !== query.sql) {
           query.sql = currentSql;
           UiProject.markDirty();
+          UiQueryLinks.update();
         }
         const sql = query.sql.trim();
         UiQueries.clearOutput();
@@ -16062,6 +16118,177 @@ ORDER BY edificios DESC, sede;</pre>
       },
     };
 
+    /** The two drop-downs of the query editor that jump to the related queries:
+     *  the ones that read the open query as a table and the ones it reads. They
+     *  are worked out from the text of the queries (SqlViews.usage) and stay
+     *  hidden while there is none of them. */
+    const UiQueryLinks = {
+      /** "readers" (they read the open query), "sources" (the open query reads
+       *  them) or null while the drop-down is closed. */
+      kind: null,
+
+      /** Button the drop-down hangs under. */
+      button: null,
+
+      popup() {
+        return document.getElementById("related-popup");
+      },
+
+      buttonOf(kind) {
+        return document.getElementById(kind === "readers" ? "btn-query-readers" : "btn-query-sources");
+      },
+
+      /** Queries related to the open one in that direction, in project order. */
+      names(kind, query, usage) {
+        const analisis = usage || SqlViews.usage(Store.project);
+        return (kind === "readers" ? analisis.leen : analisis.lee).get(query.name) || [];
+      },
+
+      /** Paints the button of one direction with its number, or hides it when
+       *  there is no query on that side. */
+      paint(kind, query, usage) {
+        const button = UiQueryLinks.buttonOf(kind);
+        const names = query ? UiQueryLinks.names(kind, query, usage) : [];
+        button.hidden = names.length === 0;
+        button.textContent = I18n.t(kind === "readers" ? "queries.readersButton" : "queries.sourcesButton", { count: names.length });
+        button.title = names.length === 0
+          ? ""
+          : I18n.t(kind === "readers" ? "queries.readersTip" : "queries.sourcesTip", { name: query.name });
+        button.setAttribute("aria-label", button.title || button.textContent);
+      },
+
+      /** Brings both buttons up to date with the open query, and the drop-down
+       *  too when it is open. */
+      update(usage) {
+        const query = UiQueries.activeQueryOrNull();
+        UiQueryLinks.paint("readers", query, usage);
+        UiQueryLinks.paint("sources", query, usage);
+        document.getElementById("related-sep").hidden =
+          UiQueryLinks.buttonOf("readers").hidden && UiQueryLinks.buttonOf("sources").hidden;
+        if (UiQueryLinks.kind === null) {
+          return;
+        }
+        if (!query || UiQueryLinks.names(UiQueryLinks.kind, query, usage).length === 0) {
+          UiQueryLinks.hide();
+        } else {
+          UiQueryLinks.render();
+        }
+      },
+
+      /** Opens the drop-down of that direction under its button. */
+      show(kind) {
+        const query = UiQueries.activeQueryOrNull();
+        if (!query) {
+          return;
+        }
+        UiQueryInsert.hide();
+        UiQueryLinks.kind = kind;
+        UiQueryLinks.button = UiQueryLinks.buttonOf(kind);
+        UiQueryLinks.button.setAttribute("aria-expanded", "true");
+        const popup = UiQueryLinks.popup();
+        UiQueryLinks.render();
+        popup.hidden = false;
+        UiQueryLinks.place();
+      },
+
+      /** Closes the drop-down; nothing happens when it is already closed. */
+      hide() {
+        if (UiQueryLinks.kind === null) {
+          return;
+        }
+        UiQueryLinks.button.setAttribute("aria-expanded", "false");
+        UiQueryLinks.kind = null;
+        UiQueryLinks.button = null;
+        const popup = UiQueryLinks.popup();
+        popup.hidden = true;
+        popup.textContent = "";
+      },
+
+      /** Opens or closes the drop-down, as the button does. */
+      toggle(kind) {
+        if (UiQueryLinks.kind === kind) {
+          UiQueryLinks.hide();
+        } else {
+          UiQueryLinks.show(kind);
+        }
+      },
+
+      /** Paints the list of the open drop-down: one button per query. */
+      render() {
+        const popup = UiQueryLinks.popup();
+        popup.textContent = "";
+        const query = UiQueries.activeQueryOrNull();
+        if (!query || UiQueryLinks.kind === null) {
+          return;
+        }
+        popup.setAttribute("aria-label", UiQueryLinks.button.title);
+        UiQueryLinks.names(UiQueryLinks.kind, query).forEach((name) => {
+          const item = document.createElement("button");
+          item.type = "button";
+          item.className = "related-pick";
+          item.dataset.name = name;
+          item.textContent = name;
+          item.title = I18n.t("queries.relatedPickTip", { name: name });
+          item.setAttribute("aria-label", item.title);
+          popup.appendChild(item);
+        });
+      },
+
+      /** Puts the drop-down under its button, inside the window. */
+      place() {
+        const box = UiQueryLinks.button.getBoundingClientRect();
+        const popup = UiQueryLinks.popup();
+        const width = popup.offsetWidth;
+        const height = popup.offsetHeight;
+        const left = Math.max(4, Math.min(box.left, window.innerWidth - width - 4));
+        const top = box.bottom + 2 + height > window.innerHeight - 4
+          ? Math.max(4, box.top - height - 2)
+          : box.bottom + 2;
+        popup.style.left = `${left}px`;
+        popup.style.top = `${top}px`;
+      },
+
+      /** Opens the picked query in the editor. */
+      open(name) {
+        UiQueryLinks.hide();
+        UiQueries.select(name);
+      },
+
+      /** Wires the two buttons, the list and the ways out. */
+      bind() {
+        ["readers", "sources"].forEach((kind) => {
+          UiQueryLinks.buttonOf(kind).addEventListener("click", () => UiQueryLinks.toggle(kind));
+        });
+        UiQueryLinks.popup().addEventListener("click", (event) => {
+          const item = event.target.closest("button[data-name]");
+          if (item) {
+            UiQueryLinks.open(item.dataset.name);
+          }
+        });
+        document.addEventListener("pointerdown", (event) => {
+          if (UiQueryLinks.kind === null || !(event.target instanceof Element)) {
+            return;
+          }
+          if (!event.target.closest("#related-popup, #btn-query-readers, #btn-query-sources")) {
+            UiQueryLinks.hide();
+          }
+        });
+        document.addEventListener("keydown", (event) => {
+          if (UiQueryLinks.kind !== null && event.key === "Escape") {
+            event.preventDefault();
+            const button = UiQueryLinks.button;
+            UiQueryLinks.hide();
+            button.focus();
+          }
+        });
+        window.addEventListener("resize", () => {
+          if (UiQueryLinks.kind !== null) {
+            UiQueryLinks.place();
+          }
+        });
+      },
+    };
+
     const UiProject = {
       /** File of the project opened or saved with «… as» (when the browser gives
        *  file access): it allows overwriting it without asking. */
@@ -16635,6 +16862,39 @@ ORDER BY edificios DESC, sede;</pre>
       /** Element of the sidebar of that kind. */
       listOf(kind) {
         return document.getElementById(UiFolders.KIND[kind].list);
+      },
+
+      /** Item of that list with that name, as painted, or null. */
+      itemOf(kind, name) {
+        return [...UiFolders.listOf(kind).querySelectorAll("li[data-name]")]
+          .find((item) => item.dataset.name === name) || null;
+      },
+
+      /** Brings a jumped-to item into sight: it opens the list of tables and the
+       *  folder that hold it when they are folded (the state travels in the
+       *  project, as when folding by hand) and scrolls the sidebar until the
+       *  item shows. */
+      reveal(kind, name) {
+        const item = UiFolders.itemOf(kind, name);
+        if (!item) {
+          return;
+        }
+        let changed = false;
+        if (kind === "tables" && Model.tablesFolded(Store.project)) {
+          Model.unfoldTableList(Store.project);
+          Ui.applyTablesFold();
+          changed = true;
+        }
+        const folder = item.dataset.folder || "";
+        if (Model.isFolded(Store.project, folder, kind)) {
+          Model.unfoldFolder(Store.project, folder, kind);
+          UiFolders.applyCollapsed(kind);
+          changed = true;
+        }
+        if (changed) {
+          UiProject.markDirty();
+        }
+        item.scrollIntoView({ block: "nearest" });
       },
 
       /** Repaints the list of that kind. */
@@ -24680,6 +24940,225 @@ ORDER BY edificios DESC, sede;</pre>
       });
     });
 
+    /* --- Cases T42: jumping to the related queries ----------------------- */
+
+    /** Loads a project with a chain of queries (base → media → final), opens
+     *  «media» and, whatever happens, puts the previous project back. */
+    const conProyectoEncadenado = (body) => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        query: Ui.state.activeQuery,
+        view: Ui.state.view,
+      };
+      Store.replaceProject({
+        name: "relacionadas",
+        tables: [],
+        queries: [
+          { name: "base", description: "", sql: "SELECT 1 AS x", assert: null },
+          { name: "media", description: "", sql: "SELECT x FROM base", assert: null },
+          { name: "final", description: "", sql: "SELECT x FROM media", assert: null },
+          { name: "suelta", description: "", sql: "SELECT 2 AS y", assert: null },
+        ],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        UiQueries.select("media");
+        Store.dirty = false;
+        body();
+      } finally {
+        UiQueryLinks.hide();
+        Store.replaceProject(before.project);
+        Ui.state.activeQuery = before.query;
+        Ui.showView(before.view);
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
+      }
+    };
+
+    const nombresDelDesplegable = () => [...document.querySelectorAll("#related-popup .related-pick")]
+      .map((item) => item.dataset.name);
+
+    SelfTests.add("When_OpenQueryWithNeighbours_Expect_TwoButtonsWithCounts", () => {
+      conProyectoEncadenado(() => {
+        const readers = document.getElementById("btn-query-readers");
+        const sources = document.getElementById("btn-query-sources");
+        assertEqual(readers.hidden, false, "the button of the queries that read it shows");
+        assertEqual(sources.hidden, false, "the button of the queries it reads shows");
+        assertEqual(
+          readers.textContent,
+          I18n.t("queries.readersButton", { count: 1 }),
+          "the readers button carries its number",
+        );
+        assertEqual(
+          sources.textContent,
+          I18n.t("queries.sourcesButton", { count: 1 }),
+          "the sources button carries its number",
+        );
+      });
+    });
+
+    SelfTests.add("When_QueryWithoutNeighbours_Expect_ButtonsHidden", () => {
+      conProyectoEncadenado(() => {
+        UiQueries.select("suelta");
+        assertEqual(document.getElementById("btn-query-readers").hidden, true, "nobody reads it");
+        assertEqual(document.getElementById("btn-query-sources").hidden, true, "it reads nobody");
+        assertEqual(document.getElementById("related-sep").hidden, true, "and the separator goes with them");
+        UiQueries.select("base");
+        assertEqual(document.getElementById("btn-query-readers").hidden, false, "base is read by media");
+        assertEqual(document.getElementById("btn-query-sources").hidden, true, "base reads no query");
+        assertEqual(document.getElementById("related-sep").hidden, false, "the separator stays with the button");
+      });
+    });
+
+    SelfTests.add("When_OpenReadersPicker_Expect_ReadersListedAndPickable", () => {
+      conProyectoEncadenado(() => {
+        document.getElementById("btn-query-readers").click();
+        assertEqual(document.getElementById("related-popup").hidden, false, "the list opens");
+        assertEqual(nombresDelDesplegable().join("|"), "final", "the query that reads it, and only it");
+        document.querySelector("#related-popup .related-pick").click();
+        assertEqual(document.getElementById("related-popup").hidden, true, "the list closes");
+        assertEqual(Ui.state.activeQuery, "final", "the picked query opens");
+        assertEqual(document.getElementById("query-sql").value, "SELECT x FROM media", "with its SQL");
+        assertEqual(document.getElementById("view-query").hidden, false, "in the query view");
+      });
+    });
+
+    SelfTests.add("When_OpenSourcesPicker_Expect_SourcesListed", () => {
+      conProyectoEncadenado(() => {
+        document.getElementById("btn-query-sources").click();
+        assertEqual(nombresDelDesplegable().join("|"), "base", "the query it reads, and only it");
+        document.querySelector("#related-popup .related-pick").click();
+        assertEqual(Ui.state.activeQuery, "base", "the picked source opens");
+      });
+    });
+
+    SelfTests.add("When_SwitchPicker_Expect_OnlyOneOpenAndEscClosesIt", () => {
+      conProyectoEncadenado(() => {
+        document.getElementById("btn-query-readers").click();
+        document.getElementById("btn-query-sources").click();
+        assertEqual(nombresDelDesplegable().join("|"), "base", "the second button replaces the list");
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+        assertEqual(document.getElementById("related-popup").hidden, true, "Escape closes it");
+        document.getElementById("btn-query-sources").click();
+        document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+        assertEqual(document.getElementById("related-popup").hidden, true, "a click outside closes it");
+        document.getElementById("btn-query-sources").click();
+        document.getElementById("btn-query-sources").click();
+        assertEqual(document.getElementById("related-popup").hidden, true, "the button closes it again");
+      });
+    });
+
+    SelfTests.add("When_EditSqlAndRun_Expect_ButtonsFollowTheText", () => {
+      conProyectoEncadenado(() => {
+        const editor = document.getElementById("query-sql");
+        editor.value = "SELECT 3 AS z";
+        editor.dispatchEvent(new Event("change"));
+        assertEqual(document.getElementById("btn-query-sources").hidden, true, "it no longer reads a query");
+        editor.value = "SELECT x FROM base";
+        editor.dispatchEvent(new Event("change"));
+        assertEqual(document.getElementById("btn-query-sources").hidden, false, "it reads base again");
+      });
+    });
+
+    /* --- Cases T43: revealing the jumped-to item in the sidebar ---------- */
+
+    /** Loads a project with a folded folder of queries («Ventas», holding
+     *  «resumen»), a folded «no folder» group (holding «suelta») and the list of
+     *  tables folded, runs `body` and puts the previous project back. */
+    const conProyectoPlegado = (body) => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        query: Ui.state.activeQuery,
+        table: Ui.state.activeTable,
+        view: Ui.state.view,
+      };
+      Store.replaceProject({
+        name: "plegado",
+        folders: ["Ventas"],
+        foldedFolders: ["Ventas", ""],
+        tableFolders: [],
+        foldedTableFolders: [],
+        tablesFolded: true,
+        tables: [
+          {
+            name: "ventas",
+            description: "",
+            idField: null,
+            nextId: 2,
+            fields: [{ name: "importe", description: null, type: "number" }],
+            rows: [{ importe: 10 }],
+          },
+        ],
+        queries: [
+          { name: "resumen", description: "", folder: "Ventas", sql: "SELECT importe FROM ventas", assert: null },
+          { name: "suelta", description: "", sql: "SELECT 1 AS x", assert: null },
+        ],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        Store.dirty = false;
+        Ui.renderAll();
+        body();
+      } finally {
+        Store.replaceProject(before.project);
+        Ui.state.activeQuery = before.query;
+        Ui.state.activeTable = before.table;
+        Ui.showView(before.view);
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
+      }
+    };
+
+    const elementoDeLaBarra = (list, name) => [...document.querySelectorAll(`#${list} li[data-name]`)]
+      .find((item) => item.dataset.name === name);
+
+    SelfTests.add("When_JumpToQueryInFoldedFolder_Expect_FolderOpensAndItemShows", () => {
+      conProyectoPlegado(() => {
+        assertEqual(Model.isFolded(Store.project, "Ventas", "queries"), true, "the folder starts folded");
+        assertEqual(elementoDeLaBarra("list-queries", "resumen").hidden, true, "and its query is hidden");
+        UiQueries.select("resumen");
+        assertEqual(Model.isFolded(Store.project, "Ventas", "queries"), false, "the jump opens the folder");
+        assertEqual(elementoDeLaBarra("list-queries", "resumen").hidden, false, "so the query shows in the sidebar");
+        assertEqual(Store.dirty, true, "the project is marked as modified, as when folding by hand");
+      });
+    });
+
+    SelfTests.add("When_JumpToQueryWithNoFolder_Expect_GroupOpens", () => {
+      conProyectoPlegado(() => {
+        assertEqual(Model.isFolded(Store.project, "", "queries"), true, "the «no folder» group starts folded");
+        UiQueries.select("suelta");
+        assertEqual(Model.isFolded(Store.project, "", "queries"), false, "the jump opens the group");
+        assertEqual(elementoDeLaBarra("list-queries", "suelta").hidden, false, "so the query shows in the sidebar");
+      });
+    });
+
+    SelfTests.add("When_JumpToTableWithFoldedList_Expect_ListOpensAndItemShows", () => {
+      conProyectoPlegado(() => {
+        assertEqual(Model.tablesFolded(Store.project), true, "the list of tables starts folded");
+        assertEqual(elementoDeLaBarra("list-tables", "ventas").hidden, true, "and the table is hidden");
+        Ui.selectTable("ventas");
+        assertEqual(Model.tablesFolded(Store.project), false, "the jump opens the list");
+        assertEqual(elementoDeLaBarra("list-tables", "ventas").hidden, false, "so the table shows in the sidebar");
+      });
+    });
+
+    SelfTests.add("When_JumpToItemAlreadyInSight_Expect_NothingChangesInTheProject", () => {
+      conProyectoPlegado(() => {
+        UiQueries.select("resumen");
+        Store.dirty = false;
+        UiQueries.select("resumen");
+        assertEqual(Store.dirty, false, "jumping again to the open query touches nothing");
+        Ui.selectTable("ventas");
+        Store.dirty = false;
+        Ui.selectTable("ventas");
+        assertEqual(Store.dirty, false, "nor to the open table");
+      });
+    });
+
     /* =====================================================================
        12 · INITIALISATION
        ===================================================================== */
@@ -24695,6 +25174,7 @@ ORDER BY edificios DESC, sede;</pre>
         UiFolders.bind();
         UiQueries.bind();
         UiQueryInsert.bind();
+        UiQueryLinks.bind();
         UiTableCsv.bind();
         UiImport.bind();
         UiUpdateTable.bind();
