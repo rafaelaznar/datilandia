@@ -73,10 +73,17 @@
     #header {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 3px;
       align-items: center;
       padding: 3px 6px;
       border-bottom: 1px solid #bbb;
+    }
+
+    /*  The buttons of the top bar carry an icon beside the word: a little less
+       padding keeps every one of them, and the language picker, in the same
+       line in Spanish (the longest labels).  */
+    #header button {
+      padding: 1px 4px;
     }
 
     /* The brand is a button that looks like text: it goes back to the home page. */
@@ -283,6 +290,31 @@
       font: inherit;
     }
 
+    /* --- 3b. Icons (Astra Icons, MIT; direct inline SVG) --------------- */
+
+    /*  Every icon is the same 24 × 24 stroke drawing, painted with the colour
+        of its control (currentColor), so it follows hover, disabled and the
+        native look without a second palette. The size is in em: the icon grows
+        with the type of the place it is in (11 px in the top bar and in the
+        toolbars, 10 px in the sidebar).  */
+    .icon {
+      width: 1em;
+      height: 1em;
+      flex: 0 0 auto;
+      stroke: currentColor;
+      vertical-align: -0.15em;
+      pointer-events: none;
+    }
+
+    /*  A control that carries an icon and a label (or only the icon): the two
+        are aligned in the middle and separated by a hair.  */
+    .with-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
     /* --- 4. Sidebar lists -------------------------------------------- */
 
     .panel h2 {
@@ -291,8 +323,11 @@
       justify-content: space-between;
     }
 
-    /*  The panel title looks like text, but it is a button: it opens on the right the summary with every table or every query.  */
+    /*  The panel title looks like text, but it is a button: it opens on the right the summary with every table or every query. Its icon sits before the word, aligned in the middle.  */
     .titulo-panel {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       padding: 0;
       border: 0;
       background: none;
@@ -310,10 +345,13 @@
     }
 
     /* Small actions of a panel header: the two «+» (add a table and add a
-       query), the one that adds a folder (+F, +C) and the one that folds every
+       query), the one that adds a folder and the one that folds every
        folder. They all share the same box, so the headers of the panels look
        the same. */
     .panel-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       min-width: 1.5em;
       padding: 0 4px;
       font-size: 10px;
@@ -397,6 +435,9 @@
     /* Arrow that folds a group: the header is the widest thing of the
        sidebar in its row, so it is kept small. */
     li.folder .folder-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0 2px;
       font-size: 9px;
       line-height: 1;
@@ -459,12 +500,13 @@
       white-space: nowrap;
     }
 
-    /* End of a query row of the sidebar: its marks and the «D» that duplicates
-       the query, side by side and to the right of the name. */
+    /* End of a query row of the sidebar: its marks and the icons that move,
+       duplicate, paint and delete the query, side by side and to the right of
+       the name. The icons are centred with the marks, which are text. */
     .row-actions {
       display: flex;
       gap: 4px;
-      align-items: baseline;
+      align-items: center;
       white-space: nowrap;
     }
 
@@ -481,8 +523,9 @@
     }
 
     /*  The rest of the actions of a query row: the arrows that move it inside
-        its folder, the swatch of its background colour and the «✕» that deletes
-        it. They are as small as the «D», so the row stays readable.  */
+        its folder, the swatch of its background colour and the bin that deletes
+        it. They are as small as the icon that duplicates, so the row stays
+        readable.  */
     .row-actions .move-query,
     .row-actions .color-query,
     .row-actions .delete-query {
@@ -1087,6 +1130,9 @@
     #view-table .grid .btn-delete-row,
     #view-table .grid .btn-delete-field,
     #dlg-fields .grid .btn-delete-field {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0 3px;
       line-height: 1;
     }
@@ -1401,6 +1447,13 @@
       margin-bottom: 4px;
     }
 
+    /*  Fields and metadata window: wider than its content asks for, so the
+       name, the description, the type, the foreign key and both directions of
+       the references fit side by side without cutting anything.  */
+    #dlg-fields {
+      width: min(1180px, 94vw);
+    }
+
     #dlg-fields #table-fields {
       width: 100%;
     }
@@ -1664,6 +1717,9 @@
     }
 
     .insert-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 16px;
       padding: 0;
       color: #555;
@@ -1815,22 +1871,39 @@
 </head>
 <body>
   <!-- =====================================================================
+       ICONS (Astra Icons, MIT · linear style · 24 × 24, 1.5 stroke)
+       Source of the drawings: https://github.com/uiastra/astraicons
+       The source of every icon is written directly in the document, as an
+       inline SVG that paints itself with the colour of its control
+       (currentColor). These templates are the ones the lists of the sidebar
+       and the folder headers clone when they build their buttons: the same
+       source, with no extra request.
+       ===================================================================== -->
+  <template data-icon="chevron-up"><svg class="icon" data-icon="chevron-up" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M6 15L10.5858 10.4142C11.3668 9.63317 12.6332 9.63316 13.4142 10.4142L18 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
+  <template data-icon="chevron-down"><svg class="icon" data-icon="chevron-down" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M18 9L13.4142 13.5858C12.6332 14.3668 11.3668 14.3668 10.5858 13.5858L6 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
+  <template data-icon="chevron-right"><svg class="icon" data-icon="chevron-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9.24323 6L14.0929 9.99038C15.3024 10.9856 15.3024 12.8143 14.0929 13.8095L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
+  <template data-icon="chevron-double-up"><svg class="icon" data-icon="chevron-double-up" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M8 16L11.2929 12.7071C11.6834 12.3166 12.3166 12.3166 12.7071 12.7071L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 12L11.2929 8.70711C11.6834 8.31658 12.3166 8.31658 12.7071 8.70711L16 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
+  <template data-icon="chevron-double-down"><svg class="icon" data-icon="chevron-double-down" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 12L12.7071 15.2929C12.3166 15.6834 11.6834 15.6834 11.2929 15.2929L8 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8L12.7071 11.2929C12.3166 11.6834 11.6834 11.6834 11.2929 11.2929L8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
+  <template data-icon="copy"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg></template>
+  <template data-icon="edit"><svg class="icon" data-icon="edit" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M21 18V18.5C21 19.8807 19.8807 21 18.5 21H5.5C4.11929 21 3 19.8807 3 18.5V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.4048 12.1062L13.0741 3.99909C13.4236 3.49921 13.9636 3.15449 14.5753 3.04075C15.1869 2.92701 15.82 3.05359 16.3355 3.39262L18.9697 5.12543C20.0429 5.83143 20.3229 7.24759 19.595 8.28853L13.9257 16.3956C13.5761 16.8955 13.0361 17.2402 12.4245 17.354L9.06104 17.9794C8.42423 18.0978 7.809 17.6931 7.6869 17.0755L7.04201 13.8134C6.92475 13.2202 7.05525 12.6061 7.4048 12.1062Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10.85" y1="13.5496" x2="11.15" y2="13.1496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.1092" y1="7.63042" x2="16.6813" y2="11.0967" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
+  <template data-icon="trash"><svg class="icon" data-icon="trash" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 9V17.5C5 19.9853 7.01472 22 9.5 22H14.5C16.9853 22 19 19.9853 19 17.5V9" stroke="currentColor" stroke-width="1.5"/><path d="M20 8H13.12H9.94667H6.77333H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 6C7 4.34315 8.34315 3 10 3H14C15.6569 3 17 4.34315 17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.99998 17L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 17L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 17L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
+  <!-- =====================================================================
        STRUCTURE: project header, sidebar, views and status.
        ===================================================================== -->
   <header id="header">
-    <button data-i18n-title="markup.button.goHomePageSummaryEverything" id="mark" type="button" title="Ir a la página de inicio (resumen de todo lo que puedes hacer)">DATILANDIA</button>
+    <button class="with-icon" data-i18n-title="markup.button.goHomePageSummaryEverything" id="mark" type="button" title="Ir a la página de inicio (resumen de todo lo que puedes hacer)"><svg class="icon" data-icon="chart" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.5 21H16.5C18.9853 21 21 18.9853 21 16.5V12V7.5C21 5.01472 18.9853 3 16.5 3H12H7.5C5.01472 3 3 5.01472 3 7.5V16.5C3 18.9853 5.01472 21 7.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.6667 12.5556H15.5C16.3284 12.5556 17 13.2271 17 14.0556V15.5C17 16.3284 16.3284 17 15.5 17H15.3333H13.6667M13.6667 12.5556V8.5C13.6667 7.67157 12.9951 7 12.1667 7H11.8333C11.0049 7 10.3333 7.67157 10.3333 8.5V10M13.6667 12.5556V17M10.3333 10H8.5C7.67157 10 7 10.6716 7 11.5V16.4444C7 16.7513 7.24873 17 7.55556 17H10.3333M10.3333 10V17M13.6667 17H10.3333" stroke="currentColor" stroke-width="1.5"/></svg>DATILANDIA</button>
     <span class="muted" data-i18n="project.label">Proyecto:</span>
     <span data-i18n-aria-label="markup.span.projectName" data-i18n-title="markup.span.projectNameChangedSettings" id="project-name" title="Nombre del proyecto (se cambia en «Ajustes»)" aria-label="Nombre del proyecto">Sin título</span>
-    <button data-i18n-title="markup.button.newProjectDiscardsCurrentOne" data-i18n="markup.button.new" id="btn-new" type="button" title="Nuevo proyecto (descarta el actual)">Nuevo proyecto</button>
-    <button data-i18n-title="markup.button.openProjectFromJSONFile" data-i18n="markup.button.openJSON" id="btn-open" type="button" title="Abrir un proyecto desde fichero JSON">Abrir proyecto</button>
+    <button class="with-icon" data-i18n-title="markup.button.newProjectDiscardsCurrentOne" id="btn-new" type="button" title="Nuevo proyecto (descarta el actual)"><svg class="icon" data-icon="add-box" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 12.485L3.76983 7.78911M12 12.485V20.7297M12 12.485L15.6 10.2M3.76983 7.78911C4.29845 6.8289 5.07782 6.0305 6.04032 5.51183L9.54033 3.62579C11.0887 2.7914 12.9113 2.7914 14.4597 3.62579L15.6 4.35M3.76983 7.78911C3.27509 8.68778 3 9.72818 3 10.8136V13.1864C3 15.4316 4.17701 17.4841 6.04033 18.4882L9.54033 20.3742C11.0887 21.2086 12.9113 21.2086 14.4597 20.3742L17.9597 18.4882C19.823 17.4841 21 15.4316 21 13.1864V12.485" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 5.5V9.5M21 7.5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.new">Nuevo proyecto</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.openProjectFromJSONFile" id="btn-open" type="button" title="Abrir un proyecto desde fichero JSON"><svg class="icon" data-icon="open-folder" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.5V10.2414C20 8.94493 18.8766 7.92817 17.5808 7.97033C15.5033 8.03793 12.6649 7.95741 11.5 7.12774C10.8433 6.65998 10.6248 6.15674 10.2188 5.40785C9.50343 4.08869 8.31881 3 6.8182 3H5.65625C4.18924 3 3 4.18924 3 5.65625V7.12774V14.6953V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 16L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5.15705 12.7291L3.39963 16.0625C2.22841 18.2839 3.77194 21 6.20558 21H16.037C17.2053 21 18.2807 20.3373 18.843 19.2709L20.6004 15.9375C21.7716 13.7161 20.2281 11 17.7944 11H7.96299C6.79475 11 5.71928 11.6627 5.15705 12.7291Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.openJSON">Abrir proyecto</span></button>
     <input id="file-open" type="file" accept=".json" title="Fichero de proyecto JSON" hidden>
-    <button data-i18n-title="markup.button.saveProjectItsFileCtrl" data-i18n="markup.button.saveProject" id="btn-save" type="button" title="Guardar el proyecto en su fichero (Ctrl+S)">Guardar proyecto</button>
-    <button data-i18n-title="markup.button.saveProjectAnotherFileSystem" data-i18n="markup.button.saveProjectAs" id="btn-save-como" type="button" title="Guardar el proyecto en otro fichero (se pedirá con la ventana del sistema)">Guardar proyecto como</button>
-    <button data-i18n-title="markup.button.goDataImportPanel" data-i18n="markup.button.importData" id="btn-import" type="button" title="Ir al panel de importación de datos">Importar datos</button>
-    <button data-i18n-title="markup.button.mergeTablesTip" data-i18n="markup.button.mergeTables" id="btn-merge-tables" type="button" title="Fusionar varias tablas en una tabla nueva">Fusionar tablas…</button>
-    <button data-i18n-title="markup.button.settingsProjectNameRowsPer" data-i18n="markup.button.settings" id="btn-settings" type="button" title="Ajustes: nombre del proyecto, filas por página y CSV al importar/exportar">Ajustes</button>
-    <button data-i18n-title="markup.button.testsRunsEveryQueryCompares" data-i18n="markup.button.tests" id="btn-tests" type="button" hidden title="Pruebas: ejecuta todas las consultas y compara cada resultado con el resultado asertado (assert) del proyecto (aparece cuando alguna consulta es un test)">Pruebas</button>
-    <button data-i18n-title="markup.button.selfTestsRunsProgramS" data-i18n="markup.button.selfTests" id="btn-auto-test" type="button" title="Auto-tests: ejecuta la batería interna de pruebas del programa (motor SQL, utilidades e interfaz) y muestra el informe">Auto-tests</button>
+    <button class="with-icon" data-i18n-title="markup.button.saveProjectItsFileCtrl" id="btn-save" type="button" title="Guardar el proyecto en su fichero (Ctrl+S)"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.saveProject">Guardar proyecto</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.saveProjectAnotherFileSystem" id="btn-save-como" type="button" title="Guardar el proyecto en otro fichero (se pedirá con la ventana del sistema)"><svg class="icon" data-icon="document-download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M21 7.63559V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V7.5C3 5.01472 5.01472 3 7.5 3H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15.6715 3.09666L20.884 7.44046C21.1318 7.64694 20.9563 8 20.6059 8H15.3933C15.1761 8 15 7.85325 15 7.67223V3.32843C15 3.03642 15.4237 2.89017 15.6715 3.09666Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V18L14 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 18L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="6.75" y1="10.25" x2="8.25" y2="10.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="7.25" x2="11.25" y2="7.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.saveProjectAs">Guardar proyecto como</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.goDataImportPanel" id="btn-import" type="button" title="Ir al panel de importación de datos"><svg class="icon" data-icon="import" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M3 11.5C3 10.1193 4.11929 9 5.5 9H7.07692C7.58672 9 8 9.41328 8 9.92308V10.3462C8 10.6223 8.22386 10.8462 8.5 10.8462H12H15.5C15.7761 10.8462 16 10.6223 16 10.3462V9.92308C16 9.41328 16.4133 9 16.9231 9H18.5C19.8807 9 21 10.1193 21 11.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V11.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M14 16L12.4934 17.6583C12.2289 17.9494 11.7711 17.9494 11.5066 17.6583L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 13.5L12 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 6.5V4.67785C5 3.7512 5.89543 3 7 3H17C18.1046 3 19 3.7512 19 4.67785V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9.5V8.5C4 7.39543 4.89543 6.5 6 6.5H18C19.1046 6.5 20 7.39543 20 8.5V9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.importData">Importar datos</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.mergeTablesTip" id="btn-merge-tables" type="button" title="Fusionar varias tablas en una tabla nueva"><svg class="icon" data-icon="exchange" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M18 9L15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 15L6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.mergeTables">Fusionar tablas…</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.settingsProjectNameRowsPer" id="btn-settings" type="button" title="Ajustes: nombre del proyecto, filas por página y CSV al importar/exportar"><svg class="icon" data-icon="settings" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M10.4959 4.20228C10.858 2.59924 13.142 2.59924 13.5041 4.20228L13.632 4.7684C13.8667 5.80733 15.0589 6.30116 15.9595 5.73247L16.4502 5.42259C17.8398 4.54511 19.4549 6.16021 18.5774 7.54977L18.2675 8.0405C17.6988 8.94107 18.1927 10.1333 19.2316 10.368L19.7977 10.4959C21.4008 10.858 21.4008 13.142 19.7977 13.5041L19.2316 13.632C18.1927 13.8667 17.6988 15.0589 18.2675 15.9595L18.5774 16.4502C19.4549 17.8398 17.8398 19.4549 16.4502 18.5774L15.9595 18.2675C15.0589 17.6988 13.8667 18.1927 13.632 19.2316L13.5041 19.7977C13.142 21.4008 10.858 21.4008 10.4959 19.7977L10.368 19.2316C10.1333 18.1927 8.94107 17.6988 8.0405 18.2675L7.54977 18.5774C6.16021 19.4549 4.54512 17.8398 5.42259 16.4502L5.73247 15.9595C6.30116 15.0589 5.80732 13.8667 4.76839 13.632L4.20228 13.5041C2.59924 13.142 2.59924 10.858 4.20228 10.4959L4.7684 10.368C5.80733 10.1333 6.30116 8.94107 5.73247 8.0405L5.42259 7.54977C4.54511 6.1602 6.16021 4.54512 7.54977 5.42259L8.0405 5.73247C8.94107 6.30116 10.1333 5.80732 10.368 4.76839L10.4959 4.20228Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.settings">Ajustes</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.testsRunsEveryQueryCompares" id="btn-tests" type="button" hidden title="Pruebas: ejecuta todas las consultas y compara cada resultado con el resultado asertado (assert) del proyecto (aparece cuando alguna consulta es un test)"><svg class="icon" data-icon="check-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 12L10.9976 14.5L15.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.tests">Pruebas</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.selfTestsRunsProgramS" id="btn-auto-test" type="button" title="Auto-tests: ejecuta la batería interna de pruebas del programa (motor SQL, utilidades e interfaz) y muestra el informe"><svg class="icon" data-icon="verification" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9.80078 12L11.4655 14L14.8008 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.8595 3.53849C11.4503 2.8205 12.5497 2.8205 13.1405 3.53849L14.2132 4.84192C14.5258 5.22174 15.0069 5.42104 15.4965 5.37349L17.1767 5.21032C18.1022 5.12044 18.8796 5.89779 18.7897 6.8233L18.6265 8.50345C18.579 8.99306 18.7783 9.4742 19.1581 9.78678L20.4615 10.8595C21.1795 11.4503 21.1795 12.5497 20.4615 13.1405L19.1581 14.2132C18.7783 14.5258 18.579 15.0069 18.6265 15.4965L18.7897 17.1767C18.8796 18.1022 18.1022 18.8796 17.1767 18.7897L15.4965 18.6265C15.0069 18.579 14.5258 18.7783 14.2132 19.1581L13.1405 20.4615C12.5497 21.1795 11.4503 21.1795 10.8595 20.4615L9.78678 19.1581C9.4742 18.7783 8.99306 18.579 8.50345 18.6265L6.8233 18.7897C5.89779 18.8796 5.12044 18.1022 5.21032 17.1767L5.37349 15.4965C5.42104 15.0069 5.22174 14.5258 4.84192 14.2132L3.53849 13.1405C2.8205 12.5497 2.8205 11.4503 3.53849 10.8595L4.84192 9.78678C5.22174 9.4742 5.42104 8.99306 5.37349 8.50345L5.21032 6.8233C5.12044 5.89779 5.89779 5.12044 6.8233 5.21032L8.50345 5.37349C8.99306 5.42104 9.4742 5.22174 9.78678 4.84192L10.8595 3.53849Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.selfTests">Auto-tests</span></button>
     <span class="header-right">
       <span id="project-dirty" class="warning" aria-live="polite"></span>
       <span data-i18n-title="markup.span.showsWhetherProjectIsTest" id="project-test" title="Indica si el proyecto está en modo test"></span>
@@ -1844,7 +1917,7 @@
   <!-- History bar: a link to every place visited, so you can go back to any
        of them. The URL never changes, so the place on screen is saved inside. -->
   <nav data-i18n-aria-label="history.aria" data-i18n-title="history.aria" id="history-bar" aria-label="Lugares visitados" title="Enlaces a los lugares que has visitado">
-    <span class="history-label" data-i18n="history.label">Histórico</span>
+    <span class="history-label with-icon"><svg class="icon" data-icon="clock" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 8V13.3846L16 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="history.label">Histórico</span></span>
     <ol id="history-list" class="history-list"></ol>
   </nav>
 
@@ -1852,29 +1925,29 @@
     <aside id="sidebar">
       <section class="panel">
         <h2>
-          <button class="titulo-panel" data-i18n-title="markup.button.seeEveryTableItsProperties" data-i18n="markup.button.tables" id="btn-summary-tables" type="button" title="Ver todas las tablas con sus propiedades">Tablas</button>
+          <button class="titulo-panel with-icon" data-i18n-title="markup.button.seeEveryTableItsProperties" id="btn-summary-tables" type="button" title="Ver todas las tablas con sus propiedades"><svg class="icon" data-icon="table" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 7.5C4 5.01472 6.01472 3 8.5 3H15.5C17.9853 3 20 5.01472 20 7.5V16.5C20 18.9853 17.9853 21 15.5 21H8.5C6.01472 21 4 18.9853 4 16.5V7.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M13.4 17.1C13.4 17.7628 12.8627 18.3 12.2 18.3C11.5373 18.3 11 17.7628 11 17.1C11 16.4373 11.5373 15.9 12.2 15.9C12.8627 15.9 13.4 16.4373 13.4 17.1Z" stroke="currentColor" stroke-width="1.5"/><path d="M10 6L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.tables">Tablas</span></button>
           <span class="panel-actions">
             <button class="panel-action" id="btn-fold-all-tables" type="button" hidden></button>
-            <button class="panel-action" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" data-i18n="markup.button.newFolder" id="btn-new-table-folder" type="button" title="Añadir una carpeta vacía de tablas (+C)">+C</button>
-            <button class="panel-action" data-i18n-title="markup.button.createEmptyTable" id="btn-new-table" type="button" title="Crear una tabla vacía">+</button>
+            <button class="panel-action with-icon" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" id="btn-new-table-folder" type="button" title="Añadir una carpeta vacía de tablas (+C)"><svg class="icon" data-icon="folder-add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V13.9286V6.85714V5.8125C3 4.2592 4.2592 3 5.8125 3H7.32296C8.75679 3 9.89276 4.02835 10.6434 5.25C11.0734 5.9498 11.3046 6.42005 12 6.85714C13.0877 7.54086 15.5536 7.68013 17.6297 7.66016C19.4407 7.64274 21 9.06385 21 10.875V12V16.5C21 18.9853 18.9853 21 16.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 15.4968L17.9937 15.4968" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.4961 16.9937L16.4961 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+            <button class="panel-action with-icon" data-i18n-title="markup.button.createEmptyTable" id="btn-new-table" type="button" title="Crear una tabla vacía"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           </span>
         </h2>
         <ul id="list-tables" class="list"></ul>
       </section>
       <section class="panel">
         <h2>
-          <button data-i18n-title="markup.button.seeEveryQueryItsProperties" data-i18n="markup.button.queries" class="titulo-panel" id="btn-summary-queries" type="button" title="Ver todas las consultas con sus propiedades">Consultas</button>
+          <button data-i18n-title="markup.button.seeEveryQueryItsProperties" class="titulo-panel with-icon" id="btn-summary-queries" type="button" title="Ver todas las consultas con sus propiedades"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.queries">Consultas</span></button>
           <span class="panel-actions">
             <button class="panel-action" id="btn-fold-all" type="button" hidden></button>
-            <button class="panel-action" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" data-i18n="markup.button.newFolder" id="btn-new-folder" type="button" title="Añadir una carpeta vacía (+C)">+C</button>
-            <button class="panel-action" data-i18n-title="markup.button.createNewQuery" id="btn-new-query" type="button" title="Crear una consulta nueva">+</button>
+            <button class="panel-action with-icon" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" id="btn-new-folder" type="button" title="Añadir una carpeta vacía (+C)"><svg class="icon" data-icon="folder-add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V13.9286V6.85714V5.8125C3 4.2592 4.2592 3 5.8125 3H7.32296C8.75679 3 9.89276 4.02835 10.6434 5.25C11.0734 5.9498 11.3046 6.42005 12 6.85714C13.0877 7.54086 15.5536 7.68013 17.6297 7.66016C19.4407 7.64274 21 9.06385 21 10.875V12V16.5C21 18.9853 18.9853 21 16.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 15.4968L17.9937 15.4968" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.4961 16.9937L16.4961 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+            <button class="panel-action with-icon" data-i18n-title="markup.button.createNewQuery" id="btn-new-query" type="button" title="Crear una consulta nueva"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           </span>
         </h2>
         <ul id="list-queries" class="list"></ul>
       </section>
       <section class="panel">
         <h2>
-          <button data-i18n-title="markup.button.relationMatrixWhichTablesRelate" data-i18n="markup.button.relations" class="titulo-panel" id="btn-relations" type="button" title="Matriz de relaciones: qué tablas se relacionan entre sí y qué consultas las citan">Relaciones</button>
+          <button data-i18n-title="markup.button.relationMatrixWhichTablesRelate" class="titulo-panel with-icon" id="btn-relations" type="button" title="Matriz de relaciones: qué tablas se relacionan entre sí y qué consultas las citan"><svg class="icon" data-icon="share" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="6.43478" cy="12" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><circle cx="17.5656" cy="6.43478" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><path d="M15 7.5L9 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2.43478" cy="2.43478" r="2.43478" transform="matrix(1 0 0 -1 15.1309 19.5)" stroke="currentColor" stroke-width="1.3913"/><path d="M15 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.relations">Relaciones</span></button>
         </h2>
       </section>
     </aside>
@@ -1987,7 +2060,7 @@
                 <li data-i18n-html="markup.li.deletingWarnsYouBeforeRemoving"><b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.</li>
                 <li data-i18n-html="markup.li.typeIsInferredImportIt">El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.</li>
                 <li data-i18n="markup.li.rowPagesTotalJumpFirst">Páginas de filas con el total y salto a la primera o a la última.</li>
-                <li data-i18n-html="markup.li.tableFoldersGroupTablesInOneLevel"><b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la sube y la baja con sus flechas <b>▲</b> y <b>▼</b>, la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.</li>
+                <li data-i18n-html="markup.li.tableFoldersGroupTablesInOneLevel"><b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>añadir carpeta</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la sube y la baja con sus flechas <b>▲</b> y <b>▼</b>, la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>añadir carpeta</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.</li>
                 <li data-i18n-html="markup.li.pressTablesQueriesTitleSidebar">Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.</li>
                 <li data-i18n-html="markup.li.downloadStructureJsonSummary">En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.</li>
                 <li data-i18n-html="markup.li.linkRelationsBetweenTablesQueries">El enlace <b>Relaciones entre tablas y consultas</b> abre la <b>matriz</b> de relaciones del proyecto: quién apunta a quién y qué consultas citan cada pareja de tablas. El detalle está en el apartado <b>Relaciones</b>.</li>
@@ -1998,8 +2071,8 @@
             <section class="help-bloque" data-help="queries">
               <h3 data-i18n="markup.h3.queries">Consultas</h3>
               <ul>
-                <li data-i18n-html="markup.li.createGiveItNameDescription">Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>. Mientras una consulta o la batería de pruebas tarda, una ventana con un <b>spinner</b> dice qué se está ejecutando hasta que acaba.</li>
-                <li data-i18n-html="markup.li.insertButtonSpeedsUpWriting"><b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos. A su lado, <b>La leen como tabla (n)</b> y <b>Lee como tabla (n)</b> despliegan las consultas que leen la abierta como tabla y las que ella lee, para saltar de una a otra; cada botón aparece solo cuando hay alguna.</li>
+                <li data-i18n-html="markup.li.createGiveItNameDescription">Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>Ejecutar</b> o <b>Ctrl+Enter</b>. Mientras una consulta o la batería de pruebas tarda, una ventana con un <b>spinner</b> dice qué se está ejecutando hasta que acaba.</li>
+                <li data-i18n-html="markup.li.insertButtonSpeedsUpWriting"><b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa la <b>flecha</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos. A su lado, <b>La leen como tabla (n)</b> y <b>Lee como tabla (n)</b> despliegan las consultas que leen la abierta como tabla y las que ella lee, para saltar de una a otra; cada botón aparece solo cuando hay alguna.</li>
                 <li data-i18n-html="markup.li.queryCanBeReadFrom">Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.</li>
                 <li data-i18n-html="markup.li.sidebarQueryThatSomeOther">En la barra lateral, la consulta que <b>alguna otra lee como tabla</b> lleva la marca <b>«vista»</b> en azul, o <b>«vista ×N»</b> si la leen N consultas. Pasa el ratón por su pista y te dice los dos sentidos: <b>«Lee como tabla (n): …»</b> (a quién lee ella) y <b>«La leen como tabla (n): …»</b> (quién la lee a ella). La marca es solo información: no cambia lo que comprueba la consulta.</li>
                 <li data-i18n-html="markup.li.querySummaryQueriesTitleSidebar">El <b>resumen de consultas</b> (el título <b>Consultas</b> de la barra lateral) lleva una columna <b>Vistas</b> con lo mismo, una línea por sentido (<code>lee: «…»</code> y <code>la leen: «…»</code>), o un guion si no hay ninguna. El <b>salpicadero</b> de la bienvenida cuenta en <b>Consultas como tabla</b> cuántas consultas del proyecto se leen así.</li>
@@ -2014,7 +2087,7 @@
                 <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
                 <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
               
-                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí (las flechas <b>▲</b> y <b>▼</b> de su cabecera suben o bajan la carpeta en la lista); cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).</li>
+                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>añadir carpeta</b> de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón de <b>copiar</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí (las flechas de subir y bajar de su cabecera suben o bajan la carpeta en la lista); cada consulta de la lista lleva además sus acciones a la derecha: las flechas de subir y bajar la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), el <b>icono de copiar</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y el <b>icono de la papelera</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón de <b>plegar</b> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>añadir carpeta</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).</li>
               </ul>
             </section>
 
@@ -2518,31 +2591,31 @@ ORDER BY edificios DESC, sede;</pre>
         <div class="toolbar">
           <label data-i18n="markup.label.table" for="table-name">Tabla:</label>
           <input id="table-name" type="text" title="Nombre de la tabla (al renombrarla se actualizan las consultas que la usan)">
-          <button data-i18n-title="markup.button.renameTable" data-i18n="markup.button.rename" id="btn-rename-table" type="button" title="Renombrar la tabla">Renombrar</button>
-          <button data-i18n-title="markup.button.deleteTableAllItsData" data-i18n="markup.button.deleteTable" id="btn-delete-table" type="button" title="Eliminar la tabla y todos sus datos">Eliminar tabla</button>
+          <button class="with-icon" data-i18n-title="markup.button.renameTable" id="btn-rename-table" type="button" title="Renombrar la tabla"><svg class="icon" data-icon="edit" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M21 18V18.5C21 19.8807 19.8807 21 18.5 21H5.5C4.11929 21 3 19.8807 3 18.5V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.4048 12.1062L13.0741 3.99909C13.4236 3.49921 13.9636 3.15449 14.5753 3.04075C15.1869 2.92701 15.82 3.05359 16.3355 3.39262L18.9697 5.12543C20.0429 5.83143 20.3229 7.24759 19.595 8.28853L13.9257 16.3956C13.5761 16.8955 13.0361 17.2402 12.4245 17.354L9.06104 17.9794C8.42423 18.0978 7.809 17.6931 7.6869 17.0755L7.04201 13.8134C6.92475 13.2202 7.05525 12.6061 7.4048 12.1062Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10.85" y1="13.5496" x2="11.15" y2="13.1496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.1092" y1="7.63042" x2="16.6813" y2="11.0967" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.rename">Renombrar</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.deleteTableAllItsData" id="btn-delete-table" type="button" title="Eliminar la tabla y todos sus datos"><svg class="icon" data-icon="trash" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 9V17.5C5 19.9853 7.01472 22 9.5 22H14.5C16.9853 22 19 19.9853 19 17.5V9" stroke="currentColor" stroke-width="1.5"/><path d="M20 8H13.12H9.94667H6.77333H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 6C7 4.34315 8.34315 3 10 3H14C15.6569 3 17 4.34315 17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.99998 17L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 17L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 17L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.deleteTable">Eliminar tabla</span></button>
           <span class="sep"></span>
-          <button data-i18n-title="markup.button.seeEditFieldsMetadataPop" data-i18n="markup.button.fieldsMetadata" id="btn-fields" type="button" title="Ver y editar los campos y metadatos en una ventana emergente">Campos y metadatos…</button>
-          <button data-i18n-title="markup.button.seeStructureJsonPop" data-i18n="markup.button.structureJson" id="btn-structure" type="button" title="Ver la estructura de la tabla en JSON en una ventana emergente">Estructura JSON…</button>
-          <button data-i18n-title="markup.button.updateTableDataFromImport" data-i18n="markup.button.updateTable" id="btn-update-table" type="button" title="Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)">Actualizar tabla…</button>
-          <button data-i18n-title="markup.button.openTableAsCSVText" data-i18n="markup.button.exportCSV" id="btn-export-csv-table" type="button" title="Abrir los datos de la tabla como texto CSV en una ventana, para copiarlo o descargarlo como fichero">Exportar CSV…</button>
-          <button data-i18n-title="markup.button.downloadWholeTableAsJSON" data-i18n="markup.button.exportJSON" id="btn-export-json-table" type="button" title="Descargar toda la tabla como fichero JSON: un array de objetos, uno por fila, con los campos como claves">Exportar JSON…</button>
+          <button class="with-icon" data-i18n-title="markup.button.seeEditFieldsMetadataPop" id="btn-fields" type="button" title="Ver y editar los campos y metadatos en una ventana emergente"><svg class="icon" data-icon="grid" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7.2" height="7.2" rx="2.7" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="13.8" width="7.2" height="7.2" rx="2.7" stroke="currentColor" stroke-width="1.5"/><rect x="13.8008" y="13.8" width="7.2" height="7.2" rx="2.7" stroke="currentColor" stroke-width="1.5"/><rect x="13.8008" y="3" width="7.2" height="7.2" rx="2.7" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.fieldsMetadata">Campos y metadatos…</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.seeStructureJsonPop" id="btn-structure" type="button" title="Ver la estructura de la tabla en JSON en una ventana emergente"><svg class="icon" data-icon="document" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><path d="M21 9V13.5C21 15.9853 18.9853 18 16.5 18H7.5C5.01472 18 3 15.9853 3 13.5V9" stroke="currentColor" stroke-width="1.5"/><line x1="7.75" y1="9.25" x2="14.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="7.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.structureJson">Estructura JSON…</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.updateTableDataFromImport" id="btn-update-table" type="button" title="Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)"><svg class="icon" data-icon="refresh" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20.9014 12C20.9014 16.968 16.8694 21 11.9014 21C6.93339 21 3.90039 15.996 3.90039 15.996M3.90039 15.996H7.96839M3.90039 15.996V20.496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11.7192C3 6.75124 6.996 2.71924 12 2.71924C18.003 2.71924 21 7.72324 21 7.72324M21 7.72324V3.22324M21 7.72324H17.004" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.updateTable">Actualizar tabla…</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.openTableAsCSVText" id="btn-export-csv-table" type="button" title="Abrir los datos de la tabla como texto CSV en una ventana, para copiarlo o descargarlo como fichero"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.exportCSV">Exportar CSV…</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.downloadWholeTableAsJSON" id="btn-export-json-table" type="button" title="Descargar toda la tabla como fichero JSON: un array de objetos, uno por fila, con los campos como claves"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.exportJSON">Exportar JSON…</span></button>
           <span class="sep"></span>
-          <button data-i18n-title="markup.button.addRowAtEnd" data-i18n="markup.button.addRow" id="btn-add-row" type="button" title="Añadir una fila al final">Añadir fila</button>
+          <button class="with-icon" data-i18n-title="markup.button.addRowAtEnd" id="btn-add-row" type="button" title="Añadir una fila al final"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.addRow">Añadir fila</span></button>
           <span class="sep"></span>
-          <button data-i18n-title="markup.button.searchMatchesWholeTableOne" data-i18n="markup.button.find" id="btn-search" type="button" title="Buscar coincidencias en toda la tabla o en una columna (admite los comodines * y ?)">Buscar…</button>
-          <button data-i18n-title="markup.button.searchReplaceEveryMatchWhole" data-i18n="markup.button.replace" id="btn-replace" type="button" title="Buscar y reemplazar todas las coincidencias en toda la tabla o en una columna (admite los comodines * y ?)">Reemplazar…</button>
+          <button class="with-icon" data-i18n-title="markup.button.searchMatchesWholeTableOne" id="btn-search" type="button" title="Buscar coincidencias en toda la tabla o en una columna (admite los comodines * y ?)"><svg class="icon" data-icon="search" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5703 17.4329L20.4299 20.567" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.find">Buscar…</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.searchReplaceEveryMatchWhole" id="btn-replace" type="button" title="Buscar y reemplazar todas las coincidencias en toda la tabla o en una columna (admite los comodines * y ?)"><svg class="icon" data-icon="swap" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 9L7.29289 5.70711C7.68342 5.31658 8.31658 5.31658 8.70711 5.70711L12 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 19L8 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 15L16.7071 18.2929C16.3166 18.6834 15.6834 18.6834 15.2929 18.2929L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 5L16 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.replace">Reemplazar…</span></button>
           <span id="table-count" class="muted"></span>
         </div>
         <div class="toolbar">
           <label data-i18n="markup.label.description" for="table-description">Descripción:</label>
           <input id="table-description" type="text" size="60" title="Descripción de la tabla (se guarda en los metadatos del proyecto)">
           <label data-i18n="markup.label.folder" for="table-folder">Carpeta:</label>
-          <select data-i18n-title="ui.tableFolderTip" id="table-folder" title="Carpeta de la tabla; elige una de la lista (+C crea una nueva)"></select>
-          <button data-i18n-title="markup.button.firstPage" class="derecha" id="btn-pag-first" type="button" title="Primera página">|«</button>
-          <button data-i18n-title="markup.button.previousPage" id="btn-pag-prev" type="button" title="Página anterior">«</button>
+          <select data-i18n-title="ui.tableFolderTip" id="table-folder" title="Carpeta de la tabla; elige una de la lista (el botón de añadir carpeta crea una nueva)"></select>
+          <button data-i18n-title="markup.button.firstPage" class="derecha with-icon" id="btn-pag-first" type="button" title="Primera página"><svg class="icon" data-icon="chevron-double-left" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 16L8.70711 12.7071C8.31658 12.3166 8.31658 11.6834 8.70711 11.2929L12 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16L12.7071 12.7071C12.3166 12.3166 12.3166 11.6834 12.7071 11.2929L16 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="with-icon" data-i18n-title="markup.button.previousPage" id="btn-pag-prev" type="button" title="Página anterior"><svg class="icon" data-icon="chevron-left" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M14.7568 6L9.90713 9.99038C8.69762 10.9856 8.69762 12.8143 9.90713 13.8095L15 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
           <span id="pag-info" class="muted"></span>
-          <button data-i18n-title="markup.button.nextPage" id="btn-pag-next" type="button" title="Página siguiente">»</button>
-          <button data-i18n-title="markup.button.lastPage" id="btn-pag-last" type="button" title="Última página">»|</button>
+          <button class="with-icon" data-i18n-title="markup.button.nextPage" id="btn-pag-next" type="button" title="Página siguiente"><svg class="icon" data-icon="chevron-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9.24323 6L14.0929 9.99038C15.3024 10.9856 15.3024 12.8143 14.0929 13.8095L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+          <button class="with-icon" data-i18n-title="markup.button.lastPage" id="btn-pag-last" type="button" title="Última página"><svg class="icon" data-icon="chevron-double-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 8L15.2929 11.2929C15.6834 11.6834 15.6834 12.3166 15.2929 12.7071L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8L11.2929 11.2929C11.6834 11.6834 11.6834 12.3166 11.2929 12.7071L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
         <div class="box-table">
           <table id="table-grid" class="grid"></table>
@@ -2554,29 +2627,29 @@ ORDER BY edificios DESC, sede;</pre>
         <div class="toolbar">
           <label data-i18n="markup.label.name" for="query-name">Nombre:</label>
           <input id="query-name" type="text" title="Nombre de la consulta">
-          <button data-i18n-title="markup.button.runQueryCtrlEnter" data-i18n="markup.button.run" id="btn-run" type="button" title="Ejecutar la consulta (Ctrl+Enter)">▶ Ejecutar</button>
-          <button data-i18n-title="markup.button.runQuerySaveItsResult" data-i18n="markup.button.turnIntoTest" id="btn-save-test" type="button" title="Ejecutar la consulta, guardar su resultado como resultado esperado (assert) de esa consulta y poner el proyecto en modo test">Convertir en test</button>
-          <button data-i18n-title="markup.button.removeAssertedResultThisQuery" data-i18n="markup.button.removeTest" id="btn-quitar-test" type="button" disabled title="Quitar el resultado asertado de esta consulta: seguirá ejecutándose, pero dejará de comprobarse en el informe del proyecto">Quitar test</button>
-          <button data-i18n-title="markup.button.createTableFromResultTip" data-i18n="markup.button.createTableFromResult" id="btn-create-table-result" type="button" disabled title="Crear una tabla nueva con las columnas y filas del resultado de la consulta">Crear tabla…</button>
-          <button data-i18n-title="markup.button.deleteThisQuery" data-i18n="markup.button.deleteQuery" id="btn-delete-query" type="button" title="Eliminar esta consulta">Eliminar consulta</button>
+          <button class="with-icon" data-i18n-title="markup.button.runQueryCtrlEnter" id="btn-run" type="button" title="Ejecutar la consulta (Ctrl+Enter)"><svg class="icon" data-icon="play" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M3 12V8.24069C3 3.57324 6.5185 1.6619 10.8239 3.99563L14.2974 5.87528L17.771 7.75494C22.0763 10.0887 22.0763 13.9113 17.771 16.2451L14.2974 18.1247L10.8239 20.0044C6.5185 22.3381 3 20.4268 3 15.7593V12Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.run">▶ Ejecutar</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.runQuerySaveItsResult" id="btn-save-test" type="button" title="Ejecutar la consulta, guardar su resultado como resultado esperado (assert) de esa consulta y poner el proyecto en modo test"><svg class="icon" data-icon="check-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 12L10.9976 14.5L15.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.turnIntoTest">Convertir en test</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.removeAssertedResultThisQuery" id="btn-quitar-test" type="button" disabled title="Quitar el resultado asertado de esta consulta: seguirá ejecutándose, pero dejará de comprobarse en el informe del proyecto"><svg class="icon" data-icon="close-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.87891 9.87891L14.1215 14.1215" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.87845 14.1215L14.1211 9.87891" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.removeTest">Quitar test</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.createTableFromResultTip" id="btn-create-table-result" type="button" disabled title="Crear una tabla nueva con las columnas y filas del resultado de la consulta"><svg class="icon" data-icon="table" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 7.5C4 5.01472 6.01472 3 8.5 3H15.5C17.9853 3 20 5.01472 20 7.5V16.5C20 18.9853 17.9853 21 15.5 21H8.5C6.01472 21 4 18.9853 4 16.5V7.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M13.4 17.1C13.4 17.7628 12.8627 18.3 12.2 18.3C11.5373 18.3 11 17.7628 11 17.1C11 16.4373 11.5373 15.9 12.2 15.9C12.8627 15.9 13.4 16.4373 13.4 17.1Z" stroke="currentColor" stroke-width="1.5"/><path d="M10 6L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.createTableFromResult">Crear tabla…</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.deleteThisQuery" id="btn-delete-query" type="button" title="Eliminar esta consulta"><svg class="icon" data-icon="trash" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 9V17.5C5 19.9853 7.01472 22 9.5 22H14.5C16.9853 22 19 19.9853 19 17.5V9" stroke="currentColor" stroke-width="1.5"/><path d="M20 8H13.12H9.94667H6.77333H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 6C7 4.34315 8.34315 3 10 3H14C15.6569 3 17 4.34315 17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.99998 17L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 17L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 17L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.deleteQuery">Eliminar consulta</span></button>
           <span class="sep"></span>
-          <button data-i18n-title="markup.button.openResultAsCSVText" data-i18n="markup.button.exportCSV" id="btn-exportar-csv" type="button" title="Abrir el resultado como texto CSV en una ventana, para copiarlo o descargarlo como fichero">Exportar CSV…</button>
-          <button data-i18n-title="markup.button.downloadWholeResultAsJSON" data-i18n="markup.button.exportJSON" id="btn-export-json-query" type="button" title="Descargar el resultado completo como fichero JSON: un array de objetos, uno por fila, con las columnas como claves">Exportar JSON…</button>
+          <button class="with-icon" data-i18n-title="markup.button.openResultAsCSVText" id="btn-exportar-csv" type="button" title="Abrir el resultado como texto CSV en una ventana, para copiarlo o descargarlo como fichero"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.exportCSV">Exportar CSV…</span></button>
+          <button class="with-icon" data-i18n-title="markup.button.downloadWholeResultAsJSON" id="btn-export-json-query" type="button" title="Descargar el resultado completo como fichero JSON: un array de objetos, uno por fila, con las columnas como claves"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.exportJSON">Exportar JSON…</span></button>
           <span class="sep"></span>
-          <button data-i18n-title="markup.button.reminderOpenRelationMatrixBetween" data-i18n="markup.button.seeRelations" id="btn-ver-relations" type="button" title="Recordatorio: abrir la matriz de relaciones entre las tablas del proyecto (solo claves ajenas)">Ver relaciones</button>
+          <button class="with-icon" data-i18n-title="markup.button.reminderOpenRelationMatrixBetween" id="btn-ver-relations" type="button" title="Recordatorio: abrir la matriz de relaciones entre las tablas del proyecto (solo claves ajenas)"><svg class="icon" data-icon="share" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="6.43478" cy="12" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><circle cx="17.5656" cy="6.43478" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><path d="M15 7.5L9 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2.43478" cy="2.43478" r="2.43478" transform="matrix(1 0 0 -1 15.1309 19.5)" stroke="currentColor" stroke-width="1.3913"/><path d="M15 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.seeRelations">Ver relaciones</span></button>
         </div>
         <div class="toolbar">
           <label data-i18n="markup.label.description2" for="query-description">Descripción:</label>
           <input id="query-description" type="text" title="Descripción de la consulta (metadatos)">
           <label data-i18n="markup.label.folder" for="query-folder">Carpeta:</label>
-          <select data-i18n-title="ui.folderTip" id="query-folder" title="Carpeta de la consulta; elige una de la lista (+C crea una nueva)"></select>
+          <select data-i18n-title="ui.folderTip" id="query-folder" title="Carpeta de la consulta; elige una de la lista (el botón de añadir carpeta crea una nueva)"></select>
         </div>
         <div class="toolbar">
-          <button data-i18n-title="queries.insertTip" data-i18n="queries.insertButton" id="btn-insert" type="button" title="Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space)">Insertar tabla, consulta o campo…</button>
-          <span data-i18n="queries.insertHint" class="muted">Pulsa un nombre para escribirlo en el cursor; ▸ despliega sus campos.</span>
+          <button class="with-icon" data-i18n-title="queries.insertTip" id="btn-insert" type="button" title="Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="queries.insertButton">Insertar tabla, consulta o campo…</span></button>
+          <span data-i18n="queries.insertHint" class="muted">Pulsa un nombre para escribirlo en el cursor; la flecha despliega sus campos.</span>
           <span class="sep" id="related-sep"></span>
-          <button aria-expanded="false" aria-haspopup="dialog" id="btn-query-readers" type="button" hidden>La leen como tabla</button>
-          <button aria-expanded="false" aria-haspopup="dialog" id="btn-query-sources" type="button" hidden>Lee como tabla</button>
+          <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-readers" type="button" hidden><svg class="icon" data-icon="arrow-back" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5L6.37143 6.97143C5.68571 7.48571 5.68571 8.51429 6.37143 9.02857L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 8H14C17.3137 8 20 10.6863 20 14C20 17.3137 17.3137 20 14 20H9.76923" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
+          <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-sources" type="button" hidden><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
         </div>
         <textarea data-i18n-aria-label="markup.textarea.sqlQuery" data-i18n-title="markup.textarea.sqlQuerySELECTOnly" id="query-sql" rows="8" spellcheck="false" aria-label="Consulta SQL" title="Consulta SQL (solo SELECT)"></textarea>
         <div id="insert-popup" role="dialog" data-i18n-aria-label="queries.insertTitle" aria-label="Insertar en el cursor" hidden>
@@ -2587,11 +2660,11 @@ ORDER BY edificios DESC, sede;</pre>
         <div id="query-plan" class="muted"></div>
         <div id="query-error" hidden></div>
         <div id="query-paginacion" class="toolbar" hidden>
-          <button data-i18n-title="markup.button.firstPageResult" id="btn-res-pag-first" type="button" title="Primera página del resultado">|«</button>
-          <button data-i18n-title="markup.button.previousPageResult" id="btn-res-pag-prev" type="button" title="Página anterior del resultado">«</button>
+          <button class="with-icon" data-i18n-title="markup.button.firstPageResult" id="btn-res-pag-first" type="button" title="Primera página del resultado"><svg class="icon" data-icon="chevron-double-left" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 16L8.70711 12.7071C8.31658 12.3166 8.31658 11.6834 8.70711 11.2929L12 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16L12.7071 12.7071C12.3166 12.3166 12.3166 11.6834 12.7071 11.2929L16 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="with-icon" data-i18n-title="markup.button.previousPageResult" id="btn-res-pag-prev" type="button" title="Página anterior del resultado"><svg class="icon" data-icon="chevron-left" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M14.7568 6L9.90713 9.99038C8.69762 10.9856 8.69762 12.8143 9.90713 13.8095L15 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
           <span id="res-pag-info" class="muted"></span>
-          <button data-i18n-title="markup.button.nextPageResult" id="btn-res-pag-next" type="button" title="Página siguiente del resultado">»</button>
-          <button data-i18n-title="markup.button.lastPageResult" id="btn-res-pag-last" type="button" title="Última página del resultado">»|</button>
+          <button class="with-icon" data-i18n-title="markup.button.nextPageResult" id="btn-res-pag-next" type="button" title="Página siguiente del resultado"><svg class="icon" data-icon="chevron-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9.24323 6L14.0929 9.99038C15.3024 10.9856 15.3024 12.8143 14.0929 13.8095L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+          <button class="with-icon" data-i18n-title="markup.button.lastPageResult" id="btn-res-pag-last" type="button" title="Última página del resultado"><svg class="icon" data-icon="chevron-double-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 8L15.2929 11.2929C15.6834 11.6834 15.6834 12.3166 15.2929 12.7071L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8L11.2929 11.2929C11.6834 11.6834 11.6834 12.3166 11.2929 12.7071L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
         <div id="query-result"></div>
       </section>
@@ -2612,7 +2685,7 @@ ORDER BY edificios DESC, sede;</pre>
           <input id="import-separador-otro" type="text" size="2" maxlength="1" placeholder="×" title="Carácter separador personalizado">
           <label><input id="import-header" type="checkbox" checked> 1ª fila = cabecera</label>
           <label><input id="import-omitir" type="checkbox"> omitir filas inválidas</label>
-          <button data-i18n-title="markup.button.selectSeveralCSVJSONFiles" data-i18n="markup.button.selectFiles" id="btn-import-files" type="button" title="Seleccionar varios ficheros CSV/JSON">Seleccionar ficheros…</button>
+          <button class="with-icon" data-i18n-title="markup.button.selectSeveralCSVJSONFiles" id="btn-import-files" type="button" title="Seleccionar varios ficheros CSV/JSON"><svg class="icon" data-icon="upload" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 12V14.5C20 16.9853 17.9853 19 15.5 19H8.5C6.01472 19 4 16.9853 4 14.5V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 7.97609L11.988 5L9 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.selectFiles">Seleccionar ficheros…</span></button>
           <input id="import-files" type="file" multiple accept=".csv,.tsv,.txt,.json" title="Ficheros a importar" hidden>
         </div>
         <p data-i18n="markup.p.everyFileCreatesTableFile" class="muted">Cada fichero crea una tabla con el nombre del fichero (sin extensión, en minúsculas y con _). El JSON debe ser un array de objetos con las mismas propiedades; el CSV debe tener los mismos campos en todas las filas.</p>
@@ -2620,7 +2693,7 @@ ORDER BY edificios DESC, sede;</pre>
         <div class="toolbar">
           <label data-i18n="markup.label.tableName" for="import-name">Nombre de la tabla:</label>
           <input id="import-name" type="text" size="14" placeholder="pegado" title="Nombre para la nueva tabla (por defecto: pegado)">
-          <button data-i18n-title="markup.button.importPastedContentAlsoCtrl" data-i18n="markup.button.importPastedText" id="btn-import-pegar" type="button" title="Importar el contenido pegado (también con Ctrl+Enter en el cuadro)">Importar lo pegado</button>
+          <button class="with-icon" data-i18n-title="markup.button.importPastedContentAlsoCtrl" id="btn-import-pegar" type="button" title="Importar el contenido pegado (también con Ctrl+Enter en el cuadro)"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.importPastedText">Importar lo pegado</span></button>
           <span data-i18n="markup.span.formatIsDetectedItsOwn" class="muted">El formato se detecta solo: JSON si empieza por [ o {; si no, CSV.</span>
         </div>
         <textarea data-i18n-aria-label="markup.textarea.dataPasteCSVJSON" data-i18n-placeholder="markup.textarea.pasteCSVJSONDataHere" id="import-pasted" rows="8" spellcheck="false" aria-label="Datos para pegar (CSV o JSON)" placeholder="Pega aquí los datos CSV o JSON…"></textarea>
@@ -2631,7 +2704,7 @@ ORDER BY edificios DESC, sede;</pre>
       <section id="view-tables" class="view" hidden>
         <h2><span data-i18n="markup.h2.projectTables">Project tables</span> <span id="summary-tables-info" class="muted"></span></h2>
         <div class="toolbar">
-          <button data-i18n-title="markup.button.showTablesStructureJsonTip" data-i18n="markup.button.showTablesStructureJson" id="btn-show-tables-structure" type="button" disabled title="Ver en una ventana la estructura JSON de todas las tablas del proyecto">Ver estructura JSON…</button>
+          <button class="with-icon" data-i18n-title="markup.button.showTablesStructureJsonTip" id="btn-show-tables-structure" type="button" disabled title="Ver en una ventana la estructura JSON de todas las tablas del proyecto"><svg class="icon" data-icon="document" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><path d="M21 9V13.5C21 15.9853 18.9853 18 16.5 18H7.5C5.01472 18 3 15.9853 3 13.5V9" stroke="currentColor" stroke-width="1.5"/><line x1="7.75" y1="9.25" x2="14.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="7.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.showTablesStructureJson">Ver estructura JSON…</span></button>
         </div>
         <div class="box-table">
           <table id="table-summary-tables" class="grid"></table>
@@ -2663,17 +2736,17 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.fieldsMetadata" id="dlg-titulo">Campos y metadatos</b>
       <span id="dlg-fields-table" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc" data-i18n="markup.button.close" class="derecha" id="btn-close-fields" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc" class="derecha with-icon" id="btn-close-fields" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close">Cerrar</span></button>
     </div>
     <div class="box-table">
       <table id="table-fields" class="grid"></table>
     </div>
     <div class="toolbar">
       <input id="new-field-name" type="text" size="14" placeholder="nombre del campo" title="Nombre del nuevo campo">
-      <button data-i18n-title="markup.button.addFieldNullValues" data-i18n="markup.button.addField" id="btn-add-field" type="button" title="Añadir un campo (valores nulos)">Añadir campo</button>
+      <button class="with-icon" data-i18n-title="markup.button.addFieldNullValues" id="btn-add-field" type="button" title="Añadir un campo (valores nulos)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.addField">Añadir campo</span></button>
       <span class="sep"></span>
       <input id="id-field-name" type="text" size="8" value="id" title="Nombre del campo ID autonumérico">
-      <button data-i18n-title="markup.button.createCorrelativeAutoNumberedID" data-i18n="markup.button.createAutoNumberedIDField" id="btn-create-id" type="button" title="Crear un campo ID autonumérico correlativo">Crear campo ID autonumérico</button>
+      <button class="with-icon" data-i18n-title="markup.button.createCorrelativeAutoNumberedID" id="btn-create-id" type="button" title="Crear un campo ID autonumérico correlativo"><svg class="icon" data-icon="add-box" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 12.485L3.76983 7.78911M12 12.485V20.7297M12 12.485L15.6 10.2M3.76983 7.78911C4.29845 6.8289 5.07782 6.0305 6.04032 5.51183L9.54033 3.62579C11.0887 2.7914 12.9113 2.7914 14.4597 3.62579L15.6 4.35M3.76983 7.78911C3.27509 8.68778 3 9.72818 3 10.8136V13.1864C3 15.4316 4.17701 17.4841 6.04033 18.4882L9.54033 20.3742C11.0887 21.2086 12.9113 21.2086 14.4597 20.3742L17.9597 18.4882C19.823 17.4841 21 15.4316 21 13.1864V12.485" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 5.5V9.5M21 7.5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.createAutoNumberedIDField">Crear campo ID autonumérico</span></button>
     </div>
   </dialog>
 
@@ -2682,11 +2755,11 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.tableStructureJson" id="dlg-structure-titulo">Estructura de la tabla (JSON)</b>
       <span id="dlg-structure-table" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc8" data-i18n="markup.button.close8" class="derecha" id="btn-close-structure" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc8" class="derecha with-icon" id="btn-close-structure" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close8">Cerrar</span></button>
     </div>
     <textarea data-i18n-aria-label="markup.textarea.tableStructureAsJson" data-i18n-title="markup.textarea.structureJsonReadOnly" id="structure-json-text" readonly spellcheck="false" aria-label="Estructura de la tabla en JSON" title="Estructura de la tabla en JSON (solo lectura)"></textarea>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.copyStructureJsonClipboard" data-i18n="markup.button.copy" id="btn-copiar-structure" type="button" title="Copiar el JSON al portapapeles">Copiar</button>
+      <button class="with-icon" data-i18n-title="markup.button.copyStructureJsonClipboard" id="btn-copiar-structure" type="button" title="Copiar el JSON al portapapeles"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.copy">Copiar</span></button>
     </div>
   </dialog>
 
@@ -2694,11 +2767,11 @@ ORDER BY edificios DESC, sede;</pre>
   <dialog id="dlg-tables-structure" aria-labelledby="dlg-tables-structure-titulo">
     <div class="dlg-header">
       <b data-i18n="summary.tablesStructureTitle" id="dlg-tables-structure-titulo">Estructura de las tablas (JSON)</b>
-      <button data-i18n-title="markup.button.closeWindowEsc" data-i18n="markup.button.close" class="derecha" id="btn-close-tables-structure" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc" class="derecha with-icon" id="btn-close-tables-structure" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close">Cerrar</span></button>
     </div>
     <textarea data-i18n-aria-label="summary.tablesStructureAria" data-i18n-title="summary.tablesStructureReadOnly" id="tables-structure-json-text" readonly spellcheck="false" aria-label="Estructura de todas las tablas en JSON" title="Estructura de las tablas en JSON (solo lectura)"></textarea>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.downloadTablesStructureJsonTip" data-i18n="markup.button.downloadTablesStructureJson" id="btn-download-tables-structure" type="button" title="Descargar un JSON con la estructura de todas las tablas del proyecto">Descargar estructura JSON</button>
+      <button class="with-icon" data-i18n-title="markup.button.downloadTablesStructureJsonTip" id="btn-download-tables-structure" type="button" title="Descargar un JSON con la estructura de todas las tablas del proyecto"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.downloadTablesStructureJson">Descargar estructura JSON</span></button>
     </div>
   </dialog>
 
@@ -2707,7 +2780,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.relationsBetweenTables" id="dlg-relations-titulo">Relaciones entre tablas</b>
       <span id="dlg-relations-info" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc2" data-i18n="markup.button.close2" class="derecha" id="btn-close-relations" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc2" class="derecha with-icon" id="btn-close-relations" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close2">Cerrar</span></button>
     </div>
     <div id="dlg-relations-recordatorio" class="muted">
       <p data-i18n-html="markup.p.originHas01Related">Un <b>origen</b> tiene 0 o 1 destinos relacionados.</p>
@@ -2725,7 +2798,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.searchTable" id="dlg-search-titulo">Buscar en la tabla</b>
       <span id="dlg-search-table" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc3" data-i18n="markup.button.close3" class="derecha" id="btn-close-search" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc3" class="derecha with-icon" id="btn-close-search" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close3">Cerrar</span></button>
     </div>
     <div class="toolbar">
       <label data-i18n="markup.label.find" for="search-patron">Buscar:</label>
@@ -2737,7 +2810,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="toolbar" id="search-replacement-row" hidden>
       <label data-i18n="markup.label.replace" for="search-replacement">Reemplazar con:</label>
       <input id="search-replacement" type="text" size="24" placeholder="vacío = borrar lo encontrado" title="Texto que sustituye a cada coincidencia; si lo dejas vacío, las coincidencias se borran">
-      <button data-i18n-title="markup.button.replaceEveryMatchTableColumn" data-i18n="markup.button.replaceAll" id="btn-replace-all" type="button" title="Reemplazar todas las coincidencias de la tabla o de la columna">Reemplazar todo</button>
+      <button class="with-icon" data-i18n-title="markup.button.replaceEveryMatchTableColumn" id="btn-replace-all" type="button" title="Reemplazar todas las coincidencias de la tabla o de la columna"><svg class="icon" data-icon="swap" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 9L7.29289 5.70711C7.68342 5.31658 8.31658 5.31658 8.70711 5.70711L12 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 19L8 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 15L16.7071 18.2929C16.3166 18.6834 15.6834 18.6834 15.2929 18.2929L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 5L16 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.replaceAll">Reemplazar todo</span></button>
       <span data-i18n="markup.span.autoNumberedIDFieldIs" class="muted">El campo ID autonumérico no se modifica.</span>
     </div>
     <p id="search-summary" class="muted"></p>
@@ -2751,12 +2824,12 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.resultCSV" id="dlg-csv-titulo">Resultado en CSV</b>
       <span id="dlg-csv-query" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc4" data-i18n="markup.button.close4" class="derecha" id="btn-close-csv" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc4" class="derecha with-icon" id="btn-close-csv" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close4">Cerrar</span></button>
     </div>
     <textarea data-i18n-aria-label="markup.textarea.resultAsCSVText" data-i18n-title="markup.textarea.csvTextResultSelectIt" id="query-csv-text" readonly spellcheck="false" aria-label="Resultado en texto CSV" title="Texto CSV del resultado (selecciónalo o usa «Copiar»)"></textarea>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.copyCSVTextClipboard" data-i18n="markup.button.copy" id="btn-copiar-csv" type="button" title="Copiar el texto CSV al portapapeles">Copiar</button>
-      <button data-i18n-title="markup.button.downloadCompleteResultAsCSV" data-i18n="markup.button.downloadCSV" id="btn-descargar-csv" type="button" title="Descargar el resultado completo como fichero CSV (con BOM para que Excel lo abra bien)">Descargar CSV</button>
+      <button class="with-icon" data-i18n-title="markup.button.copyCSVTextClipboard" id="btn-copiar-csv" type="button" title="Copiar el texto CSV al portapapeles"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.copy">Copiar</span></button>
+      <button class="with-icon" data-i18n-title="markup.button.downloadCompleteResultAsCSV" id="btn-descargar-csv" type="button" title="Descargar el resultado completo como fichero CSV (con BOM para que Excel lo abra bien)"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.downloadCSV">Descargar CSV</span></button>
       <span class="sep"></span>
       <label data-i18n="markup.label.delimiter" for="csv-separador">Separador:</label>
       <select data-i18n-title="markup.select.csvDelimiter" id="csv-separador" title="Separador del CSV">
@@ -2778,12 +2851,12 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.tableCSV" id="dlg-table-csv-titulo">Tabla en CSV</b>
       <span id="dlg-table-csv-table" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc10" data-i18n="markup.button.close10" class="derecha" id="btn-close-table-csv" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc10" class="derecha with-icon" id="btn-close-table-csv" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close10">Cerrar</span></button>
     </div>
     <textarea data-i18n-aria-label="markup.textarea.tableAsCSVText" data-i18n-title="markup.textarea.csvTextTableSelectIt" id="table-csv-text" readonly spellcheck="false" aria-label="Tabla en texto CSV" title="Texto CSV de la tabla (selecciónalo o usa «Copiar»)"></textarea>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.copyCSVTextClipboard" data-i18n="markup.button.copy" id="btn-copiar-table-csv" type="button" title="Copiar el texto CSV al portapapeles">Copiar</button>
-      <button data-i18n-title="markup.button.downloadWholeTableAsCSV" data-i18n="markup.button.downloadCSV" id="btn-descargar-table-csv" type="button" title="Descargar toda la tabla como fichero CSV (con BOM para que Excel lo abra bien)">Descargar CSV</button>
+      <button class="with-icon" data-i18n-title="markup.button.copyCSVTextClipboard" id="btn-copiar-table-csv" type="button" title="Copiar el texto CSV al portapapeles"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.copy">Copiar</span></button>
+      <button class="with-icon" data-i18n-title="markup.button.downloadWholeTableAsCSV" id="btn-descargar-table-csv" type="button" title="Descargar toda la tabla como fichero CSV (con BOM para que Excel lo abra bien)"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.downloadCSV">Descargar CSV</span></button>
       <span class="sep"></span>
       <label data-i18n="markup.label.delimiter" for="table-csv-separador">Separador:</label>
       <select data-i18n-title="markup.select.csvDelimiter" id="table-csv-separador" title="Separador del CSV">
@@ -2805,7 +2878,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.updateTable" id="dlg-update-titulo">Actualizar tabla</b>
       <span id="update-table-name" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc9" data-i18n="markup.button.close9" class="derecha" id="btn-close-update" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc9" class="derecha with-icon" id="btn-close-update" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close9">Cerrar</span></button>
     </div>
     <p data-i18n-html="markup.p.updateTableWarning" class="warning">Al actualizar se <b>sustituirán todos los datos</b> de la tabla. La tabla, sus campos, sus claves ajenas y las consultas que la usan se conservan. Los datos nuevos deben tener los <b>mismos campos</b>, con los <b>mismos nombres</b> (si la primera fila es cabecera); el <b>campo ID autonumérico puede faltar</b> (se numera 1..N) y en la ventana siguiente eliges el <b>tipo de cada columna</b>: el del campo (que se conserva) o el detectado en los datos.</p>
     <div class="toolbar">
@@ -2821,13 +2894,13 @@ ORDER BY edificios DESC, sede;</pre>
       <input id="update-separador-otro" type="text" size="2" maxlength="1" placeholder="×" disabled title="Carácter separador personalizado">
       <label><input id="update-header" type="checkbox" checked> 1ª fila = cabecera</label>
       <label><input id="update-omitir" type="checkbox"> omitir filas inválidas</label>
-      <button data-i18n-title="markup.button.selectCSVJSONFileToUpdate" data-i18n="markup.button.selectFile" id="btn-update-files" type="button" title="Seleccionar el fichero CSV/JSON con los datos nuevos">Seleccionar fichero…</button>
+      <button class="with-icon" data-i18n-title="markup.button.selectCSVJSONFileToUpdate" id="btn-update-files" type="button" title="Seleccionar el fichero CSV/JSON con los datos nuevos"><svg class="icon" data-icon="upload" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 12V14.5C20 16.9853 17.9853 19 15.5 19H8.5C6.01472 19 4 16.9853 4 14.5V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 7.97609L11.988 5L9 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.selectFile">Seleccionar fichero…</span></button>
       <input id="update-files" type="file" accept=".csv,.tsv,.txt,.json" title="Fichero a importar" hidden>
     </div>
     <h3 data-i18n="markup.h3.pasteDataCSVJSON">O pegar datos (CSV o JSON)</h3>
     <textarea data-i18n-aria-label="markup.textarea.dataPasteCSVJSON" data-i18n-placeholder="markup.textarea.pasteCSVJSONDataHere" id="update-pasted" rows="6" spellcheck="false" aria-label="Datos para pegar (CSV o JSON)" placeholder="Pega aquí los datos CSV o JSON…"></textarea>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.replaceTableDataWithPasted" data-i18n="markup.button.updateTable" id="btn-update-apply" type="button" title="Sustituir los datos de la tabla por los pegados (también con Ctrl+Enter en el cuadro)">Actualizar tabla</button>
+      <button class="with-icon" data-i18n-title="markup.button.replaceTableDataWithPasted" id="btn-update-apply" type="button" title="Sustituir los datos de la tabla por los pegados (también con Ctrl+Enter en el cuadro)"><svg class="icon" data-icon="refresh" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20.9014 12C20.9014 16.968 16.8694 21 11.9014 21C6.93339 21 3.90039 15.996 3.90039 15.996M3.90039 15.996H7.96839M3.90039 15.996V20.496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11.7192C3 6.75124 6.996 2.71924 12 2.71924C18.003 2.71924 21 7.72324 21 7.72324M21 7.72324V3.22324M21 7.72324H17.004" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.updateTable">Actualizar tabla</span></button>
     </div>
     <div id="update-log"></div>
   </dialog>
@@ -2837,7 +2910,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.importColumnTypes" id="dlg-types-titulo">Tipos de las columnas</b>
       <span class="muted" id="import-types-file"></span>
-      <button class="derecha" data-i18n="markup.button.close" data-i18n-title="markup.button.closeWindowEsc" id="btn-close-types" title="Cerrar la ventana (Esc)" type="button">Cerrar</button>
+      <button class="derecha with-icon" data-i18n-title="markup.button.closeWindowEsc" id="btn-close-types" title="Cerrar la ventana (Esc)" type="button"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close">Cerrar</span></button>
     </div>
     <p data-i18n-html="markup.p.importColumnTypes" class="muted">Los datos se leen tal cual y cada columna se guarda con el <b>tipo</b> que elijas: en <b>texto</b> se conservan los ceros a la izquierda.</p>
     <p class="warning" id="import-types-note"></p>
@@ -2845,8 +2918,8 @@ ORDER BY edificios DESC, sede;</pre>
       <table class="grid" id="table-import-types"></table>
     </div>
     <div class="toolbar">
-      <button data-i18n="importTypes.apply" data-i18n-title="importTypes.applyTip" id="btn-apply-types" type="button" title="Guardar los datos con los tipos elegidos">Aplicar</button>
-      <button data-i18n="importTypes.cancel" data-i18n-title="importTypes.cancelTip" id="btn-cancel-types" type="button" title="Cerrar sin importar ni cambiar nada">Cancelar</button>
+      <button class="with-icon" data-i18n-title="importTypes.applyTip" id="btn-apply-types" type="button" title="Guardar los datos con los tipos elegidos"><svg class="icon" data-icon="check" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12L9.99529 17L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="importTypes.apply">Aplicar</span></button>
+      <button class="with-icon" data-i18n-title="importTypes.cancelTip" id="btn-cancel-types" type="button" title="Cerrar sin importar ni cambiar nada"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="importTypes.cancel">Cancelar</span></button>
     </div>
   </dialog>
 
@@ -2854,7 +2927,7 @@ ORDER BY edificios DESC, sede;</pre>
   <dialog id="dlg-merge-tables" aria-labelledby="dlg-merge-titulo">
     <div class="dlg-header">
       <b data-i18n="merge.title" id="dlg-merge-titulo">Fusionar tablas</b>
-      <button data-i18n-title="markup.button.closeWindowEsc" data-i18n="markup.button.close" class="derecha" id="btn-close-merge" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc" class="derecha with-icon" id="btn-close-merge" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close">Cerrar</span></button>
     </div>
     <p data-i18n-html="merge.help" class="muted">Elige las tablas que quieres fusionar, en el orden de la lista: la tabla nueva tendrá la unión de los campos y cada campo conserva la definición de la primera tabla que lo ofrece. Las filas se concatenan; los campos que una tabla no tiene quedan vacíos (null).</p>
     <div class="toolbar">
@@ -2867,8 +2940,8 @@ ORDER BY edificios DESC, sede;</pre>
     </div>
     <div id="merge-list" class="merge-list"></div>
     <div class="toolbar">
-      <button data-i18n-title="merge.applyTip" data-i18n="merge.apply" id="btn-merge-apply" type="button" disabled title="Crear la tabla fusionada">Fusionar</button>
-      <button data-i18n="merge.cancel" id="btn-merge-cancel" type="button">Cancelar</button>
+      <button class="with-icon" data-i18n-title="merge.applyTip" id="btn-merge-apply" type="button" disabled title="Crear la tabla fusionada"><svg class="icon" data-icon="exchange" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M18 9L15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 15L6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="merge.apply">Fusionar</span></button>
+      <button class="with-icon" id="btn-merge-cancel" type="button"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="merge.cancel">Cancelar</span></button>
     </div>
   </dialog>
 
@@ -2876,7 +2949,7 @@ ORDER BY edificios DESC, sede;</pre>
   <dialog id="dlg-result-table" aria-labelledby="dlg-result-table-titulo">
     <div class="dlg-header">
       <b data-i18n="resultTable.title" id="dlg-result-table-titulo">Crear tabla con el resultado</b>
-      <button data-i18n-title="markup.button.closeWindowEsc" data-i18n="markup.button.close" class="derecha" id="btn-close-result-table" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc" class="derecha with-icon" id="btn-close-result-table" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close">Cerrar</span></button>
     </div>
     <p data-i18n-html="resultTable.help" class="muted">Se creará una tabla nueva con las columnas y filas de este resultado. Si una columna repite nombre, se le añade un sufijo numérico.</p>
     <p id="result-table-info" class="muted"></p>
@@ -2885,8 +2958,8 @@ ORDER BY edificios DESC, sede;</pre>
       <input id="result-table-name" type="text" autocomplete="off" title="Nombre de la tabla nueva">
     </div>
     <div class="toolbar">
-      <button data-i18n-title="resultTable.createTip" data-i18n="resultTable.create" id="btn-result-table-create" type="button" title="Crear la tabla con las columnas y filas del resultado">Crear tabla</button>
-      <button data-i18n="resultTable.cancel" id="btn-result-table-cancel" type="button">Cancelar</button>
+      <button class="with-icon" data-i18n-title="resultTable.createTip" id="btn-result-table-create" type="button" title="Crear la tabla con las columnas y filas del resultado"><svg class="icon" data-icon="table" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 7.5C4 5.01472 6.01472 3 8.5 3H15.5C17.9853 3 20 5.01472 20 7.5V16.5C20 18.9853 17.9853 21 15.5 21H8.5C6.01472 21 4 18.9853 4 16.5V7.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M13.4 17.1C13.4 17.7628 12.8627 18.3 12.2 18.3C11.5373 18.3 11 17.7628 11 17.1C11 16.4373 11.5373 15.9 12.2 15.9C12.8627 15.9 13.4 16.4373 13.4 17.1Z" stroke="currentColor" stroke-width="1.5"/><path d="M10 6L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="resultTable.create">Crear tabla</span></button>
+      <button class="with-icon" id="btn-result-table-cancel" type="button"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="resultTable.cancel">Cancelar</span></button>
     </div>
   </dialog>
 
@@ -2895,7 +2968,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.defaultSettings" id="dlg-settings-titulo">Ajustes por defecto</b>
       <span data-i18n="markup.span.theyAreSavedProjectFile" class="muted">Se guardan en el fichero del proyecto</span>
-      <button data-i18n-title="markup.button.closeWindowEsc5" data-i18n="markup.button.close5" class="derecha" id="btn-close-settings" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc5" class="derecha with-icon" id="btn-close-settings" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close5">Cerrar</span></button>
     </div>
     <h3 data-i18n="markup.h3.project">Proyecto</h3>
     <div class="toolbar">
@@ -2940,8 +3013,8 @@ ORDER BY edificios DESC, sede;</pre>
       <label><input id="aj-export-comma" type="checkbox" title="Escribir los decimales de los campos numéricos con coma (3,14) en vez de con punto (3.14)"> coma decimal</label>
     </div>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.applyUseAsDefaultValues" data-i18n="markup.button.apply" id="btn-aplicar-settings" type="button" title="Aplicar y usar como valores por defecto">Aplicar</button>
-      <button data-i18n-title="markup.button.goBackFactoryValues" data-i18n="markup.button.reset" id="btn-restablecer-settings" type="button" title="Volver a los valores de fábrica">Restablecer</button>
+      <button class="with-icon" data-i18n-title="markup.button.applyUseAsDefaultValues" id="btn-aplicar-settings" type="button" title="Aplicar y usar como valores por defecto"><svg class="icon" data-icon="check" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12L9.99529 17L19 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.apply">Aplicar</span></button>
+      <button class="with-icon" data-i18n-title="markup.button.goBackFactoryValues" id="btn-restablecer-settings" type="button" title="Volver a los valores de fábrica"><svg class="icon" data-icon="reset" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 4.44637C9.90311 4.17647 10.8997 4 12 4C16.9723 4 21 8.02768 21 13C21 17.9723 16.9723 22 12 22C7.02768 22 3 17.9723 3 13C3 11.1522 3.56055 9.42907 4.51557 7.99654" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.30823 5.53986L9.92072 1.6156" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.30859 5.53906L11.8476 6.22876" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.reset">Restablecer</span></button>
       <span id="aj-warning" class="muted"></span>
     </div>
   </dialog>
@@ -2951,7 +3024,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.testReport" id="dlg-tests-titulo">Informe de pruebas</b>
       <span id="tests-summary" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc6" data-i18n="markup.button.close6" class="derecha" id="btn-close-tests" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc6" class="derecha with-icon" id="btn-close-tests" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close6">Cerrar</span></button>
     </div>
     <div class="box-table">
       <table id="tests-table" class="grid"></table>
@@ -2959,8 +3032,8 @@ ORDER BY edificios DESC, sede;</pre>
     <h3 data-i18n="markup.h3.differencesAssertedResult">Diferencias con el resultado asertado</h3>
     <pre data-i18n-aria-label="markup.pre.differencesTestReport" id="tests-detail" class="mono" aria-label="Diferencias del informe de pruebas"></pre>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.runWholeBatteryAgainCompare" data-i18n="markup.button.runAgain" id="btn-repetir-tests" type="button" title="Volver a ejecutar toda la batería y compararla otra vez">Re-ejecutar</button>
-      <button data-i18n-title="markup.button.copyCompleteReportAsText" data-i18n="markup.button.copyReport" id="btn-copiar-tests" type="button" title="Copiar el informe completo como texto">Copiar informe</button>
+      <button class="with-icon" data-i18n-title="markup.button.runWholeBatteryAgainCompare" id="btn-repetir-tests" type="button" title="Volver a ejecutar toda la batería y compararla otra vez"><svg class="icon" data-icon="refresh" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20.9014 12C20.9014 16.968 16.8694 21 11.9014 21C6.93339 21 3.90039 15.996 3.90039 15.996M3.90039 15.996H7.96839M3.90039 15.996V20.496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11.7192C3 6.75124 6.996 2.71924 12 2.71924C18.003 2.71924 21 7.72324 21 7.72324M21 7.72324V3.22324M21 7.72324H17.004" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.runAgain">Re-ejecutar</span></button>
+      <button class="with-icon" data-i18n-title="markup.button.copyCompleteReportAsText" id="btn-copiar-tests" type="button" title="Copiar el informe completo como texto"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.copyReport">Copiar informe</span></button>
       <span id="tests-mode" class="muted"></span>
     </div>
   </dialog>
@@ -2970,7 +3043,7 @@ ORDER BY edificios DESC, sede;</pre>
     <div class="dlg-header">
       <b data-i18n="markup.b.selfTestReport" id="dlg-auto-test-titulo">Informe de auto-tests</b>
       <span id="auto-test-summary" class="muted"></span>
-      <button data-i18n-title="markup.button.closeWindowEsc7" data-i18n="markup.button.close7" class="derecha" id="btn-close-auto-test" type="button" title="Cerrar la ventana (Esc)">Cerrar</button>
+      <button data-i18n-title="markup.button.closeWindowEsc7" class="derecha with-icon" id="btn-close-auto-test" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close7">Cerrar</span></button>
     </div>
     <div class="box-table">
       <table id="auto-test-table" class="grid"></table>
@@ -2978,8 +3051,8 @@ ORDER BY edificios DESC, sede;</pre>
     <h3 data-i18n="markup.h3.failingCases">Casos que fallan</h3>
     <pre data-i18n-aria-label="markup.pre.detailSelfTestsThatFail" id="auto-test-detail" class="mono" aria-label="Detalle de los auto-tests que fallan"></pre>
     <div class="toolbar">
-      <button data-i18n-title="markup.button.runWholeSelfTestBattery" data-i18n="markup.button.runAgain2" id="btn-repetir-auto-test" type="button" title="Volver a ejecutar toda la batería de auto-tests">Re-ejecutar</button>
-      <button data-i18n-title="markup.button.copyCompleteReportAsText2" data-i18n="markup.button.copyReport2" id="btn-copiar-auto-test" type="button" title="Copiar el informe completo como texto">Copiar informe</button>
+      <button class="with-icon" data-i18n-title="markup.button.runWholeSelfTestBattery" id="btn-repetir-auto-test" type="button" title="Volver a ejecutar toda la batería de auto-tests"><svg class="icon" data-icon="refresh" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20.9014 12C20.9014 16.968 16.8694 21 11.9014 21C6.93339 21 3.90039 15.996 3.90039 15.996M3.90039 15.996H7.96839M3.90039 15.996V20.496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11.7192C3 6.75124 6.996 2.71924 12 2.71924C18.003 2.71924 21 7.72324 21 7.72324M21 7.72324V3.22324M21 7.72324H17.004" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.runAgain2">Re-ejecutar</span></button>
+      <button class="with-icon" data-i18n-title="markup.button.copyCompleteReportAsText2" id="btn-copiar-auto-test" type="button" title="Copiar el informe completo como texto"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.copyReport2">Copiar informe</span></button>
     </div>
   </dialog>
 
@@ -3004,8 +3077,8 @@ ORDER BY edificios DESC, sede;</pre>
     window.datilandia = window.datilandia || {};
     window.datilandia.messages = {
       en: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>D</b> button of its header (it copies the folder with all its queries) or delete it from there (the <b>▲</b> and <b>▼</b> arrows of its header move it up or down in the list); every query of the list also carries its own actions on the right: the <b>▲</b> and <b>▼</b> arrows move it up or down <b>inside its folder</b> (they are greyed out at the ends), the <b>D</b> duplicates it, the <b>colour swatch</b> paints its row with a pastel colour (only in the sidebar; the file keeps it in <code>color</code>) and the <b>✕</b> deletes it after a confirmation; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>. When a project is <b>opened</b> every folder starts <b>folded</b> (the «No folder» group is left as it is).",
-        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header moves it up or down with its <b>▲</b> and <b>▼</b> arrows, renames it, deletes it and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>add folder</b> button of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>copy</b> button of its header (it copies the folder with all its queries) or delete it from there (the up and down arrows of its header move it up or down in the list); every query of the list also carries its own actions on the right: the up and down arrows move it up or down <b>inside its folder</b> (they are greyed out at the ends), the <b>copy icon</b> duplicates it, the <b>colour swatch</b> paints its row with a pastel colour (only in the sidebar; the file keeps it in <code>color</code>) and the <b>bin icon</b> deletes it after a confirmation; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the <b>fold</b> button of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>add folder</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>. When a project is <b>opened</b> every folder starts <b>folded</b> (the «No folder» group is left as it is).",
+        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>add folder</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header moves it up or down with its <b>▲</b> and <b>▼</b> arrows, renames it, deletes it and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>add folder</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
         "folders.duplicateTip": "Duplicate the folder “{name}” with its queries",
@@ -3045,11 +3118,10 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.queriesCount": {"one":"{count} query","other":"{count} queries"},
         "ui.folder": "Folder",
         "ui.folderNone": "No folder",
-        "ui.folderTip": "Folder of the query; choose one from the list (+F creates a new one)",
-        "ui.tableFolderTip": "Folder of the table; choose one from the list (+F creates a new one)",
+        "ui.folderTip": "Folder of the query; choose one from the list (the add folder button creates a new one)",
+        "ui.tableFolderTip": "Folder of the table; choose one from the list (the add folder button creates a new one)",
         "summary.folder": "Folder",
-        "markup.button.newFolder": "+F",
-        "markup.button.newFolderTip": "Add an empty folder (+F)",
+        "markup.button.newFolderTip": "Add an empty folder",
         "markup.label.folder": "Folder:",
         "persistence.foldersNotList": "{label}: “folders” must be a list of names.",
         "persistence.flagInvalid": "{label}: must be true or false.",
@@ -3173,7 +3245,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.replaceEveryMatchTableColumn": "Replace every match of the table or of the column",
         "markup.button.replaceTableDataWithPasted": "Replace the data of the table with the pasted ones (also with Ctrl+Enter in the box)",
         "markup.button.reset": "Reset",
-        "markup.button.run": "▶ Run",
+        "markup.button.run": "Run",
         "markup.button.runAgain": "Run again",
         "markup.button.runAgain2": "Run again",
         "markup.button.runQueryCtrlEnter": "Run the query (Ctrl+Enter)",
@@ -3362,7 +3434,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.beforeResultYouWillSee": "Before the result you will see the <b>plan</b> with the time of each step; if something fails, the error tells you <b>line, column and what to check</b>.",
         "markup.li.comparisonIsStrictNullOnly": "The comparison is <b>strict</b>: <code>null</code> only matches <code>null</code>, a number is not a text and <code>1</code> is not <code>true</code>. Renaming a table or a field also adjusts the asserted names, but <b>never the values</b>.",
         "markup.li.completeFormatAssertExampleAre": "The complete format of the assert and an example are in the <b>SQL help</b> sections of this page.",
-        "markup.li.createGiveItNameDescription": "Create with <b>+</b>, give it a name and a description, and run with <b>▶ Run</b> or <b>Ctrl+Enter</b>. While a query or the test battery takes a while, a window with a <b>spinner</b> says what is running until it ends.",
+        "markup.li.createGiveItNameDescription": "Create with <b>+</b>, give it a name and a description, and run with <b>Run</b> or <b>Ctrl+Enter</b>. While a query or the test battery takes a while, a window with a <b>spinner</b> says what is running until it ends.",
         "markup.li.createRenameDeleteTablesEach": "Create, rename and delete tables, each one with its <b>description</b>.",
         "markup.li.tableListFoldsUnderAllTables": "The list of tables can be <b>folded</b> from its <b>All tables</b> header: only the title with the number of tables is left, and the state is saved in the project.",
         "markup.li.csvIsWrittenBOMSo": "The CSV is written with a <b>BOM</b> so that Excel opens it well and with the options of that same window: <b>delimiter</b> (comma, semicolon, tab, space or another character), <b>header</b> yes or no and <b>decimal comma</b> (<code>3,14</code> instead of <code>3.14</code>; texts are not touched). They are the same options as the ones in <b>Settings</b> and they are saved inside the project.",
@@ -3390,7 +3462,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.exportResultAsJSON": "<b>Export JSON…</b> downloads the whole result as an <b>array of objects</b> (one per row, with the columns as keys), indented with two spaces: <b>every row</b> goes in, not only the page on screen. The query has to be <b>run</b> first.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> and <b>→</b> with the handle focused: change the width of the left column; <b>Home</b> and <b>End</b> take it to the ends.",
         "markup.li.idFieldIsAutoNumbered": "The <b>ID field is auto-numbered</b>: every new row gets the <b>next number</b> and none is repeated or reused when rows are deleted. That is why it is not edited by hand: it can be searched in, but it is not replaced. With <b>Create auto-numbered ID field</b> you add a new one (the name is written next to it), at the start of the table, and it numbers the rows that were already there <b>1..N</b>. Marking any other field as ID also makes it auto-numbered.",
-        "markup.li.insertButtonSpeedsUpWriting": "<b>Insert table, query or field…</b> (above the editor, or <b>Ctrl+Space</b> inside it) opens a <b>list</b> with the project's tables and queries: click a name to write it <b>at the cursor</b> (with brackets when the name needs them) or press <b>▸</b> to see its <b>fields</b> and click one. The <b>search box</b> filters the list and the fields. Next to it, <b>Read as a table by (n)</b> and <b>Reads as tables (n)</b> drop down the queries that read the open one as a table and the ones it reads, to jump from one to another; each button shows only while there is any.",
+        "markup.li.insertButtonSpeedsUpWriting": "<b>Insert table, query or field…</b> (above the editor, or <b>Ctrl+Space</b> inside it) opens a <b>list</b> with the project's tables and queries: click a name to write it <b>at the cursor</b> (with brackets when the name needs them) or press the <b>arrow</b> to see its <b>fields</b> and click one. The <b>search box</b> filters the list and the fields. Next to it, <b>Read as a table by (n)</b> and <b>Reads as tables (n)</b> drop down the queries that read the open one as a table and the ones it reads, to jump from one to another; each button shows only while there is any.",
         "markup.li.insideCellGoForeignKeys": "Inside the cell go the <b>foreign keys</b> of the row's table that point to the column's, written as <code>field → target field</code>. The <b>diagonal</b> holds the <b>self-references</b>: the foreign keys of a table that point to itself.",
         "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: an array of objects with the same keys and simple values.",
         "markup.li.jsonIsValidatedWhenIt": "The JSON is validated when it is opened: if something does not add up it tells you exactly what, including the asserted result (<code>assert</code>) of every query. The old <code>\"testing\"</code> property is accepted but <b>ignored</b>: test mode is worked out from the queries.",
@@ -3793,17 +3865,17 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.confirmRemoveTest": "Remove the asserted result of “{name}”?\n\nThe query will still run, but it will not be checked in the project report.",
         "queries.confirmReplaceAssert": "“{name}” already checks an asserted result ({assert}).\n\nReplace it with the current result ({rows})?",
         "queries.convertedToTest": "“{name}” turned into a test: {assert}. The project is now in test mode; press “Tests” to check the battery.",
-        "queries.created": "Query “{name}” created. Write the SQL and press ▶ Run (or Ctrl+Enter).",
+        "queries.created": "Query “{name}” created. Write the SQL and press Run (or Ctrl+Enter).",
         "queries.csvCopied": "CSV copied to the clipboard.",
         "queries.csvCopyManual": "It could not be copied on its own: the text is selected, press Ctrl+C.",
         "queries.csvDialogTitle": "Query “{name}” · {rows} row(s)",
         "queries.csvDownloaded": "Result exported as “{name}” (download, {rows} row(s)).",
         "queries.csvFileType": "Comma-separated values (CSV)",
-        "queries.csvNoResults": "No results yet: run the query with ▶",
-        "queries.csvNothingToCopy": "There is no CSV to copy: run the query (▶) first.",
-        "queries.csvRunBeforeDownload": "Run the query (▶) before downloading the CSV.",
-        "queries.jsonRunBeforeExport": "Run the query (▶) before exporting its result as JSON.",
-        "queries.csvRunFirst": "Run the query (▶) to see its CSV here.",
+        "queries.csvNoResults": "No results yet: run the query with the Run button",
+        "queries.csvNothingToCopy": "There is no CSV to copy: run the query first.",
+        "queries.csvRunBeforeDownload": "Run the query before downloading the CSV.",
+        "queries.jsonRunBeforeExport": "Run the query before exporting its result as JSON.",
+        "queries.csvRunFirst": "Run the query to see its CSV here.",
         "queries.csvSavedAs": "Result exported to “{name}” ({rows} row(s)).",
         "queries.csvStatus": "Result as CSV: change the separator, press “Copy” or “Download CSV”, or close with Esc.",
         "queries.defaultSql": "SELECT * FROM table",
@@ -3825,7 +3897,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.insertFieldTip": "Write the field “{name}” at the cursor",
         "queries.insertFieldsError": "The fields of “{name}” could not be read: {message}",
         "queries.insertFoldTip": "Hide the fields of “{name}”",
-        "queries.insertHint": "Click a name to write it at the cursor; ▸ shows its fields.",
+        "queries.insertHint": "Click a name to write it at the cursor; its arrow shows the fields.",
         "queries.insertListAria": "Tables, queries and fields",
         "queries.insertNameTip": "Write “{name}” at the cursor",
         "queries.insertNeedsQuery": "Open or create a query to insert names in it.",
@@ -3836,7 +3908,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.insertSearchAria": "Search a table, a query or a field",
         "queries.insertSearchPlaceholder": "Search a table, a query or a field…",
         "queries.insertTables": "Tables",
-        "queries.insertTip": "Insert a table, a query or one of its fields at the cursor (Ctrl+Space). The arrow ▸ shows the fields.",
+        "queries.insertTip": "Insert a table, a query or one of its fields at the cursor (Ctrl+Space). The arrow beside the name shows the fields.",
         "queries.insertTitle": "Insert at the cursor",
         "queries.insertUnfoldTip": "Show the fields of “{name}”",
         "queries.inserted": "“{name}” written at the cursor.",
@@ -3857,7 +3929,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.relatedPickTip": "Open the query “{name}”",
         "queries.removed": "Query “{name}” deleted.{orphans}",
         "queries.renamed": "Query renamed: “{old}” → “{new}”{note}.",
-        "queries.selected": "Query “{name}”. Press ▶ Run or Ctrl+Enter.",
+        "queries.selected": "Query “{name}”. Press Run or Ctrl+Enter.",
         "queries.sourcesButton": "Reads as tables ({count})",
         "queries.sourcesTip": "Jump to one of the queries that “{name}” reads as a table",
         "queries.suffixedName": "query_{n}",
@@ -4160,8 +4232,8 @@ ORDER BY edificios DESC, sede;</pre>
         "utils.zeroRowsPerPage": "0 rows · {perPage} per page",
       },
       es: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí (las flechas <b>▲</b> y <b>▼</b> de su cabecera suben o bajan la carpeta en la lista); cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).",
-        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la sube y la baja con sus flechas <b>▲</b> y <b>▼</b>, la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>añadir carpeta</b> de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón de <b>copiar</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí (las flechas de subir y bajar de su cabecera suben o bajan la carpeta en la lista); cada consulta de la lista lleva además sus acciones a la derecha: las flechas de subir y bajar la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), el <b>icono de copiar</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y el <b>icono de la papelera</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón de <b>plegar</b> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>añadir carpeta</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).",
+        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>añadir carpeta</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la sube y la baja con sus flechas <b>▲</b> y <b>▼</b>, la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>añadir carpeta</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
         "folders.duplicateTip": "Duplicar la carpeta «{name}» con sus consultas",
@@ -4201,11 +4273,10 @@ ORDER BY edificios DESC, sede;</pre>
         "folders.queriesCount": {"one":"{count} consulta","other":"{count} consultas"},
         "ui.folder": "Carpeta",
         "ui.folderNone": "Sin carpeta",
-        "ui.folderTip": "Carpeta de la consulta; elige una de la lista (+C crea una nueva)",
-        "ui.tableFolderTip": "Carpeta de la tabla; elige una de la lista (+C crea una nueva)",
+        "ui.folderTip": "Carpeta de la consulta; elige una de la lista (el botón de añadir carpeta crea una nueva)",
+        "ui.tableFolderTip": "Carpeta de la tabla; elige una de la lista (el botón de añadir carpeta crea una nueva)",
         "summary.folder": "Carpeta",
-        "markup.button.newFolder": "+C",
-        "markup.button.newFolderTip": "Añadir una carpeta vacía (+C)",
+        "markup.button.newFolderTip": "Añadir una carpeta vacía",
         "markup.label.folder": "Carpeta:",
         "persistence.foldersNotList": "{label}: «folders» debe ser una lista de nombres.",
         "persistence.flagInvalid": "{label}: debe ser true o false.",
@@ -4329,7 +4400,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.button.replaceEveryMatchTableColumn": "Reemplazar todas las coincidencias de la tabla o de la columna",
         "markup.button.replaceTableDataWithPasted": "Sustituir los datos de la tabla por los pegados (también con Ctrl+Enter en el cuadro)",
         "markup.button.reset": "Restablecer",
-        "markup.button.run": "▶ Ejecutar",
+        "markup.button.run": "Ejecutar",
         "markup.button.runAgain": "Re-ejecutar",
         "markup.button.runAgain2": "Re-ejecutar",
         "markup.button.runQueryCtrlEnter": "Ejecutar la consulta (Ctrl+Enter)",
@@ -4518,7 +4589,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.beforeResultYouWillSee": "Antes del resultado verás el <b>plan</b> con el tiempo de cada paso; si algo falla, el error te dice <b>línea, columna y qué revisar</b>.",
         "markup.li.comparisonIsStrictNullOnly": "La comparación es <b>estricta</b>: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Renombrar una tabla o un campo ajusta también los nombres asertados, pero <b>nunca los valores</b>.",
         "markup.li.completeFormatAssertExampleAre": "El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.",
-        "markup.li.createGiveItNameDescription": "Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>. Mientras una consulta o la batería de pruebas tarda, una ventana con un <b>spinner</b> dice qué se está ejecutando hasta que acaba.",
+        "markup.li.createGiveItNameDescription": "Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>Ejecutar</b> o <b>Ctrl+Enter</b>. Mientras una consulta o la batería de pruebas tarda, una ventana con un <b>spinner</b> dice qué se está ejecutando hasta que acaba.",
         "markup.li.createRenameDeleteTablesEach": "Crear, renombrar y eliminar tablas, cada una con su <b>descripción</b>.",
         "markup.li.tableListFoldsUnderAllTables": "La lista de tablas se puede <b>plegar</b> desde su cabecera <b>Todas las tablas</b>: queda solo el título con el número de tablas, y el estado se guarda en el proyecto.",
         "markup.li.csvIsWrittenBOMSo": "El CSV se escribe con <b>BOM</b> para que Excel lo abra bien y con las opciones de esa misma ventana: <b>separador</b> (coma, punto y coma, tabulador, espacio u otro carácter), <b>cabecera</b> sí o no y <b>coma decimal</b> (<code>3,14</code> en vez de <code>3.14</code>; los textos no se tocan). Son las mismas opciones que las de <b>Ajustes</b> y se guardan dentro del proyecto.",
@@ -4546,7 +4617,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.exportResultAsJSON": "<b>Exportar JSON…</b> descarga el resultado completo como <b>array de objetos</b> (uno por fila, con las columnas como claves), con sangría de dos espacios: van <b>todas las filas</b>, no solo la página que ves. Hay que <b>ejecutar</b> la consulta antes.",
         "markup.li.handleFocusedChangeWidthLeft": "<b>←</b> y <b>→</b> con el tirador enfocado: cambiar el ancho de la columna izquierda; <b>Inicio</b> y <b>Fin</b> lo llevan a los extremos.",
         "markup.li.idFieldIsAutoNumbered": "El <b>campo ID es autonumérico</b>: cada fila nueva recibe el <b>siguiente número</b> y ninguno se repite ni se reutiliza al borrar filas. Por eso no se edita a mano: se puede buscar en él, pero no se reemplaza. Con <b>Crear campo ID autonumérico</b> añades uno nuevo (el nombre se escribe a su lado), al principio de la tabla, y numera <b>1..N</b> las filas que ya había. Marcar cualquier otro campo como ID también lo vuelve autonumérico.",
-        "markup.li.insertButtonSpeedsUpWriting": "<b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos. A su lado, <b>La leen como tabla (n)</b> y <b>Lee como tabla (n)</b> despliegan las consultas que leen la abierta como tabla y las que ella lee, para saltar de una a otra; cada botón aparece solo cuando hay alguna.",
+        "markup.li.insertButtonSpeedsUpWriting": "<b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa la <b>flecha</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos. A su lado, <b>La leen como tabla (n)</b> y <b>Lee como tabla (n)</b> despliegan las consultas que leen la abierta como tabla y las que ella lee, para saltar de una a otra; cada botón aparece solo cuando hay alguna.",
         "markup.li.insideCellGoForeignKeys": "Dentro de la casilla van las <b>claves ajenas</b> de la tabla de la fila que apuntan a la de la columna, escritas como <code>campo → campo destino</code>. La <b>diagonal</b> recoge las <b>autorreferencias</b>: las claves ajenas de una tabla que apuntan a ella misma.",
         "markup.li.jsonArrayObjectsSameKeys": "<b>JSON</b>: un array de objetos con las mismas claves y valores simples.",
         "markup.li.jsonIsValidatedWhenIt": "El JSON se valida al abrirlo: si algo no cuadra te dice exactamente qué, incluido el resultado asertado (<code>assert</code>) de cada consulta. La antigua propiedad <code>\"testing\"</code> se acepta pero se <b>ignora</b>: el modo test se deduce de las consultas.",
@@ -4949,17 +5020,17 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.confirmRemoveTest": "¿Quitar el resultado asertado de «{name}»?\n\nLa consulta seguirá ejecutándose, pero no se comprobará en el informe del proyecto.",
         "queries.confirmReplaceAssert": "«{name}» ya comprueba un resultado asertado ({assert}).\n\n¿Sustituirlo por el resultado actual ({rows})?",
         "queries.convertedToTest": "«{name}» convertida en test: {assert}. El proyecto queda en modo test; pulsa «Pruebas» para comprobar la batería.",
-        "queries.created": "Consulta «{name}» creada. Escribe el SQL y pulsa ▶ Ejecutar (o Ctrl+Enter).",
+        "queries.created": "Consulta «{name}» creada. Escribe el SQL y pulsa Ejecutar (o Ctrl+Enter).",
         "queries.csvCopied": "CSV copiado al portapapeles.",
         "queries.csvCopyManual": "No se pudo copiar solo: el texto queda seleccionado, pulsa Ctrl+C.",
         "queries.csvDialogTitle": "Consulta «{name}» · {rows} fila(s)",
         "queries.csvDownloaded": "Resultado exportado en «{name}» (descarga, {rows} fila(s)).",
         "queries.csvFileType": "Valores separados por comas (CSV)",
-        "queries.csvNoResults": "Sin resultados todavía: ejecuta la consulta con ▶",
-        "queries.csvNothingToCopy": "No hay CSV que copiar: ejecuta la consulta (▶) primero.",
-        "queries.csvRunBeforeDownload": "Ejecuta la consulta (▶) antes de descargar el CSV.",
-        "queries.jsonRunBeforeExport": "Ejecuta la consulta (▶) antes de exportar su resultado en JSON.",
-        "queries.csvRunFirst": "Ejecuta la consulta (▶) para ver aquí su CSV.",
+        "queries.csvNoResults": "Sin resultados todavía: ejecuta la consulta con el botón Ejecutar",
+        "queries.csvNothingToCopy": "No hay CSV que copiar: ejecuta la consulta primero.",
+        "queries.csvRunBeforeDownload": "Ejecuta la consulta antes de descargar el CSV.",
+        "queries.jsonRunBeforeExport": "Ejecuta la consulta antes de exportar su resultado en JSON.",
+        "queries.csvRunFirst": "Ejecuta la consulta para ver aquí su CSV.",
         "queries.csvSavedAs": "Resultado exportado a «{name}» ({rows} fila(s)).",
         "queries.csvStatus": "Resultado en CSV: ajusta el separador, pulsa «Copiar» o «Descargar CSV», o cierra con Esc.",
         "queries.defaultSql": "SELECT * FROM tabla",
@@ -4981,7 +5052,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.insertFieldTip": "Escribir el campo «{name}» en el cursor",
         "queries.insertFieldsError": "No se han podido leer los campos de «{name}»: {message}",
         "queries.insertFoldTip": "Ocultar los campos de «{name}»",
-        "queries.insertHint": "Pulsa un nombre para escribirlo en el cursor; ▸ despliega sus campos.",
+        "queries.insertHint": "Pulsa un nombre para escribirlo en el cursor; la flecha despliega sus campos.",
         "queries.insertListAria": "Tablas, consultas y campos",
         "queries.insertNameTip": "Escribir «{name}» en el cursor",
         "queries.insertNeedsQuery": "Abre o crea una consulta para insertar nombres en ella.",
@@ -4992,7 +5063,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.insertSearchAria": "Buscar una tabla, una consulta o un campo",
         "queries.insertSearchPlaceholder": "Buscar una tabla, una consulta o un campo…",
         "queries.insertTables": "Tablas",
-        "queries.insertTip": "Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space). La flecha ▸ muestra los campos.",
+        "queries.insertTip": "Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space). La flecha que hay junto al nombre muestra los campos.",
         "queries.insertTitle": "Insertar en el cursor",
         "queries.insertUnfoldTip": "Mostrar los campos de «{name}»",
         "queries.inserted": "«{name}» escrito en el cursor.",
@@ -5013,7 +5084,7 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.relatedPickTip": "Abrir la consulta «{name}»",
         "queries.removed": "Consulta «{name}» eliminada.{orphans}",
         "queries.renamed": "Consulta renombrada: «{old}» → «{new}»{note}.",
-        "queries.selected": "Consulta «{name}». Pulsa ▶ Ejecutar o Ctrl+Enter.",
+        "queries.selected": "Consulta «{name}». Pulsa Ejecutar o Ctrl+Enter.",
         "queries.sourcesButton": "Lee como tabla ({count})",
         "queries.sourcesTip": "Saltar a una de las consultas que «{name}» lee como tabla",
         "queries.suffixedName": "consulta_{n}",
@@ -11802,7 +11873,7 @@ ORDER BY edificios DESC, sede;</pre>
         const text = I18n.t(folded ? "tables.unfold" : "tables.fold");
         header.classList.toggle("folder-collapsed", folded);
         const toggle = header.querySelector("button.folder-toggle");
-        toggle.textContent = folded ? "▸" : "▾";
+        toggle.replaceChildren(Ui.icon(folded ? "chevron-right" : "chevron-down"));
         toggle.title = text;
         toggle.setAttribute("aria-label", text);
         toggle.setAttribute("aria-expanded", folded ? "false" : "true");
@@ -11836,13 +11907,24 @@ ORDER BY edificios DESC, sede;</pre>
         UiFolders.render("queries", list, (query, folder) => Ui.queryItem(query, usage, shape, folder));
       },
 
-      /** Button of a row of the sidebar: a symbol, the query it belongs to and a
-       *  tip that also names the action for whoever does not see the symbol. */
-      rowButton(symbol, className, name, tip) {
+      /** Icon of the direct-SVG set with that name (its source is the
+       *  template of that name in the document), or null when there is none. */
+      icon(name) {
+        const template = document.querySelector(`template[data-icon="${name}"]`);
+        return template ? template.content.firstElementChild.cloneNode(true) : null;
+      },
+
+      /** Button of a row of the sidebar: an icon, the query it belongs to and a
+       *  tip that also names the action for whoever does not see the icon. A
+       *  row without an icon (the colour swatch) keeps its empty button. */
+      rowButton(icon, className, name, tip) {
         const button = document.createElement("button");
         button.type = "button";
         button.className = `panel-action ${className}`;
-        button.textContent = symbol;
+        const drawing = Ui.icon(icon);
+        if (drawing) {
+          button.appendChild(drawing);
+        }
         button.dataset.name = name;
         button.title = tip;
         button.setAttribute("aria-label", tip);
@@ -11889,20 +11971,20 @@ ORDER BY edificios DESC, sede;</pre>
         // left out when the query is already at the end it leads to.
         const group = Model.itemsInFolder(Store.project, folder || null, "queries");
         const position = group.indexOf(query);
-        const up = Ui.rowButton("▲", "move-query", query.name, I18n.t("queries.moveUpTip", { name: query.name }));
+        const up = Ui.rowButton("chevron-up", "move-query", query.name, I18n.t("queries.moveUpTip", { name: query.name }));
         up.dataset.step = "-1";
         up.disabled = position <= 0;
         actions.appendChild(up);
-        const down = Ui.rowButton("▼", "move-query", query.name, I18n.t("queries.moveDownTip", { name: query.name }));
+        const down = Ui.rowButton("chevron-down", "move-query", query.name, I18n.t("queries.moveDownTip", { name: query.name }));
         down.dataset.step = "1";
         down.disabled = position < 0 || position >= group.length - 1;
         actions.appendChild(down);
-        actions.appendChild(Ui.rowButton("D", "duplicate-query", query.name, I18n.t("queries.duplicateTip", { name: query.name })));
-        const color = Ui.rowButton("", "color-query", query.name, I18n.t("queries.colorTip", { name: query.name }));
+        actions.appendChild(Ui.rowButton("copy", "duplicate-query", query.name, I18n.t("queries.duplicateTip", { name: query.name })));
+        const color = Ui.rowButton(null, "color-query", query.name, I18n.t("queries.colorTip", { name: query.name }));
         color.style.background = query.color || "transparent";
         color.setAttribute("aria-haspopup", "dialog");
         actions.appendChild(color);
-        actions.appendChild(Ui.rowButton("✕", "delete-query", query.name, I18n.t("queries.deleteTip", { name: query.name })));
+        actions.appendChild(Ui.rowButton("trash", "delete-query", query.name, I18n.t("queries.deleteTip", { name: query.name })));
         item.appendChild(actions);
         if (query.color) {
           item.style.setProperty("--row-color", query.color);
@@ -12114,8 +12196,8 @@ ORDER BY edificios DESC, sede;</pre>
         const actionsCell = document.createElement("td");
         const remove = document.createElement("button");
         remove.type = "button";
-        remove.className = "btn-delete-row";
-        remove.textContent = "✕";
+        remove.className = "btn-delete-row with-icon";
+        remove.appendChild(Ui.icon("trash"));
         remove.dataset.index = String(index);
         remove.title = I18n.t("ui.deleteRowNumber", { number: index + 1 });
         actionsCell.appendChild(remove);
@@ -12692,8 +12774,8 @@ ORDER BY edificios DESC, sede;</pre>
           const actionsCell = document.createElement("td");
           const remove = document.createElement("button");
           remove.type = "button";
-          remove.className = "btn-delete-field";
-          remove.textContent = "✕";
+          remove.className = "btn-delete-field with-icon";
+          remove.appendChild(Ui.icon("trash"));
           remove.dataset.fieldIndex = String(index);
           remove.title = I18n.t("ui.deleteFieldTip", { fieldName: field.name });
           actionsCell.appendChild(remove);
@@ -14083,7 +14165,7 @@ ORDER BY edificios DESC, sede;</pre>
         setStatus(I18n.t("queries.created", { name: name }));
       },
 
-      /** Duplicates a query of the list with its «D» and opens the copy. */
+      /** Duplicates a query of the list with its copy icon and opens the copy. */
       duplicate(name) {
         const result = Model.duplicateQuery(Store.project, name);
         if (!result.ok) {
@@ -14229,7 +14311,7 @@ ORDER BY edificios DESC, sede;</pre>
         }
       },
 
-      /** Deletes the query with that name, with its «✕», after the
+      /** Deletes the query with that name, with its bin icon, after the
        *  confirmation. When it is the open one the view is emptied, as
        *  «Delete query» does. */
       removeQuery(name) {
@@ -16664,7 +16746,7 @@ ORDER BY edificios DESC, sede;</pre>
         arrow.dataset.kind = kind;
         arrow.dataset.name = item.name;
         arrow.setAttribute("aria-expanded", unfolded ? "true" : "false");
-        arrow.textContent = unfolded ? "▾" : "▸";
+        arrow.replaceChildren(Ui.icon(unfolded ? "chevron-down" : "chevron-right"));
         arrow.title = I18n.t(unfolded ? "queries.insertFoldTip" : "queries.insertUnfoldTip", { name: item.name });
         arrow.setAttribute("aria-label", arrow.title);
         row.appendChild(arrow);
@@ -16849,7 +16931,12 @@ ORDER BY edificios DESC, sede;</pre>
         const button = UiQueryLinks.buttonOf(kind);
         const names = query ? UiQueryLinks.names(kind, query, usage) : [];
         button.hidden = names.length === 0;
-        button.textContent = I18n.t(kind === "readers" ? "queries.readersButton" : "queries.sourcesButton", { count: names.length });
+        // The label is a span of its own: the icon of the button is written in
+        // the markup and the number is the only thing that changes.
+        button.querySelector(".label").textContent = I18n.t(
+          kind === "readers" ? "queries.readersButton" : "queries.sourcesButton",
+          { count: names.length },
+        );
         button.title = names.length === 0
           ? ""
           : I18n.t(kind === "readers" ? "queries.readersTip" : "queries.sourcesTip", { name: query.name });
@@ -17740,7 +17827,7 @@ ORDER BY edificios DESC, sede;</pre>
           }
           const label = I18n.t(isFolded ? "folders.expand" : "folders.collapse",
             { name: name || I18n.t("folders.noFolder") });
-          toggle.textContent = isFolded ? "▸" : "▾";
+          toggle.replaceChildren(Ui.icon(isFolded ? "chevron-right" : "chevron-down"));
           toggle.title = label;
           toggle.setAttribute("aria-label", label);
           toggle.setAttribute("aria-expanded", isFolded ? "false" : "true");
@@ -17752,7 +17839,7 @@ ORDER BY edificios DESC, sede;</pre>
         const everythingFolded = names.length > 0 && names.concat([""]).every((name) => folded.has(name));
         const allLabel = I18n.t(everythingFolded ? "folders.unfoldAll" : "folders.foldAll");
         button.hidden = names.length === 0;
-        button.textContent = everythingFolded ? "⊞" : "⊟";
+        button.replaceChildren(Ui.icon(everythingFolded ? "chevron-double-down" : "chevron-double-up"));
         button.title = allLabel;
         button.setAttribute("aria-label", allLabel);
       },
@@ -17900,7 +17987,7 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       /** Saves the folder chosen in the editor: an empty value takes the item
-       *  out of every folder. New folders are created with the +C button. */
+       *  out of every folder. New folders are created with the add folder button. */
       commitEditorFolder(kind) {
         const spec = UiFolders.KIND[kind];
         const input = document.getElementById(spec.field);
@@ -17959,7 +18046,7 @@ ORDER BY edificios DESC, sede;</pre>
         setStatus(I18n.t("folders.movedMessage", { name: name }));
       },
 
-      /** Duplicates a folder of queries with all its queries («D»). */
+      /** Duplicates a folder of queries with all its queries (the copy icon). */
       duplicate(kind, name) {
         const result = Model.duplicateQueryFolder(Store.project, name);
         if (!result.ok) {
@@ -18075,7 +18162,7 @@ ORDER BY edificios DESC, sede;</pre>
           const up = document.createElement("button");
           up.type = "button";
           up.className = "panel-action move-folder";
-          up.textContent = "▲";
+          up.appendChild(Ui.icon("chevron-up"));
           up.dataset.folder = name;
           up.dataset.step = "-1";
           up.title = I18n.t("folders.moveUpTip", { name: name });
@@ -18085,7 +18172,7 @@ ORDER BY edificios DESC, sede;</pre>
           const down = document.createElement("button");
           down.type = "button";
           down.className = "panel-action move-folder";
-          down.textContent = "▼";
+          down.appendChild(Ui.icon("chevron-down"));
           down.dataset.folder = name;
           down.dataset.step = "1";
           down.title = I18n.t("folders.moveDownTip", { name: name });
@@ -18096,7 +18183,7 @@ ORDER BY edificios DESC, sede;</pre>
             const duplicate = document.createElement("button");
             duplicate.type = "button";
             duplicate.className = "panel-action duplicate-folder";
-            duplicate.textContent = "D";
+            duplicate.appendChild(Ui.icon("copy"));
             duplicate.title = I18n.t("folders.duplicateTip", { name: name });
             duplicate.setAttribute("aria-label", duplicate.title);
             duplicate.dataset.folder = name;
@@ -18105,7 +18192,7 @@ ORDER BY edificios DESC, sede;</pre>
           const rename = document.createElement("button");
           rename.type = "button";
           rename.className = "panel-action rename-folder";
-          rename.textContent = "✎";
+          rename.appendChild(Ui.icon("edit"));
           rename.title = I18n.t("folders.renameTip", { name: name });
           rename.setAttribute("aria-label", rename.title);
           rename.dataset.folder = name;
@@ -18113,7 +18200,7 @@ ORDER BY edificios DESC, sede;</pre>
           const remove = document.createElement("button");
           remove.type = "button";
           remove.className = "panel-action delete-folder";
-          remove.textContent = "✕";
+          remove.appendChild(Ui.icon("trash"));
           remove.title = I18n.t("folders.deleteTip", { name: name });
           remove.setAttribute("aria-label", remove.title);
           remove.dataset.folder = name;
@@ -18339,9 +18426,11 @@ ORDER BY edificios DESC, sede;</pre>
       run() {
         // Some cases measure widths and positions: the size of the window of
         // whoever runs the battery would change the result, so the whole run is
-        // measured over a stable, wide page and the real width is put back.
+        // measured over a stable, wide page and the real width is put back. The
+        // width is the one the top bar needs with its icons and the longest
+        // labels (Spanish) in one line.
         const ancho = document.body.style.minWidth;
-        document.body.style.minWidth = "1440px";
+        document.body.style.minWidth = "1680px";
         const language = I18n.current;
         // The language also travels in the settings: a case that fails halfway
         // (before restoring what it changed) must not leave the following run
@@ -20879,7 +20968,7 @@ ORDER BY edificios DESC, sede;</pre>
           "Ver relaciones", "Consultas como tablas", "vista ×N",
           "Lee como tabla (", "la leen: «", "Subconsultas", "Ayuda SQL",
           "propiedades", "tirador", "140 a 480", "resumen",
-          "Carpetas", "+C", "añadir carpeta", "Sin carpeta", "arrastra", "pliega", "despliega",
+          "Carpetas", "añadir carpeta", "el icono de la papelera", "Sin carpeta", "arrastra", "pliega", "despliega",
           "Carpetas de tablas", "tableFolders", "foldedTableFolders", "Todas las tablas",
           "Fusionar tablas", "Crear tabla", "Ver estructura JSON", "Descargar estructura JSON"]],
         ["en", ["Is a foreign key", "Create auto-numbered ID field", "auto-numbered",
@@ -20887,7 +20976,7 @@ ORDER BY edificios DESC, sede;</pre>
           "See relations", "Queries as tables", "view ×N",
           "Reads as a table (", "read by: «", "Subqueries", "SQL help",
           "properties", "handle", "140 to 480", "summary",
-          "Folders", "+F", "add folder", "No folder", "drag", "fold", "unfold",
+          "Folders", "add folder", "bin icon", "No folder", "drag", "fold", "unfold",
           "Table folders", "tableFolders", "foldedTableFolders", "All tables",
           "Merge tables", "Create table", "View structure JSON", "Download structure JSON"]],
       ].forEach(([language, words]) => {
@@ -24015,7 +24104,7 @@ ORDER BY edificios DESC, sede;</pre>
       const button = () => document.getElementById("btn-fold-all");
       assertEqual(button().hidden, false, "with folders, the header of the panel offers to fold them all");
       assertEqual(button().title, "Fold every folder", "and the tip says what it does");
-      assertEqual(button().textContent, "⊟", "with the mark of folding");
+      assertEqual(button().querySelector('[data-icon="chevron-double-up"]') !== null, true, "with the icon that folds every folder");
       Store.dirty = false;
       button().click();
       assertEqual(Model.foldedOf(Store.project), ["Sales", "2026", ""], "every group ends up folded, the «no folder» one included");
@@ -24023,7 +24112,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(items.every((item) => item.hidden), true, "and no query is left in the list");
       assertEqual(folderToggle("Sales").getAttribute("aria-expanded"), "false", "the folders show the folded state");
       assertEqual(button().title, "Unfold every folder", "the button offers the opposite");
-      assertEqual(button().textContent, "⊞", "with the mark of unfolding");
+      assertEqual(button().querySelector('[data-icon="chevron-double-down"]') !== null, true, "with the icon that unfolds them again");
       assertEqual(Store.dirty, true, "and the project is left pending save");
       assert(Persistence.serializeProject(Store.project).indexOf("foldedFolders") >= 0, "with the state written in the file");
       Store.replaceProject(before.project);
@@ -24110,10 +24199,10 @@ ORDER BY edificios DESC, sede;</pre>
       const tables = document.getElementById("btn-new-table");
       assertEqual(tableFolder.closest("h2") !== null, true, "the button that adds a folder of tables lives in the header of the tables panel");
       assertEqual(tables.previousElementSibling, tableFolder, "right beside the button that adds a table");
-      assertEqual(button.title.indexOf("+F") >= 0, true, "and its tip says the caption: " + button.title);
+      assertEqual(button.title, "Add an empty folder", "and its tip says what it does: " + button.title);
       assertEqual(document.querySelector(".sidebar-actions"), null, "the block below the list is gone");
-      SelfTests.inLanguage("en", () => assertEqual(button.textContent, "+F", "in English the caption is +F (folder)"));
-      SelfTests.inLanguage("es", () => assertEqual(button.textContent, "+C", "and in Spanish +C (carpeta)"));
+      SelfTests.inLanguage("en", () => assertEqual(button.querySelector('[data-icon="folder-add"]') !== null, true, "in English the icon of the folder stays"));
+      SelfTests.inLanguage("es", () => assertEqual(button.querySelector('[data-icon="folder-add"]') !== null, true, "and the language only rewrites the text, not the icon"));
     });
 
     SelfTests.add("When_PanelAddButtons_Expect_SameStyle", () => {
@@ -24144,6 +24233,37 @@ ORDER BY edificios DESC, sede;</pre>
       UiProject.updateDirtyIndicator();
     });
 
+    SelfTests.add("When_IconSet_Expect_EveryControlCarriesItsOwnIcon", () => {
+      const controls = [...document.querySelectorAll("#header button, #sidebar button, .toolbar button, .dlg-header button")]
+        // The two buttons that fold a whole panel only get theirs when there is
+        // something to fold, and the colour swatch of a query is no icon.
+        .filter((button) => button.id !== "btn-fold-all" && button.id !== "btn-fold-all-tables" && !button.classList.contains("color-query"));
+      const without = controls.filter((button) => button.querySelector("svg.icon") === null)
+        .map((button) => button.id || button.textContent.trim());
+      assertEqual(without, [], "every control of the bars carries its icon");
+      const twice = controls.filter((button) => button.querySelectorAll("svg.icon").length !== 1)
+        .map((button) => button.id || button.textContent.trim());
+      assertEqual(twice, [], "one icon per control, no more");
+      controls.forEach((button) => {
+        const drawing = button.querySelector("svg.icon");
+        assertEqual(drawing.getAttribute("viewBox"), "0 0 24 24", "the icon is the 24 × 24 drawing: " + button.id);
+        assertEqual(drawing.getAttribute("aria-hidden"), "true", "the icon is decorative and the text names the control: " + button.id);
+        assert(drawing.dataset.icon !== undefined && drawing.dataset.icon !== "", "the icon says which one it is: " + button.id);
+        assertEqual(drawing.getAttribute("fill"), "none", "the drawing is stroke only: " + button.id);
+        const strokes = [...drawing.querySelectorAll("[stroke]")].map((shape) => shape.getAttribute("stroke"));
+        assert(strokes.every((stroke) => stroke === "currentColor"), "every stroke takes the colour of the control: " + button.id);
+      });
+      // The translator rewrites the label: the icon has to stay beside it.
+      SelfTests.inLanguage("es", () => {
+        ["btn-new", "btn-run", "btn-delete-table", "btn-close-fields"].forEach((id) => {
+          assert(document.getElementById(id).querySelector("svg.icon") !== null, "the icon of «" + id + "» survives the translation");
+        });
+        assertEqual(document.getElementById("btn-run").textContent, "Ejecutar", "and the run button reads without the old «▶»");
+        assertEqual(document.getElementById("mark").textContent, "DATILANDIA", "the brand keeps its name");
+      });
+      SelfTests.inLanguage("en", () => assertEqual(document.getElementById("btn-run").textContent, "Run", "the run button names the action in English too"));
+    });
+
     SelfTests.add("When_NewFolder_Expect_EmptyFolderInList", () => {
       const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
       Store.replaceProject(folderProject());
@@ -24171,7 +24291,7 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.renderSidebarQueries();
       const rename = folderHeader("Sales").querySelector("button.rename-folder");
       const remove = folderHeader("Sales").querySelector("button.delete-folder");
-      assertEqual([rename.textContent, remove.textContent], ["✎", "✕"], "renaming and deleting are two symbols");
+      assertEqual([rename.querySelector('[data-icon="edit"]') !== null, remove.querySelector('[data-icon="trash"]') !== null], [true, true], "renaming and deleting are two icons");
       assertEqual(rename.classList.contains("panel-action"), true, "with the same small box as the buttons of the panel headers");
       assertEqual(remove.classList.contains("panel-action"), true, "both of them");
       assertEqual(rename.getAttribute("aria-label"), "Rename the folder “Sales”", "and the name of the action for whoever does not see the symbol");
@@ -24279,7 +24399,7 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.renderSidebarQueries();
       const duplicate = queryItem("q1").querySelector("button.duplicate-query");
       assert(duplicate !== null, "every query of the list carries its «D»");
-      assertEqual(duplicate.textContent, "D", "with the symbol of the action");
+      assertEqual(duplicate.querySelector('[data-icon="copy"]') !== null, true, "with the icon of the action");
       assertEqual(duplicate.title, "Duplicate the query “q1”", "and the tip that says what it does");
       assertEqual(duplicate.getAttribute("aria-label"), duplicate.title, "also for whoever does not see the symbol");
       duplicate.click();
@@ -24306,7 +24426,7 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.renderSidebarQueries();
       const duplicate = folderHeader("Sales").querySelector("button.duplicate-folder");
       assert(duplicate !== null, "every folder of queries carries its «D»");
-      assertEqual(duplicate.textContent, "D", "with the symbol of the action");
+      assertEqual(duplicate.querySelector('[data-icon="copy"]') !== null, true, "with the icon of the action");
       assertEqual(duplicate.title, "Duplicate the folder “Sales” with its queries", "and the tip that says what it does");
       assertEqual(document.querySelector("#list-tables button.duplicate-folder"), null, "the folders of the tables do not carry it");
       assertEqual(folderHeader("").querySelectorAll("button.duplicate-folder").length, 0, "nor the «no folder» group");
@@ -24522,7 +24642,7 @@ ORDER BY edificios DESC, sede;</pre>
       Store.replaceProject(again.project);
       Ui.renderSidebarQueries();
       assertEqual(queryItem("q1").hidden, true, "so opening the project shows it folded");
-      assertEqual(folderToggle("Sales").textContent, "▸", "with the arrow of the folded state");
+      assertEqual(folderToggle("Sales").querySelector('[data-icon="chevron-right"]') !== null, true, "with the arrow of the folded state");
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
@@ -24536,7 +24656,7 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.renderSidebarQueries();
       assert(folderToggle("Sales") !== null, "the header of a folder carries a fold button");
       assertEqual(folderToggle("Sales").getAttribute("aria-expanded"), "true", "which starts unfolded");
-      assertEqual(folderToggle("Sales").textContent, "▾", "with the arrow pointing down");
+      assertEqual(folderToggle("Sales").querySelector('[data-icon="chevron-down"]') !== null, true, "with the arrow pointing down");
       assertEqual(folderToggle("Sales").title, "Fold “Sales”", "and it says what it does");
       assertEqual(queryItem("q1").hidden, false, "the queries of the folder are visible");
       folderToggle("Sales").click();
@@ -24546,7 +24666,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(queryItem("q2").hidden, false, "and only the ones of that folder");
       assertEqual(queryItem("q3").hidden, false, "the queries of the other groups stay");
       assertEqual(folderToggle("Sales").getAttribute("aria-expanded"), "false", "the button says it is folded");
-      assertEqual(folderToggle("Sales").textContent, "▸", "with the arrow pointing right");
+      assertEqual(folderToggle("Sales").querySelector('[data-icon="chevron-right"]') !== null, true, "with the arrow pointing right");
       assertEqual(folderToggle("Sales").title, "Unfold “Sales”", "and it offers the opposite");
       assertEqual(folderHeader("Sales").classList.contains("folder-collapsed"), true, "the header is marked as folded");
       assertEqual(folderHeader("Sales").querySelector(".count").textContent, "1", "and keeps the number of queries");
@@ -24565,7 +24685,7 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.renderSidebarQueries();
       assertEqual(queryItem("q1").hidden, true, "the folder is still folded after repainting the list");
       assertEqual(folderToggle("Sales").getAttribute("aria-expanded"), "false", "and its button says so");
-      assertEqual(folderToggle("Sales").textContent, "▸", "with the arrow of the folded state");
+      assertEqual(folderToggle("Sales").querySelector('[data-icon="chevron-right"]') !== null, true, "with the arrow of the folded state");
       folderToggle("Sales").click();
       assertEqual(queryItem("q1").hidden, false, "and unfolding brings the queries back");
       assertEqual(Model.foldedOf(Store.project), [], "leaving the project without folded folders");
@@ -24624,7 +24744,7 @@ ORDER BY edificios DESC, sede;</pre>
       input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
       assertEqual(Store.project.folders, ["Ventas", "2026"], "the folder is renamed");
       assertEqual(queryItem("q1").hidden, true, "the folded state follows the new name");
-      assertEqual(folderToggle("Ventas").textContent, "▸", "and the arrow of the new header too");
+      assertEqual(folderToggle("Ventas").querySelector('[data-icon="chevron-right"]') !== null, true, "and the arrow of the new header too");
       assertEqual(Model.foldedOf(Store.project), ["Ventas"], "the project keeps the folder folded under its new name");
       Store.replaceProject(before.project);
       UiProject.showName();
@@ -24644,7 +24764,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.foldedOf(Store.project), [], "deleting the folder forgets that it was folded");
       Model.addFolder(Store.project, "Sales");
       Ui.renderSidebarQueries();
-      assertEqual(folderToggle("Sales").textContent, "▾", "a folder created again starts unfolded");
+      assertEqual(folderToggle("Sales").querySelector('[data-icon="chevron-down"]') !== null, true, "a folder created again starts unfolded");
       assertEqual(queryItem("q1").hidden, false, "and shows its queries");
       Store.replaceProject(before.project);
       UiProject.showName();
@@ -24724,7 +24844,7 @@ ORDER BY edificios DESC, sede;</pre>
       tableFolderToggle("Staff").click();
       assertEqual(tableRow("people").hidden, true, "folding it hides its tables");
       assertEqual(tableRow("rooms").hidden, false, "and only the ones of that folder");
-      assertEqual(tableFolderToggle("Staff").textContent, "▸", "with the arrow of the folded state");
+      assertEqual(tableFolderToggle("Staff").querySelector('[data-icon="chevron-right"]') !== null, true, "with the arrow of the folded state");
       assertEqual(tableFolderToggle("Staff").title, "Unfold “Staff”", "offering the opposite");
       assertEqual(tableFolderHeader("Staff").classList.contains("folder-collapsed"), true, "the header is marked as folded");
       assertEqual(Store.project.foldedTableFolders, ["Staff"], "and the project remembers it");
@@ -24745,12 +24865,12 @@ ORDER BY edificios DESC, sede;</pre>
       Ui.renderSidebarTables();
       const button = () => document.getElementById("btn-fold-all-tables");
       assertEqual(button().hidden, false, "with folders of tables the header of the panel offers to fold them all");
-      assertEqual(button().textContent, "⊟", "with the symbol of folding");
+      assertEqual(button().querySelector('[data-icon="chevron-double-up"]') !== null, true, "with the icon that folds every folder");
       assertEqual(button().title, "Fold every folder", "and the tip of the action");
       button().click();
       assertEqual(Store.project.foldedTableFolders.slice().sort(), ["", "Rooms", "Staff"], "the button folds every folder of tables and the «no folder» group");
       assertEqual([...document.querySelectorAll("#list-tables li[data-name]")].every((item) => item.hidden), true, "so every table is hidden");
-      assertEqual(button().textContent, "⊞", "and the button now offers the opposite");
+      assertEqual(button().querySelector('[data-icon="chevron-double-down"]') !== null, true, "and now offers the opposite icon");
       assertEqual(button().title, "Unfold every folder", "with its tip");
       assertEqual(document.getElementById("status").textContent, "Every folder folded.", "the status says so");
       button().click();
@@ -24861,7 +24981,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(tableRow("courses").dataset.folder, "Staff", "and the sidebar lists it under the folder");
       assertEqual(document.querySelectorAll("#list-tables li[data-name=\"courses\"]").length, 1, "once");
       // Un nombre que no está en la lista no puede crearse desde aquí: para eso
-      // está el botón +C de la cabecera del panel.
+      // está el botón de añadir carpeta de la cabecera del panel.
       assertEqual([...field.options].map((option) => option.value), ["", "Staff", "Rooms"], "the drop-down never invents a folder");
       document.getElementById("btn-new-table-folder").click();
       Ui.selectTable("courses");
@@ -25009,7 +25129,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(items().every((item) => item.hidden), true, "folding hides every table");
       assertEqual(getComputedStyle(items()[0]).display, "none", "and they really leave the list");
       assertEqual(header().classList.contains("folder-collapsed"), true, "the header is marked as folded");
-      assertEqual(toggle().textContent, "▸", "with the arrow of the folded state");
+      assertEqual(toggle().querySelector('[data-icon="chevron-right"]') !== null, true, "with the arrow of the folded state");
       assertEqual(toggle().title, "Unfold the list of tables", "offering the opposite");
       Store.replaceProject(before.project);
       UiProject.showName();
@@ -25278,8 +25398,8 @@ ORDER BY edificios DESC, sede;</pre>
       Settings.apply();
       Ui.renderAll();
       const header = () => document.querySelector("#list-queries li.folder[data-folder=\"Sales\"]");
-      assertEqual(header().querySelector("button.rename-folder").textContent, "✎", "the actions of a folder are symbols");
-      assertEqual(header().querySelector("button.duplicate-folder").textContent, "D", "the one that duplicates it too");
+      assertEqual(header().querySelector("button.rename-folder").querySelector('[data-icon="edit"]') !== null, true, "the actions of a folder are icons");
+      assertEqual(header().querySelector("button.duplicate-folder").querySelector('[data-icon="copy"]') !== null, true, "the one that duplicates it too");
       assertEqual(header().querySelector("button.rename-folder").title, "Rename the folder “Sales”", "with their meaning in the tip, in English");
       assertEqual(header().querySelector("button.delete-folder").title, "Delete the folder “Sales”", "both of them");
       assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicate the folder “Sales” with its queries", "and the duplicate one");
@@ -25287,7 +25407,7 @@ ORDER BY edificios DESC, sede;</pre>
       const select = document.getElementById("language-select");
       select.value = "es";
       select.dispatchEvent(new Event("change"));
-      assertEqual(header().querySelector("button.rename-folder").textContent, "✎", "the symbols do not change with the language");
+      assertEqual(header().querySelector("button.rename-folder").querySelector('[data-icon="edit"]') !== null, true, "the icons do not change with the language");
       assertEqual(header().querySelector("button.rename-folder").title, "Renombrar la carpeta «Sales»", "but their tips do");
       assertEqual(header().querySelector("button.delete-folder").title, "Borrar la carpeta «Sales»", "both of them");
       assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicar la carpeta «Sales» con sus consultas", "and the duplicate one");
@@ -25436,7 +25556,7 @@ ORDER BY edificios DESC, sede;</pre>
       Store.dirty = false;
       Ui.renderSidebarQueries();
       const arrows = (name) => [...queryItem(name).querySelectorAll("button.move-query")];
-      assertEqual(arrows("q1").map((button) => button.textContent), ["▲", "▼"], "every query carries the two arrows");
+      assertEqual(arrows("q1").map((button) => button.querySelector("svg").dataset.icon), ["chevron-up", "chevron-down"], "every query carries the two arrows");
       assertEqual(arrows("q1")[0].disabled, true, "the first one of its folder cannot go up");
       assertEqual(arrows("q1")[1].disabled, false, "but it can go down");
       assertEqual(arrows("q4")[1].disabled, true, "the last one cannot go down");
@@ -25462,7 +25582,7 @@ ORDER BY edificios DESC, sede;</pre>
       Store.dirty = false;
       Ui.renderSidebarQueries();
       const arrows = (name) => [...folderHeader(name).querySelectorAll("button.move-folder")];
-      assertEqual(arrows("Sales").map((button) => button.textContent), ["▲", "▼"], "every folder carries the two arrows");
+      assertEqual(arrows("Sales").map((button) => button.querySelector("svg").dataset.icon), ["chevron-up", "chevron-down"], "every folder carries the two arrows");
       assertEqual(arrows("Sales")[0].disabled, true, "the first folder cannot go up");
       assertEqual(arrows("Sales")[1].disabled, false, "but it can go down");
       assertEqual(arrows("2026")[1].disabled, true, "the last one cannot go down");
@@ -25578,7 +25698,7 @@ ORDER BY edificios DESC, sede;</pre>
       UiQueries.select("q4");
       const mark = queryItem("q1").querySelector("button.delete-query");
       assert(mark !== null, "every query carries its «✕»");
-      assertEqual(mark.textContent, "✕", "with the symbol of the action");
+      assertEqual(mark.querySelector('[data-icon="trash"]') !== null, true, "with the icon of the action");
       window.confirm = () => false;
       mark.click();
       assertEqual(Store.project.queries.some((query) => query.name === "q1"), true, "saying no keeps the query");
