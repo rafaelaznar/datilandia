@@ -1697,9 +1697,14 @@
       font-family: ui-monospace, Consolas, "Courier New", monospace;
     }
 
-    /* --- 9. Waiting window for imports, exports and saves ------------- */
+    /* --- 9. Waiting window for imports, exports, saves and long runs -- */
 
     #busy-overlay {
+      position: fixed;
+      inset: 0;
+      width: fit-content;
+      height: fit-content;
+      margin: auto;
       padding: 0;
       border: 0;
       background: transparent;
@@ -1708,6 +1713,25 @@
 
     #busy-overlay::backdrop {
       background: rgb(0 0 0 / 0.25);
+    }
+
+    /*  The window fades in after a moment: an operation that ends at once (a
+       quick query, for example) closes it before it is seen, so only the ones
+       that take a while show the spinner. A CSS animation keeps its own time
+       while the main thread is busy, which a timer would not do.  */
+    #busy-overlay,
+    #busy-overlay::backdrop {
+      animation: busy-fade 140ms ease-out 160ms backwards;
+    }
+
+    @keyframes busy-fade {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     #busy-overlay .busy-box {
@@ -1922,7 +1946,7 @@
             <section class="help-bloque" data-help="queries">
               <h3 data-i18n="markup.h3.queries">Consultas</h3>
               <ul>
-                <li data-i18n-html="markup.li.createGiveItNameDescription">Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>.</li>
+                <li data-i18n-html="markup.li.createGiveItNameDescription">Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>. Mientras una consulta o la batería de pruebas tarda, una ventana con un <b>spinner</b> dice qué se está ejecutando hasta que acaba.</li>
                 <li data-i18n-html="markup.li.insertButtonSpeedsUpWriting"><b>Insertar tabla, consulta o campo…</b> (encima del editor, o <b>Ctrl+Space</b> dentro de él) abre una <b>lista</b> con las tablas y las consultas del proyecto: pulsa un nombre para escribirlo <b>en el cursor</b> (con corchetes cuando el nombre los necesita) o pulsa <b>▸</b> para ver sus <b>campos</b> y pulsar uno. El <b>buscador</b> filtra la lista y los campos. A su lado, <b>La leen como tabla (n)</b> y <b>Lee como tabla (n)</b> despliegan las consultas que leen la abierta como tabla y las que ella lee, para saltar de una a otra; cada botón aparece solo cuando hay alguna.</li>
                 <li data-i18n-html="markup.li.queryCanBeReadFrom">Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.</li>
                 <li data-i18n-html="markup.li.sidebarQueryThatSomeOther">En la barra lateral, la consulta que <b>alguna otra lee como tabla</b> lleva la marca <b>«vista»</b> en azul, o <b>«vista ×N»</b> si la leen N consultas. Pasa el ratón por su pista y te dice los dos sentidos: <b>«Lee como tabla (n): …»</b> (a quién lee ella) y <b>«La leen como tabla (n): …»</b> (quién la lee a ella). La marca es solo información: no cambia lo que comprueba la consulta.</li>
@@ -3264,7 +3288,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.beforeResultYouWillSee": "Before the result you will see the <b>plan</b> with the time of each step; if something fails, the error tells you <b>line, column and what to check</b>.",
         "markup.li.comparisonIsStrictNullOnly": "The comparison is <b>strict</b>: <code>null</code> only matches <code>null</code>, a number is not a text and <code>1</code> is not <code>true</code>. Renaming a table or a field also adjusts the asserted names, but <b>never the values</b>.",
         "markup.li.completeFormatAssertExampleAre": "The complete format of the assert and an example are in the <b>SQL help</b> sections of this page.",
-        "markup.li.createGiveItNameDescription": "Create with <b>+</b>, give it a name and a description, and run with <b>▶ Run</b> or <b>Ctrl+Enter</b>.",
+        "markup.li.createGiveItNameDescription": "Create with <b>+</b>, give it a name and a description, and run with <b>▶ Run</b> or <b>Ctrl+Enter</b>. While a query or the test battery takes a while, a window with a <b>spinner</b> says what is running until it ends.",
         "markup.li.createRenameDeleteTablesEach": "Create, rename and delete tables, each one with its <b>description</b>.",
         "markup.li.tableListFoldsUnderAllTables": "The list of tables can be <b>folded</b> from its <b>All tables</b> header: only the title with the number of tables is left, and the state is saved in the project.",
         "markup.li.csvIsWrittenBOMSo": "The CSV is written with a <b>BOM</b> so that Excel opens it well and with the options of that same window: <b>delimiter</b> (comma, semicolon, tab, space or another character), <b>header</b> yes or no and <b>decimal comma</b> (<code>3,14</code> instead of <code>3.14</code>; texts are not touched). They are the same options as the ones in <b>Settings</b> and they are saved inside the project.",
@@ -3312,7 +3336,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.projectSTestModeIs": "The project's <b>test mode</b> is shown <b>at the very top right</b> of the top bar (<b>test mode</b> or <b>no tests</b>), and in the sidebar every query carries its <b>mark</b>: <b>test</b> if it has an asserted result and <b>no tests</b> if not. The query summary goes into detail in its <b>Assert</b> column.",
         "markup.li.queryCanBeReadFrom": "A query can <b>be read from another one as if it were a table</b>: write its name in the <code>FROM</code> and the engine runs it straight away (section <b>SQL help</b>, «Queries as tables»). Also, when you <b>rename it</b>, the queries that use it are rewritten and, if you <b>delete it</b>, it warns you which ones are left hanging.",
         "markup.li.querySummaryQueriesTitleSidebar": "The <b>query summary</b> (the <b>Queries</b> title in the sidebar) carries a <b>Views</b> column with the same thing, one line per direction (<code>reads: «…»</code> and <code>read by: «…»</code>), or a dash if there is none. The <b>dashboard</b> of the welcome page counts in <b>Queries used as tables</b> how many queries of the project are read that way.",
-        "markup.li.renamingFollowsQueriesWhenName": "<b>Renaming follows the queries</b>: when the name of a table or of a field changes, the queries rewrite themselves (<code>FROM table</code>, <code>table.field</code>, the bare column and the asserted names), also in the editor that is open. <b>Aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected.",
+        "markup.li.renamingFollowsQueriesWhenName": "<b>Renaming follows the queries</b>: when the name of a table or of a field changes, the queries rewrite themselves (<code>FROM table</code>, <code>table.field</code>, the bare column and the asserted names), also in the editor that is open. <b>Aliases</b> (<code>AS name</code>), the <code>FROM</code>/<code>JOIN</code> aliases, strings, comments and the brackets of <code>[name with spaces]</code> are respected. Only the queries that <b>cite that name</b> are reviewed, so renaming stays fast with many queries.",
         "markup.li.reportOpensItsOwnWhen": "The <b>report</b> opens on its own when loading: a summary (queries, passed, failed and without an assert), one row per query —its rows, whether it carries an assert and the result— and the <b>detail of the differences</b>, with what was expected and what was obtained in every row or column that does not add up. If a query does not compile, it is marked as failed with the error.",
         "markup.li.rowHeadersStayFixedWhen": "The row headers stay <b>fixed</b> when the matrix is scrolled across the width of the screen.",
         "markup.li.historyBarUnderTop": "Under the top bar there is a <b>history bar</b>: a rounded link to every place you have passed through (home, a table, a query, a summary, the relations or the import panel). When you go back to a table or a query it is <b>revealed in the sidebar</b>: its folder opens if it was folded and the list scrolls to it.",
@@ -3542,6 +3566,9 @@ ORDER BY edificios DESC, sede;</pre>
         "busy.exportingCsv": "Exporting CSV…",
         "busy.mergingTables": "Merging tables…",
         "busy.creatingTable": "Creating table…",
+        "busy.runningQuery": "Running the query “{name}”…",
+        "busy.runningTests": "Running the project tests…",
+        "busy.runningSelfTests": "Running the self-tests…",
         "merge.title": "Merge tables",
         "merge.help": "Choose the tables to merge, in the order shown: the new table takes the union of the fields, and each field keeps the definition of the first table that has it. Rows are concatenated; fields a table does not have are left empty (null).",
         "merge.name": "Name of the new table:",
@@ -3686,7 +3713,6 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.csvRunFirst": "Run the query (▶) to see its CSV here.",
         "queries.csvSavedAs": "Result exported to “{name}” ({rows} row(s)).",
         "queries.csvStatus": "Result as CSV: change the separator, press “Copy” or “Download CSV”, or close with Esc.",
-        "queries.csvTruncated": "Showing the first {max} of {total} rows (the exported file includes them all).",
         "queries.defaultSql": "SELECT * FROM table",
         "queries.deleteTip": "Delete the query “{name}”",
         "queries.descriptionUpdated": "Description of “{name}” updated.",
@@ -4393,7 +4419,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.beforeResultYouWillSee": "Antes del resultado verás el <b>plan</b> con el tiempo de cada paso; si algo falla, el error te dice <b>línea, columna y qué revisar</b>.",
         "markup.li.comparisonIsStrictNullOnly": "La comparación es <b>estricta</b>: <code>null</code> solo cuadra con <code>null</code>, un número no es un texto y <code>1</code> no es <code>true</code>. Renombrar una tabla o un campo ajusta también los nombres asertados, pero <b>nunca los valores</b>.",
         "markup.li.completeFormatAssertExampleAre": "El formato completo del assert y un ejemplo, en los apartados de <b>Ayuda SQL</b> de esta página.",
-        "markup.li.createGiveItNameDescription": "Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>.",
+        "markup.li.createGiveItNameDescription": "Crear con <b>+</b>, ponerle nombre y descripción, y ejecutar con <b>▶ Ejecutar</b> o <b>Ctrl+Enter</b>. Mientras una consulta o la batería de pruebas tarda, una ventana con un <b>spinner</b> dice qué se está ejecutando hasta que acaba.",
         "markup.li.createRenameDeleteTablesEach": "Crear, renombrar y eliminar tablas, cada una con su <b>descripción</b>.",
         "markup.li.tableListFoldsUnderAllTables": "La lista de tablas se puede <b>plegar</b> desde su cabecera <b>Todas las tablas</b>: queda solo el título con el número de tablas, y el estado se guarda en el proyecto.",
         "markup.li.csvIsWrittenBOMSo": "El CSV se escribe con <b>BOM</b> para que Excel lo abra bien y con las opciones de esa misma ventana: <b>separador</b> (coma, punto y coma, tabulador, espacio u otro carácter), <b>cabecera</b> sí o no y <b>coma decimal</b> (<code>3,14</code> en vez de <code>3.14</code>; los textos no se tocan). Son las mismas opciones que las de <b>Ajustes</b> y se guardan dentro del proyecto.",
@@ -4441,7 +4467,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.projectSTestModeIs": "El <b>modo test</b> del proyecto se ve <b>arriba del todo a la derecha</b> de la barra superior (<b>modo test</b> o <b>sin test</b>), y en la barra lateral cada consulta lleva su <b>marca</b>: <b>test</b> si tiene resultado asertado y <b>sin test</b> si no. El resumen de consultas lo detalla en su columna <b>Assert</b>.",
         "markup.li.queryCanBeReadFrom": "Una consulta puede <b>leerse desde otra como si fuera una tabla</b>: escribe su nombre en el <code>FROM</code> y el motor la ejecuta al momento (apartado <b>Ayuda SQL</b>, «Consultas como tablas»). También al <b>renombrarla</b> se reescriben las consultas que la usan y, si la <b>borras</b>, te avisa de cuáles se quedan colgadas.",
         "markup.li.querySummaryQueriesTitleSidebar": "El <b>resumen de consultas</b> (el título <b>Consultas</b> de la barra lateral) lleva una columna <b>Vistas</b> con lo mismo, una línea por sentido (<code>lee: «…»</code> y <code>la leen: «…»</code>), o un guion si no hay ninguna. El <b>salpicadero</b> de la bienvenida cuenta en <b>Consultas como tabla</b> cuántas consultas del proyecto se leen así.",
-        "markup.li.renamingFollowsQueriesWhenName": "<b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>.",
+        "markup.li.renamingFollowsQueriesWhenName": "<b>Renombrar sigue a las consultas</b>: al cambiar el nombre de una tabla o de un campo, las consultas se reescriben solas (<code>FROM tabla</code>, <code>tabla.campo</code>, la columna suelta y los nombres asertados), también en el editor abierto. Se respetan los <b>alias</b> (<code>AS nombre</code>), los alias del <code>FROM</code>/<code>JOIN</code>, los textos, los comentarios y los corchetes de <code>[nombre con espacios]</code>. Solo se revisan las consultas que <b>citan ese nombre</b>, así renombrar sigue siendo rápido con muchas consultas.",
         "markup.li.reportOpensItsOwnWhen": "El <b>informe</b> se abre solo al cargar: resumen (consultas, correctas, fallidas y sin assert), una fila por consulta —sus filas, si lleva assert y el resultado— y el <b>detalle de las diferencias</b>, con lo esperado y lo obtenido en cada fila o columna que no cuadra. Si una consulta no compila, se marca como fallida con el error.",
         "markup.li.rowHeadersStayFixedWhen": "Las cabeceras de fila quedan <b>fijas</b> al desplazar la matriz a lo ancho de la pantalla.",
         "markup.li.historyBarUnderTop": "Bajo la barra superior hay una <b>barra de histórico</b>: un enlace redondeado a cada lugar por el que has pasado (inicio, una tabla, una consulta, un resumen, las relaciones o la importación). Al volver a una tabla o a una consulta, se <b>revela en la barra lateral</b>: se abre su carpeta si estaba plegada y la lista se desplaza hasta ella.",
@@ -4671,6 +4697,9 @@ ORDER BY edificios DESC, sede;</pre>
         "busy.exportingCsv": "Exportando CSV…",
         "busy.mergingTables": "Fusionando tablas…",
         "busy.creatingTable": "Creando tabla…",
+        "busy.runningQuery": "Ejecutando la consulta «{name}»…",
+        "busy.runningTests": "Ejecutando las pruebas del proyecto…",
+        "busy.runningSelfTests": "Ejecutando los auto-tests…",
         "merge.title": "Fusionar tablas",
         "merge.help": "Elige las tablas que quieres fusionar, en el orden de la lista: la tabla nueva tendrá la unión de los campos y cada campo conserva la definición de la primera tabla que lo ofrece. Las filas se concatenan; los campos que una tabla no tiene quedan vacíos (null).",
         "merge.name": "Nombre de la tabla resultante:",
@@ -4815,7 +4844,6 @@ ORDER BY edificios DESC, sede;</pre>
         "queries.csvRunFirst": "Ejecuta la consulta (▶) para ver aquí su CSV.",
         "queries.csvSavedAs": "Resultado exportado a «{name}» ({rows} fila(s)).",
         "queries.csvStatus": "Resultado en CSV: ajusta el separador, pulsa «Copiar» o «Descargar CSV», o cierra con Esc.",
-        "queries.csvTruncated": "Mostrando las primeras {max} de {total} filas (el fichero exportado incluye todas).",
         "queries.defaultSql": "SELECT * FROM tabla",
         "queries.deleteTip": "Borrar la consulta «{name}»",
         "queries.descriptionUpdated": "Descripción de «{name}» actualizada.",
@@ -8588,6 +8616,14 @@ ORDER BY edificios DESC, sede;</pre>
         }
       },
 
+      /** Does the SQL text carry that name at all? A name is always written
+       *  with its own letters (between brackets or not), so a text without
+       *  them cannot reference it: this cheap test keeps the queries that have
+       *  nothing to do with a rename from being read (tokenised and analysed). */
+      mentions(sql, name) {
+        return String(sql).toLowerCase().includes(String(name).toLowerCase());
+      },
+
       /** Replaces the references to the column `oldName` with `newName`.
        *  It only touches identifiers — never texts or comments —, it leaves the
        *  table names and their FROM/JOIN aliases alone, it respects output
@@ -8607,11 +8643,15 @@ ORDER BY edificios DESC, sede;</pre>
        *  and, in the queries that change, it also adjusts the assert column
        *  names (unless the query produces them with an alias, which is
        *  respected). The asserted values are not touched: renaming a field does
-       *  not change the data. Returns how many queries changed. */
+       *  not change the data. Returns how many queries changed. Only the
+       *  queries that carry the name are read: the rest cannot use it. */
       renameColumnInProject(project, oldName, newName) {
         const buscado = String(oldName).toLowerCase();
         let changed = 0;
         project.queries.forEach((query) => {
+          if (!SqlRename.mentions(query.sql, oldName)) {
+            return;
+          }
           const parsed = SqlRename.parse(query.sql);
           const refs = parsed ? SqlRename.columnRefs(parsed.tokens, parsed.info, oldName) : [];
           if (refs.length === 0) {
@@ -8627,9 +8667,11 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       /** Names of the queries that use the column (to warn before deleting it
-       *  or to know what is left broken afterwards). */
+       *  or to know what is left broken afterwards). Only the queries that
+       *  carry the name are read. */
       queriesUsingField(project, fieldName) {
         return project.queries
+          .filter((query) => SqlRename.mentions(query.sql, fieldName))
           .filter((query) => {
             const parsed = SqlRename.parse(query.sql);
             return parsed !== null && SqlRename.columnRefs(parsed.tokens, parsed.info, fieldName).length > 0;
@@ -8637,9 +8679,11 @@ ORDER BY edificios DESC, sede;</pre>
           .map((query) => query.name);
       },
 
-      /** Names of the queries that use the table. */
+      /** Names of the queries that use the table. Only the queries that carry
+       *  the name are read. */
       queriesUsingTable(project, tableName) {
         return project.queries
+          .filter((query) => SqlRename.mentions(query.sql, tableName))
           .filter((query) => {
             const parsed = SqlRename.parse(query.sql);
             return parsed !== null && SqlRename.tableRefs(parsed.tokens, parsed.info, tableName).length > 0;
@@ -8669,10 +8713,14 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Renames the table in every query of the project. The asserts need no
        *  adjustment: the output name of a column is the field's name, not the
-       *  table's. Returns how many queries changed. */
+       *  table's. Returns how many queries changed. Only the queries that
+       *  carry the name are read: the rest cannot cite the table. */
       renameTableInProject(project, oldName, newName) {
         let changed = 0;
         project.queries.forEach((query) => {
+          if (!SqlRename.mentions(query.sql, oldName)) {
+            return;
+          }
           const actualizado = SqlRename.renameTable(query.sql, oldName, newName);
           if (actualizado !== query.sql) {
             query.sql = actualizado;
@@ -9358,8 +9406,14 @@ ORDER BY edificios DESC, sede;</pre>
       /** Which queries each query reads as a table and who reads it. Returns
        *  { lee, leen }: two Maps keyed by the name of each project query, with
        *  lists of names, in project order. It is worked out from the SQL texts
-       *  (nothing is stored) and runs no query. */
+       *  (nothing is stored) and runs no query. The answer is kept while the
+       *  SQL and the names do not change, which is what repainting the sidebar
+       *  after renaming a folder asks for. */
       usage(project) {
+        const key = SqlViews.usageKey(project);
+        if (SqlViews.usageMemo.key === key) {
+          return SqlViews.usageMemo.usage;
+        }
         const queries = project.queries || [];
         const porKey = new Map(queries.map((query) => [query.name.toLowerCase(), query.name]));
         const lee = new Map();
@@ -9383,7 +9437,21 @@ ORDER BY edificios DESC, sede;</pre>
             }
           });
         });
-        return { lee, leen };
+        SqlViews.usageMemo = { key, usage: { lee, leen } };
+        return SqlViews.usageMemo.usage;
+      },
+
+      /** Last analysis of who reads whom, with the signature of the project it
+       *  was worked out from (empty at the start). */
+      usageMemo: { key: null, usage: null },
+
+      /** Cheap signature of what the usage depends on: every query with its
+       *  SQL and the names of the tables (a source that names a table is not
+       *  read as a query). */
+      usageKey(project) {
+        const queries = (project.queries || []).map((query) => `${query.name}#${query.sql}`).join("~");
+        const tables = (project.tables || []).map((table) => table.name).join("|");
+        return `${queries}@${tables}`;
       },
 
       /** Error of a query used as a table: it says whose it is. Errors that
@@ -13637,8 +13705,8 @@ ORDER BY edificios DESC, sede;</pre>
             UiQueries.select(item.dataset.name);
           }
         });
-        document.getElementById("btn-run").addEventListener("click", () => UiQueries.execute());
-        document.getElementById("btn-save-test").addEventListener("click", () => UiQueries.saveAsTest());
+        document.getElementById("btn-run").addEventListener("click", () => UiQueries.runWithBusy());
+        document.getElementById("btn-save-test").addEventListener("click", () => UiQueries.saveTestWithBusy());
         document.getElementById("btn-quitar-test").addEventListener("click", () => UiQueries.removeTest());
         document.getElementById("btn-create-table-result").addEventListener("click", () => UiQueries.openCreateTable());
         document.getElementById("btn-close-result-table").addEventListener("click", () => UiQueries.closeCreateTable());
@@ -13667,7 +13735,7 @@ ORDER BY edificios DESC, sede;</pre>
           }
           if (event.ctrlKey && event.key === "Enter") {
             event.preventDefault();
-            UiQueries.execute();
+            UiQueries.runWithBusy();
           }
         });
         document.getElementById("btn-exportar-csv").addEventListener("click", () => UiQueries.openCsv());
@@ -14095,6 +14163,27 @@ ORDER BY edificios DESC, sede;</pre>
         return outcome;
       },
 
+      /** Message of the waiting window while the open query runs. */
+      busyMessage() {
+        const query = UiQueries.activeQueryOrNull();
+        return query
+          ? I18n.t("busy.runningQuery", { name: query.name })
+          : I18n.t("busy.working");
+      },
+
+      /** Runs the SQL of the editor with the waiting window on screen: a long
+       *  query keeps the spinner up until it ends, and a quick one closes the
+       *  window before it shows up. */
+      async runWithBusy() {
+        await Busy.run(UiQueries.busyMessage(), () => UiQueries.execute());
+      },
+
+      /** Turns the result into the asserted one with the waiting window on
+       *  screen: it runs the query first, which can take a while. */
+      async saveTestWithBusy() {
+        await Busy.run(UiQueries.busyMessage(), () => UiQueries.saveAsTest());
+      },
+
       /** Runs the query and stores its result as the asserted result (assert)
        *  of that query. The project goes into test mode. */
       saveAsTest() {
@@ -14519,9 +14608,6 @@ ORDER BY edificios DESC, sede;</pre>
        ===================================================================== */
 
     const UiTableCsv = {
-      /** Cap of rows painted in the preview (the downloaded file carries them all). */
-      MAX_ROWS: 1000,
-
       /** Wires the button of the table view and the window controls. */
       bind() {
         document.getElementById("btn-export-csv-table").addEventListener("click", () => UiTableCsv.open());
@@ -14603,7 +14689,8 @@ ORDER BY edificios DESC, sede;</pre>
         };
       },
 
-      /** Paints the CSV text of the table in the box (capped). */
+      /** Paints the CSV text of the table in the box: every row of the table,
+       *  so they can all be copied at once. */
       render() {
         const text = document.getElementById("table-csv-text");
         const warning = document.getElementById("table-csv-warning");
@@ -14613,14 +14700,8 @@ ORDER BY edificios DESC, sede;</pre>
           warning.textContent = I18n.t("tableCsv.tableGone");
           return;
         }
-        const max = UiTableCsv.MAX_ROWS;
-        text.value = Utils.resultToCsv(
-          { columns: result.columns, rows: result.rows.slice(0, max) },
-          UiTableCsv.readConfig(),
-        );
-        warning.textContent = result.rows.length > max
-          ? I18n.t("queries.csvTruncated", { max: max, total: result.rows.length })
-          : I18n.t("misc.rowsCountDot", { count: result.rows.length });
+        text.value = Utils.resultToCsv(result, UiTableCsv.readConfig());
+        warning.textContent = I18n.t("misc.rowsCountDot", { count: result.rows.length });
       },
 
       /** Copies the CSV text to the clipboard (or leaves it selected). */
@@ -14946,9 +15027,9 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Wires the header button and the controls of the report. */
       bind() {
-        document.getElementById("btn-tests").addEventListener("click", () => UiTests.run());
+        document.getElementById("btn-tests").addEventListener("click", () => UiTests.runWithBusy());
         document.getElementById("btn-close-tests").addEventListener("click", () => UiTests.close());
-        document.getElementById("btn-repetir-tests").addEventListener("click", () => UiTests.run());
+        document.getElementById("btn-repetir-tests").addEventListener("click", () => UiTests.runWithBusy());
         document.getElementById("btn-copiar-tests").addEventListener("click", () => UiTests.copy());
         document.getElementById("dlg-tests").addEventListener("keydown", (event) => {
           if (event.key === "Escape") {
@@ -14974,6 +15055,12 @@ ORDER BY edificios DESC, sede;</pre>
         }
         setStatus(`${ProjectTests.summaryLine(report)}.`);
         return report;
+      },
+
+      /** Runs the battery with the waiting window on screen and opens the
+       *  report: with many queries the spinner shows up until it ends. */
+      async runWithBusy() {
+        await Busy.run(I18n.t("busy.runningTests"), () => UiTests.run());
       },
 
       /** Closes the report when it is open. */
@@ -15072,9 +15159,9 @@ ORDER BY edificios DESC, sede;</pre>
 
       /** Wires the header button and the controls of the report. */
       bind() {
-        document.getElementById("btn-auto-test").addEventListener("click", () => UiAutoTests.run());
+        document.getElementById("btn-auto-test").addEventListener("click", () => UiAutoTests.runWithBusy());
         document.getElementById("btn-close-auto-test").addEventListener("click", () => UiAutoTests.close());
-        document.getElementById("btn-repetir-auto-test").addEventListener("click", () => UiAutoTests.run());
+        document.getElementById("btn-repetir-auto-test").addEventListener("click", () => UiAutoTests.runWithBusy());
         document.getElementById("btn-copiar-auto-test").addEventListener("click", () => UiAutoTests.copy());
         document.getElementById("dlg-auto-test").addEventListener("keydown", (event) => {
           if (event.key === "Escape") {
@@ -15119,6 +15206,23 @@ ORDER BY edificios DESC, sede;</pre>
           return null;
         }
         const report = SelfTests.run();
+        setStatus(`${SelfTests.summaryLine(report)}.`);
+        return UiAutoTests.show(report);
+      },
+
+      /** Runs the internal battery with the waiting window on screen and opens
+       *  the report: the whole program takes a moment to check itself. The
+       *  window does not block the page, as the battery looks at it while it
+       *  runs. */
+      async runWithBusy() {
+        if (!UiAutoTests.prepareForRun()) {
+          return null;
+        }
+        const report = await Busy.run(
+          I18n.t("busy.runningSelfTests"),
+          () => SelfTests.run(),
+          { modal: false },
+        );
         setStatus(`${SelfTests.summaryLine(report)}.`);
         return UiAutoTests.show(report);
       },
@@ -15773,12 +15877,19 @@ ORDER BY edificios DESC, sede;</pre>
         });
       },
 
-      /** Shows the waiting window with a message and waits until it is painted. */
-      async show(message) {
+      /** Shows the waiting window with a message and waits until it is painted.
+       *  `options.modal` false opens it without blocking the page: the self-tests
+       *  look at the page while they run, so they cannot have it inert. */
+      async show(message, options) {
         const dialog = document.getElementById("busy-overlay");
+        const modal = !options || options.modal !== false;
         document.getElementById("busy-message").textContent = message || I18n.t("busy.working");
         if (!dialog.open) {
-          dialog.showModal();
+          if (modal) {
+            dialog.showModal();
+          } else {
+            dialog.show();
+          }
         }
         // Two frames (and a task) let the browser paint the spinner before a
         // synchronous import or export takes over the main thread.
@@ -15800,8 +15911,8 @@ ORDER BY edificios DESC, sede;</pre>
       },
 
       /** Shows the waiting window while the task runs and closes it afterwards. */
-      async run(message, task) {
-        await Busy.show(message);
+      async run(message, task, options) {
+        await Busy.show(message, options);
         try {
           return await task();
         } finally {
@@ -17967,6 +18078,34 @@ ORDER BY edificios DESC, sede;</pre>
       UiProject.updateDirtyIndicator();
     });
 
+    SelfTests.add("When_ShowWaitingWindow_Expect_SpinnerAppearsOnlyIfItLasts", () => {
+      const dialog = document.getElementById("busy-overlay");
+      // Run from its own button, the battery keeps this window open: the case
+      // would be measuring the window of that run.
+      if (dialog.open) {
+        return;
+      }
+      assertEqual(dialog.open, false, "the waiting window starts closed");
+      // Without awaiting: show() only waits for the browser to paint the spinner.
+      Busy.show(I18n.t("busy.runningQuery", { name: "q1" }));
+      assertEqual(dialog.open, true, "it opens while the work runs");
+      assertEqual(
+        document.getElementById("busy-message").textContent,
+        I18n.t("busy.runningQuery", { name: "q1" }),
+        "with the message of the work",
+      );
+      assertEqual(
+        getComputedStyle(dialog).opacity,
+        "0",
+        "and it is not painted at once, so work that ends immediately does not make it flash",
+      );
+      const cancel = new Event("cancel", { cancelable: true });
+      dialog.dispatchEvent(cancel);
+      assertEqual(cancel.defaultPrevented, true, "Escape cannot close it while the work runs");
+      Busy.hide();
+      assertEqual(dialog.open, false, "it closes when the work ends");
+    });
+
     SelfTests.add("When_ExportCsvClicked_Expect_PreviewWindowWithDownload", () => {
       assertEqual(document.getElementById("btn-ver-csv"), null, "the «See CSV» button is gone");
       document.getElementById("btn-exportar-csv").click();
@@ -18075,6 +18214,49 @@ ORDER BY edificios DESC, sede;</pre>
       UiTableCsv.close();
       assertEqual(dialog.open, false, "it closes with “Close”");
 
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_ExportTableCsvWithManyRows_Expect_EveryRowInTheBox", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        header: document.getElementById("table-csv-header").checked,
+      };
+      Store.replaceProject({
+        name: "table-csv-larga",
+        tables: [{
+          name: "big",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "n", description: null, type: "number" }],
+          rows: Array.from({ length: 1200 }, (_, i) => ({ n: i + 1 })),
+        }],
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      Ui.selectTable("big");
+      document.getElementById("table-csv-header").checked = false;
+      UiTableCsv.render();
+      const lines = document.getElementById("table-csv-text").value.split("\n");
+      assertEqual(lines.length, 1200, "the box carries every row of the table, not only the first thousand");
+      assertEqual(lines[lines.length - 1], "1200", "down to the last one");
+      assertEqual(
+        document.getElementById("table-csv-warning").textContent,
+        I18n.t("misc.rowsCountDot", { count: 1200 }),
+        "and the note counts them all, with no warning about a cap",
+      );
+      document.getElementById("table-csv-header").checked = antes.header;
       Store.replaceProject(antes.project);
       Ui.state.activeTable = antes.table;
       Ui.state.activeQuery = antes.query;
@@ -20555,7 +20737,7 @@ ORDER BY edificios DESC, sede;</pre>
         { name: "big", description: "", sql: "SELECT code, capacity FROM classrooms WHERE capacity >= 50" },
       ]));
       UiQueries.select("big");
-      document.getElementById("btn-save-test").click();
+      UiQueries.saveAsTest();
 
       const query = Store.project.queries[0];
       assert(query.assert, "the query keeps its asserted result");
@@ -20601,7 +20783,7 @@ ORDER BY edificios DESC, sede;</pre>
       const confirmar = window.confirm;
       window.confirm = () => false;
       try {
-        document.getElementById("btn-save-test").click();
+        UiQueries.saveAsTest();
       } finally {
         window.confirm = confirmar;
       }
@@ -20610,7 +20792,7 @@ ORDER BY edificios DESC, sede;</pre>
 
       window.confirm = () => true;
       try {
-        document.getElementById("btn-save-test").click();
+        UiQueries.saveAsTest();
       } finally {
         window.confirm = confirmar;
       }
@@ -20775,7 +20957,7 @@ ORDER BY edificios DESC, sede;</pre>
       UiQueries.select("without");
       const boton = document.getElementById("btn-quitar-test");
       assertEqual(boton.disabled, true, "without an asserted result, «Remove test» is disabled");
-      document.getElementById("btn-save-test").click();
+      UiQueries.saveAsTest();
       assertEqual(boton.disabled, false, "after turning it into a test, it is enabled");
       UiQueries.select("without");
       assertEqual(boton.disabled, false, "and it is still enabled when the query is opened again");
@@ -20975,7 +21157,7 @@ ORDER BY edificios DESC, sede;</pre>
         { name: "summary", description: "", sql: "SELECT code, capacity FROM big ORDER BY code" },
       ]));
       UiQueries.select("summary");
-      document.getElementById("btn-run").click();
+      UiQueries.execute();
       const cabeceras = Array.from(document.querySelectorAll("#query-result thead th")).map((th) => th.textContent);
       assertEqual(cabeceras, ["code", "capacity"], "the columns of the query read as a table");
       const rows = Array.from(document.querySelectorAll("#query-result tbody tr"));
@@ -21002,7 +21184,7 @@ ORDER BY edificios DESC, sede;</pre>
         { name: "union_codes", description: "", sql: "SELECT code FROM classrooms UNION SELECT code FROM classrooms" },
       ]));
       UiQueries.select("union_codes");
-      document.getElementById("btn-run").click();
+      UiQueries.execute();
       const cabeceras = Array.from(document.querySelectorAll("#query-result thead th")).map((th) => th.textContent);
       assertEqual(cabeceras, ["code"], "the columns of the union");
       const filas = Array.from(document.querySelectorAll("#query-result tbody tr"));
@@ -22424,6 +22606,48 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(SqlRename.renameColumn("SELECT 'x", "a", "b"), "SELECT 'x", "the loose text is not touched either");
     });
 
+    SelfTests.add("When_RenameTable_Expect_OnlyTheQueriesThatCiteItRead", () => {
+      const project = {
+        tables: [
+          { name: "employees", description: "", idField: null, nextId: 1,
+            fields: [{ name: "surname", description: null, type: "string" }], rows: [] },
+          { name: "buildings", description: "", idField: null, nextId: 1,
+            fields: [{ name: "capacity", description: null, type: "number" }], rows: [] },
+        ],
+        queries: [
+          { name: "cita", description: "", sql: "SELECT surname FROM employees" },
+          { name: "otra", description: "", sql: "SELECT capacity FROM buildings" },
+          { name: "suelta", description: "", sql: "SELECT 1" },
+        ],
+      };
+      const realParse = SqlRename.parse;
+      const leidas = [];
+      SqlRename.parse = (sql) => {
+        leidas.push(String(sql));
+        return realParse(sql);
+      };
+      let changed;
+      let usadas;
+      let usadasCampo;
+      try {
+        changed = SqlRename.renameTableInProject(project, "employees", "staff");
+        usadas = SqlRename.queriesUsingTable(project, "employees");
+        usadasCampo = SqlRename.queriesUsingField(project, "surname");
+      } finally {
+        SqlRename.parse = realParse;
+      }
+      assertEqual(changed, 1, "the query that cites the table is rewritten");
+      assertEqual(project.queries[0].sql, "SELECT surname FROM staff", "with the new name");
+      assertEqual(usadas, [], "nobody cites the old name any more");
+      assertEqual(usadasCampo, ["cita"], "the column is still used by that one");
+      assertEqual(leidas.length, 2, "only that query is read: once to rewrite it and once to list its uses");
+      assertEqual(
+        leidas.every((sql) => sql.includes("surname")),
+        true,
+        "the other two queries are never read, as they carry neither the table nor the column",
+      );
+    });
+
     SelfTests.add("When_FieldNamedLikeObjectMember_Expect_OnlyOwnKeysCount", () => {
       const table = Model.createTable("t", [{ name: "constructor" }, { name: "a" }]);
       const row = Model.addRow(table, { a: 1 });
@@ -23190,6 +23414,29 @@ ORDER BY edificios DESC, sede;</pre>
       const width = Math.round(rename.getBoundingClientRect().width);
       assert(width > 0 && width < 24, "and they are narrower than a word: " + width);
       Store.replaceProject(before.project);
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_RenameFolder_Expect_UsageReusedWithoutReadingQueries", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery };
+      Store.replaceProject(folderProject());
+      Ui.renderAll();
+      const first = SqlViews.usage(Store.project);
+      const key = SqlViews.usageKey(Store.project);
+      assertEqual(SqlViews.usage(Store.project) === first, true, "the analysis is reused while the SQL does not change");
+      Model.renameFolder(Store.project, "Sales", "Ventas");
+      assertEqual(SqlViews.usageKey(Store.project), key, "renaming a folder leaves the queries as they are");
+      assertEqual(SqlViews.usage(Store.project) === first, true, "so their analysis is reused, with no query read again");
+      UiFolders.refresh("queries");
+      assertEqual(SqlViews.usage(Store.project) === first, true, "even after repainting the sidebar");
+      Store.project.queries[0].sql = "SELECT * FROM c WHERE 1 = 1";
+      assertEqual(SqlViews.usageKey(Store.project) === key, false, "changing the SQL of a query makes the analysis stale");
+      assertEqual(SqlViews.usage(Store.project) === first, false, "and it is worked out again");
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
       UiProject.showName();
       Ui.renderAll();
       Store.dirty = before.dirty;
