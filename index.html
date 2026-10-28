@@ -348,8 +348,22 @@
       cursor: pointer;
     }
 
+    /*  The item open in its editor stands out over the rest: dark grey with
+       light letters, over the pastel colour of a query row as well.  */
     .list li.selected {
-      background: #dce9f9;
+      background: #333;
+      color: #f2f2f2;
+    }
+
+    .list li.selected .detail {
+      color: #d6d6d6;
+    }
+
+    /*  The marks and the actions of the selected query are light too, or they
+       would be lost over the dark background. The symbols of its buttons are
+       left as they are: they sit on their own light box.  */
+    .list li.selected .mark-test.mode-test {
+      color: #9ef29e;
     }
 
     .list .detail {
@@ -392,6 +406,26 @@
     li.folder .folder-toggle:hover,
     li.folder .folder-toggle:focus-visible {
       color: #000;
+    }
+
+    /*  The arrows that move a folder up or down inside its list are as small as
+        the rest of its actions; the one that cannot move it any further is left
+        greyed out.  */
+    li.folder .move-folder {
+      padding: 0 1px;
+      font-size: 9px;
+      line-height: 1;
+      color: #555;
+    }
+
+    li.folder .move-folder:not(:disabled):hover,
+    li.folder .move-folder:focus-visible {
+      color: #000;
+    }
+
+    li.folder .move-folder:disabled {
+      color: #bbb;
+      cursor: default;
     }
 
     .list li.folder.drop-target {
@@ -490,11 +524,17 @@
       border-color: #000;
     }
 
-    /*  The pastel colour paints the row of the list and nothing else. When that
-        row is the open query the selection is a blue frame, so it is seen over
-        the colour.  */
+    /*  The pastel colour paints the row of the list and nothing else, through
+        the custom property of the row, so the selection can be painted over
+        it. When that row is the open query the selection is dark grey with a
+        light frame, so the colour it has is still noticed.  */
+    #list-queries li.has-color {
+      background: var(--row-color);
+    }
+
     #list-queries li.has-color.selected {
-      outline: 1px solid #1a4f8a;
+      background: #333;
+      outline: 1px solid #a8c3e0;
       outline-offset: -1px;
     }
 
@@ -1871,7 +1911,7 @@
                 <li data-i18n-html="markup.li.deletingWarnsYouBeforeRemoving"><b>Borrar avisa</b>: antes de eliminar una tabla o un campo te dice cuántas consultas lo usan y cuáles, y después te recuerda las que se han quedado citando un nombre que ya no existe.</li>
                 <li data-i18n-html="markup.li.typeIsInferredImportIt">El tipo se <b>infiere al importar</b>, se puede <b>cambiar a mano</b> y se guarda en el proyecto. <code>null</code> no es un tipo: es información que falta. <code>number</code> admite decimales.</li>
                 <li data-i18n="markup.li.rowPagesTotalJumpFirst">Páginas de filas con el total y salto a la primera o a la última.</li>
-                <li data-i18n-html="markup.li.tableFoldersGroupTablesInOneLevel"><b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.</li>
+                <li data-i18n-html="markup.li.tableFoldersGroupTablesInOneLevel"><b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la sube y la baja con sus flechas <b>▲</b> y <b>▼</b>, la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.</li>
                 <li data-i18n-html="markup.li.pressTablesQueriesTitleSidebar">Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.</li>
                 <li data-i18n-html="markup.li.downloadStructureJsonSummary">En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.</li>
                 <li data-i18n-html="markup.li.linkRelationsBetweenTablesQueries">El enlace <b>Relaciones entre tablas y consultas</b> abre la <b>matriz</b> de relaciones del proyecto: quién apunta a quién y qué consultas citan cada pareja de tablas. El detalle está en el apartado <b>Relaciones</b>.</li>
@@ -1897,7 +1937,7 @@
                 <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
                 <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
               
-                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).</li>
+                <li data-i18n-html="markup.li.foldersCreateOneNewFolder"><b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí (las flechas <b>▲</b> y <b>▼</b> de su cabecera suben o bajan la carpeta en la lista); cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).</li>
               </ul>
             </section>
 
@@ -2870,11 +2910,14 @@ ORDER BY edificios DESC, sede;</pre>
     window.datilandia = window.datilandia || {};
     window.datilandia.messages = {
       en: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>D</b> button of its header (it copies the folder with all its queries) or delete it from there; every query of the list also carries its own actions on the right: the <b>▲</b> and <b>▼</b> arrows move it up or down <b>inside its folder</b> (they are greyed out at the ends), the <b>D</b> duplicates it, the <b>colour swatch</b> paints its row with a pastel colour (only in the sidebar; the file keeps it in <code>color</code>) and the <b>✕</b> deletes it after a confirmation; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>. When a project is <b>opened</b> every folder starts <b>folded</b> (the «No folder» group is left as it is).",
-        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header renames, deletes and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Folders</b>: create one with the <b>+F</b> button (add folder) of the panel header, <b>drag</b> a query onto a folder to put it inside (or onto «No folder» to take it out) and rename it, duplicate it with the <b>D</b> button of its header (it copies the folder with all its queries) or delete it from there (the <b>▲</b> and <b>▼</b> arrows of its header move it up or down in the list); every query of the list also carries its own actions on the right: the <b>▲</b> and <b>▼</b> arrows move it up or down <b>inside its folder</b> (they are greyed out at the ends), the <b>D</b> duplicates it, the <b>colour swatch</b> paints its row with a pastel colour (only in the sidebar; the file keeps it in <code>color</code>) and the <b>✕</b> deletes it after a confirmation; <b>fold</b> or <b>unfold</b> its queries with the arrow of the header (clicking the header does the same) or every folder at once with the button beside the <code>+</code> of the panel. Deleting a folder <b>does not delete its queries</b>: they are left without a folder. In the editor, the <b>Folder</b> field does the same by choosing one from the drop-down (the <b>+F</b> button creates a new one). The query summary carries a column with the folder of each one and the file keeps them in <code>folders</code>, plus which ones are folded in <code>foldedFolders</code>. When a project is <b>opened</b> every folder starts <b>folded</b> (the «No folder» group is left as it is).",
+        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Table folders</b>: the tables are grouped in folders the same way, each one in its own list: <b>+F</b> adds one, <b>drag</b> a table onto a folder to put it inside (or onto «No folder» to take it out), its header moves it up or down with its <b>▲</b> and <b>▼</b> arrows, renames it, deletes it and folds it and the button beside it folds or unfolds <b>every folder of the tables</b> at once. In the table editor the field <b>Folder</b> is a drop-down with the folders of the tables (and «No folder» to take the table out); the <b>+F</b> button of the panel creates a new one. With folders of tables the «All tables» group steps aside and the file keeps them in <code>tableFolders</code>, plus which ones are folded in <code>foldedTableFolders</code>. Folders <b>never</b> change the SQL: two tables cannot share a name even if they are in different folders, and a query reads a table the same wherever it is.",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
         "folders.duplicateTip": "Duplicate the folder “{name}” with its queries",
+        "folders.moveUpTip": "Move the folder “{name}” up",
+        "folders.moveDownTip": "Move the folder “{name}” down",
+        "folders.movedMessage": "Folder “{name}” moved.",
         "folders.collapse": "Fold “{name}”",
         "folders.expand": "Unfold “{name}”",
         "folders.foldAll": "Fold every folder",
@@ -3996,11 +4039,14 @@ ORDER BY edificios DESC, sede;</pre>
         "utils.zeroRowsPerPage": "0 rows · {perPage} per page",
       },
       es: {
-        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí; cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).",
-        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
+        "markup.li.foldersCreateOneNewFolder": "<b>Carpetas</b>: crea una con el botón <b>+C</b> (añadir carpeta) de la cabecera del panel, <b>arrastra</b> una consulta hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla) y renómbrala, duplícala con el botón <b>D</b> de su cabecera (copia la carpeta con todas sus consultas) o bórrala desde ahí (las flechas <b>▲</b> y <b>▼</b> de su cabecera suben o bajan la carpeta en la lista); cada consulta de la lista lleva además sus acciones a la derecha: las flechas <b>▲</b> y <b>▼</b> la suben o la bajan <b>dentro de su carpeta</b> (se apagan en los extremos), la <b>D</b> la duplica, la <b>muestra de color</b> pinta su fila con un color pastel (solo en la barra lateral; el fichero lo guarda en <code>color</code>) y la <b>✕</b> la borra pidiendo confirmación; <b>pliega</b> o <b>despliega</b> sus consultas con la flecha de la cabecera (pulsar la cabecera hace lo mismo) o todas de una vez con el botón que hay junto al <code>+</code> del panel. Borrar una carpeta <b>no borra sus consultas</b>: se quedan sin carpeta. En el editor, el campo <b>Carpeta</b> hace lo mismo eligiendo una de la lista desplegable (el botón <b>+C</b> crea una nueva). El resumen de consultas lleva una columna con la carpeta de cada una y el fichero las guarda en <code>folders</code>, más cuáles están plegadas en <code>foldedFolders</code>. Al <b>abrir un proyecto</b> todas las carpetas empiezan <b>plegadas</b> (el grupo «Sin carpeta» se queda como está).",
+        "markup.li.tableFoldersGroupTablesInOneLevel": "<b>Carpetas de tablas</b>: las tablas se agrupan en carpetas igual, cada lista con las suyas: <b>+C</b> añade una, <b>arrastra</b> una tabla hasta una carpeta para meterla dentro (o hasta «Sin carpeta» para sacarla), su cabecera la sube y la baja con sus flechas <b>▲</b> y <b>▼</b>, la renombra, la borra y la pliega y el botón que hay a su lado pliega o despliega <b>todas las carpetas de tablas</b> de una vez. En el editor de la tabla el campo <b>Carpeta</b> es un desplegable con las carpetas de las tablas (y «Sin carpeta» para sacarla); el botón <b>+C</b> del panel crea una nueva. Con carpetas de tablas el grupo «Todas las tablas» deja su sitio y el fichero las guarda en <code>tableFolders</code>, más cuáles están plegadas en <code>foldedTableFolders</code>. Las carpetas <b>nunca</b> cambian el SQL: dos tablas no pueden llamarse igual ni estando en carpetas distintas, y una consulta lee una tabla igual esté donde esté.",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
         "folders.duplicateTip": "Duplicar la carpeta «{name}» con sus consultas",
+        "folders.moveUpTip": "Subir la carpeta «{name}»",
+        "folders.moveDownTip": "Bajar la carpeta «{name}»",
+        "folders.movedMessage": "Carpeta «{name}» movida.",
         "folders.collapse": "Plegar «{name}»",
         "folders.expand": "Desplegar «{name}»",
         "folders.foldAll": "Plegar todas las carpetas",
@@ -5643,6 +5689,27 @@ ORDER BY edificios DESC, sede;</pre>
         if (Array.isArray(project[spec.folded])) {
           project[spec.folded] = project[spec.folded].filter((item) => item !== name);
         }
+        return { ok: true, error: "" };
+      },
+
+      /** Moves a folder of that kind one place up (-1) or down (1) inside its
+       *  list, swapping it with its neighbour: the order of the folder list is
+       *  the order on screen and in the project file, so nothing else changes. */
+      moveFolder(project, name, step, kind) {
+        const spec = Model.groupOf(kind);
+        const folders = Model.foldersOf(project, kind);
+        const from = folders.indexOf(name);
+        if (from < 0) {
+          return { ok: false, error: I18n.t("folders.unknown", { name: name }) };
+        }
+        const to = from + (step < 0 ? -1 : 1);
+        if (to < 0 || to >= folders.length) {
+          return { ok: false, error: "" };
+        }
+        const moved = folders.slice();
+        moved[from] = folders[to];
+        moved[to] = folders[from];
+        project[spec.folders] = moved;
         return { ok: true, error: "" };
       },
 
@@ -11506,7 +11573,7 @@ ORDER BY edificios DESC, sede;</pre>
         actions.appendChild(Ui.rowButton("✕", "delete-query", query.name, I18n.t("queries.deleteTip", { name: query.name })));
         item.appendChild(actions);
         if (query.color) {
-          item.style.background = query.color;
+          item.style.setProperty("--row-color", query.color);
           item.classList.add("has-color");
         }
         return item;
@@ -16957,6 +17024,11 @@ ORDER BY edificios DESC, sede;</pre>
           UiFolders.toggle(kind, toggle.dataset.folder);
           return true;
         }
+        const move = event.target.closest("button.move-folder");
+        if (move) {
+          UiFolders.move(kind, move.dataset.folder, Number(move.dataset.step));
+          return true;
+        }
         const rename = event.target.closest("button.rename-folder");
         if (rename) {
           UiFolders.rename(kind, rename.dataset.folder);
@@ -17243,6 +17315,21 @@ ORDER BY edificios DESC, sede;</pre>
         setStatus(I18n.t("folders.created", { name: name }));
       },
 
+      /** Moves a folder of that list one place up (-1) or down (1), so the
+       *  order of the sidebar is the order of the project. */
+      move(kind, name, step) {
+        const result = Model.moveFolder(Store.project, name, step, kind);
+        if (!result.ok) {
+          if (result.error) {
+            setStatus(result.error);
+          }
+          return;
+        }
+        UiProject.markDirty();
+        UiFolders.refresh(kind);
+        setStatus(I18n.t("folders.movedMessage", { name: name }));
+      },
+
       /** Duplicates a folder of queries with all its queries («D»). */
       duplicate(kind, name) {
         const result = Model.duplicateQueryFolder(Store.project, name);
@@ -17352,6 +17439,30 @@ ORDER BY edificios DESC, sede;</pre>
         number.title = I18n.t(spec.count, { count: count });
         item.appendChild(number);
         if (name !== "") {
+          // The arrows change the place of the folder in the list: the first
+          // one cannot go up and the last one cannot go down.
+          const folders = Model.foldersOf(Store.project, kind);
+          const position = folders.indexOf(name);
+          const up = document.createElement("button");
+          up.type = "button";
+          up.className = "panel-action move-folder";
+          up.textContent = "▲";
+          up.dataset.folder = name;
+          up.dataset.step = "-1";
+          up.title = I18n.t("folders.moveUpTip", { name: name });
+          up.setAttribute("aria-label", up.title);
+          up.disabled = position <= 0;
+          item.appendChild(up);
+          const down = document.createElement("button");
+          down.type = "button";
+          down.className = "panel-action move-folder";
+          down.textContent = "▼";
+          down.dataset.folder = name;
+          down.dataset.step = "1";
+          down.title = I18n.t("folders.moveDownTip", { name: name });
+          down.setAttribute("aria-label", down.title);
+          down.disabled = position < 0 || position >= folders.length - 1;
+          item.appendChild(down);
           if (kind === "queries") {
             const duplicate = document.createElement("button");
             duplicate.type = "button";
@@ -17394,8 +17505,8 @@ ORDER BY edificios DESC, sede;</pre>
        *  { key, view, table, query }. */
       entries: [],
 
-      /** How many places the bar keeps at most. */
-      MAX: 30,
+      /** How many places the bar keeps at most (the 10 last visits). */
+      MAX: 10,
 
       /** True while going back from the bar, so the visit is not recorded. */
       navigating: false,
@@ -22008,6 +22119,55 @@ ORDER BY edificios DESC, sede;</pre>
       UiProject.updateDirtyIndicator();
     });
 
+    SelfTests.add("When_VisitMoreThanTenPlaces_Expect_OnlyLastTenLinks", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        view: Ui.state.view,
+        history: UiHistory.entries.slice(),
+      };
+      UiHistory.entries = [];
+      Store.replaceProject({
+        name: "historial-largo",
+        testing: false,
+        tables: Array.from({ length: 11 }, (_, i) => ({
+          name: `t${i + 1}`,
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "id", description: null, type: "number" }],
+          rows: [],
+        })),
+        queries: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+
+      for (let i = 1; i <= 11; i += 1) {
+        Ui.selectTable(`t${i}`);
+      }
+
+      const texts = [...document.querySelectorAll("#history-list li button")].map((b) => b.textContent);
+      assertEqual(texts.length, 10, "the bar only shows the 10 last visits");
+      assertEqual(
+        texts,
+        Array.from({ length: 10 }, (_, i) => I18n.t("history.table", { name: `t${i + 2}` })),
+        "the oldest visits fall out of the bar and the 10 last ones stay in visit order",
+      );
+      assertEqual(UiHistory.entries.length, 10, "the history keeps no more than 10 places");
+
+      Store.replaceProject(antes.project);
+      Ui.state.activeTable = antes.table;
+      Ui.state.activeQuery = antes.query;
+      Ui.showView(antes.view);
+      Ui.renderAll();
+      UiHistory.entries = antes.history.filter((place) => UiHistory.exists(place));
+      UiHistory.render();
+      Store.dirty = antes.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
     SelfTests.add("When_ClickFigure_Expect_GeneratedQueryWithThoseRows", () => {
       const antes = {
         project: Utils.cloneJson(Store.project),
@@ -22617,6 +22777,23 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.moveQueryToFolder(project, "q3", "Sales").ok, true, "moving it to its folder is a no-op");
     });
 
+    SelfTests.add("When_MoveFolder_Expect_OrderSwapped", () => {
+      const project = folderProject();
+      assertEqual(Model.moveFolder(project, "Sales", 1, "queries").ok, true, "the folder goes down");
+      assertEqual(project.folders, ["2026", "Sales"], "swapping it with the next one");
+      assertEqual(Model.moveFolder(project, "Sales", -1, "queries").ok, true, "and comes back up");
+      assertEqual(project.folders, ["Sales", "2026"], "to its place");
+      assertEqual(Model.moveFolder(project, "Sales", -1, "queries").ok, false, "the first one cannot go up");
+      assertEqual(Model.moveFolder(project, "2026", 1, "queries").ok, false, "nor can the last one go down");
+      assertEqual(Model.moveFolder(project, "Nope", 1, "queries").ok, false, "an unknown folder is rejected");
+      assert(Model.moveFolder(project, "Nope", 1, "queries").error !== "", "and the rejection says why");
+      assertEqual(project.folders, ["Sales", "2026"], "nothing else moved");
+      assertEqual(project.queries.map((query) => query.folder || null), ["Sales", "2026", null], "the queries stay in their folder");
+      const tables = { tables: [], tableFolders: ["A", "B"] };
+      assertEqual(Model.moveFolder(tables, "B", -1, "tables").ok, true, "the list of tables moves too");
+      assertEqual(tables.tableFolders, ["B", "A"], "in its own list");
+    });
+
     SelfTests.add("When_DuplicateQuery_Expect_CopyRightAfterWithFreeName", () => {
       const project = folderProject();
       project.queries[0].assert = { columns: ["id"], rows: [[1]], rowCount: 1, ignoreOrder: false };
@@ -22799,7 +22976,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(items.map((item) => item.classList.contains("folder-open")), [true, true, false], "the ones inside a folder are indented");
       assertEqual(items[0].querySelector("span").textContent, "q1", "the query keeps its name and its marks");
       assertEqual(items[0].querySelector(".marcas") !== null, true, "the marks stay");
-      assertEqual(headers[0].querySelectorAll("button").length, 4, "a folder header has fold, duplicate, rename and delete");
+      assertEqual(headers[0].querySelectorAll("button").length, 6, "a folder header has fold, move up and down, duplicate, rename and delete");
       assertEqual(headers[2].querySelectorAll("button").length, 1, "the «no folder» group is only folded and dropped on");
       Store.replaceProject(before.project);
       UiProject.showName();
@@ -23481,7 +23658,7 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(items[0].querySelector("span").textContent, "people", "the table keeps its name");
       assertEqual(items[0].querySelector(".detail").textContent, "0", "and how many rows it has");
       assertEqual(items[0].title.includes("Fields"), true, "with its fields in the tip");
-      assertEqual(headers[0].querySelectorAll("button").length, 3, "a folder header has fold, rename and delete");
+      assertEqual(headers[0].querySelectorAll("button").length, 5, "a folder header has fold, move up and down, rename and delete");
       assertEqual(headers[2].querySelectorAll("button").length, 1, "the «no folder» group is only folded and dropped on");
       assertEqual(list.querySelector("li[data-group=\"tables\"]"), null, "the «all tables» header steps aside when there are folders");
       Store.replaceProject(before.project);
@@ -24243,6 +24420,62 @@ ORDER BY edificios DESC, sede;</pre>
       assertEqual(Model.itemsInFolder(Store.project, "Sales", "queries").map((query) => query.name), ["q1", "q4"], "and the other arrow undoes it");
       assert(document.getElementById("status").textContent.includes("q1"), "the status names the query: " + document.getElementById("status").textContent);
       Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_ClickFolderArrows_Expect_FolderSwapsPlace", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, query: Ui.state.activeQuery };
+      Store.replaceProject(folderProject());
+      Store.dirty = false;
+      Ui.renderSidebarQueries();
+      const arrows = (name) => [...folderHeader(name).querySelectorAll("button.move-folder")];
+      assertEqual(arrows("Sales").map((button) => button.textContent), ["▲", "▼"], "every folder carries the two arrows");
+      assertEqual(arrows("Sales")[0].disabled, true, "the first folder cannot go up");
+      assertEqual(arrows("Sales")[1].disabled, false, "but it can go down");
+      assertEqual(arrows("2026")[1].disabled, true, "the last one cannot go down");
+      assertEqual(folderHeader("").querySelectorAll("button.move-folder").length, 0, "the «no folder» group is not a folder and carries no arrows");
+      arrows("Sales")[1].click();
+      assertEqual(Model.foldersOf(Store.project, "queries"), ["2026", "Sales"], "the arrow swaps it with the next folder");
+      assertEqual(Store.dirty, true, "the project is left pending save");
+      assert(document.getElementById("status").textContent.includes("Sales"), "the status names the folder: " + document.getElementById("status").textContent);
+      assertEqual(queryItem("q1").dataset.folder, "Sales", "the queries stay in their folder");
+      arrows("Sales")[0].click();
+      assertEqual(Model.foldersOf(Store.project, "queries"), ["Sales", "2026"], "and the other arrow undoes it");
+      Store.replaceProject(before.project);
+      Ui.state.activeQuery = before.query;
+      UiProject.showName();
+      Ui.renderAll();
+      Store.dirty = before.dirty;
+      UiProject.updateDirtyIndicator();
+    });
+
+    SelfTests.add("When_SelectSidebarItem_Expect_DarkRowWithLightLetters", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty, table: Ui.state.activeTable, query: Ui.state.activeQuery };
+      Store.replaceProject(folderProject());
+      Ui.state.activeTable = "c";
+      Ui.state.activeQuery = "q1";
+      Ui.renderSidebarTables();
+      Ui.renderSidebarQueries();
+      const selected = getComputedStyle(queryItem("q1"));
+      assertEqual(selected.backgroundColor, "rgb(51, 51, 51)", "the selected query is painted dark grey");
+      assertEqual(selected.color, "rgb(242, 242, 242)", "with light letters");
+      assertEqual(getComputedStyle(queryItem("q1").querySelector(".mark-test")).color, "rgb(214, 214, 214)", "and its marks are light too");
+      const selectedTable = document.querySelector("#list-tables li.selected");
+      assertEqual(getComputedStyle(selectedTable).backgroundColor, "rgb(51, 51, 51)", "the selected table is painted the same way");
+      assertEqual(getComputedStyle(selectedTable).color, "rgb(242, 242, 242)", "also with light letters");
+      // The pastel colour of a row does not hide the selection; the row keeps it
+      // when it is not the one on screen.
+      Store.project.queries[0].color = Model.PASTEL_COLORS[0].hex;
+      Store.project.queries[2].color = Model.PASTEL_COLORS[0].hex;
+      Ui.renderSidebarQueries();
+      assertEqual(getComputedStyle(queryItem("q1")).backgroundColor, "rgb(51, 51, 51)", "the selection wins over the pastel colour");
+      assertEqual(getComputedStyle(queryItem("q3")).backgroundColor, "rgb(252, 228, 228)", "while a row that is not selected keeps its colour");
+      Store.replaceProject(before.project);
+      Ui.state.activeTable = before.table;
       Ui.state.activeQuery = before.query;
       UiProject.showName();
       Ui.renderAll();
