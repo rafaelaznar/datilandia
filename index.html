@@ -1932,7 +1932,7 @@
                 <li data-i18n-html="markup.li.paginatedResultsTotalRowsPages">Resultados <b>paginados</b> (con total de filas y de páginas); clic en una fila para marcarla.</li>
                 <li data-i18n-html="markup.li.exportCSVOpensResultCSV"><b>Exportar CSV…</b> abre la ventana <b>Resultado en CSV</b> con la <b>previsualización</b> del resultado: <b>Copiar</b> lo lleva al portapapeles y <b>Descargar CSV</b> guarda el fichero con el nombre de la consulta (preguntando la carpeta, si el navegador tiene ventana de guardado).</li>
                 <li data-i18n-html="markup.li.csvIsWrittenBOMSo">El CSV se escribe con <b>BOM</b> para que Excel lo abra bien y con las opciones de esa misma ventana: <b>separador</b> (coma, punto y coma, tabulador, espacio u otro carácter), <b>cabecera</b> sí o no y <b>coma decimal</b> (<code>3,14</code> en vez de <code>3.14</code>; los textos no se tocan). Son las mismas opciones que las de <b>Ajustes</b> y se guardan dentro del proyecto.</li>
-                <li data-i18n-html="markup.li.previewShowsUp1000Rows">La previsualización muestra hasta 1000 filas y avisa cuando hay más, pero el <b>fichero descargado va completo</b>. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.</li>
+                <li data-i18n-html="markup.li.previewShowsEveryRow">La caja muestra <b>todas las filas</b> del resultado, para poder copiarlas todas de una vez, y el <b>fichero descargado</b> también va completo. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.</li>
                 <li data-i18n-html="markup.li.theyAreReadOnlyThey">Son <b>solo de lectura</b>: nunca cambian los datos. En pantalla hay un tope de filas; el CSV exportado va completo.</li>
                 <li data-i18n-html="markup.li.everyQueryCanCarryIts">Cada consulta puede llevar su <b>resultado asertado</b> para el <b>modo test</b>: al abrir el proyecto se ejecuta y se compara con él (apartado «Modo test»). El botón <b>Convertir en test</b> del editor guarda el resultado que tienes en pantalla como ese resultado esperado.</li>
                 <li data-i18n-html="markup.li.createTableFromResultCreatesNew"><b>Crear tabla…</b> crea una <b>tabla nueva</b> con las columnas y filas del resultado que tienes en pantalla y te pide su nombre; el botón se habilita cuando la consulta tiene un resultado con filas. La consulta no cambia; si el resultado repite nombres de columna, se les añade un sufijo numérico.</li>
@@ -3306,7 +3306,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.pressRowReportOpenThat": "Press a row of the report to open that query in the editor; <b>Run again</b> launches the battery once more and <b>Copy report</b> leaves it as text (if the browser does not allow copying, it stays selected for Ctrl+C).",
         "markup.li.pressTablesQueriesTitleSidebar": "Press the <b>Tables</b> or <b>Queries</b> title in the sidebar to see the full list with its <b>properties</b> on the right: description, rows, ID field and fields with their type; in the queries, their assert and the test result. Every row of the summary opens that item.",
         "markup.li.downloadStructureJsonSummary": "In the <b>Project tables</b> summary, <b>View structure JSON…</b> opens a window with the structure of every table, the same one shown by <b>Structure JSON…</b> for each table (without the rows); inside that window, <b>Download structure JSON</b> saves the JSON to a file.",
-        "markup.li.previewShowsUp1000Rows": "The preview shows up to 1000 rows and warns when there are more, but the <b>downloaded file is complete</b>. The query has to be <b>run</b> first: with no result, the window reminds you.",
+        "markup.li.previewShowsEveryRow": "The box shows <b>every row</b> of the result, so they can all be copied at once, and the <b>downloaded file</b> is complete too. The query has to be <b>run</b> first: with no result, the window reminds you.",
         "markup.li.projectIsTestModeWhen": "A project is in <b>test mode</b> when <b>some of its queries checks a result</b> (it has an <code>assert</code>): when it is <b>opened</b>, datilandia runs <b>every query</b> and compares each result with that query's <code>\"assert\"</code>. If no query checks anything, the project is not a test one and nothing runs on its own. There is nothing to declare: the <code>\"testing\"</code> property of old files is no longer needed.",
         "markup.li.projectNameIsChangedSettings": "The <b>project name</b> is changed in <b>Settings</b>; in the top bar it is only shown.",
         "markup.li.projectSTestModeIs": "The project's <b>test mode</b> is shown <b>at the very top right</b> of the top bar (<b>test mode</b> or <b>no tests</b>), and in the sidebar every query carries its <b>mark</b>: <b>test</b> if it has an asserted result and <b>no tests</b> if not. The query summary goes into detail in its <b>Assert</b> column.",
@@ -4435,7 +4435,7 @@ ORDER BY edificios DESC, sede;</pre>
         "markup.li.pressRowReportOpenThat": "Pulsa una fila del informe para abrir esa consulta en el editor; <b>Re-ejecutar</b> lanza otra vez la batería y <b>Copiar informe</b> lo deja como texto (si el navegador no deja copiar, queda seleccionado para Ctrl+C).",
         "markup.li.pressTablesQueriesTitleSidebar": "Pulsa el título <b>Tablas</b> o <b>Consultas</b> de la barra lateral para ver a la derecha la lista completa con sus <b>propiedades</b>: descripción, filas, campo ID y campos con su tipo; en las consultas, su assert y el resultado de las pruebas. Cada fila del resumen abre ese elemento.",
         "markup.li.downloadStructureJsonSummary": "En el resumen <b>Tablas del proyecto</b>, <b>Ver estructura JSON…</b> abre una ventana con la estructura de todas las tablas, la misma que muestra <b>Estructura JSON…</b> en cada tabla (sin las filas); dentro de esa ventana, <b>Descargar estructura JSON</b> guarda el JSON en un fichero.",
-        "markup.li.previewShowsUp1000Rows": "La previsualización muestra hasta 1000 filas y avisa cuando hay más, pero el <b>fichero descargado va completo</b>. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.",
+        "markup.li.previewShowsEveryRow": "La caja muestra <b>todas las filas</b> del resultado, para poder copiarlas todas de una vez, y el <b>fichero descargado</b> también va completo. Hay que <b>ejecutar</b> la consulta antes: sin resultado, la ventana te lo recuerda.",
         "markup.li.projectIsTestModeWhen": "Un proyecto está en <b>modo test</b> cuando <b>alguna de sus consultas comprueba un resultado</b> (tiene <code>assert</code>): al <b>abrirlo</b>, datilandia ejecuta <b>todas las consultas</b> y compara cada resultado con el <code>\"assert\"</code> de esa consulta. Si ninguna consulta comprueba nada, el proyecto no es de test y no se ejecuta nada solo. No hay nada que declarar: la propiedad <code>\"testing\"</code> de los ficheros antiguos ya no hace falta.",
         "markup.li.projectNameIsChangedSettings": "El <b>nombre del proyecto</b> se cambia en <b>Ajustes</b>; en la barra superior solo se muestra.",
         "markup.li.projectSTestModeIs": "El <b>modo test</b> del proyecto se ve <b>arriba del todo a la derecha</b> de la barra superior (<b>modo test</b> o <b>sin test</b>), y en la barra lateral cada consulta lleva su <b>marca</b>: <b>test</b> si tiene resultado asertado y <b>sin test</b> si no. El resumen de consultas lo detalla en su columna <b>Assert</b>.",
@@ -13603,9 +13603,6 @@ ORDER BY edificios DESC, sede;</pre>
       page: 0,
       selectedRow: null,
 
-      /** Row cap of the CSV text (the exported file is complete). */
-      MAX_ROWS: 1000,
-
       /** Query whose pastel palette is open (null when it is closed) and the
        *  swatch it was opened from. */
       colorQuery: null,
@@ -14433,7 +14430,8 @@ ORDER BY edificios DESC, sede;</pre>
         };
       },
 
-      /** Paints the CSV text of the last result in the box (capped). */
+      /** Paints the CSV text of the last result in the box: every row of the
+       *  result, so they can all be copied at once. */
       renderCsv() {
         const text = document.getElementById("query-csv-text");
         const warning = document.getElementById("query-csv-warning");
@@ -14443,14 +14441,8 @@ ORDER BY edificios DESC, sede;</pre>
           warning.textContent = I18n.t("queries.csvRunFirst");
           return;
         }
-        const max = UiQueries.MAX_ROWS;
-        text.value = Utils.resultToCsv(
-          { columns: result.columns, rows: result.rows.slice(0, max) },
-          UiQueries.readCsvConfig(),
-        );
-        warning.textContent = result.rows.length > max
-          ? I18n.t("queries.csvTruncated", { max: max, total: result.rows.length })
-          : I18n.t("misc.rowsCountDot", { count: result.rows.length });
+        text.value = Utils.resultToCsv(result, UiQueries.readCsvConfig());
+        warning.textContent = I18n.t("misc.rowsCountDot", { count: result.rows.length });
       },
 
       /** Copies the CSV text to the clipboard (or leaves it selected). */
@@ -18001,6 +17993,31 @@ ORDER BY edificios DESC, sede;</pre>
       UiQueries.closeCsv();
       assertEqual(dialogo.open, false, "it closes with “Close”");
       UiQueries.lastResult = null;
+      UiQueries.renderCsv();
+    });
+
+    SelfTests.add("When_ExportCsvWithManyRows_Expect_EveryRowInTheBox", () => {
+      const antes = { result: UiQueries.lastResult, header: document.getElementById("csv-header").checked };
+      const header = document.getElementById("csv-header");
+      UiQueries.lastResult = {
+        columns: ["n"],
+        rows: Array.from({ length: 1200 }, (_, i) => [i + 1]),
+      };
+      header.checked = false;
+      UiQueries.renderCsv();
+      const lines = document.getElementById("query-csv-text").value.split("\n");
+      assertEqual(lines.length, 1200, "the box carries every row of the result, not only the first thousand");
+      assertEqual(lines[lines.length - 1], "1200", "down to the last one");
+      assertEqual(
+        document.getElementById("query-csv-warning").textContent,
+        I18n.t("misc.rowsCountDot", { count: 1200 }),
+        "and the note counts them all, with no warning about a cap",
+      );
+      header.checked = true;
+      UiQueries.renderCsv();
+      assertEqual(document.getElementById("query-csv-text").value.split("\n").length, 1201, "with the header it is one line more");
+      header.checked = antes.header;
+      UiQueries.lastResult = antes.result;
       UiQueries.renderCsv();
     });
 
