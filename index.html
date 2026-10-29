@@ -668,6 +668,99 @@
       line-height: 1.15;
     }
 
+    /*  Detail panels under the figures: the largest tables, the test coverage
+       and how the fields are typed. They share the width of the cards.  */
+    .dashboard-detail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: 1400px;
+      margin-top: 6px;
+    }
+
+    .dashboard-panel {
+      flex: 1 1 300px;
+      min-width: 240px;
+      max-width: 460px;
+      padding: 5px 9px 7px;
+      border: 1px solid #e2e2e2;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+
+    .dashboard-panel h3 {
+      margin: 0 0 4px;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #666;
+    }
+
+    .dashboard-bars {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .dashboard-bars li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 16px;
+      font-size: 10px;
+    }
+
+    .dashboard-bars .bar-name {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dashboard-bars .bar {
+      flex: 0 0 34%;
+      height: 5px;
+      overflow: hidden;
+      border-radius: 3px;
+      background: #ececec;
+    }
+
+    .dashboard-bars .bar span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: #4a7ebb;
+    }
+
+    .dashboard-bars .bar-value {
+      flex: 0 0 6ch;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #333;
+    }
+
+    .dashboard-meter {
+      height: 8px;
+      margin: 3px 0 4px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #ececec;
+    }
+
+    .dashboard-meter span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: #2e7d32;
+    }
+
+    .dashboard-empty {
+      margin: 2px 0;
+      color: #777;
+      font-style: italic;
+    }
+
     /*  The table view takes the whole height available: the data grid reaches the status bar.  */
     #view-table:not([hidden]) {
       display: flex;
@@ -801,7 +894,8 @@
 
     #view-tables:not([hidden]),
     #view-queries:not([hidden]),
-    #view-relations:not([hidden]) {
+    #view-relations:not([hidden]),
+    #view-dependencies:not([hidden]) {
       display: flex;
       flex-direction: column;
       flex: 1 1 auto;
@@ -811,7 +905,8 @@
 
     #view-tables > .box-table,
     #view-queries > .box-table,
-    #view-relations > .box-table {
+    #view-relations > .box-table,
+    #view-dependencies > .box-table {
       flex: 1 1 auto;
       min-height: 0;
       max-height: none;
@@ -1669,6 +1764,146 @@
       background: #dce9f9;
     }
 
+    .related-group {
+      padding: 3px 8px 2px;
+      border-top: 1px solid #ddd;
+      color: #666;
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .related-group:first-child {
+      border-top: 0;
+    }
+
+    /* --- 7b. Dependency tree ------------------------------------------- */
+
+    .dependencies-box {
+      overflow: auto;
+    }
+
+    .dep-tree,
+    .dep-children {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .dep-children {
+      margin-left: 14px;
+      border-left: 1px solid #ddd;
+    }
+
+    .dep-node {
+      margin: 0;
+    }
+
+    .dep-row {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      min-height: 20px;
+      padding: 1px 4px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .dep-row:hover {
+      background: #f6f6f6;
+    }
+
+    .dep-toggle,
+    .dep-blank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      min-width: 14px;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: #555;
+      font-size: 9px;
+      line-height: 1;
+    }
+
+    .dep-toggle:hover,
+    .dep-toggle:focus-visible {
+      color: #000;
+    }
+
+    .dep-open {
+      display: inline-flex;
+      gap: 5px;
+      align-items: baseline;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: #000;
+      font: inherit;
+      text-align: start;
+      cursor: pointer;
+    }
+
+    .dep-open:hover .dep-name,
+    .dep-open:focus-visible .dep-name {
+      text-decoration: underline;
+    }
+
+    .dep-kind {
+      flex: none;
+      padding: 0 3px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: #666;
+      font-size: 8px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .dep-kind-table {
+      border-color: #b9cbe0;
+      color: #1a4f8a;
+    }
+
+    .dep-kind-query {
+      border-color: #c9b9e0;
+      color: #5a3f8a;
+    }
+
+    .dep-kind-script {
+      border-color: #c9d9b9;
+      color: #3f6a2a;
+    }
+
+    .dep-name {
+      overflow: hidden;
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dep-count {
+      margin-left: auto;
+      color: #666;
+      font-size: 9px;
+    }
+
+    .dep-cycle {
+      margin-left: auto;
+      color: #8a5300;
+      font-size: 9px;
+      font-style: italic;
+    }
+
+    #btn-dep-sources.active,
+    #btn-dep-dependents.active {
+      background: #dce9f9;
+      border-color: #1a4f8a;
+      color: #1a4f8a;
+    }
+
     /* --- 8. Import panel ---------------------------------------- */
 
     #import-log {
@@ -1843,6 +2078,11 @@
         </h2>
         <ul id="list-scripts" class="list"></ul>
       </section>
+      <section class="panel">
+        <h2>
+          <button data-i18n-title="dependencies.panelTip" class="titulo-panel with-icon" id="btn-dependencies" type="button" title="Explorar las dependencias y los dependientes del proyecto"><svg class="icon" data-icon="share" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="6.43478" cy="12" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><circle cx="17.5656" cy="6.43478" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><path d="M15 7.5L9 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2.43478" cy="2.43478" r="2.43478" transform="matrix(1 0 0 -1 15.1309 19.5)" stroke="currentColor" stroke-width="1.3913"/><path d="M15 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.dependencies">Dependencias</span></button>
+        </h2>
+      </section>
     </aside>
 
     <!-- Handle to change the width of the left column -->
@@ -1883,19 +2123,64 @@
               <dd class="data-figure" data-data="queriesWithTest">0</dd>
             </div>
             <div class="data">
-              <dt data-i18n-title="markup.dt.queriesWhoseResultAnotherQuery" data-i18n="markup.dt.queriesUsedAsTables" class="data-name" title="Consultas cuyo resultado lee otra consulta, como si fuera una tabla">Consultas como tabla</dt>
+              <dt data-i18n-title="markup.dt.scriptsSavedProject" data-i18n="markup.dt.scripts" class="data-name" title="Scripts guardados en el proyecto">Scripts</dt>
+              <dd class="data-figure" data-data="scripts">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n-title="markup.dt.scriptsAssertedResultOnesTest" data-i18n="markup.dt.scriptsTest" class="data-name" title="Scripts con resultado asertado: los que se comprueban en la batería de pruebas">Scripts con test</dt>
+              <dd class="data-figure" data-data="scriptsWithTest">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n-title="markup.dt.queriesWhoseResultAnotherQuery" data-i18n="markup.dt.queriesUsedAsTables" class="data-name" title="Consultas y scripts cuyo resultado lee otra consulta o script, como si fuera una tabla">Consultas como tabla</dt>
               <dd class="data-figure" data-data="views">0</dd>
             </div>
             <div class="data">
               <dt data-i18n-title="markup.dt.pairsTablesJoinedByForeign" data-i18n="markup.dt.relatedPairs" class="data-name" title="Parejas de tablas unidas por alguna clave ajena; una autorreferencia cuenta como pareja">Parejas relacionadas</dt>
               <dd class="data-figure" data-data="relatedPairs">0</dd>
             </div>
+            <div class="data">
+              <dt data-i18n-title="markup.dt.dependenciesTip" data-i18n="markup.dt.dependencies" class="data-name" title="Enlaces entre consultas y scripts y las tablas, consultas o scripts que leen">Dependencias</dt>
+              <dd class="data-figure" data-data="dependencies">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n-title="markup.dt.testCoverageTip" data-i18n="markup.dt.testCoverage" class="data-name" title="Porcentaje de consultas y scripts con resultado asertado">Cobertura de pruebas</dt>
+              <dd class="data-figure" data-data="testCoverage" data-suffix="%">0%</dd>
+            </div>
           </dl>
+          <!-- Detail panels: the largest tables, the test coverage and the
+               field types. UiDashboard.render fills them from the project. -->
+          <div class="dashboard-detail">
+            <section class="dashboard-panel" aria-labelledby="dashboard-tables-title">
+              <h3 id="dashboard-tables-title" data-i18n="markup.h3.tablesByRows">Tablas por filas</h3>
+              <ul class="dashboard-bars" id="dashboard-top-tables"></ul>
+            </section>
+            <section class="dashboard-panel" aria-labelledby="dashboard-tests-title">
+              <h3 id="dashboard-tests-title" data-i18n="markup.h3.testCoverage">Cobertura de pruebas</h3>
+              <div class="dashboard-meter" id="dashboard-test-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span id="dashboard-test-fill"></span>
+              </div>
+              <p class="muted" id="dashboard-test-note"></p>
+              <h3 data-i18n="markup.h3.fieldTypes">Campos por tipo</h3>
+              <ul class="dashboard-bars" id="dashboard-field-types"></ul>
+            </section>
+          </div>
         </section>
+        <pre style="font-family: monospace; font-size: 1.2em; line-height: 1.2em; text-align: center;">
 
+
+     888          888    d8b 888                        888 d8b          
+     888          888    Y8P 888                        888 Y8P          
+     888          888        888                        888              
+ .d88888  8888b.  888888 888 888  8888b.  88888b.   .d88888 888  8888b.  
+d88" 888     "88b 888    888 888     "88b 888 "88b d88" 888 888     "88b 
+888  888 .d888888 888    888 888 .d888888 888  888 888  888 888 .d888888 
+Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888 
+ "Y88888 "Y888888  "Y888 888 888 "Y888888 888  888  "Y88888 888 "Y888888 
+
+
+        </pre>
         <h2 data-i18n="markup.h2.welcome">Bienvenido</h2>
-        <p data-i18n-html="markup.p.datilandiaIsSingleFileData"><b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, consultas usadas como tabla y relaciones. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página.</p>
-
+        <p data-i18n-html="markup.p.datilandiaIsSingleFileData"><b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, vistas (consultas y scripts usados como tabla) y relaciones. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página.</p>
 
       </section>
 
@@ -1917,6 +2202,8 @@
           <span class="sep"></span>
           <button class="with-icon" data-i18n-title="markup.button.searchMatchesWholeTableOne" id="btn-search" type="button" title="Buscar coincidencias en toda la tabla o en una columna (admite los comodines * y ?)"><svg class="icon" data-icon="search" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5703 17.4329L20.4299 20.567" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.find">Buscar…</span></button>
           <button class="with-icon" data-i18n-title="markup.button.searchReplaceEveryMatchWhole" id="btn-replace" type="button" title="Buscar y reemplazar todas las coincidencias en toda la tabla o en una columna (admite los comodines * y ?)"><svg class="icon" data-icon="swap" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 9L7.29289 5.70711C7.68342 5.31658 8.31658 5.31658 8.70711 5.70711L12 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 19L8 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 15L16.7071 18.2929C16.3166 18.6834 15.6834 18.6834 15.2929 18.2929L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 5L16 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.replace">Reemplazar…</span></button>
+          <span class="sep" id="table-related-sep"></span>
+          <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-table-readers" type="button" hidden><svg class="icon" data-icon="arrow-back" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5L6.37143 6.97143C5.68571 7.48571 5.68571 8.51429 6.37143 9.02857L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 8H14C17.3137 8 20 10.6863 20 14C20 17.3137 17.3137 20 14 20H9.76923" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
           <span id="table-count" class="muted"></span>
         </div>
         <div class="toolbar">
@@ -1958,14 +2245,13 @@
           <select data-i18n-title="ui.folderTip" id="query-folder" title="Carpeta de la consulta; elige una de la lista (el botón de añadir carpeta crea una nueva)"></select>
         </div>
         <div class="toolbar">
-          <button class="with-icon" data-i18n-title="queries.insertTip" id="btn-insert" type="button" title="Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="queries.insertButton">Insertar tabla, consulta o campo…</span></button>
+          <button class="with-icon" data-i18n-title="queries.insertTip" id="btn-insert" type="button" title="Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="queries.insertButton">Insertar tabla, consulta, script o campo…</span></button>
           <span data-i18n="queries.insertHint" class="muted">Pulsa un nombre para escribirlo en el cursor; la flecha despliega sus campos.</span>
           <span class="sep" id="related-sep"></span>
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-readers" type="button" hidden><svg class="icon" data-icon="arrow-back" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5L6.37143 6.97143C5.68571 7.48571 5.68571 8.51429 6.37143 9.02857L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 8H14C17.3137 8 20 10.6863 20 14C20 17.3137 17.3137 20 14 20H9.76923" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-sources" type="button" hidden><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
         </div>
         <textarea data-i18n-aria-label="markup.textarea.sqlQuery" data-i18n-title="markup.textarea.sqlQuerySELECTOnly" id="query-sql" rows="8" spellcheck="false" aria-label="Consulta SQL" title="Consulta SQL (solo SELECT)"></textarea>
-        <div id="related-popup" role="dialog" aria-label="Consultas relacionadas" hidden></div>
         <div id="query-plan" class="muted"></div>
         <div id="query-error" hidden></div>
         <div id="query-paginacion" class="toolbar" hidden>
@@ -1997,12 +2283,13 @@
           <input id="script-description" type="text" data-i18n-title="scripts.descriptionTip" title="Descripción del script (metadatos)">
           <label data-i18n="markup.label.folder" for="script-folder">Carpeta:</label>
           <select data-i18n-title="scripts.folderTip" id="script-folder" title="Carpeta del script; elige una de la lista (el botón de añadir carpeta crea una nueva)"></select>
-          <label data-i18n="markup.label.source" for="script-source">Origen:</label>
-          <select id="script-source" data-i18n-title="scripts.sourceTip" title="Tabla o consulta cuyas filas se pasan al script en «datos»"></select>
         </div>
         <div class="toolbar">
-          <button class="with-icon" data-i18n-title="scripts.insertTip" id="btn-script-insert" type="button" title="Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="queries.insertButton">Insertar tabla, consulta o campo…</span></button>
+          <button class="with-icon" data-i18n-title="scripts.insertTip" id="btn-script-insert" type="button" title="Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="queries.insertButton">Insertar tabla, consulta, script o campo…</span></button>
           <span data-i18n="queries.insertHint" class="muted">Pulsa un nombre para escribirlo en el cursor; la flecha despliega sus campos.</span>
+          <span class="sep" id="script-related-sep"></span>
+          <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-script-readers" type="button" hidden><svg class="icon" data-icon="arrow-back" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5L6.37143 6.97143C5.68571 7.48571 5.68571 8.51429 6.37143 9.02857L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 8H14C17.3137 8 20 10.6863 20 14C20 17.3137 17.3137 20 14 20H9.76923" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
+          <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-script-sources" type="button" hidden><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
         </div>
         <p id="script-help" class="muted"></p>
         <textarea data-i18n-aria-label="markup.textarea.javaScriptCode" data-i18n-title="markup.textarea.javaScriptCode" id="script-code" rows="10" spellcheck="false" aria-label="Código JavaScript" title="Código JavaScript"></textarea>
@@ -2077,12 +2364,29 @@
         <p id="relations-leyenda" class="muted"></p>
         <p id="relations-leyenda-figures" class="muted"></p>
       </section>
+
+      <!-- Dependency tree: what a node reads and what reads it -->
+      <section id="view-dependencies" class="view" hidden>
+        <h2><span data-i18n="dependencies.title">Dependencias</span> <span id="dependencies-info" class="muted"></span></h2>
+        <div class="toolbar">
+          <label data-i18n="dependencies.root" for="dependencies-root">Objeto:</label>
+          <select id="dependencies-root"></select>
+          <span class="sep"></span>
+          <button class="with-icon" id="btn-dep-sources" type="button"><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="dependencies.sources">Dependencias</span></button>
+          <button class="with-icon" id="btn-dep-dependents" type="button"><svg class="icon" data-icon="arrow-back" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5L6.37143 6.97143C5.68571 7.48571 5.68571 8.51429 6.37143 9.02857L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 8H14C17.3137 8 20 10.6863 20 14C20 17.3137 17.3137 20 14 20H9.76923" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="dependencies.dependents">Dependientes</span></button>
+          <span id="dependencies-direction" class="muted"></span>
+        </div>
+        <div class="box-table dependencies-box">
+          <ul id="dependencies-tree" class="dep-tree"></ul>
+        </div>
+      </section>
     </main>
   </div>
 
+        <div id="related-popup" role="dialog" aria-label="Objetos relacionados" hidden></div>
         <div id="insert-popup" role="dialog" data-i18n-aria-label="queries.insertTitle" aria-label="Insertar en el cursor" hidden>
           <input data-i18n-aria-label="queries.insertSearchAria" data-i18n-placeholder="queries.insertSearchPlaceholder" id="insert-search" type="text" autocomplete="off" spellcheck="false" aria-label="Buscar una tabla, una consulta o un campo" placeholder="Buscar una tabla, una consulta o un campo…">
-          <div id="insert-list" data-i18n-aria-label="queries.insertListAria" aria-label="Tablas, consultas y campos"></div>
+          <div id="insert-list" data-i18n-aria-label="queries.insertListAria" aria-label="Tablas, consultas, scripts y campos"></div>
         </div>
 
   <!-- Modal window: fields and metadata of the table -->
@@ -2641,11 +2945,19 @@
         "markup.dt.queriesAssertedResultOnesTest": "Queries with an asserted result: the ones the test battery checks",
         "markup.dt.queriesSavedProject": "Queries saved in the project",
         "markup.dt.queriesTest": "Queries with a test",
-        "markup.dt.queriesUsedAsTables": "Queries used as tables",
-        "markup.dt.queriesWhoseResultAnotherQuery": "Queries whose result another query reads, as if it were a table",
+        "markup.dt.queriesUsedAsTables": "Views (queries and scripts)",
+        "markup.dt.queriesWhoseResultAnotherQuery": "Queries and scripts whose result another query or script reads, as if it were a table",
         "markup.dt.relatedPairs": "Related pairs",
         "markup.dt.rows": "Rows",
         "markup.dt.rowsEveryTable": "Rows in every table",
+        "markup.dt.scripts": "Scripts",
+        "markup.dt.scriptsAssertedResultOnesTest": "Scripts with an asserted result: the ones the test battery checks",
+        "markup.dt.scriptsSavedProject": "Scripts saved in the project",
+        "markup.dt.scriptsTest": "Scripts with a test",
+        "markup.dt.dependencies": "Dependencies",
+        "markup.dt.dependenciesTip": "Links between queries and scripts and the tables, queries or scripts they read",
+        "markup.dt.testCoverage": "Test coverage",
+        "markup.dt.testCoverageTip": "Share of queries and scripts with an asserted result",
         "markup.dt.tables": "Tables",
         "markup.dt.tablesProject": "Tables in the project",
         "markup.footer.applicationMessages": "Application messages",
@@ -2658,9 +2970,12 @@
         "markup.h3.defaultCSVImport": "Default CSV import",
         "markup.h3.differencesAssertedResult": "Differences with the asserted result",
         "markup.h3.failingCases": "Failing cases",
+        "markup.h3.fieldTypes": "Fields by type",
         "markup.h3.pasteDataCSVJSON": "Or paste data (CSV or JSON)",
         "markup.h3.project": "Project",
         "markup.h3.rowsPerPage": "Rows per page",
+        "markup.h3.tablesByRows": "Tables by rows",
+        "markup.h3.testCoverage": "Test coverage",
         "markup.label.csvDelimiter": "CSV delimiter:",
         "markup.label.delimiter": "Delimiter:",
         "markup.label.delimiter2": "Delimiter:",
@@ -2677,7 +2992,7 @@
         "markup.label.tables": "Tables:",
         "markup.p.everyFileCreatesTableFile": "Every file creates a table with the file name (without the extension, in lower case and with _). The JSON must be an array of objects with the same properties; the CSV must have the same fields in every row.",
         "markup.p.everyForeignKeyAppearsCell": "Every foreign key appears in the cell of the table that defines it (row, child) pointing to the table and the target field (column, parent): field → target field.",
-        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> is a single-file data analysis notebook: you <b>import</b> files or paste text, you <b>edit them as tables</b> and you <b>query them with SQL</b>. Tables, queries and settings are saved together in <b>a JSON project file</b> that runs entirely in the browser. A project can also bring its own <b>tests</b> (test mode): datilandia runs them when it opens it and shows you the report. The <b>dashboard</b> above summarises the open project: tables, rows, fields, foreign keys, queries, queries used as tables and relations. Press <b>DATILANDIA</b> in the top bar to come back to this page. Press <b>Help</b> to open the complete help in another tab.",
+        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> is a single-file data analysis notebook: you <b>import</b> files or paste text, you <b>edit them as tables</b>, you <b>query them with SQL</b> and you combine everything with <b>JavaScript scripts</b>. Tables, queries, scripts and settings are saved together in <b>a JSON project file</b> that runs entirely in the browser. A project can also bring its own <b>tests</b> (test mode): datilandia runs them when it opens it and shows you the report. The <b>dashboard</b> above summarises the open project: tables, rows, fields, foreign keys, queries, scripts, tests, dependencies, views (queries and scripts used as tables), relations, the largest tables, the test coverage and the field types. Press <b>DATILANDIA</b> in the top bar to come back to this page. Press <b>Help</b> to open the complete help in another tab.",
         "markup.p.importColumnTypes": "The data is read as it comes and every column is stored with the <b>type</b> you choose: in <b>text</b> the leading zeros are kept.",
         "markup.p.originHas01Related": "An <b>origin</b> has 0 or 1 related targets.",
         "markup.p.targetHas01Several": "A <b>target</b> has 0, 1 or several related origins.",
@@ -3011,24 +3326,30 @@
         "queries.errorValidation": "Query error (validation)",
         "queries.executed": "Query “{name}” run: {rows} row(s) in {ms} ms.",
         "scripts.created": "Script “{name}” created. Write the code and press Run (or Ctrl+Enter).",
-        "scripts.defaultCode": "// “datos” is an array of objects with the chosen table or query.\n// Use map, filter, reduce… and return an array (of objects or of arrays).\nreturn datos;",
+        "scripts.defaultCode": "// “tables”, “queries” and “scripts” give every table, query and script.\n// For example: tables[\"name\"], queries[\"name\"]() or scripts[\"name\"]().\n// Use map, filter, reduce… and return an array (of objects or of arrays).\nreturn [];",
         "scripts.defaultName": "script",
-        "scripts.deleteConfirm": "Delete the script “{name}”?",
+        "scripts.deleteConfirm": "Delete the script “{name}”?{warning}",
         "scripts.descriptionUpdated": "Description of “{name}” updated.",
         "scripts.emptyCode": "Write some JavaScript code before running.",
-        "scripts.emptyCodeHint": "For example: return datos.filter((row) => row.age > 18);",
+        "scripts.emptyCodeHint": "For example: return tables[\"name\"].filter((row) => row.age > 18);",
         "scripts.emptyCodeTitle": "Empty script",
         "scripts.errorTitle": "JavaScript error",
         "scripts.executed": "Script “{name}”: {rows} row(s) in {ms} ms.",
-        "scripts.help": "“datos” holds the chosen source; “tablas” gives every table by name and “consultas” runs a saved query (for example consultas[\"name\"]()). Return an array of objects or arrays to see it in the grid.",
+        "scripts.help": "“tables” gives every table by name, “queries” runs a saved query and “scripts” runs a saved script (for example queries[\"name\"]()). Return an array of objects or arrays to see it in the grid.",
         "scripts.nameEmpty": "The script needs a name.",
         "scripts.nameExists": "There is already a script called “{name}”.",
         "scripts.noResult": "The script did not return anything. Use return or assign the result to “resultado”.",
         "scripts.noResultTitle": "No result",
         "scripts.noScript": "Open or create a script first.",
         "scripts.queryError": "The source query could not be run: {message}",
-        "scripts.removed": "Script “{name}” deleted.",
-        "scripts.renamed": "Script renamed to “{name}”.",
+        "scripts.sourceError": "The script “{name}”, used as a table, could not be run: {message}",
+        "scripts.sourceErrorHint": "Check the script code and that it is synchronous.",
+        "scripts.removed": "Script “{name}” deleted. {orphans}",
+        "scripts.orphans": "Still broken: {names}.",
+        "scripts.dependentsWarning": "\n\nThe queries and scripts that read it will stop working ({count}): {names}.",
+        "scripts.renamedDependents": " {queries} query(s) and {scripts} script(s) updated.",
+        "scripts.updatedSuffix": " {count} script(s) updated.",
+        "scripts.renamed": "Script renamed to “{name}”. {note}",
         "scripts.resultSummary": "{rows} row(s) · {ms} ms",
         "scripts.selected": "Script “{name}” selected.",
         "scripts.sourceGroupQueries": "Queries",
@@ -3039,7 +3360,7 @@
         "scripts.suffixedName": "script_{n}",
         "scripts.unknown": "There is no script called “{name}”.",
         "scripts.folderTip": "Folder of the script; choose one from the list (the add folder button creates a new one)",
-        "scripts.insertTip": "Insert a table, a query or one of its fields at the cursor (Ctrl+Space)",
+        "scripts.insertTip": "Insert a table, a query, a script or one of its fields at the cursor (Ctrl+Space)",
         "scripts.asyncInTests": "This script is asynchronous: the project tests can only run synchronous scripts.",
         "scripts.saveTestTip": "Run the script, save its result as the asserted result and put the project in test mode",
         "scripts.removeTestTip": "Remove the asserted result of this script: it will still run, but it will not be checked in the project report",
@@ -3077,22 +3398,23 @@
         "projectTests.scriptLine": "Script: {code}",
         "projectTests.scriptError": "Script error: {message}",
         "testsReport.openScript": "See script “{name}” in the editor",
-        "queries.insertButton": "Insert table, query or field…",
+        "queries.insertButton": "Insert table, query, script or field…",
         "queries.insertFieldTip": "Write the field “{name}” at the cursor",
         "queries.insertFieldsError": "The fields of “{name}” could not be read: {message}",
         "queries.insertFoldTip": "Hide the fields of “{name}”",
         "queries.insertHint": "Click a name to write it at the cursor; its arrow shows the fields.",
-        "queries.insertListAria": "Tables, queries and fields",
+        "queries.insertListAria": "Tables, queries, scripts and fields",
         "queries.insertNameTip": "Write “{name}” at the cursor",
         "queries.insertNeedsQuery": "Open or create a query to insert names in it.",
         "queries.insertNoFieldResults": "No field matches “{text}”.",
         "queries.insertNoFields": "“{name}” has no fields.",
         "queries.insertNoResults": "Nothing matches “{text}”.",
         "queries.insertQueries": "Queries",
+        "queries.insertScripts": "Scripts",
         "queries.insertSearchAria": "Search a table, a query or a field",
         "queries.insertSearchPlaceholder": "Search a table, a query or a field…",
         "queries.insertTables": "Tables",
-        "queries.insertTip": "Insert a table, a query or one of its fields at the cursor (Ctrl+Space). The arrow beside the name shows the fields.",
+        "queries.insertTip": "Insert a table, a query, a script or one of its fields at the cursor (Ctrl+Space). The arrow beside the name shows the fields.",
         "queries.insertTitle": "Insert at the cursor",
         "queries.insertUnfoldTip": "Show the fields of “{name}”",
         "queries.inserted": "“{name}” written at the cursor.",
@@ -3105,7 +3427,7 @@
         "queries.nameEmpty": "The query name cannot be empty.",
         "queries.nameExists": "A query “{name}” already exists.",
         "queries.openToConvert": "Open a project query to be able to turn it into a test.",
-        "queries.orphans": " {count} query(s) are left citing a query that no longer exists: {names}.",
+        "queries.orphans": " {count} query(s) or script(s) are left citing a query that no longer exists: {names}.",
         "queries.planLine": "Plan · {ms} ms: {steps}",
         "queries.planStep": "{n}) {label} → {rows} row(s)",
         "queries.readersButton": {"one":"Read as a table by (1)","other":"Read as a table by ({count})"},
@@ -3121,7 +3443,7 @@
         "queries.testRemovedStillTest": "“{name}” no longer checks an asserted result; the project stays in test mode.",
         "queries.unknown": "There is no query “{name}”.",
         "queries.updatedSuffix": {"one":" ({count} query updated)","other":" ({count} queries updated)"},
-        "queries.usedAsTableWarning": "\n\nQueries that use it as a table ({count}) will stop working: {names}.",
+        "queries.usedAsTableWarning": "\n\nQueries and scripts that use it as a table ({count}) will stop working: {names}.",
         "relations.corner": "source ↓ / target →",
         "relations.figureDescription": "{rows} {figure}: the ones counted in cell {origin} → {target} of the relationship matrix, through foreign key {source} → {targetField}.",
         "relations.figureManySourcesName": "rows of {table} with more than 1 source",
@@ -3209,6 +3531,7 @@
         "sqlPlanner.projection": "Projection of {count} column(s)",
         "sqlPlanner.scan": "Scan “{alias}”",
         "sqlPlanner.scanQuery": "Scan “{alias}” (query “{queryName}”)",
+        "sqlPlanner.scanScript": "Scan “{alias}” (script “{scriptName}”)",
         "sqlPlanner.scanSubquery": "Scan “{alias}” (subquery of the FROM)",
         "sqlPlanner.sortKeys": "Sort by {count} key(s)",
         "sqlPlanner.subqueryColumn": "(subquery)",
@@ -3245,7 +3568,7 @@
         "sqlValidator.orJoiner": " or ",
         "sqlValidator.orderByPositionHint": "A number in ORDER BY is the position of the column in the SELECT (1 is the first).",
         "sqlValidator.orderByPositionOutOfRange": "ORDER BY {position} does not match any column: the result has {columnCount} column(s).",
-        "sqlValidator.queriesAsTablesHint": " Any query in the project can also be used as a table: just write its name in the FROM.",
+        "sqlValidator.queriesAsTablesHint": " Any query or script in the project can also be used as a table: just write its name in the FROM.",
         "sqlValidator.sourceNotFound": "Table or alias “{alias}” does not exist in the query. Available sources: {sources}.",
         "sqlValidator.subqueryOneColumn": "The subquery used here must return a single column.",
         "sqlValidator.subqueryOneColumnHint": "Write one expression in the SELECT of the subquery, or pick one of its columns.",
@@ -3275,8 +3598,8 @@
         "summary.openItem": "Open “{name}”",
         "summary.queriesInfo": "{count} query(s) · click a row to open it",
         "summary.queriesStatus": "Project queries: {count}. Click a row to open it.",
-        "summary.readBy": "read by: {names}",
-        "summary.reads": "reads: {names}",
+        "summary.readBy": "is source of: {names}",
+        "summary.reads": "sources: {names}",
         "summary.tablesInfo": "{count} table(s) · click a row to open it",
         "summary.tablesStructureFileName": "tables_structure",
         "summary.tablesStructureDownloaded": "Structure of {count} table(s) downloaded as “{name}”.",
@@ -3378,10 +3701,10 @@
         "ui.tableCounter": "{rowCount} row(s) · {fieldCount} field(s)",
         "ui.tableCreated": "Table “{tableName}” created with the initial field “c1”. Rename it in the “Table” field if you need to.",
         "ui.tableDeleteForeignKeysWarning": "\n\nThe foreign keys that point to this table ({count}) will be left without a reference: {names}.",
-        "ui.tableDeleteQueriesWarning": "\n\nThe queries that use it ({count}) will stop working: {names}.",
+        "ui.tableDeleteQueriesWarning": "\n\nThe queries and scripts that use it ({count}) will stop working: {names}.",
         "ui.tableDeleted": "Table “{tableName}” deleted.{orphans}{cleaned}",
         "ui.tableDeletedForeignKeysRemoved": " {count} foreign key(s) that pointed to it have been removed.",
-        "ui.tableDeletedOrphanQueries": " {count} query(s) still reference a table that no longer exists: {names}.",
+        "ui.tableDeletedOrphanQueries": " {count} query(s) or script(s) still reference a table that no longer exists: {names}.",
         "ui.tableDescriptionUpdated": "Description of “{tableName}” updated.",
         "ui.tableDetailHint": "Fields and metadata of “{tableName}”. Close with Esc or the “Close” button.",
         "ui.tableExists": "A table “{tableName}” already exists.",
@@ -3398,6 +3721,42 @@
         "ui.viewCount": "view ×{count}",
         "ui.viewMark": {"one":"view","other":"view ×{count}"},
         "ui.viewReaders": {"one":"Read as a table by: {names}","other":"Read as a table by: {names}"},
+        "markup.button.dependencies": "Dependencies",
+        "dashboard.emptyTables": "No tables yet.",
+        "dashboard.testCoverageNote": "{tested} of {total} queries and scripts carry an asserted result.",
+        "dashboard.typeBoolean": "Boolean",
+        "dashboard.typeNumber": "Number",
+        "dashboard.typeString": "Text",
+        "dependencies.panelTip": "Explore the dependencies and dependents of the project",
+        "dependencies.title": "Dependencies",
+        "dependencies.root": "Object:",
+        "dependencies.sources": "Dependencies",
+        "dependencies.dependents": "Dependents",
+        "dependencies.showingSources": "Dependencies of “{name}”",
+        "dependencies.showingDependents": "Objects that read “{name}”",
+        "dependencies.info": "“{root}”: {count} related object(s).",
+        "dependencies.childCount": {"one":"{count} related object","other":"{count} related objects"},
+        "dependencies.foldTip": "Fold the dependencies of “{name}”",
+        "dependencies.unfoldTip": "Unfold the dependencies of “{name}”",
+        "dependencies.openTip": "Open “{name}”",
+        "dependencies.cycle": "cycle",
+        "dependencies.empty": "There are no tables, queries or scripts to explore.",
+        "ui.dataSourcesButton": {"one":"Data sources (1)","other":"Data sources ({count})"},
+        "ui.isSourceOfButton": {"one":"Is source of... (1)","other":"Is source of... ({count})"},
+        "ui.dataSourcesTip": "Jump to one of the data sources of “{name}”",
+        "ui.isSourceOfTip": "Jump to one of the objects that read “{name}”",
+        "ui.dataSourcesLine": "Data sources ({total}): {names}",
+        "ui.isSourceOfLine": "Is source of ({total}): {names}",
+        "ui.relatedPickTip": "Open {kind}",
+        "ui.groupTables": "Tables",
+        "ui.groupQueries": "Queries",
+        "ui.groupScripts": "Scripts",
+        "ui.kindTable": "table",
+        "ui.kindQuery": "query",
+        "ui.kindScript": "script",
+        "ui.refTable": "table “{name}”",
+        "ui.refQuery": "query “{name}”",
+        "ui.refScript": "script “{name}”",
         "updateTable.cancelled": "Update cancelled: the table keeps its data.",
         "updateTable.confirm": "Replace the {rows} row(s) of “{name}” with the {newRows} row(s) read? The current data will be lost.",
         "updateTable.done": "Table “{name}” updated with {rows} row(s).",
@@ -3626,11 +3985,19 @@
         "markup.dt.queriesAssertedResultOnesTest": "Consultas con resultado asertado: las que se comprueban en la batería de pruebas",
         "markup.dt.queriesSavedProject": "Consultas guardadas en el proyecto",
         "markup.dt.queriesTest": "Consultas con test",
-        "markup.dt.queriesUsedAsTables": "Consultas como tabla",
-        "markup.dt.queriesWhoseResultAnotherQuery": "Consultas cuyo resultado lee otra consulta, como si fuera una tabla",
+        "markup.dt.queriesUsedAsTables": "Vistas (consultas y scripts)",
+        "markup.dt.queriesWhoseResultAnotherQuery": "Consultas y scripts cuyo resultado lee otra consulta o script, como si fuera una tabla",
         "markup.dt.relatedPairs": "Parejas relacionadas",
         "markup.dt.rows": "Filas",
         "markup.dt.rowsEveryTable": "Filas de todas las tablas",
+        "markup.dt.scripts": "Scripts",
+        "markup.dt.scriptsAssertedResultOnesTest": "Scripts con resultado asertado: los que se comprueban en la batería de pruebas",
+        "markup.dt.scriptsSavedProject": "Scripts guardados en el proyecto",
+        "markup.dt.scriptsTest": "Scripts con test",
+        "markup.dt.dependencies": "Dependencias",
+        "markup.dt.dependenciesTip": "Enlaces entre consultas y scripts y las tablas, consultas o scripts que leen",
+        "markup.dt.testCoverage": "Cobertura de pruebas",
+        "markup.dt.testCoverageTip": "Porcentaje de consultas y scripts con resultado asertado",
         "markup.dt.tables": "Tablas",
         "markup.dt.tablesProject": "Tablas del proyecto",
         "markup.footer.applicationMessages": "Mensajes de la aplicación",
@@ -3643,9 +4010,12 @@
         "markup.h3.defaultCSVImport": "Importar CSV por defecto",
         "markup.h3.differencesAssertedResult": "Diferencias con el resultado asertado",
         "markup.h3.failingCases": "Casos que fallan",
+        "markup.h3.fieldTypes": "Campos por tipo",
         "markup.h3.pasteDataCSVJSON": "O pegar datos (CSV o JSON)",
         "markup.h3.project": "Proyecto",
         "markup.h3.rowsPerPage": "Filas por página",
+        "markup.h3.tablesByRows": "Tablas por filas",
+        "markup.h3.testCoverage": "Cobertura de pruebas",
         "markup.label.csvDelimiter": "Separador CSV:",
         "markup.label.delimiter": "Separador:",
         "markup.label.delimiter2": "Separador:",
@@ -3662,7 +4032,7 @@
         "markup.label.tables": "Tablas:",
         "markup.p.everyFileCreatesTableFile": "Cada fichero crea una tabla con el nombre del fichero (sin extensión, en minúsculas y con _). El JSON debe ser un array de objetos con las mismas propiedades; el CSV debe tener los mismos campos en todas las filas.",
         "markup.p.everyForeignKeyAppearsCell": "Cada clave ajena aparece en la casilla de la tabla que la define (fila, hijo) apuntando a la tabla y el campo de destino (columna, padre): campo → campo destino.",
-        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, consultas usadas como tabla y relaciones. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página. Pulsa <b>Ayuda</b> para abrir la ayuda completa en otra pestaña.",
+        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b>, los <b>consultas con SQL</b> y lo combinas todo con <b>scripts JavaScript</b>. Las tablas, las consultas, los scripts y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, scripts, pruebas, dependencias, vistas (consultas y scripts usados como tabla), relaciones, las tablas con más filas, la cobertura de pruebas y los tipos de campo. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página. Pulsa <b>Ayuda</b> para abrir la ayuda completa en otra pestaña.",
         "markup.p.importColumnTypes": "Los datos se leen tal cual y cada columna se guarda con el <b>tipo</b> que elijas: en <b>texto</b> se conservan los ceros a la izquierda.",
         "markup.p.originHas01Related": "Un <b>origen</b> tiene 0 o 1 destinos relacionados.",
         "markup.p.targetHas01Several": "Un <b>destino</b> tiene 0, 1 o varios orígenes relacionados.",
@@ -3996,24 +4366,30 @@
         "queries.errorValidation": "Error de consulta (validación)",
         "queries.executed": "Consulta «{name}» ejecutada: {rows} fila(s) en {ms} ms.",
         "scripts.created": "Script «{name}» creado. Escribe el código y pulsa Ejecutar (o Ctrl+Enter).",
-        "scripts.defaultCode": "// «datos» es un array de objetos con la tabla o consulta elegida.\n// Usa map, filter, reduce… y devuelve un array (de objetos o de arrays).\nreturn datos;",
+        "scripts.defaultCode": "// «tables», «queries» y «scripts» dan cada tabla, consulta y script.\n// Por ejemplo: tables[\"nombre\"], queries[\"nombre\"]() o scripts[\"nombre\"]().\n// Usa map, filter, reduce… y devuelve un array (de objetos o de arrays).\nreturn [];",
         "scripts.defaultName": "script",
-        "scripts.deleteConfirm": "¿Eliminar el script «{name}»?",
+        "scripts.deleteConfirm": "¿Eliminar el script «{name}»?{warning}",
         "scripts.descriptionUpdated": "Descripción de «{name}» actualizada.",
         "scripts.emptyCode": "Escribe código JavaScript antes de ejecutar.",
-        "scripts.emptyCodeHint": "Por ejemplo: return datos.filter((row) => row.age > 18);",
+        "scripts.emptyCodeHint": "Por ejemplo: return tables[\"nombre\"].filter((row) => row.age > 18);",
         "scripts.emptyCodeTitle": "Script vacío",
         "scripts.errorTitle": "Error de JavaScript",
         "scripts.executed": "Script «{name}»: {rows} fila(s) en {ms} ms.",
-        "scripts.help": "«datos» contiene el origen elegido; «tablas» da cada tabla por su nombre y «consultas» ejecuta una consulta guardada (por ejemplo consultas[\"nombre\"]()). Devuelve un array de objetos o de arrays para verlo en el grid.",
+        "scripts.help": "«tables» da cada tabla por su nombre, «queries» ejecuta una consulta guardada y «scripts» ejecuta un script guardado (por ejemplo queries[\"nombre\"]()). Devuelve un array de objetos o de arrays para verlo en el grid.",
         "scripts.nameEmpty": "El script necesita un nombre.",
         "scripts.nameExists": "Ya existe un script llamado «{name}».",
         "scripts.noResult": "El script no ha devuelto nada. Usa return o asigna el resultado a «resultado».",
         "scripts.noResultTitle": "Sin resultado",
         "scripts.noScript": "Abre o crea un script primero.",
         "scripts.queryError": "No se ha podido ejecutar la consulta de origen: {message}",
-        "scripts.removed": "Script «{name}» eliminado.",
-        "scripts.renamed": "Script renombrado a «{name}».",
+        "scripts.sourceError": "No se ha podido ejecutar el script «{name}», usado como tabla: {message}",
+        "scripts.sourceErrorHint": "Revisa el código del script y que sea síncrono.",
+        "scripts.removed": "Script «{name}» eliminado. {orphans}",
+        "scripts.orphans": "Siguen rotos: {names}.",
+        "scripts.dependentsWarning": "\n\nLas consultas y scripts que lo leen dejarán de funcionar ({count}): {names}.",
+        "scripts.renamedDependents": " {queries} consulta(s) y {scripts} script(s) actualizados.",
+        "scripts.updatedSuffix": " {count} script(s) actualizados.",
+        "scripts.renamed": "Script renombrado a «{name}». {note}",
         "scripts.resultSummary": "{rows} fila(s) · {ms} ms",
         "scripts.selected": "Script «{name}» seleccionado.",
         "scripts.sourceGroupQueries": "Consultas",
@@ -4024,7 +4400,7 @@
         "scripts.suffixedName": "script_{n}",
         "scripts.unknown": "No existe ningún script llamado «{name}».",
         "scripts.folderTip": "Carpeta del script; elige una de la lista (el botón de añadir carpeta crea una nueva)",
-        "scripts.insertTip": "Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space)",
+        "scripts.insertTip": "Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space)",
         "scripts.asyncInTests": "Este script es asíncrono: las pruebas del proyecto solo pueden ejecutar scripts síncronos.",
         "scripts.saveTestTip": "Ejecutar el script, guardar su resultado como asertado y poner el proyecto en modo test",
         "scripts.removeTestTip": "Quitar el resultado asertado de este script: seguirá ejecutándose, pero dejará de comprobarse en el informe del proyecto",
@@ -4062,22 +4438,23 @@
         "projectTests.scriptLine": "Script: {code}",
         "projectTests.scriptError": "Error del script: {message}",
         "testsReport.openScript": "Ver el script «{name}» en el editor",
-        "queries.insertButton": "Insertar tabla, consulta o campo…",
+        "queries.insertButton": "Insertar tabla, consulta, script o campo…",
         "queries.insertFieldTip": "Escribir el campo «{name}» en el cursor",
         "queries.insertFieldsError": "No se han podido leer los campos de «{name}»: {message}",
         "queries.insertFoldTip": "Ocultar los campos de «{name}»",
         "queries.insertHint": "Pulsa un nombre para escribirlo en el cursor; la flecha despliega sus campos.",
-        "queries.insertListAria": "Tablas, consultas y campos",
+        "queries.insertListAria": "Tablas, consultas, scripts y campos",
         "queries.insertNameTip": "Escribir «{name}» en el cursor",
         "queries.insertNeedsQuery": "Abre o crea una consulta para insertar nombres en ella.",
         "queries.insertNoFieldResults": "Ningún campo coincide con «{text}».",
         "queries.insertNoFields": "«{name}» no tiene campos.",
         "queries.insertNoResults": "Nada coincide con «{text}».",
         "queries.insertQueries": "Consultas",
+        "queries.insertScripts": "Scripts",
         "queries.insertSearchAria": "Buscar una tabla, una consulta o un campo",
         "queries.insertSearchPlaceholder": "Buscar una tabla, una consulta o un campo…",
         "queries.insertTables": "Tablas",
-        "queries.insertTip": "Insertar una tabla, una consulta o uno de sus campos en el cursor (Ctrl+Space). La flecha que hay junto al nombre muestra los campos.",
+        "queries.insertTip": "Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space). La flecha que hay junto al nombre muestra los campos.",
         "queries.insertTitle": "Insertar en el cursor",
         "queries.insertUnfoldTip": "Mostrar los campos de «{name}»",
         "queries.inserted": "«{name}» escrito en el cursor.",
@@ -4090,7 +4467,7 @@
         "queries.nameEmpty": "El nombre de la consulta no puede estar vacío.",
         "queries.nameExists": "Ya existe una consulta «{name}».",
         "queries.openToConvert": "Abre una consulta del proyecto para poder convertirla en test.",
-        "queries.orphans": " Quedan {count} consulta(s) citando una consulta que ya no existe: {names}.",
+        "queries.orphans": " Quedan {count} consulta(s) o script(s) citando una consulta que ya no existe: {names}.",
         "queries.planLine": "Plan · {ms} ms: {steps}",
         "queries.planStep": "{n}) {label} → {rows} fila(s)",
         "queries.readersButton": {"one":"La lee como tabla (1)","other":"La leen como tabla ({count})"},
@@ -4106,7 +4483,7 @@
         "queries.testRemovedStillTest": "«{name}» ya no comprueba ningún resultado asertado; el proyecto sigue en modo test.",
         "queries.unknown": "No existe la consulta «{name}».",
         "queries.updatedSuffix": {"one":" ({count} consulta actualizada)","other":" ({count} consultas actualizadas)"},
-        "queries.usedAsTableWarning": "\n\nLas consultas que la usan como tabla ({count}) dejarán de funcionar: {names}.",
+        "queries.usedAsTableWarning": "\n\nLas consultas y scripts que la usan como tabla ({count}) dejarán de funcionar: {names}.",
         "relations.corner": "origen ↓ / destino →",
         "relations.figureDescription": "{rows} {figure}: las contadas en la casilla {origin} → {target} de la matriz de relaciones, por la clave ajena {source} → {targetField}.",
         "relations.figureManySourcesName": "filas de {table} con más de 1 origen",
@@ -4194,6 +4571,7 @@
         "sqlPlanner.projection": "Proyección de {count} columna(s)",
         "sqlPlanner.scan": "Escaneo «{alias}»",
         "sqlPlanner.scanQuery": "Escaneo «{alias}» (consulta «{queryName}»)",
+        "sqlPlanner.scanScript": "Escaneo «{alias}» (script «{scriptName}»)",
         "sqlPlanner.scanSubquery": "Escaneo «{alias}» (subconsulta del FROM)",
         "sqlPlanner.sortKeys": "Orden por {count} clave(s)",
         "sqlPlanner.subqueryColumn": "(subconsulta)",
@@ -4230,7 +4608,7 @@
         "sqlValidator.orJoiner": " o ",
         "sqlValidator.orderByPositionHint": "Un número en ORDER BY es la posición de la columna en el SELECT (1 es la primera).",
         "sqlValidator.orderByPositionOutOfRange": "ORDER BY {position} no corresponde a ninguna columna: el resultado tiene {columnCount} columna(s).",
-        "sqlValidator.queriesAsTablesHint": " Cualquier consulta del proyecto también se puede usar como tabla: basta con escribir su nombre en el FROM.",
+        "sqlValidator.queriesAsTablesHint": " Cualquier consulta o script del proyecto también se puede usar como tabla: basta con escribir su nombre en el FROM.",
         "sqlValidator.sourceNotFound": "La tabla o alias «{alias}» no existe en la consulta. Fuentes disponibles: {sources}.",
         "sqlValidator.subqueryOneColumn": "La subconsulta usada aquí debe devolver una sola columna.",
         "sqlValidator.subqueryOneColumnHint": "Escribe una única expresión en el SELECT de la subconsulta, o elige una de sus columnas.",
@@ -4260,8 +4638,8 @@
         "summary.openItem": "Abrir «{name}»",
         "summary.queriesInfo": "{count} consulta(s) · pulsa una fila para abrirla",
         "summary.queriesStatus": "Consultas del proyecto: {count}. Pulsa una fila para abrirla.",
-        "summary.readBy": "la leen: {names}",
-        "summary.reads": "lee: {names}",
+        "summary.readBy": "es origen de: {names}",
+        "summary.reads": "orígenes: {names}",
         "summary.tablesInfo": "{count} tabla(s) · pulsa una fila para abrirla",
         "summary.tablesStructureFileName": "estructura_tablas",
         "summary.tablesStructureDownloaded": "Estructura de {count} tabla(s) descargada en «{name}».",
@@ -4363,10 +4741,10 @@
         "ui.tableCounter": "{rowCount} fila(s) · {fieldCount} campo(s)",
         "ui.tableCreated": "Tabla «{tableName}» creada con el campo inicial «c1». Renómbrala en el campo «Tabla» si lo necesitas.",
         "ui.tableDeleteForeignKeysWarning": "\n\nLas claves ajenas que apuntan a esta tabla ({count}) se quedarán sin referencia: {names}.",
-        "ui.tableDeleteQueriesWarning": "\n\nLas consultas que la usan ({count}) dejarán de funcionar: {names}.",
+        "ui.tableDeleteQueriesWarning": "\n\nLas consultas y scripts que la usan ({count}) dejarán de funcionar: {names}.",
         "ui.tableDeleted": "Tabla «{tableName}» eliminada.{orphans}{cleaned}",
         "ui.tableDeletedForeignKeysRemoved": " Se han quitado {count} clave(s) ajena(s) que apuntaban a ella.",
-        "ui.tableDeletedOrphanQueries": " Quedan {count} consulta(s) citando una tabla que ya no existe: {names}.",
+        "ui.tableDeletedOrphanQueries": " Quedan {count} consulta(s) o script(s) citando una tabla que ya no existe: {names}.",
         "ui.tableDescriptionUpdated": "Descripción de «{tableName}» actualizada.",
         "ui.tableDetailHint": "Campos y metadatos de «{tableName}». Cierra con Esc o con el botón «Cerrar».",
         "ui.tableExists": "Ya existe una tabla «{tableName}».",
@@ -4383,6 +4761,42 @@
         "ui.viewCount": "vista ×{count}",
         "ui.viewMark": {"one":"vista","other":"vista ×{count}"},
         "ui.viewReaders": {"one":"La lee como tabla: {names}","other":"La leen como tabla: {names}"},
+        "markup.button.dependencies": "Dependencias",
+        "dashboard.emptyTables": "Aún no hay tablas.",
+        "dashboard.testCoverageNote": "{tested} de {total} consultas y scripts llevan resultado asertado.",
+        "dashboard.typeBoolean": "Booleano",
+        "dashboard.typeNumber": "Número",
+        "dashboard.typeString": "Texto",
+        "dependencies.panelTip": "Explorar las dependencias y los dependientes del proyecto",
+        "dependencies.title": "Dependencias",
+        "dependencies.root": "Objeto:",
+        "dependencies.sources": "Dependencias",
+        "dependencies.dependents": "Dependientes",
+        "dependencies.showingSources": "Dependencias de «{name}»",
+        "dependencies.showingDependents": "Objetos que leen «{name}»",
+        "dependencies.info": "«{root}»: {count} objeto(s) relacionado(s).",
+        "dependencies.childCount": {"one":"{count} objeto relacionado","other":"{count} objetos relacionados"},
+        "dependencies.foldTip": "Plegar las dependencias de «{name}»",
+        "dependencies.unfoldTip": "Desplegar las dependencias de «{name}»",
+        "dependencies.openTip": "Abrir «{name}»",
+        "dependencies.cycle": "ciclo",
+        "dependencies.empty": "No hay tablas, consultas ni scripts que explorar.",
+        "ui.dataSourcesButton": {"one":"Orígenes de datos (1)","other":"Orígenes de datos ({count})"},
+        "ui.isSourceOfButton": {"one":"Es origen de... (1)","other":"Es origen de... ({count})"},
+        "ui.dataSourcesTip": "Saltar a uno de los orígenes de datos de «{name}»",
+        "ui.isSourceOfTip": "Saltar a uno de los objetos que leen «{name}»",
+        "ui.dataSourcesLine": "Orígenes de datos ({total}): {names}",
+        "ui.isSourceOfLine": "Es origen de ({total}): {names}",
+        "ui.relatedPickTip": "Abrir {kind}",
+        "ui.groupTables": "Tablas",
+        "ui.groupQueries": "Consultas",
+        "ui.groupScripts": "Scripts",
+        "ui.kindTable": "tabla",
+        "ui.kindQuery": "consulta",
+        "ui.kindScript": "script",
+        "ui.refTable": "tabla «{name}»",
+        "ui.refQuery": "consulta «{name}»",
+        "ui.refScript": "script «{name}»",
         "updateTable.cancelled": "Actualización cancelada: la tabla conserva sus datos.",
         "updateTable.confirm": "¿Sustituir las {rows} fila(s) de «{name}» por las {newRows} fila(s) leídas? Se perderán los datos actuales.",
         "updateTable.done": "Tabla «{name}» actualizada con {rows} fila(s).",
@@ -4740,11 +5154,13 @@
       projectStats(project) {
         const tables = project.tables || [];
         const queries = project.queries || [];
+        const scripts = project.scripts || [];
         const parejas = new Set();
         let rows = 0;
         let fields = 0;
         let references = 0;
         let views = 0;
+        let dependencies = 0;
         tables.forEach((table) => {
           rows += table.rows.length;
           fields += table.fields.length;
@@ -4757,20 +5173,33 @@
             parejas.add([table.name, field.references.table].sort().join("\u0000"));
           });
         });
-        SqlViews.usage(project).leen.forEach((lectores) => {
-          if (lectores.length > 0) {
+        const graph = ProjectGraph.build(project);
+        graph.nodes.forEach((node) => {
+          if (node.kind !== "query" && node.kind !== "script") {
+            return;
+          }
+          dependencies += node.sources.length;
+          if (node.dependents.length > 0) {
             views += 1;
           }
         });
+        const queriesWithTest = queries.filter((query) => Boolean(query.assert)).length;
+        const scriptsWithTest = scripts.filter((script) => Boolean(script.assert)).length;
+        const tested = queriesWithTest + scriptsWithTest;
+        const testable = queries.length + scripts.length;
         return {
           tables: tables.length,
           rows,
           fields,
           references,
           queries: queries.length,
-          queriesWithTest: queries.filter((query) => Boolean(query.assert)).length,
+          queriesWithTest,
+          scripts: scripts.length,
+          scriptsWithTest,
           relatedPairs: parejas.size,
           views,
+          dependencies,
+          testCoverage: testable ? Math.round((tested / testable) * 1000) / 10 : 0,
         };
       },
 
@@ -5129,19 +5558,6 @@
       /** Script of the project with that name, or null. */
       findScript(project, name) {
         return (project.scripts || []).find((script) => script.name === name) || null;
-      },
-
-      /** Rewrites the scripts that take their rows from a table or a query
-       *  that has just been renamed. Returns how many scripts changed. */
-      renameScriptSources(project, kind, oldName, newName) {
-        let changed = 0;
-        (project.scripts || []).forEach((script) => {
-          if (script.source && script.source.kind === kind && script.source.name === oldName) {
-            script.source.name = newName;
-            changed += 1;
-          }
-        });
-        return changed;
       },
 
       /** Creates an empty table with the given fields. */
@@ -6503,15 +6919,13 @@
         return copy;
       },
 
-      /** Script as it is written to the file: the source is left out when it
-       *  has none, so a script without a source does not carry an empty key. */
+      /** Script as it is written to the file. The old "source" key is never
+       *  written again. */
       scriptToJson(script) {
         const copy = script.assert
           ? { ...script, assert: Persistence.assertToJson(script.assert) }
           : { ...script };
-        if (!copy.source) {
-          delete copy.source;
-        }
+        delete copy.source;
         if (!copy.folder) {
           delete copy.folder;
         }
@@ -6649,8 +7063,9 @@
       },
 
       /** Validates and normalises the scripts of the file. A script is
-       *  { name, description, code, source? }, where source is
-       *  { kind: "table" | "query", name }. */
+       *  { name, description, code }. The old "source" key, when present, is
+       *  ignored: scripts now read the data through tables, queries and
+       *  scripts. */
       parseScripts(rawScripts, errors) {
         if (rawScripts === undefined) {
           return [];
@@ -6679,18 +7094,6 @@
             errors.push(I18n.t("persistence.scriptCodeInvalid", { label: label, scriptName: raw.name }));
             return;
           }
-          let source = null;
-          if (raw.source !== undefined && raw.source !== null) {
-            const rawSource = raw.source;
-            const valid = rawSource !== null && typeof rawSource === "object" && !Array.isArray(rawSource)
-              && (rawSource.kind === "table" || rawSource.kind === "query")
-              && typeof rawSource.name === "string" && rawSource.name.trim() !== "";
-            if (!valid) {
-              errors.push(I18n.t("persistence.scriptSourceInvalid", { label: label, scriptName: raw.name }));
-            } else {
-              source = { kind: rawSource.kind, name: rawSource.name };
-            }
-          }
           let folder = raw.folder === undefined || raw.folder === null ? null : raw.folder;
           if (folder !== null && (typeof folder !== "string" || folder.trim() === "")) {
             errors.push(I18n.t("persistence.queryFolderInvalid", { queryLabel: `${label} ("${raw.name}")` }));
@@ -6705,9 +7108,6 @@
           const script = { name: raw.name, description, code: raw.code };
           if (expected) {
             script.assert = expected;
-          }
-          if (source !== null) {
-            script.source = source;
           }
           if (folder !== null) {
             script.folder = folder.trim();
@@ -8817,10 +9217,16 @@
         const query = (project.queries || []).find(
           (candidate) => candidate.name.toLowerCase() === buscado,
         );
-        if (!query) {
+        if (query) {
+          return { table: SqlViews.materialize(query, project, state), query, script: null };
+        }
+        const script = (project.scripts || []).find(
+          (candidate) => candidate.name.toLowerCase() === buscado,
+        );
+        if (!script) {
           return null;
         }
-        return { table: SqlViews.materialize(query, project, state), query };
+        return { table: ScriptRunner.materialize(script, project, state), query: null, script };
       },
 
       /** Runs the query and returns its result as a table: the same columns and
@@ -9011,6 +9417,284 @@
       },
     };
 
+    /* --- 5.3b Dependency graph ------------------------------------------- */
+
+    /** Graph of who reads whom across tables, queries and scripts. It is
+     *  worked out from the SQL text and from the literal accesses of the
+     *  scripts: nothing is run and nothing is stored in the project. */
+    const ProjectGraph = {
+      /** One access to the data containers of a script: tables["…"],
+       *  queries["…"] or scripts["…"]. */
+      SCRIPT_REF_SOURCE: "\\b(tables|queries|scripts)\\s*\\[\\s*(?:\"((?:\\\\.|[^\"\\\\])*)\"|'((?:\\\\.|[^'\\\\])*)')\\s*\\]",
+
+      /** Key of a node: the kind is part of it because a table, a query and a
+       *  script may share their name. */
+      nodeKey(kind, name) {
+        return `${kind}\u0000${name}`;
+      },
+
+      refKey(ref) {
+        return ProjectGraph.nodeKey(ref.kind, ref.name);
+      },
+
+      sameRef(left, right) {
+        return left.kind === right.kind && left.name === right.name;
+      },
+
+      /** Source of a FROM/JOIN: a table first, then a query and then a script. */
+      resolveSqlSource(project, name) {
+        const buscado = String(name).toLowerCase();
+        const table = (project.tables || []).find(
+          (candidate) => candidate.name.toLowerCase() === buscado,
+        );
+        if (table) {
+          return { kind: "table", name: table.name };
+        }
+        const query = (project.queries || []).find(
+          (candidate) => candidate.name.toLowerCase() === buscado,
+        );
+        if (query) {
+          return { kind: "query", name: query.name };
+        }
+        const script = (project.scripts || []).find(
+          (candidate) => candidate.name.toLowerCase() === buscado,
+        );
+        return script ? { kind: "script", name: script.name } : null;
+      },
+
+      /** Unescapes the text of a JavaScript string, as written between the
+       *  quotes of a literal access. */
+      unescapeScriptName(raw) {
+        return String(raw).replace(/\\(u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|.)/g, (all, code) => {
+          if (code[0] === "u" || code[0] === "x") {
+            return String.fromCharCode(parseInt(code.slice(1), 16));
+          }
+          switch (code) {
+            case "n": return "\n";
+            case "r": return "\r";
+            case "t": return "\t";
+            case "b": return "\b";
+            case "f": return "\f";
+            case "v": return "\v";
+            case "0": return "\0";
+            default: return code;
+          }
+        });
+      },
+
+      /** Literal accesses of a script, with the quote style each one uses. */
+      scriptRefs(code) {
+        const pattern = new RegExp(ProjectGraph.SCRIPT_REF_SOURCE, "g");
+        const refs = [];
+        let match;
+        while ((match = pattern.exec(String(code || ""))) !== null) {
+          const container = match[1];
+          const quote = match[2] !== undefined ? "\"" : "'";
+          const raw = match[2] !== undefined ? match[2] : match[3];
+          refs.push({
+            container,
+            kind: container === "tables" ? "table" : (container === "queries" ? "query" : "script"),
+            name: ProjectGraph.unescapeScriptName(raw),
+            quote,
+            start: match.index,
+            end: match.index + match[0].length,
+          });
+        }
+        return refs;
+      },
+
+      /** Data sources of a query: every table, query or script named in its
+       *  FROM/JOIN, in the order it appears. */
+      querySources(project, query) {
+        const parsed = SqlRename.parse(query.sql);
+        if (!parsed) {
+          return [];
+        }
+        const sources = [];
+        const seen = new Set();
+        parsed.info.tables.forEach((index) => {
+          const resolved = ProjectGraph.resolveSqlSource(project, parsed.tokens[index].value);
+          if (!resolved) {
+            return;
+          }
+          const key = ProjectGraph.refKey(resolved);
+          if (seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          sources.push(resolved);
+        });
+        return sources;
+      },
+
+      /** Data sources of a script: the literal accesses that name something
+       *  that exists in the project, in code order. */
+      scriptSources(project, script) {
+        const sources = [];
+        const seen = new Set();
+        ProjectGraph.scriptRefs(script.code).forEach((ref) => {
+          const exists = ref.kind === "table"
+            ? (project.tables || []).some((item) => item.name === ref.name)
+            : (ref.kind === "query"
+              ? (project.queries || []).some((item) => item.name === ref.name)
+              : (project.scripts || []).some((item) => item.name === ref.name));
+          if (!exists) {
+            return;
+          }
+          const key = ProjectGraph.nodeKey(ref.kind, ref.name);
+          if (seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          sources.push({ kind: ref.kind, name: ref.name });
+        });
+        return sources;
+      },
+
+      /** Signature of everything the graph depends on. */
+      signature(project) {
+        const tables = (project.tables || []).map((table) => table.name).join("|");
+        const queries = (project.queries || []).map((query) => `${query.name}#${query.sql}`).join("~");
+        const scripts = (project.scripts || []).map((script) => `${script.name}#${script.code}`).join("~");
+        return `${tables}@${queries}@${scripts}`;
+      },
+
+      /** Last graph, with the signature of the project it was built from. */
+      memo: { key: null, graph: null },
+
+      /** Whole graph: { nodes, sources, dependents }. */
+      build(project) {
+        const key = ProjectGraph.signature(project);
+        if (ProjectGraph.memo.key === key) {
+          return ProjectGraph.memo.graph;
+        }
+        const nodes = new Map();
+        const sources = new Map();
+        const dependents = new Map();
+        const register = (kind, name) => {
+          const nodeKey = ProjectGraph.nodeKey(kind, name);
+          if (!nodes.has(nodeKey)) {
+            const node = { kind, name, sources: [], dependents: [] };
+            nodes.set(nodeKey, node);
+            sources.set(nodeKey, node.sources);
+            dependents.set(nodeKey, node.dependents);
+          }
+          return nodes.get(nodeKey);
+        };
+        (project.tables || []).forEach((table) => register("table", table.name));
+        (project.queries || []).forEach((query) => register("query", query.name));
+        (project.scripts || []).forEach((script) => register("script", script.name));
+        (project.queries || []).forEach((query) => {
+          const node = nodes.get(ProjectGraph.nodeKey("query", query.name));
+          node.sources = ProjectGraph.querySources(project, query);
+          sources.set(ProjectGraph.nodeKey("query", query.name), node.sources);
+          node.sources.forEach((source) => {
+            const target = nodes.get(ProjectGraph.refKey(source));
+            if (target) {
+              target.dependents.push({ kind: "query", name: query.name });
+            }
+          });
+        });
+        (project.scripts || []).forEach((script) => {
+          const node = nodes.get(ProjectGraph.nodeKey("script", script.name));
+          node.sources = ProjectGraph.scriptSources(project, script);
+          sources.set(ProjectGraph.nodeKey("script", script.name), node.sources);
+          node.sources.forEach((source) => {
+            const target = nodes.get(ProjectGraph.refKey(source));
+            if (target) {
+              target.dependents.push({ kind: "script", name: script.name });
+            }
+          });
+        });
+        const graph = { nodes, sources, dependents };
+        ProjectGraph.memo = { key, graph };
+        return graph;
+      },
+
+      /** Direct sources of a node. */
+      sourcesOf(project, kind, name) {
+        const graph = ProjectGraph.build(project);
+        const node = graph.nodes.get(ProjectGraph.nodeKey(kind, name));
+        return node ? node.sources : [];
+      },
+
+      /** Direct dependents of a node. */
+      dependentsOf(project, kind, name) {
+        const graph = ProjectGraph.build(project);
+        const node = graph.nodes.get(ProjectGraph.nodeKey(kind, name));
+        return node ? node.dependents : [];
+      },
+
+      /** Nodes of one kind, in project order. */
+      nodesOfKind(project, kind) {
+        return (kind === "table"
+          ? project.tables || []
+          : (kind === "query" ? project.queries || [] : project.scripts || []))
+          .map((item) => ({ kind, name: item.name }));
+      },
+
+      /** Every node, tables first and then queries and scripts. */
+      allNodes(project) {
+        return ["table", "query", "script"].reduce(
+          (nodes, kind) => nodes.concat(ProjectGraph.nodesOfKind(project, kind)),
+          [],
+        );
+      },
+
+      /** Is a node read by another query or script? */
+      isView(project, kind, name) {
+        return ProjectGraph.dependentsOf(project, kind, name).length > 0;
+      },
+
+      /** Text of a name, quoted and with its kind, for tips and lists. */
+      describeRef(ref) {
+        const key = ref.kind === "table" ? "ui.refTable" : (ref.kind === "query" ? "ui.refQuery" : "ui.refScript");
+        return I18n.t(key, { name: ref.name });
+      },
+
+      /** Escapes a name as a JavaScript string with that quote style. */
+      scriptString(name, quote) {
+        if (quote === "\"") {
+          return JSON.stringify(name);
+        }
+        const escaped = String(name)
+          .replace(/\\/g, "\\\\")
+          .replace(/'/g, "\\'")
+          .replace(/\n/g, "\\n")
+          .replace(/\r/g, "\\r")
+          .replace(/\t/g, "\\t");
+        return `'${escaped}'`;
+      },
+
+      /** Rewrites in every script the literal accesses of that kind. Returns
+       *  how many scripts changed. */
+      renameScriptRefs(project, kind, oldName, newName) {
+        const container = kind === "table" ? "tables" : (kind === "query" ? "queries" : "scripts");
+        let changed = 0;
+        (project.scripts || []).forEach((script) => {
+          const code = String(script.code || "");
+          const pattern = new RegExp(ProjectGraph.SCRIPT_REF_SOURCE, "g");
+          const updated = code.replace(pattern, (all, used, doubleQuoted, singleQuoted) => {
+            if (used !== container) {
+              return all;
+            }
+            const quote = doubleQuoted !== undefined ? "\"" : "'";
+            const raw = doubleQuoted !== undefined ? doubleQuoted : singleQuoted;
+            const name = ProjectGraph.unescapeScriptName(raw);
+            if (name !== oldName) {
+              return all;
+            }
+            return `${used}[${ProjectGraph.scriptString(newName, quote)}]`;
+          });
+          if (updated !== code) {
+            script.code = updated;
+            changed += 1;
+          }
+        });
+        return changed;
+      },
+    };
+
     /* --- 5.4 Validator --------------------------------------------------- */
 
     /** Scalar functions available (min./max. arguments and usage). */
@@ -9158,6 +9842,7 @@
         refs.forEach((ref) => {
           let table;
           let fromQuery = null;
+          let fromScript = null;
           if (ref.subquery) {
             table = SqlViews.materializeAst(ref.subquery, project, ejecucion, ref.alias);
           } else {
@@ -9167,6 +9852,7 @@
             }
             table = encontrada.table;
             fromQuery = encontrada.query ? encontrada.query.name : null;
+            fromScript = encontrada.script ? encontrada.script.name : null;
           }
           const alias = ref.alias || table.name;
           const key = alias.toLowerCase();
@@ -9181,6 +9867,7 @@
             alias,
             table,
             fromQuery,
+            fromScript,
             fromSubquery: Boolean(ref.subquery),
             fields: new Map(table.fields.map((field) => [field.name.toLowerCase(), field.name])),
           });
@@ -9634,6 +10321,9 @@
       sourceLabel(source) {
         if (source.fromQuery) {
           return I18n.t("sqlPlanner.scanQuery", { alias: source.alias, queryName: source.fromQuery });
+        }
+        if (source.fromScript) {
+          return I18n.t("sqlPlanner.scanScript", { alias: source.alias, scriptName: source.fromScript });
         }
         if (source.fromSubquery) {
           return I18n.t("sqlPlanner.scanSubquery", { alias: source.alias });
@@ -10743,22 +11433,24 @@
 
     /** Entry point of the engine: parse, validate, plan and run. */
     const SqlEngine = {
-      run(sql, project) {
-        const state = SqlViews.newState();
+      run(sql, project, state) {
+        const ejecucion = state || SqlViews.newState();
+        const before = ejecucion.ms;
         const ast = new SqlParser(sql).parse();
-        const resolved = SqlValidator.validate(ast, project, state);
+        const resolved = SqlValidator.validate(ast, project, ejecucion);
         const plan = SqlPlanner.build(ast, resolved);
         const result = SqlExecutor.execute(plan);
-        // The time includes the queries read as tables (their rows are
-        // computed before reading them), even if their steps are not mixed in.
-        result.ms += state.ms;
+        // The time includes the queries and scripts read as tables (their rows
+        // are computed before reading them), even if their steps are not mixed
+        // in. With a shared state only the time of this query is added.
+        result.ms += ejecucion.ms - before;
         return result;
       },
 
       /** Like run(), but returns { ok } instead of throwing errors. */
-      runSafe(sql, project) {
+      runSafe(sql, project, state) {
         try {
-          return { ok: true, result: SqlEngine.run(sql, project) };
+          return { ok: true, result: SqlEngine.run(sql, project, state) };
         } catch (err) {
           return { ok: false, error: err };
         }
@@ -10808,7 +11500,8 @@
             + (field.references ? `>${field.references.table}.${field.references.field}` : "")).join(",")}`)
           .join("|");
         const queries = project.queries.map((query) => `${query.name}#${query.sql}`).join("~");
-        return `${tables}@${queries}`;
+        const scripts = (project.scripts || []).map((script) => `${script.name}#${script.code}`).join("~");
+        return `${tables}@${queries}@${scripts}`;
       },
 
       /** Shows one of the main views (#view-empty, table, …). */
@@ -10816,12 +11509,14 @@
         if (name !== "query") {
           UiQueryInsert.hide();
         }
-        ["vacio", "table", "query", "script", "import", "tables", "queries", "relations"].forEach((candidate) => {
+        ["vacio", "table", "query", "script", "import", "tables", "queries", "relations", "dependencies"].forEach((candidate) => {
           document.getElementById(`view-${candidate}`).hidden = candidate !== name;
         });
         UiSummary.renderIfVisible();
         UiRelations.renderIfVisible();
         UiScripts.renderIfVisible();
+        UiDependencies.renderIfVisible();
+        UiDataLinks.update();
         UiHistory.record();
       },
 
@@ -10838,6 +11533,8 @@
         UiSummary.renderIfVisible();
         UiRelations.renderIfVisible();
         UiScripts.renderIfVisible();
+        UiDependencies.renderIfVisible();
+        UiDataLinks.update();
         UiHistory.render();
         if (Ui.state.activeScript && !UiScripts.activeScriptOrNull()) {
           Ui.state.activeScript = null;
@@ -11021,11 +11718,21 @@
         const item = document.createElement("li");
         item.dataset.name = table.name;
         item.dataset.folder = folder;
-        item.title = Ui.fieldsTip(
-          table.description,
-          I18n.t("ui.fields"),
-          table.fields.map((field) => Ui.fieldLabel(Store.project, table, field)),
-        );
+        const dependents = ProjectGraph.dependentsOf(Store.project, "table", table.name);
+        item.title = dependents.length === 0
+          ? Ui.fieldsTip(
+            table.description,
+            I18n.t("ui.fields"),
+            table.fields.map((field) => Ui.fieldLabel(Store.project, table, field)),
+          )
+          : Ui.joinTip(
+            Ui.fieldsTip(
+              table.description,
+              I18n.t("ui.fields"),
+              table.fields.map((field) => Ui.fieldLabel(Store.project, table, field)),
+            ),
+            I18n.t("ui.isSourceOfLine", { total: dependents.length, names: Ui.refList(dependents) }),
+          );
         if (folder) {
           item.classList.add("folder-open");
         }
@@ -11106,7 +11813,7 @@
         const list = document.getElementById("list-queries");
         list.textContent = "";
         const usage = SqlViews.usage(Store.project);
-        UiQueryLinks.update(usage);
+        UiDataLinks.update(usage);
         const shape = Ui.projectShape(Store.project);
         UiFolders.render("queries", list, (query, folder) => Ui.queryItem(query, usage, shape, folder));
       },
@@ -11168,12 +11875,12 @@
           ? I18n.t("ui.testLabel", { assertion: UiSummary.assertText(query) })
           : I18n.t("ui.noAssertedResult");
         marcas.appendChild(mark);
-        const lectores = usage.leen.get(query.name) || [];
+        const lectores = ProjectGraph.dependentsOf(Store.project, "query", query.name);
         if (lectores.length > 0) {
           const view = document.createElement("span");
           view.className = "detail mark-view";
           view.textContent = I18n.t("ui.viewMark", { count: lectores.length });
-          view.title = I18n.t("ui.viewReaders", { count: lectores.length, names: SqlRename.listNames(lectores) });
+          view.title = I18n.t("ui.isSourceOfLine", { total: lectores.length, names: Ui.refList(lectores) });
           marcas.appendChild(view);
         }
         const actions = document.createElement("span");
@@ -11211,10 +11918,7 @@
         const item = document.createElement("li");
         item.dataset.name = script.name;
         item.dataset.folder = folder;
-        const source = script.source
-          ? `${I18n.t(script.source.kind === "table" ? "scripts.sourceGroupTables" : "scripts.sourceGroupQueries")}: ${script.source.name}`
-          : I18n.t("scripts.sourceNone");
-        item.title = script.description ? `${script.description}\n${source}` : source;
+        item.title = Ui.scriptTip(script);
         if (folder) {
           item.classList.add("folder-open");
         }
@@ -11233,6 +11937,14 @@
           ? I18n.t("ui.testLabel", { assertion: UiSummary.assertText(script) })
           : I18n.t("ui.noAssertedResult");
         marcas.appendChild(mark);
+        const lectores = ProjectGraph.dependentsOf(Store.project, "script", script.name);
+        if (lectores.length > 0) {
+          const view = document.createElement("span");
+          view.className = "detail mark-view";
+          view.textContent = I18n.t("ui.viewMark", { count: lectores.length });
+          view.title = I18n.t("ui.isSourceOfLine", { total: lectores.length, names: Ui.refList(lectores) });
+          marcas.appendChild(view);
+        }
         const actions = document.createElement("span");
         actions.className = "row-actions";
         actions.appendChild(marcas);
@@ -11260,14 +11972,23 @@
         return item;
       },
 
+      /** List of dependencies for a tip or a message, with the kind of each
+       *  one and a limit of five names. */
+      refList(refs, max) {
+        const limite = max === undefined ? 5 : max;
+        const visibles = refs.slice(0, limite).map((ref) => ProjectGraph.describeRef(ref)).join(", ");
+        return refs.length > limite
+          ? I18n.t("sqlRename.andMore", { visibles: visibles, remaining: refs.length - limite })
+          : visibles;
+      },
+
       /** Tip of a sidebar query: its description, the columns the SELECT
        *  returns (when the query cannot be parsed, the reason instead of the
-       *  columns) and, when there are any, the queries it reads as a table and
-       *  the ones that read it. */
+       *  columns), its data sources and the objects that read it. */
       queryTip(query, usage, shape) {
         // The tip validates the SQL of the query, and the sidebar rebuilds every
         // tip on every repaint: the last one is reused while the project keeps
-        // the same shape (any field, foreign key or query changes it).
+        // the same shape (any field, foreign key, script or query changes it).
         const signature = shape === undefined ? Ui.projectShape(Store.project) : shape;
         const cached = Ui.tipMemo.get(query);
         if (cached && cached.signature === signature) {
@@ -11277,18 +11998,35 @@
         const lineas = [columns.ok
           ? Ui.fieldsTip(query.description, I18n.t("ui.resultFields"), columns.columns)
           : Ui.joinTip(query.description, I18n.t("ui.resultFieldsError", { message: columns.error.message }))];
-        const analisis = usage || SqlViews.usage(Store.project);
-        const lee = analisis.lee.get(query.name) || [];
-        if (lee.length > 0) {
-          lineas.push(I18n.t("ui.readsAsTable", { total: lee.length, names: SqlRename.listNames(lee) }));
+        const sources = ProjectGraph.sourcesOf(Store.project, "query", query.name);
+        if (sources.length > 0) {
+          lineas.push(I18n.t("ui.dataSourcesLine", { total: sources.length, names: Ui.refList(sources) }));
         }
-        const leen = analisis.leen.get(query.name) || [];
-        if (leen.length > 0) {
-          lineas.push(I18n.t("ui.readAsTableBy", { total: leen.length, names: SqlRename.listNames(leen) }));
+        const dependents = ProjectGraph.dependentsOf(Store.project, "query", query.name);
+        if (dependents.length > 0) {
+          lineas.push(I18n.t("ui.isSourceOfLine", { total: dependents.length, names: Ui.refList(dependents) }));
         }
         const text = lineas.join("\n");
         Ui.tipMemo.set(query, { signature, text });
         return text;
+      },
+
+      /** Tip of a sidebar script: its description, its data sources and the
+       *  objects that read it. */
+      scriptTip(script) {
+        const lineas = [];
+        if (script.description) {
+          lineas.push(script.description);
+        }
+        const sources = ProjectGraph.sourcesOf(Store.project, "script", script.name);
+        if (sources.length > 0) {
+          lineas.push(I18n.t("ui.dataSourcesLine", { total: sources.length, names: Ui.refList(sources) }));
+        }
+        const dependents = ProjectGraph.dependentsOf(Store.project, "script", script.name);
+        if (dependents.length > 0) {
+          lineas.push(I18n.t("ui.isSourceOfLine", { total: dependents.length, names: Ui.refList(dependents) }));
+        }
+        return lineas.join("\n");
       },
 
       /* --- Selected table ------------------------------------------------ */
@@ -11795,7 +12533,7 @@
         table.name = clean;
         const changed = SqlRename.renameTableInProject(Store.project, oldName, clean);
         const referencias = Model.renameTableReferences(Store.project, oldName, clean);
-        Model.renameScriptSources(Store.project, "table", oldName, clean);
+        ProjectGraph.renameScriptRefs(Store.project, "table", oldName, clean);
         UiQueries.refreshEditor();
         UiProject.markDirty();
         Ui.state.activeTable = clean;
@@ -11815,7 +12553,8 @@
         if (!table) {
           return;
         }
-        const affected = SqlRename.queriesUsingTable(Store.project, table.name);
+        const dependents = ProjectGraph.dependentsOf(Store.project, "table", table.name);
+        const affected = dependents.map((ref) => ref.name);
         const referencing = Model.fieldsReferencingTable(Store.project, table.name).filter((item) => item.table !== table.name);
         const warning = affected.length === 0
           ? ""
@@ -12547,15 +13286,15 @@
 
       /** Which queries this one reads as a table and which ones read it (one
        *  line per direction; «—» when there are none). */
-      viewsText(query, usage) {
+      viewsText(query) {
         const partes = [];
-        const lee = usage.lee.get(query.name) || [];
-        if (lee.length > 0) {
-          partes.push(I18n.t("summary.reads", { names: lee.map((name) => `«${name}»`).join(", ") }));
+        const sources = ProjectGraph.sourcesOf(Store.project, "query", query.name);
+        if (sources.length > 0) {
+          partes.push(I18n.t("summary.reads", { names: Ui.refList(sources) }));
         }
-        const leen = usage.leen.get(query.name) || [];
-        if (leen.length > 0) {
-          partes.push(I18n.t("summary.readBy", { names: leen.map((name) => `«${name}»`).join(", ") }));
+        const dependents = ProjectGraph.dependentsOf(Store.project, "query", query.name);
+        if (dependents.length > 0) {
+          partes.push(I18n.t("summary.readBy", { names: Ui.refList(dependents) }));
         }
         return partes.length === 0 ? "—" : partes.join("\n");
       },
@@ -12953,6 +13692,291 @@
           td.appendChild(line);
         }
         return td;
+      },
+    };
+
+    /* =====================================================================
+       6e · DEPENDENCY TREE
+       Explores, in both directions, what a table, a query or a script reads
+       and what reads it. A node may appear in several branches; only the
+       cycles of one branch are cut.
+       ===================================================================== */
+
+    const UiDependencies = {
+      /** "sources" (dependencies) or "dependents". */
+      direction: "sources",
+
+      /** Open root, as { kind, name }, or null. */
+      root: null,
+
+      /** Paths open in the tree: the key of each node joined by ">". */
+      expanded: new Set(),
+
+      pathKey(path) {
+        return path.join(">");
+      },
+
+      nodeKey(kind, name) {
+        return ProjectGraph.nodeKey(kind, name);
+      },
+
+      /** Current object of an editor, used as the starting point. */
+      activeSelection() {
+        if (Ui.state.activeTable) {
+          return { kind: "table", name: Ui.state.activeTable };
+        }
+        if (Ui.state.activeQuery) {
+          return { kind: "query", name: Ui.state.activeQuery };
+        }
+        if (Ui.state.activeScript) {
+          return { kind: "script", name: Ui.state.activeScript };
+        }
+        return null;
+      },
+
+      /** Does the root still exist? */
+      rootExists() {
+        if (!UiDependencies.root) {
+          return false;
+        }
+        return ProjectGraph.resolveSqlSource(Store.project, UiDependencies.root.name) !== null
+          && ProjectGraph.allNodes(Store.project).some((node) => node.kind === UiDependencies.root.kind && node.name === UiDependencies.root.name);
+      },
+
+      /** Fills the selector with every node of the project, grouped by kind. */
+      fillRoots() {
+        const select = document.getElementById("dependencies-root");
+        if (!select) {
+          return;
+        }
+        const current = UiDependencies.root
+          ? JSON.stringify([UiDependencies.root.kind, UiDependencies.root.name])
+          : "";
+        select.textContent = "";
+        ["table", "query", "script"].forEach((kind) => {
+          const nodes = ProjectGraph.nodesOfKind(Store.project, kind);
+          if (nodes.length === 0) {
+            return;
+          }
+          const group = document.createElement("optgroup");
+          group.label = I18n.t(
+            kind === "table" ? "ui.groupTables" : (kind === "query" ? "ui.groupQueries" : "ui.groupScripts"),
+          );
+          nodes.forEach((node) => {
+            const option = document.createElement("option");
+            option.value = JSON.stringify([kind, node.name]);
+            option.textContent = node.name;
+            group.appendChild(option);
+          });
+          select.appendChild(group);
+        });
+        if (current && Array.from(select.options).some((option) => option.value === current)) {
+          select.value = current;
+        }
+      },
+
+      /** Opens the dependency view. */
+      show() {
+        const active = UiDependencies.activeSelection();
+        UiDependencies.fillRoots();
+        if (!UiDependencies.rootExists()) {
+          const first = ProjectGraph.allNodes(Store.project)[0] || null;
+          UiDependencies.root = active || first;
+          UiDependencies.expanded.clear();
+          if (UiDependencies.root) {
+            UiDependencies.expanded.add(UiDependencies.pathKey([UiDependencies.nodeKey(UiDependencies.root.kind, UiDependencies.root.name)]));
+          }
+        }
+        Ui.showView("dependencies");
+        UiDependencies.render();
+      },
+
+      renderIfVisible() {
+        if (Ui.state.view === "dependencies") {
+          UiDependencies.render();
+        }
+      },
+
+      /** Changes the direction and repaints. */
+      setDirection(direction) {
+        UiDependencies.direction = direction;
+        UiDependencies.render();
+      },
+
+      /** Opens a node of the tree. */
+      open(kind, name) {
+        UiDataLinks.open(kind, name);
+      },
+
+      /** Toggles one path of the tree. */
+      toggle(path) {
+        const key = UiDependencies.pathKey(path);
+        if (UiDependencies.expanded.has(key)) {
+          UiDependencies.expanded.delete(key);
+        } else {
+          UiDependencies.expanded.add(key);
+        }
+        UiDependencies.render();
+      },
+
+      /** Related nodes of a node in the current direction. */
+      related(kind, name) {
+        return UiDependencies.direction === "sources"
+          ? ProjectGraph.sourcesOf(Store.project, kind, name)
+          : ProjectGraph.dependentsOf(Store.project, kind, name);
+      },
+
+      /** Paints one node and, when it is open, its branch. */
+      renderNode(ref, path, container) {
+        const key = UiDependencies.nodeKey(ref.kind, ref.name);
+        const cycle = path.slice(0, -1).includes(key);
+        const children = cycle ? [] : UiDependencies.related(ref.kind, ref.name);
+        const pathKey = UiDependencies.pathKey(path);
+        const open = UiDependencies.expanded.has(pathKey);
+
+        const item = document.createElement("li");
+        item.className = "dep-node";
+        item.dataset.kind = ref.kind;
+        item.dataset.name = ref.name;
+
+        const row = document.createElement("div");
+        row.className = "dep-row";
+
+        if (children.length > 0) {
+          const toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "dep-toggle";
+          toggle.dataset.path = JSON.stringify(path);
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          toggle.title = I18n.t(open ? "dependencies.foldTip" : "dependencies.unfoldTip", { name: ref.name });
+          toggle.setAttribute("aria-label", toggle.title);
+          toggle.replaceChildren(Ui.icon(open ? "chevron-down" : "chevron-right"));
+          row.appendChild(toggle);
+        } else {
+          const blank = document.createElement("span");
+          blank.className = "dep-blank";
+          row.appendChild(blank);
+        }
+
+        const openButton = document.createElement("button");
+        openButton.type = "button";
+        openButton.className = "dep-open";
+        openButton.dataset.kind = ref.kind;
+        openButton.dataset.name = ref.name;
+        openButton.title = I18n.t("dependencies.openTip", { name: ref.name });
+        const kind = document.createElement("span");
+        kind.className = `dep-kind dep-kind-${ref.kind}`;
+        kind.textContent = I18n.t(
+          ref.kind === "table" ? "ui.kindTable" : (ref.kind === "query" ? "ui.kindQuery" : "ui.kindScript"),
+        );
+        const name = document.createElement("span");
+        name.className = "dep-name";
+        name.textContent = ref.name;
+        openButton.append(kind, name);
+        row.appendChild(openButton);
+
+        if (cycle) {
+          const badge = document.createElement("span");
+          badge.className = "dep-cycle";
+          badge.textContent = I18n.t("dependencies.cycle");
+          row.appendChild(badge);
+        } else if (children.length > 0) {
+          const count = document.createElement("span");
+          count.className = "dep-count";
+          count.textContent = String(children.length);
+          count.title = I18n.t("dependencies.childCount", { count: children.length });
+          row.appendChild(count);
+        }
+        item.appendChild(row);
+
+        if (open && children.length > 0) {
+          const list = document.createElement("ul");
+          list.className = "dep-children";
+          children.forEach((child) => {
+            UiDependencies.renderNode(
+              child,
+              path.concat([UiDependencies.nodeKey(child.kind, child.name)]),
+              list,
+            );
+          });
+          item.appendChild(list);
+        }
+        container.appendChild(item);
+      },
+
+      /** Repaints the view. */
+      render() {
+        const select = document.getElementById("dependencies-root");
+        const tree = document.getElementById("dependencies-tree");
+        const info = document.getElementById("dependencies-info");
+        const direction = document.getElementById("dependencies-direction");
+        if (!select || !tree || !info || !direction) {
+          return;
+        }
+        UiDependencies.fillRoots();
+        if (!UiDependencies.rootExists()) {
+          UiDependencies.root = ProjectGraph.allNodes(Store.project)[0] || null;
+          UiDependencies.expanded.clear();
+        }
+        if (!UiDependencies.root) {
+          select.value = "";
+          tree.textContent = "";
+          info.textContent = I18n.t("dependencies.empty");
+          direction.textContent = "";
+          return;
+        }
+        select.value = JSON.stringify([UiDependencies.root.kind, UiDependencies.root.name]);
+        document.getElementById("btn-dep-sources").classList.toggle("active", UiDependencies.direction === "sources");
+        document.getElementById("btn-dep-dependents").classList.toggle("active", UiDependencies.direction === "dependents");
+        document.getElementById("btn-dep-sources").setAttribute("aria-pressed", UiDependencies.direction === "sources" ? "true" : "false");
+        document.getElementById("btn-dep-dependents").setAttribute("aria-pressed", UiDependencies.direction === "dependents" ? "true" : "false");
+        direction.textContent = I18n.t(
+          UiDependencies.direction === "sources" ? "dependencies.showingSources" : "dependencies.showingDependents",
+          { name: UiDependencies.root.name },
+        );
+        const rootPath = [UiDependencies.nodeKey(UiDependencies.root.kind, UiDependencies.root.name)];
+        if (!UiDependencies.expanded.has(UiDependencies.pathKey(rootPath))) {
+          UiDependencies.expanded.add(UiDependencies.pathKey(rootPath));
+        }
+        const related = UiDependencies.related(UiDependencies.root.kind, UiDependencies.root.name);
+        info.textContent = I18n.t("dependencies.info", { root: UiDependencies.root.name, count: related.length });
+        tree.textContent = "";
+        UiDependencies.renderNode(UiDependencies.root, rootPath, tree);
+      },
+
+      /** Wires the sidebar link and the controls of the view. */
+      bind() {
+        document.getElementById("btn-dependencies").addEventListener("click", () => UiDependencies.show());
+        document.getElementById("dependencies-root").addEventListener("change", (event) => {
+          try {
+            const parsed = JSON.parse(event.target.value);
+            if (Array.isArray(parsed) && (parsed[0] === "table" || parsed[0] === "query" || parsed[0] === "script")) {
+              UiDependencies.root = { kind: parsed[0], name: parsed[1] };
+              UiDependencies.expanded.clear();
+              UiDependencies.expanded.add(UiDependencies.pathKey([UiDependencies.nodeKey(parsed[0], parsed[1])]));
+              UiDependencies.render();
+            }
+          } catch (err) {
+            // A value that is not ours: the root stays as it was.
+          }
+        });
+        document.getElementById("btn-dep-sources").addEventListener("click", () => UiDependencies.setDirection("sources"));
+        document.getElementById("btn-dep-dependents").addEventListener("click", () => UiDependencies.setDirection("dependents"));
+        document.getElementById("dependencies-tree").addEventListener("click", (event) => {
+          const toggle = event.target.closest("button.dep-toggle");
+          if (toggle) {
+            try {
+              UiDependencies.toggle(JSON.parse(toggle.dataset.path));
+            } catch (err) {
+              // A value that is not ours: the tree stays as it is.
+            }
+            return;
+          }
+          const open = event.target.closest("button.dep-open");
+          if (open) {
+            UiDependencies.open(open.dataset.kind, open.dataset.name);
+          }
+        });
       },
     };
 
@@ -13601,15 +14625,12 @@
         if (!query) {
           return;
         }
-        // The queries that read it as a table will stop working. When there is
-        // a table with that name, no warning is given: that name is resolved by
-        // the table (case-insensitively), so no query depends
-        // on this one.
-        const buscado = query.name.toLowerCase();
-        const homonima = Store.project.tables.some((table) => table.name.toLowerCase() === buscado);
-        const affected = homonima
-          ? []
-          : SqlRename.queriesUsingTable(Store.project, query.name).filter((name) => name !== query.name);
+        // The queries and scripts that read it will stop working. The graph
+        // already resolves a name that is also a table to the table, so those
+        // FROMs do not count as dependents of this query.
+        const affected = ProjectGraph.dependentsOf(Store.project, "query", query.name)
+          .filter((ref) => !(ref.kind === "query" && ref.name === query.name))
+          .map((ref) => ref.name);
         const warning = affected.length === 0
           ? ""
           : I18n.t("queries.usedAsTableWarning", { count: affected.length, names: SqlRename.listNames(affected) });
@@ -13640,7 +14661,7 @@
           return;
         }
         UiQueryInsert.hide();
-        UiQueryLinks.hide();
+        UiDataLinks.hide();
         Ui.state.activeQuery = name;
         Ui.renderSidebarQueries();
         UiFolders.reveal("queries", name);
@@ -13695,24 +14716,26 @@
           return;
         }
         const oldName = query.name;
+        // A FROM is rewritten only when the name is resolved by this query.
+        // A table or a script with the same name has precedence and is left
+        // alone, exactly as when renaming a table.
+        const shadowed = (value) => {
+          const resolved = ProjectGraph.resolveSqlSource(Store.project, value);
+          return Boolean(resolved && resolved.kind !== "query");
+        };
         query.name = name;
-        // The queries that read it as a table are rewritten, just as when
-        // renaming a table. When the old or the new name is that of a table,
-        // nothing is touched: those FROMs are resolved by the table.
-        const homonima = (value) => Store.project.tables.some(
-          (table) => table.name.toLowerCase() === value.toLowerCase(),
-        );
-        const changed = homonima(oldName) || homonima(name)
+        const changed = shadowed(oldName) || shadowed(name)
           ? 0
           : SqlRename.renameTableInProject(Store.project, oldName, name);
-        Model.renameScriptSources(Store.project, "query", oldName, name);
+        const scriptsChanged = ProjectGraph.renameScriptRefs(Store.project, "query", oldName, name);
         UiProject.markDirty();
         Ui.state.activeQuery = name;
         UiQueries.refreshEditor();
         Ui.renderAll();
-        const seguimiento = changed === 0
-          ? ""
-          : I18n.t("queries.updatedSuffix", { count: changed });
+        const seguimiento = [
+          changed === 0 ? "" : I18n.t("queries.updatedSuffix", { count: changed }),
+          scriptsChanged === 0 ? "" : I18n.t("scripts.updatedSuffix", { count: scriptsChanged }),
+        ].filter(Boolean).join(" ");
         setStatus(I18n.t("queries.renamed", { old: oldName, new: name, note: seguimiento }));
       },
 
@@ -13752,7 +14775,7 @@
         if (value !== query.sql) {
           query.sql = value;
           UiProject.markDirty();
-          UiQueryLinks.update();
+          UiDataLinks.update();
         }
       },
 
@@ -13768,7 +14791,7 @@
         if (currentSql !== query.sql) {
           query.sql = currentSql;
           UiProject.markDirty();
-          UiQueryLinks.update();
+          UiDataLinks.update();
         }
         const sql = query.sql.trim();
         UiQueries.clearOutput();
@@ -14241,9 +15264,9 @@
 
     /* =====================================================================
        7c · JAVASCRIPT SCRIPTS
-       Scripts saved in the project. Each one receives the rows of a table or
-       query as an array of objects («datos») and returns an array that is
-       shown in a grid, just like a query result.
+       Scripts saved in the project. Each one reads the tables, queries and
+       scripts it names and returns an array that is shown in a grid, just
+       like a query result.
        ===================================================================== */
 
     const UiScripts = {
@@ -14304,7 +15327,6 @@
             UiScripts.runWithBusy();
           }
         });
-        document.getElementById("script-source").addEventListener("change", () => UiScripts.saveSource());
         document.getElementById("btn-script-res-pag-first").addEventListener("click", () => UiScripts.goToResultPage(0));
         document.getElementById("btn-script-res-pag-prev").addEventListener("click", () => UiScripts.changeResultPage(-1));
         document.getElementById("btn-script-res-pag-next").addEventListener("click", () => UiScripts.changeResultPage(1));
@@ -14325,18 +15347,6 @@
           : null;
       },
 
-      /** First table or query of the project, used as the source of a new
-       *  script; null when the project has neither. */
-      defaultSource() {
-        if (Store.project.tables.length > 0) {
-          return { kind: "table", name: Store.project.tables[0].name };
-        }
-        if (Store.project.queries.length > 0) {
-          return { kind: "query", name: Store.project.queries[0].name };
-        }
-        return null;
-      },
-
       /** Creates a script with a free name and opens it. */
       create() {
         const taken = new Set(Store.project.scripts.map((script) => script.name));
@@ -14352,10 +15362,6 @@
           description: "",
           code: I18n.t("scripts.defaultCode"),
         };
-        const source = UiScripts.defaultSource();
-        if (source) {
-          script.source = source;
-        }
         Store.project.scripts.push(script);
         UiProject.markDirty();
         UiScripts.select(name);
@@ -14390,7 +15396,6 @@
         document.getElementById("script-description").value = script.description || "";
         document.getElementById("script-code").value = script.code;
         UiFolders.fillEditorOptions("scripts");
-        UiScripts.renderSourceOptions();
         UiScripts.renderHelp();
         UiScripts.clearOutput();
         UiScripts.updateTestControls();
@@ -14402,57 +15407,15 @@
         document.getElementById("script-help").textContent = I18n.t("scripts.help");
       },
 
-      /** Fills the source selector with every table and query of the project,
-       *  keeping the source of the open script (even when it no longer exists). */
-      renderSourceOptions() {
-        const select = document.getElementById("script-source");
-        const script = UiScripts.activeScriptOrNull();
-        select.textContent = "";
-        const none = document.createElement("option");
-        none.value = "";
-        none.textContent = I18n.t("scripts.sourceNone");
-        select.appendChild(none);
-        const addGroup = (label, items, kind) => {
-          if (items.length === 0) {
-            return;
-          }
-          const group = document.createElement("optgroup");
-          group.label = label;
-          items.forEach((item) => {
-            const option = document.createElement("option");
-            option.value = JSON.stringify([kind, item.name]);
-            option.textContent = item.name;
-            group.appendChild(option);
-          });
-          select.appendChild(group);
-        };
-        addGroup(I18n.t("scripts.sourceGroupTables"), Store.project.tables, "table");
-        addGroup(I18n.t("scripts.sourceGroupQueries"), Store.project.queries, "query");
-        if (script && script.source) {
-          const value = JSON.stringify([script.source.kind, script.source.name]);
-          const exists = Array.from(select.options).some((option) => option.value === value);
-          if (!exists) {
-            const missing = document.createElement("option");
-            missing.value = value;
-            missing.textContent = script.source.name;
-            missing.title = I18n.t("scripts.sourceMissing", { name: script.source.name });
-            select.appendChild(missing);
-          }
-          select.value = value;
-        } else {
-          select.value = "";
-        }
-      },
-
-      /** Repaints the source selector of the open script, when that view is on
-       *  screen (tables and queries can be renamed or deleted meanwhile). */
+      /** Repaints the help of the open script, when that view is on screen. */
       renderIfVisible() {
         if (Ui.state.view === "script") {
-          UiScripts.renderSourceOptions();
           UiScripts.renderHelp();
         }
       },
 
+      /** Renames the open script and rewrites the SQL and the literal accesses
+       *  of the scripts that depend on it. */
       renameFromInput() {
         const script = UiScripts.activeScriptOrNull();
         if (!script) {
@@ -14475,12 +15438,22 @@
           return;
         }
         const oldName = script.name;
+        const oldResolved = ProjectGraph.resolveSqlSource(Store.project, oldName);
+        const newResolved = ProjectGraph.resolveSqlSource(Store.project, name);
+        const canRewriteSql = oldResolved && oldResolved.kind === "script"
+          && (!newResolved || newResolved.kind === "script");
         script.name = name;
-        Ui.state.activeScript = name;
+        const changed = canRewriteSql
+          ? SqlRename.renameTableInProject(Store.project, oldName, name)
+          : 0;
+        const scriptsChanged = ProjectGraph.renameScriptRefs(Store.project, "script", oldName, name);
         UiProject.markDirty();
-        Ui.renderSidebarScripts();
-        UiHistory.record();
-        setStatus(I18n.t("scripts.renamed", { name: name }));
+        Ui.state.activeScript = name;
+        Ui.renderAll();
+        const note = changed === 0 && scriptsChanged === 0
+          ? ""
+          : I18n.t("scripts.renamedDependents", { queries: changed, scripts: scriptsChanged });
+        setStatus(I18n.t("scripts.renamed", { name: name, note: note }));
       },
 
       saveDescription() {
@@ -14506,32 +15479,9 @@
         if (value !== script.code) {
           script.code = value;
           UiProject.markDirty();
+          Ui.renderSidebarScripts();
+          UiDataLinks.update();
         }
-      },
-
-      /** Reads the chosen source from the selector and keeps it in the script. */
-      saveSource() {
-        const script = UiScripts.activeScriptOrNull();
-        if (!script) {
-          return;
-        }
-        const raw = document.getElementById("script-source").value;
-        if (raw === "") {
-          delete script.source;
-        } else {
-          try {
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && (parsed[0] === "table" || parsed[0] === "query")
-              && typeof parsed[1] === "string") {
-              script.source = { kind: parsed[0], name: parsed[1] };
-            }
-          } catch (err) {
-            // A value that is not ours: leave the source as it was.
-          }
-        }
-        UiProject.markDirty();
-        Ui.renderSidebarScripts();
-        UiScripts.clearOutput();
       },
 
       /** Deletes the open script after asking for confirmation. */
@@ -14550,7 +15500,14 @@
         if (!script) {
           return;
         }
-        if (!window.confirm(I18n.t("scripts.deleteConfirm", { name: name }))) {
+        const dependents = ProjectGraph.dependentsOf(Store.project, "script", name);
+        const warning = dependents.length === 0
+          ? ""
+          : I18n.t("scripts.dependentsWarning", {
+            count: dependents.length,
+            names: SqlRename.listNames(dependents.map((ref) => ref.name)),
+          });
+        if (!window.confirm(I18n.t("scripts.deleteConfirm", { name: name, warning: warning }))) {
           return;
         }
         const wasActive = Ui.state.activeScript === name;
@@ -14564,7 +15521,10 @@
           UiScripts.updateTestControls();
           Ui.showView("vacio");
         }
-        setStatus(I18n.t("scripts.removed", { name: name }));
+        const orphans = dependents.length === 0
+          ? ""
+          : I18n.t("scripts.orphans", { count: dependents.length, names: SqlRename.listNames(dependents.map((ref) => ref.name)) });
+        setStatus(I18n.t("scripts.removed", { name: name, orphans: orphans }));
       },
 
       /** Moves a script one place up or down inside its folder. */
@@ -14680,10 +15640,6 @@
 
       /** The engine lives in ScriptRunner; these wrappers keep the public
        *  surface of the script view (and its tests) stable. */
-      sourceData(script) {
-        return ScriptRunner.sourceData(script, Store.project);
-      },
-
       tablesForScript() {
         return ScriptRunner.tablesForScript(Store.project);
       },
@@ -15105,40 +16061,43 @@
     /* =====================================================================
        7c · SCRIPT RUNNER
        The engine of the JavaScript scripts, shared by the script view and by
-       the project tests. It resolves the source, exposes the tables and the
-       queries and turns the returned value into { columns, rows }.
+       the project tests. It exposes the tables, queries and scripts, turns the
+       returned value into { columns, rows } and materialises a script when a
+       query reads it as a table.
        ===================================================================== */
 
     const ScriptRunner = {
-      /** Rows of the chosen source as an array of objects. With no source the
-       *  script receives an empty array (it can still read «tablas»). */
-      sourceData(script, project) {
-        if (!script.source) {
-          return { ok: true, data: [] };
+      /** Runs a script as a SQL source: its result becomes a synthetic table,
+       *  cached in the shared state and guarded against cycles. */
+      materialize(script, project, state) {
+        const ejecucion = state || SqlViews.newState();
+        if (!ejecucion.scriptCache) {
+          ejecucion.scriptCache = new Map();
         }
-        if (script.source.kind === "table") {
-          const table = Model.findTable(project, script.source.name);
-          if (!table) {
-            return { ok: false, error: I18n.t("scripts.sourceMissing", { name: script.source.name }) };
-          }
-          return { ok: true, data: Utils.cloneJson(table.rows) };
+        const key = `script:${script.name.toLowerCase()}`;
+        if (ejecucion.scriptCache.has(key)) {
+          return ejecucion.scriptCache.get(key);
         }
-        const query = project.queries.find((candidate) => candidate.name === script.source.name);
-        if (!query) {
-          return { ok: false, error: I18n.t("scripts.sourceMissing", { name: script.source.name }) };
-        }
-        const outcome = SqlEngine.runSafe(query.sql, project);
+        const outcome = ScriptRunner.executeSync(script, project, ejecucion);
         if (!outcome.ok) {
-          return { ok: false, error: I18n.t("scripts.queryError", { message: outcome.error.message }) };
+          const error = new SqlValidationError(
+            I18n.t("scripts.sourceError", { name: script.name, message: outcome.error.message }),
+            { hint: outcome.error.hint || I18n.t("scripts.sourceErrorHint") },
+          );
+          error.scriptViewError = true;
+          error.sqlViewError = true;
+          throw error;
         }
-        return { ok: true, data: Utils.resultToJsonObjects(outcome.result) };
+        const table = SqlViews.resultTable(script, outcome.result);
+        ejecucion.scriptCache.set(key, table);
+        return table;
       },
 
       /** Every table of the project by name, cloned the first time it is read
        *  so the script can change its copy without touching the project. */
       tablesForScript(project) {
         const tables = {};
-        project.tables.forEach((table) => {
+        (project.tables || []).forEach((table) => {
           let value;
           let copied = false;
           Object.defineProperty(tables, table.name, {
@@ -15157,13 +16116,13 @@
 
       /** Every query of the project by name: reading one runs it and returns
        *  its rows as objects. */
-      queriesForScript(project) {
+      queriesForScript(project, state) {
         const queries = {};
-        project.queries.forEach((query) => {
+        (project.queries || []).forEach((query) => {
           Object.defineProperty(queries, query.name, {
             enumerable: true,
             value() {
-              const outcome = SqlEngine.runSafe(query.sql, project);
+              const outcome = SqlEngine.runSafe(query.sql, project, state);
               if (!outcome.ok) {
                 throw new Error(I18n.t("scripts.queryError", { message: outcome.error.message }));
               }
@@ -15172,6 +16131,26 @@
           });
         });
         return queries;
+      },
+
+      /** Every script of the project by name: reading one runs it and returns
+       *  its rows as objects. The shared state detects cycles between queries
+       *  and scripts. */
+      scriptsForScript(project, state) {
+        const scripts = {};
+        (project.scripts || []).forEach((script) => {
+          Object.defineProperty(scripts, script.name, {
+            enumerable: true,
+            value() {
+              const outcome = ScriptRunner.executeSync(script, project, state);
+              if (!outcome.ok) {
+                throw new Error(outcome.error.message);
+              }
+              return Utils.resultToJsonObjects(outcome.result);
+            },
+          });
+        });
+        return scripts;
       },
 
       /** Is it a plain object (and not an array, a date or a class instance)? */
@@ -15285,47 +16264,63 @@
         return `"use strict";\nvar resultado;\n{\n${code}\n}\nreturn resultado;`;
       },
 
-      /** Data and helpers the user code receives. */
-      context(script, project) {
-        const source = ScriptRunner.sourceData(script, project);
-        if (!source.ok) {
-          return {
-            ok: false,
-            error: { title: I18n.t("scripts.errorTitle"), message: source.error },
-          };
-        }
+      /** Error for an empty script. */
+      emptyCodeError() {
         return {
-          ok: true,
-          data: source.data,
+          ok: false,
+          error: {
+            title: I18n.t("scripts.emptyCodeTitle"),
+            message: I18n.t("scripts.emptyCode"),
+            hint: I18n.t("scripts.emptyCodeHint"),
+          },
+        };
+      },
+
+      /** Error of a script read in a circle, with the chain that shows it. */
+      cycleOutcome(script, state) {
+        const error = SqlViews.cycleError(state.stack, script.name);
+        return {
+          ok: false,
+          error: {
+            title: I18n.t("scripts.errorTitle"),
+            message: error.message,
+            hint: error.hint,
+          },
+        };
+      },
+
+      /** Data and helpers the user code receives: tables, queries and scripts,
+       *  each one by its name. */
+      context(project, state) {
+        return {
           tables: ScriptRunner.tablesForScript(project),
-          queries: ScriptRunner.queriesForScript(project),
+          queries: ScriptRunner.queriesForScript(project, state),
+          scripts: ScriptRunner.scriptsForScript(project, state),
         };
       },
 
       /** Runs the script with the full JavaScript support (including await). */
-      async execute(script, project) {
+      async execute(script, project, state) {
         if (!script.code || script.code.trim() === "") {
-          return {
-            ok: false,
-            error: {
-              title: I18n.t("scripts.emptyCodeTitle"),
-              message: I18n.t("scripts.emptyCode"),
-              hint: I18n.t("scripts.emptyCodeHint"),
-            },
-          };
+          return ScriptRunner.emptyCodeError();
         }
-        const context = ScriptRunner.context(script, project);
-        if (!context.ok) {
-          return context;
+        const ejecucion = state || SqlViews.newState();
+        const key = `script:${script.name.toLowerCase()}`;
+        if (ejecucion.stack.some((item) => item.key === key)) {
+          return ScriptRunner.cycleOutcome(script, ejecucion);
         }
+        ejecucion.stack.push({ key, name: script.name });
         const started = window.performance.now();
         let value;
         try {
+          const context = ScriptRunner.context(project, ejecucion);
           const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-          const fn = new AsyncFunction("datos", "tablas", "consultas", ScriptRunner.body(script.code));
-          value = await fn(context.data, context.tables, context.queries);
+          const fn = new AsyncFunction("tables", "queries", "scripts", ScriptRunner.body(script.code));
+          value = await fn(context.tables, context.queries, context.scripts);
         } catch (err) {
           return { ok: false, error: ScriptRunner.describeError(err, script.code) };
+        } finally {
+          ejecucion.stack.pop();
         }
         const ms = window.performance.now() - started;
         const normalized = ScriptRunner.normalizeResult(value);
@@ -15341,30 +16336,28 @@
         return { ok: true, result: normalized.result, ms: ms };
       },
 
-      /** Runs the script synchronously, for the project tests: an asynchronous
-       *  script is reported as an error instead of being left pending. */
-      executeSync(script, project) {
+      /** Runs the script synchronously, for the project tests and for a script
+       *  read as a table: an asynchronous script is reported as an error. */
+      executeSync(script, project, state) {
         if (!script.code || script.code.trim() === "") {
-          return {
-            ok: false,
-            error: {
-              title: I18n.t("scripts.emptyCodeTitle"),
-              message: I18n.t("scripts.emptyCode"),
-              hint: I18n.t("scripts.emptyCodeHint"),
-            },
-          };
+          return ScriptRunner.emptyCodeError();
         }
-        const context = ScriptRunner.context(script, project);
-        if (!context.ok) {
-          return context;
+        const ejecucion = state || SqlViews.newState();
+        const key = `script:${script.name.toLowerCase()}`;
+        if (ejecucion.stack.some((item) => item.key === key)) {
+          return ScriptRunner.cycleOutcome(script, ejecucion);
         }
+        ejecucion.stack.push({ key, name: script.name });
         const started = window.performance.now();
         let value;
         try {
-          const fn = new Function("datos", "tablas", "consultas", ScriptRunner.body(script.code));
-          value = fn(context.data, context.tables, context.queries);
+          const context = ScriptRunner.context(project, ejecucion);
+          const fn = new Function("tables", "queries", "scripts", ScriptRunner.body(script.code));
+          value = fn(context.tables, context.queries, context.scripts);
         } catch (err) {
           return { ok: false, error: ScriptRunner.describeError(err, script.code) };
+        } finally {
+          ejecucion.stack.pop();
         }
         if (value && typeof value.then === "function") {
           return {
@@ -16899,9 +17892,10 @@
         popup.style.top = `${top}px`;
       },
 
-      /** Writes the identifier of a table, a query or a field at the caret and
-       *  closes the list. In a script, a table is written as tablas["…"], a
-       *  query as consultas["…"]() and a field as ["…"]. */
+      /** Writes the identifier of a table, a query, a script or a field at the
+       *  caret and closes the list. In a script, a table is written as
+       *  tables["…"], a query as queries["…"](), a script as scripts["…"]()
+       *  and a field as ["…"]. */
       insert(name, kind, field) {
         const editor = UiQueryInsert.editor();
         const start = editor.selectionStart;
@@ -16911,9 +17905,11 @@
           if (field) {
             text = `[${JSON.stringify(name)}]`;
           } else if (kind === "table") {
-            text = `tablas[${JSON.stringify(name)}]`;
+            text = `tables[${JSON.stringify(name)}]`;
           } else if (kind === "query") {
-            text = `consultas[${JSON.stringify(name)}]()`;
+            text = `queries[${JSON.stringify(name)}]()`;
+          } else if (kind === "script") {
+            text = `scripts[${JSON.stringify(name)}]()`;
           } else {
             text = JSON.stringify(name);
           }
@@ -16932,6 +17928,9 @@
 
       /** Shows or hides the fields of a table or a query. */
       unfold(kind, name) {
+        if (kind === "script") {
+          return;
+        }
         const item = UiQueryInsert.sourceOf(kind, name);
         if (!item) {
           return;
@@ -16944,10 +17943,12 @@
         UiQueryInsert.render();
       },
 
-      /** Table or query of the list with that name. */
+      /** Table, query or script of the list with that name. */
       sourceOf(kind, name) {
-        const list = kind === "table" ? Store.project.tables : Store.project.queries;
-        return list.find((item) => item.name === name) || null;
+        const list = kind === "table"
+          ? Store.project.tables
+          : (kind === "query" ? Store.project.queries : Store.project.scripts);
+        return (list || []).find((item) => item.name === name) || null;
       },
 
       /** Are the fields of that name on screen? A table opens on its own while
@@ -16963,13 +17964,17 @@
       },
 
       /** Fields of a table or a query. The columns of a query are read from its
-       *  plan (it is not run); the outcome is kept until the list closes. */
+       *  plan (it is not run); the outcome is kept until the list closes. A
+       *  script has no fields until it is run, so it is not unfolded. */
       fieldsOf(kind, item) {
         if (kind === "table") {
           return {
             fields: item.fields.map((field) => ({ name: field.name, type: field.type || "" })),
             error: "",
           };
+        }
+        if (kind === "script") {
+          return { fields: [], error: "" };
         }
         const key = `${item.name}\u0000${item.sql}`;
         if (!UiQueryInsert.columns.has(key)) {
@@ -17045,17 +18050,23 @@
 
         const row = document.createElement("div");
         row.className = "insert-row";
-        const arrow = document.createElement("button");
-        arrow.type = "button";
-        arrow.className = "insert-toggle";
-        arrow.dataset.action = "unfold";
-        arrow.dataset.kind = kind;
-        arrow.dataset.name = item.name;
-        arrow.setAttribute("aria-expanded", unfolded ? "true" : "false");
-        arrow.replaceChildren(Ui.icon(unfolded ? "chevron-down" : "chevron-right"));
-        arrow.title = I18n.t(unfolded ? "queries.insertFoldTip" : "queries.insertUnfoldTip", { name: item.name });
-        arrow.setAttribute("aria-label", arrow.title);
-        row.appendChild(arrow);
+        if (kind === "script") {
+          const blank = document.createElement("span");
+          blank.className = "insert-toggle";
+          row.appendChild(blank);
+        } else {
+          const arrow = document.createElement("button");
+          arrow.type = "button";
+          arrow.className = "insert-toggle";
+          arrow.dataset.action = "unfold";
+          arrow.dataset.kind = kind;
+          arrow.dataset.name = item.name;
+          arrow.setAttribute("aria-expanded", unfolded ? "true" : "false");
+          arrow.replaceChildren(Ui.icon(unfolded ? "chevron-down" : "chevron-right"));
+          arrow.title = I18n.t(unfolded ? "queries.insertFoldTip" : "queries.insertUnfoldTip", { name: item.name });
+          arrow.setAttribute("aria-label", arrow.title);
+          row.appendChild(arrow);
+        }
         row.appendChild(UiQueryInsert.pick(
           item.name,
           { kind: kind, name: item.name },
@@ -17076,6 +18087,7 @@
         const groups = [
           { title: I18n.t("queries.insertTables"), kind: "table", items: Store.project.tables },
           { title: I18n.t("queries.insertQueries"), kind: "query", items: Store.project.queries },
+          { title: I18n.t("queries.insertScripts"), kind: "script", items: Store.project.scripts || [] },
         ];
         let found = 0;
         groups.forEach((group) => {
@@ -17213,131 +18225,212 @@
       },
     };
 
-    /** The two drop-downs of the query editor that jump to the related queries:
-     *  the ones that read the open query as a table and the ones it reads. They
-     *  are worked out from the text of the queries (SqlViews.usage) and stay
-     *  hidden while there is none of them. */
-    const UiQueryLinks = {
-      /** "readers" (they read the open query), "sources" (the open query reads
-       *  them) or null while the drop-down is closed. */
-      kind: null,
+    /** The two drop-downs of the editors that jump to the data sources of the
+     *  open object and to the objects that read it. They are worked out from
+     *  the SQL text and the literal accesses of the scripts (ProjectGraph) and
+     *  stay hidden while there is none of them. */
+    const UiDataLinks = {
+      /** "sources" (what the open object reads) or "dependents" (what reads
+       *  it), or null while the drop-down is closed. */
+      direction: null,
 
       /** Button the drop-down hangs under. */
       button: null,
+
+      /** Buttons of each kind of editor. The tables only have dependents. */
+      BUTTONS: {
+        table: { dependents: "btn-table-readers", sources: null },
+        query: { dependents: "btn-query-readers", sources: "btn-query-sources" },
+        script: { dependents: "btn-script-readers", sources: "btn-script-sources" },
+      },
+
+      /** Separator that goes with the buttons of each kind. */
+      SEPARATORS: {
+        table: "table-related-sep",
+        query: "related-sep",
+        script: "script-related-sep",
+      },
 
       popup() {
         return document.getElementById("related-popup");
       },
 
-      buttonOf(kind) {
-        return document.getElementById(kind === "readers" ? "btn-query-readers" : "btn-query-sources");
+      buttonOf(kind, direction) {
+        const id = UiDataLinks.BUTTONS[kind] && UiDataLinks.BUTTONS[kind][direction];
+        return id ? document.getElementById(id) : null;
       },
 
-      /** Queries related to the open one in that direction, in project order. */
-      names(kind, query, usage) {
-        const analisis = usage || SqlViews.usage(Store.project);
-        return (kind === "readers" ? analisis.leen : analisis.lee).get(query.name) || [];
+      /** Open table, query or script, as { kind, name }, or null. */
+      current() {
+        if (Ui.state.view === "table" && Ui.state.activeTable) {
+          return { kind: "table", name: Ui.state.activeTable };
+        }
+        if (Ui.state.view === "query" && Ui.state.activeQuery) {
+          return { kind: "query", name: Ui.state.activeQuery };
+        }
+        if (Ui.state.view === "script" && Ui.state.activeScript) {
+          return { kind: "script", name: Ui.state.activeScript };
+        }
+        return null;
       },
 
-      /** Paints the button of one direction with its number, or hides it when
-       *  there is no query on that side. */
-      paint(kind, query, usage) {
-        const button = UiQueryLinks.buttonOf(kind);
-        const names = query ? UiQueryLinks.names(kind, query, usage) : [];
+      /** Nodes related to the open one in that direction. */
+      names(direction, node) {
+        if (!node) {
+          return [];
+        }
+        return direction === "sources"
+          ? ProjectGraph.sourcesOf(Store.project, node.kind, node.name)
+          : ProjectGraph.dependentsOf(Store.project, node.kind, node.name);
+      },
+
+      /** Paints a button with its number, or hides it when there is nothing on
+       *  that side. */
+      paint(direction, node) {
+        const button = UiDataLinks.buttonOf(node.kind, direction);
+        if (!button) {
+          return;
+        }
+        const names = UiDataLinks.names(direction, node);
         button.hidden = names.length === 0;
-        // The label is a span of its own: the icon of the button is written in
-        // the markup and the number is the only thing that changes.
-        button.querySelector(".label").textContent = I18n.t(
-          kind === "readers" ? "queries.readersButton" : "queries.sourcesButton",
-          { count: names.length },
-        );
+        const label = button.querySelector(".label");
+        if (label) {
+          label.textContent = I18n.t(
+            direction === "sources" ? "ui.dataSourcesButton" : "ui.isSourceOfButton",
+            { count: names.length },
+          );
+        }
         button.title = names.length === 0
           ? ""
-          : I18n.t(kind === "readers" ? "queries.readersTip" : "queries.sourcesTip", { name: query.name });
+          : I18n.t(
+            direction === "sources" ? "ui.dataSourcesTip" : "ui.isSourceOfTip",
+            { name: node.name },
+          );
         button.setAttribute("aria-label", button.title || button.textContent);
       },
 
-      /** Brings both buttons up to date with the open query, and the drop-down
-       *  too when it is open. */
-      update(usage) {
-        const query = UiQueries.activeQueryOrNull();
-        UiQueryLinks.paint("readers", query, usage);
-        UiQueryLinks.paint("sources", query, usage);
-        document.getElementById("related-sep").hidden =
-          UiQueryLinks.buttonOf("readers").hidden && UiQueryLinks.buttonOf("sources").hidden;
-        if (UiQueryLinks.kind === null) {
+      /** Brings the buttons of the open view up to date and repaints the list
+       *  when it is open. */
+      update() {
+        const node = UiDataLinks.current();
+        ["table", "query", "script"].forEach((kind) => {
+          ["sources", "dependents"].forEach((direction) => {
+            const button = UiDataLinks.buttonOf(kind, direction);
+            if (button) {
+              button.hidden = true;
+              button.setAttribute("aria-expanded", "false");
+            }
+          });
+          const separator = document.getElementById(UiDataLinks.SEPARATORS[kind]);
+          if (separator) {
+            separator.hidden = true;
+          }
+        });
+        if (!node) {
+          if (UiDataLinks.direction !== null) {
+            UiDataLinks.hide();
+          }
           return;
         }
-        if (!query || UiQueryLinks.names(UiQueryLinks.kind, query, usage).length === 0) {
-          UiQueryLinks.hide();
+        ["sources", "dependents"].forEach((direction) => UiDataLinks.paint(direction, node));
+        const separator = document.getElementById(UiDataLinks.SEPARATORS[node.kind]);
+        if (separator) {
+          const sources = UiDataLinks.buttonOf(node.kind, "sources");
+          const dependents = UiDataLinks.buttonOf(node.kind, "dependents");
+          separator.hidden = (!sources || sources.hidden) && (!dependents || dependents.hidden);
+        }
+        if (UiDataLinks.direction === null) {
+          return;
+        }
+        if (UiDataLinks.names(UiDataLinks.direction, node).length === 0) {
+          UiDataLinks.hide();
         } else {
-          UiQueryLinks.render();
+          UiDataLinks.render();
         }
       },
 
       /** Opens the drop-down of that direction under its button. */
-      show(kind) {
-        const query = UiQueries.activeQueryOrNull();
-        if (!query) {
+      show(direction) {
+        const node = UiDataLinks.current();
+        if (!node) {
           return;
         }
         UiQueryInsert.hide();
-        UiQueryLinks.kind = kind;
-        UiQueryLinks.button = UiQueryLinks.buttonOf(kind);
-        UiQueryLinks.button.setAttribute("aria-expanded", "true");
-        const popup = UiQueryLinks.popup();
-        UiQueryLinks.render();
+        UiDataLinks.direction = direction;
+        UiDataLinks.button = UiDataLinks.buttonOf(node.kind, direction);
+        if (!UiDataLinks.button) {
+          return;
+        }
+        UiDataLinks.button.setAttribute("aria-expanded", "true");
+        UiDataLinks.render();
+        const popup = UiDataLinks.popup();
         popup.hidden = false;
-        UiQueryLinks.place();
+        UiDataLinks.place();
       },
 
       /** Closes the drop-down; nothing happens when it is already closed. */
       hide() {
-        if (UiQueryLinks.kind === null) {
+        if (UiDataLinks.direction === null) {
           return;
         }
-        UiQueryLinks.button.setAttribute("aria-expanded", "false");
-        UiQueryLinks.kind = null;
-        UiQueryLinks.button = null;
-        const popup = UiQueryLinks.popup();
+        if (UiDataLinks.button) {
+          UiDataLinks.button.setAttribute("aria-expanded", "false");
+        }
+        UiDataLinks.direction = null;
+        UiDataLinks.button = null;
+        const popup = UiDataLinks.popup();
         popup.hidden = true;
         popup.textContent = "";
       },
 
       /** Opens or closes the drop-down, as the button does. */
-      toggle(kind) {
-        if (UiQueryLinks.kind === kind) {
-          UiQueryLinks.hide();
+      toggle(direction) {
+        if (UiDataLinks.direction === direction) {
+          UiDataLinks.hide();
         } else {
-          UiQueryLinks.show(kind);
+          UiDataLinks.show(direction);
         }
       },
 
-      /** Paints the list of the open drop-down: one button per query. */
+      /** Paints the list of the open drop-down, grouped by kind. */
       render() {
-        const popup = UiQueryLinks.popup();
+        const popup = UiDataLinks.popup();
         popup.textContent = "";
-        const query = UiQueries.activeQueryOrNull();
-        if (!query || UiQueryLinks.kind === null) {
+        const node = UiDataLinks.current();
+        if (!node || UiDataLinks.direction === null) {
           return;
         }
-        popup.setAttribute("aria-label", UiQueryLinks.button.title);
-        UiQueryLinks.names(UiQueryLinks.kind, query).forEach((name) => {
-          const item = document.createElement("button");
-          item.type = "button";
-          item.className = "related-pick";
-          item.dataset.name = name;
-          item.textContent = name;
-          item.title = I18n.t("queries.relatedPickTip", { name: name });
-          item.setAttribute("aria-label", item.title);
-          popup.appendChild(item);
+        popup.setAttribute("aria-label", UiDataLinks.button.title);
+        const names = UiDataLinks.names(UiDataLinks.direction, node);
+        ["table", "query", "script"].forEach((kind) => {
+          const group = names.filter((ref) => ref.kind === kind);
+          if (group.length === 0) {
+            return;
+          }
+          const title = document.createElement("div");
+          title.className = "related-group";
+          title.textContent = I18n.t(
+            kind === "table" ? "ui.groupTables" : (kind === "query" ? "ui.groupQueries" : "ui.groupScripts"),
+          );
+          popup.appendChild(title);
+          group.forEach((ref) => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = "related-pick";
+            item.dataset.name = ref.name;
+            item.dataset.kind = ref.kind;
+            item.textContent = ref.name;
+            item.title = I18n.t("ui.relatedPickTip", { name: ref.name, kind: ProjectGraph.describeRef(ref) });
+            item.setAttribute("aria-label", item.title);
+            popup.appendChild(item);
+          });
         });
       },
 
       /** Puts the drop-down under its button, inside the window. */
       place() {
-        const box = UiQueryLinks.button.getBoundingClientRect();
-        const popup = UiQueryLinks.popup();
+        const box = UiDataLinks.button.getBoundingClientRect();
+        const popup = UiDataLinks.popup();
         const width = popup.offsetWidth;
         const height = popup.offsetHeight;
         const left = Math.max(4, Math.min(box.left, window.innerWidth - width - 4));
@@ -17348,42 +18441,60 @@
         popup.style.top = `${top}px`;
       },
 
-      /** Opens the picked query in the editor. */
-      open(name) {
-        UiQueryLinks.hide();
-        UiQueries.select(name);
+      /** Opens the picked object in its editor. */
+      open(kind, name) {
+        UiDataLinks.hide();
+        if (kind === "table") {
+          Ui.selectTable(name);
+        } else if (kind === "query") {
+          UiQueries.select(name);
+        } else if (kind === "script") {
+          UiScripts.select(name);
+        }
       },
 
-      /** Wires the two buttons, the list and the ways out. */
+      /** Wires the buttons, the list and the ways out. */
       bind() {
-        ["readers", "sources"].forEach((kind) => {
-          UiQueryLinks.buttonOf(kind).addEventListener("click", () => UiQueryLinks.toggle(kind));
+        ["table", "query", "script"].forEach((kind) => {
+          ["sources", "dependents"].forEach((direction) => {
+            const button = UiDataLinks.buttonOf(kind, direction);
+            if (button) {
+              button.addEventListener("click", () => {
+                const current = UiDataLinks.current();
+                if (current && current.kind === kind) {
+                  UiDataLinks.toggle(direction);
+                }
+              });
+            }
+          });
         });
-        UiQueryLinks.popup().addEventListener("click", (event) => {
+        UiDataLinks.popup().addEventListener("click", (event) => {
           const item = event.target.closest("button[data-name]");
           if (item) {
-            UiQueryLinks.open(item.dataset.name);
+            UiDataLinks.open(item.dataset.kind, item.dataset.name);
           }
         });
         document.addEventListener("pointerdown", (event) => {
-          if (UiQueryLinks.kind === null || !(event.target instanceof Element)) {
+          if (UiDataLinks.direction === null || !(event.target instanceof Element)) {
             return;
           }
-          if (!event.target.closest("#related-popup, #btn-query-readers, #btn-query-sources")) {
-            UiQueryLinks.hide();
+          if (!event.target.closest("#related-popup, #btn-query-readers, #btn-query-sources, #btn-script-readers, #btn-script-sources, #btn-table-readers")) {
+            UiDataLinks.hide();
           }
         });
         document.addEventListener("keydown", (event) => {
-          if (UiQueryLinks.kind !== null && event.key === "Escape") {
+          if (UiDataLinks.direction !== null && event.key === "Escape") {
             event.preventDefault();
-            const button = UiQueryLinks.button;
-            UiQueryLinks.hide();
-            button.focus();
+            const button = UiDataLinks.button;
+            UiDataLinks.hide();
+            if (button) {
+              button.focus();
+            }
           }
         });
         window.addEventListener("resize", () => {
-          if (UiQueryLinks.kind !== null) {
-            UiQueryLinks.place();
+          if (UiDataLinks.direction !== null) {
+            UiDataLinks.place();
           }
         });
       },
@@ -17873,12 +18984,111 @@
        ===================================================================== */
 
     const UiDashboard = {
-      /** Writes in every card the figure of the open project that belongs to it. */
+      /** Writes in every card the figure of the open project that belongs to it
+       *  and fills the detail panels: the largest tables, the test coverage and
+       *  how the fields are typed. */
       render() {
-        const figures = Model.projectStats(Store.project);
+        const project = Store.project;
+        const figures = Model.projectStats(project);
         document.querySelectorAll("#view-vacio .dashboard [data-data]").forEach((nodo) => {
-          nodo.textContent = String(figures[nodo.dataset.data]);
+          const value = figures[nodo.dataset.data];
+          nodo.textContent = `${value}${nodo.dataset.suffix || ""}`;
         });
+        UiDashboard.renderTopTables(project);
+        UiDashboard.renderFieldTypes(project);
+        UiDashboard.renderTestCoverage(project, figures);
+      },
+
+      /** Largest tables, with a bar relative to the one that has more rows. */
+      renderTopTables(project) {
+        const list = document.getElementById("dashboard-top-tables");
+        if (!list) {
+          return;
+        }
+        list.textContent = "";
+        const tables = [...(project.tables || [])]
+          .sort((a, b) => b.rows.length - a.rows.length || a.name.localeCompare(b.name))
+          .slice(0, 6);
+        if (tables.length === 0) {
+          const empty = document.createElement("li");
+          empty.className = "dashboard-empty";
+          empty.textContent = I18n.t("dashboard.emptyTables");
+          list.appendChild(empty);
+          return;
+        }
+        const max = Math.max(...tables.map((table) => table.rows.length), 1);
+        tables.forEach((table) => {
+          const item = document.createElement("li");
+          const name = document.createElement("span");
+          name.className = "bar-name";
+          name.textContent = table.name;
+          name.title = table.name;
+          const bar = document.createElement("span");
+          bar.className = "bar";
+          const fill = document.createElement("span");
+          fill.style.width = `${Math.round((table.rows.length / max) * 100)}%`;
+          bar.appendChild(fill);
+          const value = document.createElement("span");
+          value.className = "bar-value";
+          value.textContent = String(table.rows.length);
+          value.title = I18n.t("misc.rowCount", { count: table.rows.length });
+          item.appendChild(name);
+          item.appendChild(bar);
+          item.appendChild(value);
+          list.appendChild(item);
+        });
+      },
+
+      /** How many fields there are of each type, with a bar per type. */
+      renderFieldTypes(project) {
+        const list = document.getElementById("dashboard-field-types");
+        if (!list) {
+          return;
+        }
+        list.textContent = "";
+        const counts = { string: 0, number: 0, boolean: 0 };
+        (project.tables || []).forEach((table) => {
+          (table.fields || []).forEach((field) => {
+            const type = counts[field.type] === undefined ? "string" : field.type;
+            counts[type] += 1;
+          });
+        });
+        const max = Math.max(counts.string, counts.number, counts.boolean, 1);
+        [["string", "dashboard.typeString"], ["number", "dashboard.typeNumber"], ["boolean", "dashboard.typeBoolean"]]
+          .forEach(([type, key]) => {
+            const item = document.createElement("li");
+            const name = document.createElement("span");
+            name.className = "bar-name";
+            name.textContent = I18n.t(key);
+            const bar = document.createElement("span");
+            bar.className = "bar";
+            const fill = document.createElement("span");
+            fill.style.width = `${Math.round((counts[type] / max) * 100)}%`;
+            bar.appendChild(fill);
+            const value = document.createElement("span");
+            value.className = "bar-value";
+            value.textContent = String(counts[type]);
+            item.appendChild(name);
+            item.appendChild(bar);
+            item.appendChild(value);
+            list.appendChild(item);
+          });
+      },
+
+      /** Green meter with the share of queries and scripts that carry an assert. */
+      renderTestCoverage(project, figures) {
+        const fill = document.getElementById("dashboard-test-fill");
+        const meter = document.getElementById("dashboard-test-meter");
+        const note = document.getElementById("dashboard-test-note");
+        if (!fill || !meter || !note) {
+          return;
+        }
+        const percent = figures.testCoverage || 0;
+        fill.style.width = `${percent}%`;
+        meter.setAttribute("aria-valuenow", String(percent));
+        const tested = figures.queriesWithTest + figures.scriptsWithTest;
+        const total = figures.queries + figures.scripts;
+        note.textContent = I18n.t("dashboard.testCoverageNote", { tested, total });
       },
     };
 
@@ -19914,8 +21124,7 @@
       const script = {
         name: "por_ciudad",
         description: "Counts the rows by city",
-        code: "return datos.map((row) => row.city);",
-        source: { kind: "table", name: "people" },
+        code: "return tables[\"people\"].map((row) => row.city);",
       };
       const project = {
         name: "scripts",
@@ -19932,20 +21141,26 @@
       assertEqual(Persistence.serializeProject(Persistence.parseProject(text).project), text, "the file does not change when it is written again");
     });
 
-    SelfTests.add("When_ScriptWithoutSource_Expect_NoSourceKey", () => {
+    SelfTests.add("When_ScriptWithLegacySource_Expect_SourceDropped", () => {
       const project = {
         name: "scripts",
         tables: [],
         queries: [],
-        scripts: [{ name: "free", description: "", code: "return [];" }],
+        scripts: [{
+          name: "old",
+          description: "",
+          code: "return [];",
+          source: { kind: "table", name: "people" },
+        }],
         settings: Utils.cloneJson(DEFAULT_SETTINGS),
       };
       const result = Persistence.parseProject(Persistence.serializeProject(project));
       assert(result.ok, "the project must be valid: " + JSON.stringify(result.errors));
-      assertEqual(result.project.scripts[0].source, undefined, "a script without a source carries no source key");
+      assertEqual(result.project.scripts[0].source, undefined, "the old source key is not kept");
+      assert(!Persistence.serializeProject(result.project).includes('"source"'), "and it is not written again");
     });
 
-    SelfTests.add("When_ScriptWithUnknownSourceKind_Expect_Rejected", () => {
+    SelfTests.add("When_ScriptWithUnknownLegacySource_Expect_Ignored", () => {
       const result = Persistence.parseProject(JSON.stringify({
         format: Persistence.FORMAT,
         version: Persistence.VERSION,
@@ -19954,23 +21169,238 @@
         queries: [],
         scripts: [{ name: "bad", description: "", code: "return [];", source: { kind: "field", name: "x" } }],
       }));
-      assertEqual(result.ok, false, "the file is not read");
-      assert(result.errors.some((error) => error.includes("bad")), "the error names the script: " + JSON.stringify(result.errors));
+      assertEqual(result.ok, true, "the old source is ignored, whatever it was");
+      assertEqual(result.project.scripts[0].source, undefined, "no source is kept");
     });
 
-    SelfTests.add("When_RenamingSource_Expect_ScriptSourceFollows", () => {
+    SelfTests.add("When_RenamingInScripts_Expect_LiteralRefsFollow", () => {
       const project = {
+        tables: [{ name: "people" }],
+        queries: [{ name: "adults", sql: "SELECT 1" }],
         scripts: [
-          { name: "s", description: "", code: "return datos;", source: { kind: "table", name: "people" } },
-          { name: "q", description: "", code: "return datos;", source: { kind: "query", name: "adults" } },
+          { name: "s", description: "", code: "return tables[\"people\"];" },
+          { name: "q", description: "", code: "return queries[\"adults\"]();" },
+          { name: "r", description: "", code: "return scripts[\"s\"]();" },
         ],
       };
-      assertEqual(Model.renameScriptSources(project, "table", "people", "staff"), 1, "the table source is updated");
-      assertEqual(project.scripts[0].source.name, "staff", "and points at the new table");
-      assertEqual(project.scripts[1].source.name, "adults", "the query source is left alone");
-      assertEqual(Model.renameScriptSources(project, "query", "adults", "grown_ups"), 1, "the query source is updated");
-      assertEqual(project.scripts[1].source.name, "grown_ups", "and points at the new query");
-      assertEqual(Model.renameScriptSources(project, "query", "gone", "other"), 0, "an unrelated name changes nothing");
+      assertEqual(ProjectGraph.renameScriptRefs(project, "table", "people", "staff"), 1, "the table reference is updated");
+      assertEqual(project.scripts[0].code, "return tables[\"staff\"];", "and points at the new table");
+      assertEqual(project.scripts[1].code, "return queries[\"adults\"]();", "the query reference is left alone");
+      assertEqual(ProjectGraph.renameScriptRefs(project, "query", "adults", "grown_ups"), 1, "the query reference is updated");
+      assertEqual(project.scripts[1].code, "return queries[\"grown_ups\"]();", "and points at the new query");
+      assertEqual(ProjectGraph.renameScriptRefs(project, "script", "s", "s2"), 1, "the script reference is updated");
+      assertEqual(project.scripts[0].code, "return tables[\"staff\"];", "the table reference is untouched");
+      assertEqual(project.scripts[2].code, "return scripts[\"s2\"]();", "and points at the new script");
+      assertEqual(ProjectGraph.renameScriptRefs(project, "query", "gone", "other"), 0, "an unrelated name changes nothing");
+    });
+
+    SelfTests.add("When_QueryReadsScript_Expect_ResultRows", () => {
+      const project = {
+        name: "scripts-as-tables",
+        tables: [{
+          name: "t",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [
+            { name: "id", description: null, type: "number" },
+            { name: "name", description: null, type: "string" },
+          ],
+          rows: [{ id: 1, name: "a" }, { id: 2, name: "b" }],
+        }],
+        queries: [{ name: "q", description: "", sql: "SELECT name FROM s ORDER BY name", assert: null }],
+        scripts: [{ name: "s", description: "", code: "return tables[\"t\"].filter((row) => row.id > 1);" }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      assertEqual(
+        ProjectGraph.sourcesOf(project, "query", "q"),
+        [{ kind: "script", name: "s" }],
+        "the graph sees the script as the source of the query",
+      );
+      assertEqual(
+        ProjectGraph.dependentsOf(project, "script", "s"),
+        [{ kind: "query", name: "q" }],
+        "and the query as its dependent",
+      );
+      const outcome = SqlEngine.runSafe("SELECT name FROM s ORDER BY name", project);
+      assert(outcome.ok, "a query can read a script as a table: " + (outcome.error && outcome.error.message));
+      assertEqual(outcome.result.columns, ["name"], "the columns come from the script result");
+      assertEqual(outcome.result.rows, [["b"]], "and so do the rows");
+    });
+
+    SelfTests.add("When_ScriptReadsScriptAndQuery_Expect_ChainRuns", () => {
+      const project = {
+        name: "script-chain",
+        tables: [{
+          name: "t",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "id", description: null, type: "number" }],
+          rows: [{ id: 1 }, { id: 2 }, { id: 3 }],
+        }],
+        queries: [{ name: "q", description: "", sql: "SELECT id FROM t WHERE id > 1", assert: null }],
+        scripts: [
+          { name: "base", description: "", code: "return tables[\"t\"];" },
+          { name: "from_query", description: "", code: "return queries[\"q\"]();" },
+          { name: "derived", description: "", code: "return scripts[\"base\"]().filter((row) => row.id > 1);" },
+        ],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      const fromQuery = ScriptRunner.executeSync(project.scripts[1], project);
+      assert(fromQuery.ok, "the script calls a saved query: " + (fromQuery.error && fromQuery.error.message));
+      assertEqual(fromQuery.result.rows, [[2], [3]], "with the rows of the query");
+      const derived = ScriptRunner.executeSync(project.scripts[2], project);
+      assert(derived.ok, "the script calls another script: " + (derived.error && derived.error.message));
+      assertEqual(derived.result.rows, [[2], [3]], "with the rows of the other script");
+    });
+
+    SelfTests.add("When_ScriptsReadEachOtherInACircle_Expect_ErrorWithChain", () => {
+      const project = {
+        name: "script-cycle",
+        tables: [],
+        queries: [],
+        scripts: [
+          { name: "a", description: "", code: "return scripts[\"b\"]();" },
+          { name: "b", description: "", code: "return scripts[\"a\"]();" },
+        ],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      const outcome = ScriptRunner.executeSync(project.scripts[0], project);
+      assert(!outcome.ok, "the circle is stopped");
+      assert(outcome.error.message.includes("a → b → a") || outcome.error.message.includes("b → a → b"), "the chain is shown: " + outcome.error.message);
+    });
+
+    SelfTests.add("When_RenameScriptUsedByQueryAndScript_Expect_RefsFollow", () => {
+      const before = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
+      Store.replaceProject({
+        name: "rename-script",
+        tables: [],
+        queries: [{ name: "q", description: "", sql: "SELECT * FROM s", assert: null }],
+        scripts: [
+          { name: "s", description: "", code: "return [];" },
+          { name: "other", description: "", code: "return scripts[\"s\"]();" },
+        ],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        UiScripts.select("s");
+        Store.dirty = false;
+        const input = document.getElementById("script-name");
+        input.value = "s2";
+        input.dispatchEvent(new Event("change"));
+        assertEqual(Store.project.queries[0].sql, "SELECT * FROM s2", "the query that reads it follows the new name");
+        assertEqual(Store.project.scripts[1].code, "return scripts[\"s2\"]();", "and so does the other script");
+      } finally {
+        Store.replaceProject(before.project);
+        Ui.state.activeScript = null;
+        Ui.showView("vacio");
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
+      }
+    });
+
+    SelfTests.add("When_ScriptIsReadByQuery_Expect_ViewMarkAndLinkButtons", () => {
+      const before = { project: Utils.cloneJson(Store.project), view: Ui.state.view, query: Ui.state.activeQuery, script: Ui.state.activeScript };
+      Store.replaceProject({
+        name: "script-view",
+        tables: [{
+          name: "t",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "id", description: null, type: "number" }],
+          rows: [{ id: 1 }],
+        }],
+        queries: [{ name: "q", description: "", sql: "SELECT id FROM s", assert: null }],
+        scripts: [{ name: "s", description: "", code: "return tables[\"t\"];" }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        UiScripts.select("s");
+        const item = document.querySelector("#list-scripts li[data-name=\"s\"]");
+        assertEqual(item.querySelector(".mark-view").textContent, "view", "the script carries the view mark");
+        assertEqual(document.getElementById("btn-script-sources").hidden, false, "the data sources button shows");
+        assertEqual(document.getElementById("btn-script-readers").hidden, false, "the dependents button shows");
+        document.getElementById("btn-script-sources").click();
+        assertEqual(
+          getComputedStyle(document.getElementById("related-popup")).display,
+          "flex",
+          "the data sources list is visible from the script view",
+        );
+        assertEqual(
+          [...document.querySelectorAll("#related-popup .related-pick")].map((button) => button.dataset.name).join("|"),
+          "t",
+          "the table source is listed",
+        );
+        UiDataLinks.hide();
+        document.getElementById("btn-script-readers").click();
+        assertEqual(
+          [...document.querySelectorAll("#related-popup .related-pick")].map((button) => button.dataset.name).join("|"),
+          "q",
+          "the query that reads it is listed",
+        );
+        document.querySelector("#related-popup .related-pick").click();
+        assertEqual(Ui.state.view, "query", "picking it opens the query");
+      } finally {
+        UiDataLinks.hide();
+        Store.replaceProject(before.project);
+        Ui.state.activeQuery = before.query;
+        Ui.state.activeScript = before.script;
+        Ui.showView(before.view);
+        Ui.renderAll();
+      }
+    });
+
+    SelfTests.add("When_OpenDependencies_Expect_TreeBothWays", () => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        script: Ui.state.activeScript,
+        direction: UiDependencies.direction,
+        root: UiDependencies.root,
+        expanded: new Set(UiDependencies.expanded),
+      };
+      Store.replaceProject({
+        name: "deps",
+        tables: [{
+          name: "t",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "id", description: null, type: "number" }],
+          rows: [{ id: 1 }],
+        }],
+        queries: [{ name: "q", description: "", sql: "SELECT id FROM t", assert: null }],
+        scripts: [{ name: "s", description: "", code: "return queries[\"q\"]();" }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        UiDependencies.root = { kind: "query", name: "q" };
+        UiDependencies.direction = "sources";
+        UiDependencies.expanded = new Set([UiDependencies.pathKey([UiDependencies.nodeKey("query", "q")])]);
+        UiDependencies.show();
+        assertEqual(document.getElementById("view-dependencies").hidden, false, "the dependency view is on screen");
+        assert(document.getElementById("dependencies-tree").textContent.includes("q"), "the root query is in the tree");
+        assert(document.getElementById("dependencies-tree").textContent.includes("t"), "and its table source");
+        document.getElementById("btn-dep-dependents").click();
+        assert(document.getElementById("dependencies-tree").textContent.includes("s"), "the dependent script shows in the other direction");
+        const toggle = document.querySelector("#dependencies-tree button.dep-toggle");
+        assertEqual(toggle !== null, true, "the nodes with dependencies can be unfolded");
+      } finally {
+        UiDependencies.direction = before.direction;
+        UiDependencies.root = before.root;
+        UiDependencies.expanded = before.expanded;
+        Store.replaceProject(before.project);
+        Ui.state.activeTable = before.table;
+        Ui.state.activeQuery = before.query;
+        Ui.state.activeScript = before.script;
+        Ui.showView(before.view);
+        Ui.renderAll();
+      }
     });
 
     SelfTests.add("When_ScriptResultIsArrayOfObjects_Expect_UnionOfColumns", () => {
@@ -21332,7 +22762,7 @@
         error = err;
       }
       assert(error instanceof SqlValidationError, "validation error: " + error);
-      assert(error.message.includes("Any query in the project"), "it warns that queries work too: " + error.message);
+      assert(error.message.includes("Any query or script in the project"), "it warns that queries and scripts work too: " + error.message);
       assert(!error.message.includes("sales_young"), "it does not list every query: " + error.message);
       assert(error.hint.includes("sales_department"), "it suggests the similar query: " + error.hint);
     });
@@ -21418,13 +22848,47 @@
       assertEqual(figures.references, 2, "foreign keys");
       assertEqual(figures.queries, 2, "queries");
       assertEqual(figures.queriesWithTest, 1, "queries with an asserted result");
+      assertEqual(figures.scripts, 0, "scripts");
+      assertEqual(figures.scriptsWithTest, 0, "scripts with an asserted result");
       assertEqual(figures.relatedPairs, 2, "related pairs: campuses–classrooms and the self-reference campus–campus");
       assertEqual(figures.views, 0, "queries used as tables: here every FROM name is a table one");
+      assertEqual(figures.dependencies, 2, "each query reads one table");
+      assertEqual(figures.testCoverage, 50, "one of the two queries carries an assert");
       assertEqual(
         Model.projectStats({ tables: [], queries: [] }),
-        { tables: 0, rows: 0, fields: 0, references: 0, queries: 0, queriesWithTest: 0, relatedPairs: 0, views: 0 },
+        {
+          tables: 0,
+          rows: 0,
+          fields: 0,
+          references: 0,
+          queries: 0,
+          queriesWithTest: 0,
+          scripts: 0,
+          scriptsWithTest: 0,
+          relatedPairs: 0,
+          views: 0,
+          dependencies: 0,
+          testCoverage: 0,
+        },
         "an empty project has no figure",
       );
+    });
+
+    SelfTests.add("When_ProjectHasScripts_Expect_DashboardCountsThem", () => {
+      const project = projectDeFigures();
+      project.scripts = [{
+        name: "resumen",
+        description: "",
+        folder: "",
+        code: "return tables[\"campuses\"];",
+        assert: { columns: ["id_campus"], rows: [[1], [2]] },
+      }];
+      const figures = Model.projectStats(project);
+      assertEqual(figures.scripts, 1, "the dashboard counts the scripts");
+      assertEqual(figures.scriptsWithTest, 1, "and the scripts with an asserted result");
+      assertEqual(figures.dependencies, 3, "the two queries and the script add one source each");
+      assertEqual(figures.testCoverage, 66.7, "two of the three testable objects carry an assert");
+      assertEqual(figures.views, 0, "a script that reads a table is not a view");
     });
 
     SelfTests.add("When_ChangeProject_Expect_DashboardCardsUpdate", () => {
@@ -21444,8 +22908,27 @@
       assertEqual(figure("references"), "2", "the foreign keys");
       assertEqual(figure("queries"), "2", "the queries");
       assertEqual(figure("queriesWithTest"), "1", "the queries with an asserted result");
+      assertEqual(figure("scripts"), "0", "the scripts");
+      assertEqual(figure("scriptsWithTest"), "0", "the scripts with an asserted result");
       assertEqual(figure("relatedPairs"), "2", "the related pairs of tables");
       assertEqual(figure("views"), "0", "the queries used as tables");
+      assertEqual(figure("dependencies"), "2", "the links between queries and their sources");
+      assertEqual(figure("testCoverage"), "50%", "one of the two testable objects carries an assert");
+      assertEqual(
+        document.querySelectorAll("#dashboard-top-tables li").length,
+        3,
+        "the panel lists one row per table",
+      );
+      assertEqual(
+        document.querySelectorAll("#dashboard-field-types li").length,
+        3,
+        "the panel lists the three field types",
+      );
+      assertEqual(
+        document.getElementById("dashboard-test-note").textContent.includes("1"),
+        true,
+        "the coverage note counts the tested object",
+      );
 
       Store.replaceProject(antes.project);
       Ui.state.activeTable = antes.table;
@@ -22160,12 +23643,12 @@
       const pista = (name) => document.querySelector(`#list-tables li[data-name="${name}"]`).title;
       assertEqual(
         pista("classrooms"),
-        "Fields (2): id_classroom, id_campus → campuses.id_campus",
-        "the field that is a foreign key carries the arrow towards its pair",
+        "Fields (2): id_classroom, id_campus → campuses.id_campus\nIs source of (1): query “classrooms”",
+        "the field that is a foreign key carries the arrow towards its pair, and the dependents are named",
       );
       assertEqual(
         pista("campuses"),
-        "Fields (1): id_campus ← classrooms.id_campus",
+        "Fields (1): id_campus ← classrooms.id_campus\nIs source of (1): query “campuses”",
         "the field another table points at carries it with the arrow the other way round",
       );
       assertEqual(
@@ -22196,18 +23679,18 @@
       const pista = (name) => document.querySelector(`#list-queries li[data-name="${name}"]`).title;
       assertEqual(
         pista("big"),
-        "Classrooms with 50 seats or more\nResult fields (2): classroom, capacity",
-        "the hint says the columns the SELECT returns",
+        "Classrooms with 50 seats or more\nResult fields (2): classroom, capacity\nData sources (1): table “classrooms”",
+        "the hint says the columns the SELECT returns and its data sources",
       );
       // The tip is memoised: changing the project must show up in it.
       const consulta = Store.project.queries.find((item) => item.name === "big");
       consulta.sql = "SELECT capacity FROM classrooms";
       Ui.renderSidebarQueries();
-      assertEqual(pista("big"), "Classrooms with 50 seats or more\nResult fields (1): capacity",
+      assertEqual(pista("big"), "Classrooms with 50 seats or more\nResult fields (1): capacity\nData sources (1): table “classrooms”",
         "the memo does not hide a change in the SQL");
       consulta.sql = "SELECT code AS classroom, capacity FROM classrooms";
       Ui.renderSidebarQueries();
-      assertEqual(pista("big"), "Classrooms with 50 seats or more\nResult fields (2): classroom, capacity",
+      assertEqual(pista("big"), "Classrooms with 50 seats or more\nResult fields (2): classroom, capacity\nData sources (1): table “classrooms”",
         "and going back gives the previous tip again");
       assert(
         pista("rota").startsWith("Result fields: cannot be calculated"),
@@ -22358,8 +23841,8 @@
       const item = (name) => document.querySelector(`#list-queries li[data-name="${name}"]`);
       assertEqual(item("big").querySelector(".mark-view").textContent, "view", "“view” mark on the one read as a table");
       assertEqual(item("summary").querySelector(".mark-view"), null, "the others carry no mark");
-      assert(item("big").title.includes("Read as a table by (1): «summary»"), "the hint says who reads it: " + item("big").title);
-      assert(item("summary").title.includes("Reads as tables (1): «big»"), "and what it reads: " + item("summary").title);
+      assert(item("big").title.includes("Is source of (1): query “summary”"), "the hint says who reads it: " + item("big").title);
+      assert(item("summary").title.includes("Data sources (1): query “big”"), "and what it reads: " + item("summary").title);
       assertEqual(
         document.querySelector("#view-vacio .dashboard [data-data=\"views\"]").textContent,
         "1",
@@ -22367,9 +23850,9 @@
       );
       UiSummary.show("queries");
       const row = (name) => document.querySelector(`#table-summary-queries tbody tr[data-query="${name}"]`);
-      assertEqual(row("big").children[3].textContent, "read by: «summary»", "the summary says who reads it");
-      assertEqual(row("summary").children[3].textContent, "reads: «big»", "and which queries it reads");
-      assertEqual(row("foreign").children[3].textContent, "—", "without views, a dash");
+      assertEqual(row("big").children[3].textContent, "sources: table “classrooms”\nis source of: query “summary”", "the summary says its sources and who reads it");
+      assertEqual(row("summary").children[3].textContent, "sources: query “big”", "and which query it reads");
+      assertEqual(row("foreign").children[3].textContent, "sources: table “classrooms”", "a query with a table source says so");
       restoreMiniProject(antes);
       UiQueries.refreshEditor();
     });
@@ -22549,11 +24032,11 @@
       assertEqual(cabeceras, ["Query", "Description", "Folder", "Views", "Assert", "Tests", "SQL"], "headers of the query summary");
       assertEqual(
         [...rows[0].children].map((td) => td.textContent),
-        ["q-list", "All", "—", "—", "1 column(s) · 2 row(s)", "✔ passed · 2 row(s)", "SELECT name FROM campuses"],
+        ["q-list", "All", "—", "sources: table “campuses”", "1 column(s) · 2 row(s)", "✔ passed · 2 row(s)", "SELECT name FROM campuses"],
         "properties of the first query, with the result of the tests",
       );
       assertEqual(rows[0].children[2].textContent, "—", "a query without folder leaves the column empty");
-      assertEqual(rows[0].children[3].textContent, "—", "without queries read as tables, a dash");
+      assertEqual(rows[0].children[3].textContent, "sources: table “campuses”", "the query shows its data sources");
       assertEqual(rows[0].children[3].className.includes("views"), true, "the column carries its class to respect the line breaks");
       assertEqual(rows[1].children[4].textContent, "1 column(s) · rowCount 0", "assert only by number of rows");
       assertEqual(rows[1].children[5].textContent, "—", "without a report, the Tests column is left empty");
@@ -26749,7 +28232,7 @@
         Store.dirty = false;
         body();
       } finally {
-        UiQueryLinks.hide();
+        UiDataLinks.hide();
         Store.replaceProject(before.project);
         Ui.state.activeQuery = before.query;
         Ui.showView(before.view);
@@ -26770,12 +28253,12 @@
         assertEqual(sources.hidden, false, "the button of the queries it reads shows");
         assertEqual(
           readers.textContent,
-          I18n.t("queries.readersButton", { count: 1 }),
+          I18n.t("ui.isSourceOfButton", { count: 1 }),
           "the readers button carries its number",
         );
         assertEqual(
           sources.textContent,
-          I18n.t("queries.sourcesButton", { count: 1 }),
+          I18n.t("ui.dataSourcesButton", { count: 1 }),
           "the sources button carries its number",
         );
       });
@@ -26957,7 +28440,8 @@
         UiQueries.bind();
         UiScripts.bind();
         UiQueryInsert.bind();
-        UiQueryLinks.bind();
+        UiDataLinks.bind();
+        UiDependencies.bind();
         UiTableCsv.bind();
         UiJsonExport.bind();
         UiImport.bind();
@@ -27001,9 +28485,12 @@
       SqlExecutor,
       SqlEngine,
       SqlRename,
+      ProjectGraph,
       ProjectTests,
       ScriptRunner,
       UiScripts,
+      UiDataLinks,
+      UiDependencies,
     };
 
     document.addEventListener("DOMContentLoaded", () => App.init());

@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Health and hospitals (20 tables, 209 queries)",
+  "name": "SQL tests · Health and hospitals (20 tables, 212 queries, 32 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -9,7 +9,8 @@
     "D · Integrity",
     "E · Views",
     "F · Subqueries",
-    "G · Unions"
+    "G · Unions",
+    "H · Scripts as tables"
   ],
   "tableFolders": [
     "Hospital",
@@ -23,7 +24,8 @@
     "Aggregates",
     "Dates",
     "Joins and integrity",
-    "Queries and reports"
+    "Queries and reports",
+    "JavaScript power"
   ],
   "tables": [
     {
@@ -21151,17 +21153,117 @@
       },
       "folder": "G · Unions",
       "color": "#e8ddf7"
+    },
+    {
+      "name": "H01 · Patients by city, read from the script",
+      "description": "Reads the result of the script “Patients by city” as if it were a table.",
+      "sql": "SELECT city, patients FROM [Patients by city] ORDER BY patients DESC, city",
+      "folder": "H · Scripts as tables",
+      "assert": {
+        "columns": [
+          "city",
+          "patients"
+        ],
+        "rows": [
+          [
+            "Bilbao",
+            6
+          ],
+          [
+            "Bogotá",
+            5
+          ],
+          [
+            "Málaga",
+            5
+          ],
+          [
+            "Quito",
+            5
+          ],
+          [
+            "Valencia",
+            5
+          ],
+          [
+            "Murcia",
+            4
+          ],
+          [
+            "Madrid",
+            3
+          ],
+          [
+            "Sevilla",
+            3
+          ],
+          [
+            "Barcelona",
+            2
+          ],
+          [
+            "Zaragoza",
+            2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "H02 · How many cities the script returns",
+      "description": "Reads the result of the script “Patients by city” as if it were a table.",
+      "sql": "SELECT COUNT(*) AS total FROM [Patients by city]",
+      "folder": "H · Scripts as tables",
+      "assert": {
+        "columns": [
+          "total"
+        ],
+        "rows": [
+          [
+            10
+          ]
+        ]
+      }
+    },
+    {
+      "name": "H03 · Cities with 5 or more patients",
+      "description": "Reads the result of the script “Patients by city” as if it were a table.",
+      "sql": "SELECT city, patients FROM [Patients by city] WHERE patients >= 5 ORDER BY patients DESC, city",
+      "folder": "H · Scripts as tables",
+      "assert": {
+        "columns": [
+          "city",
+          "patients"
+        ],
+        "rows": [
+          [
+            "Bilbao",
+            6
+          ],
+          [
+            "Bogotá",
+            5
+          ],
+          [
+            "Málaga",
+            5
+          ],
+          [
+            "Quito",
+            5
+          ],
+          [
+            "Valencia",
+            5
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
     {
       "name": "Chronic patients",
       "description": "Filters chronic patients and shows their name, city, blood group and phone.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "return datos\n  .filter((fila) => fila.is_chronic)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"city\": fila.city,\n    \"blood_group\": fila.blood_group,\n    \"phone\": fila.phone,\n  }));",
+      "code": "const datos = tables[\"patients\"];\nreturn datos\n  .filter((fila) => fila.is_chronic)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"city\": fila.city,\n    \"blood_group\": fila.blood_group,\n    \"phone\": fila.phone,\n  }));",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
       "assert": {
@@ -21268,11 +21370,7 @@
     {
       "name": "Patient ages",
       "description": "Calculates the age on 1 September 2025 and sorts from oldest to youngest.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "const reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
+      "code": "const datos = tables[\"patients\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
       "folder": "Dates",
       "color": "#fde8cd",
       "assert": {
@@ -21488,11 +21586,7 @@
     {
       "name": "Patients by city",
       "description": "Counts the patients in each city and calculates their percentage over the total.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.city || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"city\": city,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
+      "code": "const datos = tables[\"patients\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.city || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"city\": city,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -21558,11 +21652,7 @@
     {
       "name": "Patients by insurer",
       "description": "Crosses patients with insurers, counts how many there are per insurer and shows their coverage.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "const insurers = new Map(tablas[\"insurers\"].map((i) => [i.id_insurer, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_insurer;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.name : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.coverage_percent : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"insurer\": name,\n    \"patients\": g.count,\n    \"coverage\": g.coverage,\n    \"percentage\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
+      "code": "const datos = tables[\"patients\"];\nconst insurers = new Map(tables[\"insurers\"].map((i) => [i.id_insurer, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_insurer;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.name : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.coverage_percent : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"insurer\": name,\n    \"patients\": g.count,\n    \"coverage\": g.coverage,\n    \"percentage\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -21621,11 +21711,7 @@
     {
       "name": "Incomplete contacts",
       "description": "Lists the patients who are missing their phone, their e-mail or both.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "return datos\n  .filter((fila) => !fila.phone || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.phone) missing.push(\"phone\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"phone\": fila.phone,\n      \"email\": fila.email,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
+      "code": "const datos = tables[\"patients\"];\nreturn datos\n  .filter((fila) => !fila.phone || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.phone) missing.push(\"phone\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"phone\": fila.phone,\n      \"email\": fila.email,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
       "assert": {
@@ -21738,11 +21824,7 @@
     {
       "name": "Blood groups",
       "description": "Counts the patients by blood group (without the null ones) and calculates the percentage.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.blood_group;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"blood_group\": group,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
+      "code": "const datos = tables[\"patients\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.blood_group;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"blood_group\": group,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -21793,11 +21875,7 @@
     {
       "name": "Admissions and cost per hospital",
       "description": "Crosses admissions, rooms and hospitals; counts admissions, emergencies and the estimated cost per stay.",
-      "source": {
-        "kind": "table",
-        "name": "admissions"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tablas[\"rooms\"].map((r) => [r.id_room, r]));\nconst hospitals = new Map(tablas[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_room);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"cost\": Math.round(g.cost),\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
+      "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tables[\"rooms\"].map((r) => [r.id_room, r]));\nconst hospitals = new Map(tables[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_room);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"cost\": Math.round(g.cost),\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -21864,11 +21942,7 @@
     {
       "name": "Cost and days of stay",
       "description": "Calculates the days admitted and the cost of discharged admissions; sorts by cost.",
-      "source": {
-        "kind": "table",
-        "name": "admissions"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tablas[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nreturn datos\n  .filter((fila) => fila.discharge_date)\n  .map((fila) => {\n    const days = daysBetween(fila.admission_date, fila.discharge_date);\n    return {\n      \"patient\": patients.get(fila.id_patient) || `#${fila.id_patient}`,\n      \"reason\": fila.reason,\n      \"days\": days,\n      \"cost\": Math.round(days * (fila.cost_per_day || 0)),\n    };\n  })\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"])\n  .slice(0, 20);",
+      "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nreturn datos\n  .filter((fila) => fila.discharge_date)\n  .map((fila) => {\n    const days = daysBetween(fila.admission_date, fila.discharge_date);\n    return {\n      \"patient\": patients.get(fila.id_patient) || `#${fila.id_patient}`,\n      \"reason\": fila.reason,\n      \"days\": days,\n      \"cost\": Math.round(days * (fila.cost_per_day || 0)),\n    };\n  })\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"])\n  .slice(0, 20);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -22005,11 +22079,7 @@
     {
       "name": "Admissions by reason",
       "description": "Groups admissions by reason, counts how many are emergency and calculates the average daily cost.",
-      "source": {
-        "kind": "table",
-        "name": "admissions"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.reason || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.cost_per_day || 0;\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"reason\": reason,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"]);",
+      "code": "const datos = tables[\"admissions\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.reason || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.cost_per_day || 0;\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"reason\": reason,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -22080,11 +22150,7 @@
     {
       "name": "Billing by payment method",
       "description": "Groups invoices by payment method (including null ones) and adds up amounts and discounts.",
-      "source": {
-        "kind": "table",
-        "name": "invoices"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.payment_method || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.amount || 0;\n  acc[key].discount += fila.discount || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"payment_method\": method,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n    \"average\": Math.round(g.amount / g.count),\n    \"discount\": Math.round((g.discount / g.count) * 10) / 10,\n    \"percentage\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
+      "code": "const datos = tables[\"invoices\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.payment_method || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.amount || 0;\n  acc[key].discount += fila.discount || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"payment_method\": method,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n    \"average\": Math.round(g.amount / g.count),\n    \"discount\": Math.round((g.discount / g.count) * 10) / 10,\n    \"percentage\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -22135,11 +22201,7 @@
     {
       "name": "Unpaid invoices by patient",
       "description": "Filters unpaid invoices, groups them by patient and adds up what they owe.",
-      "source": {
-        "kind": "table",
-        "name": "invoices"
-      },
-      "code": "const patients = new Map(tablas[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos\n  .filter((fila) => fila.paid === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_patient;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.amount || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
+      "code": "const datos = tables[\"invoices\"];\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos\n  .filter((fila) => fila.paid === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_patient;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.amount || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -22230,11 +22292,7 @@
     {
       "name": "Appointments by status and type (pivot)",
       "description": "Turns appointment types into dynamic columns and counts how many there are per status.",
-      "source": {
-        "kind": "table",
-        "name": "appointments"
-      },
-      "code": "const types = Array.from(new Set(datos.map((fila) => fila.type))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.status;\n  const type = fila.type;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"status\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"status\"]).localeCompare(String(b[\"status\"])));",
+      "code": "const datos = tables[\"appointments\"];\nconst types = Array.from(new Set(datos.map((fila) => fila.type))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.status;\n  const type = fila.type;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"status\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"status\"]).localeCompare(String(b[\"status\"])));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -22280,11 +22338,7 @@
     {
       "name": "Average appointment duration per doctor",
       "description": "Crosses appointments with doctors, calculates the average duration and returns the top ten.",
-      "source": {
-        "kind": "table",
-        "name": "appointments"
-      },
-      "code": "const doctors = new Map(tablas[\"doctors\"].map((d) => [d.id_doctor, `${d.name} ${d.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_doctor;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duration_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"doctor\": doctors.get(Number(id)) || `#${id}`,\n    \"appointments\": g.count,\n    \"average_duration\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"average_duration\"] - a[\"average_duration\"])\n  .slice(0, 10);",
+      "code": "const datos = tables[\"appointments\"];\nconst doctors = new Map(tables[\"doctors\"].map((d) => [d.id_doctor, `${d.name} ${d.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_doctor;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duration_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"doctor\": doctors.get(Number(id)) || `#${id}`,\n    \"appointments\": g.count,\n    \"average_duration\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"average_duration\"] - a[\"average_duration\"])\n  .slice(0, 10);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -22350,11 +22404,7 @@
     {
       "name": "Doctors per specialty",
       "description": "Groups doctors by specialty and calculates how many there are, their average experience and how many research.",
-      "source": {
-        "kind": "table",
-        "name": "doctors"
-      },
-      "code": "const specialties = new Map(tablas[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_specialty;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.years_experience || 0;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"specialty\": specialties.get(Number(id)) || `#${id}`,\n    \"doctors\": g.count,\n    \"average_experience\": Math.round((g.experience / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"doctors\"] - a[\"doctors\"]);",
+      "code": "const datos = tables[\"doctors\"];\nconst specialties = new Map(tables[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_specialty;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.years_experience || 0;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"specialty\": specialties.get(Number(id)) || `#${id}`,\n    \"doctors\": g.count,\n    \"average_experience\": Math.round((g.experience / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"doctors\"] - a[\"doctors\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -22437,11 +22487,7 @@
     {
       "name": "Patients with the most admissions",
       "description": "Groups admissions by patient, adds up their estimated cost and returns the top ten.",
-      "source": {
-        "kind": "table",
-        "name": "admissions"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tablas[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_patient;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"admissions\": g.count,\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"])\n  .slice(0, 10);",
+      "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_patient;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"admissions\": g.count,\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"])\n  .slice(0, 10);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -22507,11 +22553,7 @@
     {
       "name": "Room occupancy by hospital",
       "description": "Counts rooms, occupied ones and beds per hospital and calculates the occupancy rate.",
-      "source": {
-        "kind": "table",
-        "name": "rooms"
-      },
-      "code": "const hospitals = new Map(tablas[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.occupied) acc[id].occupied += 1;\n  acc[id].beds += fila.num_beds || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"rooms\": g.rooms,\n    \"occupied\": g.occupied,\n    \"beds\": g.beds,\n    \"occupancy\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"occupancy\"] - a[\"occupancy\"]);",
+      "code": "const datos = tables[\"rooms\"];\nconst hospitals = new Map(tables[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.occupied) acc[id].occupied += 1;\n  acc[id].beds += fila.num_beds || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"rooms\": g.rooms,\n    \"occupied\": g.occupied,\n    \"beds\": g.beds,\n    \"occupancy\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"occupancy\"] - a[\"occupancy\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -22571,11 +22613,7 @@
     {
       "name": "Abnormal labs by type",
       "description": "Groups labs by type and calculates the percentage of abnormal ones and the average glucose and cholesterol.",
-      "source": {
-        "kind": "table",
-        "name": "labs"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.type || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.is_abnormal) g.abnormal += 1;\n  if (fila.glucose !== null && fila.glucose !== undefined) { g.glucose += fila.glucose; g.glucoseCount += 1; }\n  if (fila.cholesterol !== null && fila.cholesterol !== undefined) { g.cholesterol += fila.cholesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"type\": type,\n    \"count\": g.count,\n    \"abnormal\": g.abnormal,\n    \"percentage\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"average_glucose\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"average_cholesterol\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
+      "code": "const datos = tables[\"labs\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.type || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.is_abnormal) g.abnormal += 1;\n  if (fila.glucose !== null && fila.glucose !== undefined) { g.glucose += fila.glucose; g.glucoseCount += 1; }\n  if (fila.cholesterol !== null && fila.cholesterol !== undefined) { g.cholesterol += fila.cholesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"type\": type,\n    \"count\": g.count,\n    \"abnormal\": g.abnormal,\n    \"percentage\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"average_glucose\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"average_cholesterol\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -22610,11 +22648,7 @@
     {
       "name": "Low-stock drugs",
       "description": "Lists the drugs with fewer than 50 units and calculates how much to reorder.",
-      "source": {
-        "kind": "table",
-        "name": "drugs"
-      },
-      "code": "return datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"drug\": fila.name,\n    \"stock\": fila.stock,\n    \"reorder\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
+      "code": "const datos = tables[\"drugs\"];\nreturn datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"drug\": fila.name,\n    \"stock\": fila.stock,\n    \"reorder\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
       "assert": {
@@ -22635,11 +22669,7 @@
     {
       "name": "Use a saved query",
       "description": "Calls query A19 (patients with three or more admissions) and shows its result.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "const rows = consultas[\"A19 · Patients with three or more admissions\"]();\nreturn rows.map((row) => ({\n  \"patient\": `${row.name} ${row.last_name}`,\n  \"admissions\": row.admissions,\n}));",
+      "code": "const rows = queries[\"A19 · Patients with three or more admissions\"]();\nreturn rows.map((row) => ({\n  \"patient\": `${row.name} ${row.last_name}`,\n  \"admissions\": row.admissions,\n}));",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
       "assert": {
@@ -22674,11 +22704,7 @@
     {
       "name": "Report with forEach and resultado",
       "description": "Builds a report of paid and unpaid invoices with forEach, adds a TOTAL row and stores it in resultado.",
-      "source": {
-        "kind": "table",
-        "name": "invoices"
-      },
-      "code": "const groups = {};\ndatos.forEach((fila) => {\n  const key = fila.paid ? \"paid\" : \"unpaid\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.amount || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"payment_status\": status,\n  \"invoices\": g.count,\n  \"amount\": Math.round(g.amount),\n  \"average\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"payment_status\": \"TOTAL\",\n  \"invoices\": datos.length,\n  \"amount\": Math.round(datos.reduce((sum, fila) => sum + (fila.amount || 0), 0)),\n  \"average\": null,\n});\nresultado = rows;",
+      "code": "const datos = tables[\"invoices\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.paid ? \"paid\" : \"unpaid\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.amount || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"payment_status\": status,\n  \"invoices\": g.count,\n  \"amount\": Math.round(g.amount),\n  \"average\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"payment_status\": \"TOTAL\",\n  \"invoices\": datos.length,\n  \"amount\": Math.round(datos.reduce((sum, fila) => sum + (fila.amount || 0), 0)),\n  \"average\": null,\n});\nresultado = rows;",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
       "assert": {
@@ -22713,11 +22739,7 @@
     {
       "name": "Orphan admissions",
       "description": "Finds admissions whose patient, doctor or room no longer exists in the tables.",
-      "source": {
-        "kind": "table",
-        "name": "admissions"
-      },
-      "code": "const patientIds = new Set(tablas[\"patients\"].map((p) => p.id_patient));\nconst doctorIds = new Set(tablas[\"doctors\"].map((d) => d.id_doctor));\nconst roomIds = new Set(tablas[\"rooms\"].map((r) => r.id_room));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_patient) || !doctorIds.has(fila.id_doctor) || !roomIds.has(fila.id_room))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_patient)) missing.push(\"patient\");\n    if (!doctorIds.has(fila.id_doctor)) missing.push(\"doctor\");\n    if (!roomIds.has(fila.id_room)) missing.push(\"room\");\n    return {\n      \"admission\": fila.id_admission,\n      \"patient\": fila.id_patient,\n      \"doctor\": fila.id_doctor,\n      \"room\": fila.id_room,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
+      "code": "const datos = tables[\"admissions\"];\nconst patientIds = new Set(tables[\"patients\"].map((p) => p.id_patient));\nconst doctorIds = new Set(tables[\"doctors\"].map((d) => d.id_doctor));\nconst roomIds = new Set(tables[\"rooms\"].map((r) => r.id_room));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_patient) || !doctorIds.has(fila.id_doctor) || !roomIds.has(fila.id_room))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_patient)) missing.push(\"patient\");\n    if (!doctorIds.has(fila.id_doctor)) missing.push(\"doctor\");\n    if (!roomIds.has(fila.id_room)) missing.push(\"room\");\n    return {\n      \"admission\": fila.id_admission,\n      \"patient\": fila.id_patient,\n      \"doctor\": fila.id_doctor,\n      \"room\": fila.id_room,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -22777,11 +22799,7 @@
     {
       "name": "Patients by age group",
       "description": "Sorts patients into minors, young people, adults and seniors, and calculates their average age.",
-      "source": {
-        "kind": "table",
-        "name": "patients"
-      },
-      "code": "const reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.birth_date);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"age_group\": group,\n    \"patients\": g.count,\n    \"average_age\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"age_group\"]).localeCompare(String(b[\"age_group\"])));",
+      "code": "const datos = tables[\"patients\"];\nconst reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.birth_date);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"age_group\": group,\n    \"patients\": g.count,\n    \"average_age\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"age_group\"]).localeCompare(String(b[\"age_group\"])));",
       "folder": "Dates",
       "color": "#fde8cd",
       "assert": {
@@ -22817,11 +22835,7 @@
     {
       "name": "Appointments per month",
       "description": "Groups appointments by year and month, counts the cancelled ones and sorts chronologically.",
-      "source": {
-        "kind": "table",
-        "name": "appointments"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = String(fila.date).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.status === \"cancelled\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"month\": month,\n    \"appointments\": g.count,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"month\"]).localeCompare(String(b[\"month\"])));",
+      "code": "const datos = tables[\"appointments\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = String(fila.date).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.status === \"cancelled\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"month\": month,\n    \"appointments\": g.count,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"month\"]).localeCompare(String(b[\"month\"])));",
       "folder": "Dates",
       "color": "#fde8cd",
       "assert": {
@@ -22992,11 +23006,7 @@
     {
       "name": "Cost by specialty",
       "description": "Crosses admissions with doctors and specialties and calculates the estimated and average cost per specialty.",
-      "source": {
-        "kind": "table",
-        "name": "admissions"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tablas[\"doctors\"].map((d) => [d.id_doctor, d]));\nconst specialties = new Map(tablas[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_doctor);\n  const specialty = doctor ? specialties.get(doctor.id_specialty) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"specialty\": specialty,\n    \"admissions\": g.count,\n    \"average_cost\": Math.round(g.cost / g.count),\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
+      "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tables[\"doctors\"].map((d) => [d.id_doctor, d]));\nconst specialties = new Map(tables[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_doctor);\n  const specialty = doctor ? specialties.get(doctor.id_specialty) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"specialty\": specialty,\n    \"admissions\": g.count,\n    \"average_cost\": Math.round(g.cost / g.count),\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -23065,6 +23075,1748 @@
             "Traumatology",
             1,
             0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Patient directory with Intl",
+      "description": "Directory sorted with Intl.Collator, with age, initials, insurer and coverage.",
+      "folder": "JavaScript power",
+      "color": "#dde5fa",
+      "code": "const patients = tables[\"patients\"];\nconst insurers = new Map(tables[\"insurers\"].map((i) => [i.id_insurer, i]));\nconst reference = new Date(\"2025-09-01\");\nconst collator = new Intl.Collator(\"en\", { sensitivity: \"base\" });\nreturn patients\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const month = reference.getMonth() - birth.getMonth();\n    if (month < 0 || (month === 0 && reference.getDate() < birth.getDate())) age -= 1;\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    const insurer = insurers.get(fila.id_insurer);\n    return {\n      \"patient\": `${fila.last_name}, ${fila.name}`,\n      \"initials\": `${fila.name.charAt(0)}${fila.last_name.charAt(0)}`.toUpperCase(),\n      \"age\": age,\n      \"city\": fila.city,\n      \"insurer\": insurer ? insurer.name : \"—\",\n      \"coverage\": insurer ? insurer.coverage_percent : null,\n      \"email_domain\": at > 0 ? email.slice(at + 1) : null,\n      \"chronic\": fila.is_chronic ? \"yes\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"patient\"], b[\"patient\"]));",
+      "assert": {
+        "columns": [
+          "patient",
+          "initials",
+          "age",
+          "city",
+          "insurer",
+          "coverage",
+          "email_domain",
+          "chronic"
+        ],
+        "rows": [
+          [
+            "Alonso González, Adrián",
+            "AA",
+            77,
+            "Barcelona",
+            "Public Health",
+            90,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Castro Moreno, Eva",
+            "EC",
+            51,
+            "Bogotá",
+            "Basic Coverage",
+            50,
+            null,
+            "yes"
+          ],
+          [
+            "Delgado Gómez, Manuel",
+            "MD",
+            38,
+            "Valencia",
+            "Basic Coverage",
+            50,
+            null,
+            "yes"
+          ],
+          [
+            "Delgado Ruiz, Sergio",
+            "SD",
+            52,
+            "Bogotá",
+            "Basic Coverage",
+            50,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Díaz Domínguez, Julia",
+            "JD",
+            64,
+            "Bilbao",
+            "Public Health",
+            90,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Díaz Martínez, Diego",
+            "DD",
+            70,
+            "Madrid",
+            "Public Health",
+            90,
+            null,
+            "yes"
+          ],
+          [
+            "Díaz Ruiz, Beatriz",
+            "BD",
+            36,
+            "Bilbao",
+            "Andes Health",
+            70,
+            null,
+            "yes"
+          ],
+          [
+            "Domínguez Jiménez, Beatriz",
+            "BD",
+            46,
+            "Quito",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Domínguez Vázquez, Clara",
+            "CD",
+            16,
+            "Zaragoza",
+            "—",
+            null,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Fernández Alonso, Antonio",
+            "AF",
+            79,
+            "Málaga",
+            "—",
+            null,
+            "mail.com",
+            "no"
+          ],
+          [
+            "García Domínguez, Pedro",
+            "PG",
+            72,
+            "Murcia",
+            "Northern Medical Insurance",
+            75,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Gil Gutiérrez, Marina",
+            "MG",
+            49,
+            "Bogotá",
+            "Northern Medical Insurance",
+            75,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Gil Martínez, Elena",
+            "EG",
+            22,
+            "Quito",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Iglesias Gutiérrez, Jorge",
+            "JI",
+            75,
+            "Valencia",
+            "Basic Coverage",
+            50,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Iglesias Navarro, Pilar",
+            "PI",
+            61,
+            "Valencia",
+            "Northern Medical Insurance",
+            75,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Jiménez Hernández, Elena",
+            "EJ",
+            24,
+            "Quito",
+            "—",
+            null,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Jiménez Romero, Adrián",
+            "AJ",
+            60,
+            "Sevilla",
+            "Northern Medical Insurance",
+            75,
+            "mail.com",
+            "no"
+          ],
+          [
+            "López González, Pablo",
+            "PL",
+            49,
+            "Sevilla",
+            "Public Health",
+            90,
+            null,
+            "no"
+          ],
+          [
+            "López Martín, María",
+            "ML",
+            48,
+            "Murcia",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Marín Iglesias, Luis",
+            "LM",
+            61,
+            "Bogotá",
+            "Public Health",
+            90,
+            null,
+            "no"
+          ],
+          [
+            "Marín Serrano, Irene",
+            "IM",
+            43,
+            "Valencia",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Martín Delgado, Nuria",
+            "NM",
+            26,
+            "Murcia",
+            "FullLife",
+            60,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Martínez Blanco, Diego",
+            "DM",
+            35,
+            "Zaragoza",
+            "—",
+            null,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Molina Morales, Sergio",
+            "SM",
+            34,
+            "Bogotá",
+            "Northern Medical Insurance",
+            75,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Muñoz García, Francisco",
+            "FM",
+            21,
+            "Madrid",
+            "Public Health",
+            90,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Muñoz Gómez, Lucía",
+            "LM",
+            81,
+            "Sevilla",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Muñoz Ortega, Laura",
+            "LM",
+            39,
+            "Madrid",
+            "Northern Medical Insurance",
+            75,
+            null,
+            "yes"
+          ],
+          [
+            "Navarro Molina, Beatriz",
+            "BN",
+            6,
+            "Málaga",
+            "Andes Health",
+            70,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Ortega Martín, Pablo",
+            "PO",
+            34,
+            "Valencia",
+            "Andes Health",
+            70,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Ortiz Gómez, Pedro",
+            "PO",
+            10,
+            "Bilbao",
+            "Basic Coverage",
+            50,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Romero García, Lucía",
+            "LR",
+            24,
+            "Málaga",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Romero Molina, Alejandro",
+            "AR",
+            67,
+            "Bilbao",
+            "Andes Health",
+            70,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Rubio González, Miguel",
+            "MR",
+            58,
+            "Quito",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Sánchez Romero, Marta",
+            "MS",
+            19,
+            "Bilbao",
+            "—",
+            null,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Sanz Alonso, Patricia",
+            "PS",
+            14,
+            "Bilbao",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Serrano Navarro, Lucía",
+            "LS",
+            64,
+            "Málaga",
+            "Public Health",
+            90,
+            "mail.com",
+            "yes"
+          ],
+          [
+            "Suárez Rodríguez, Raúl",
+            "RS",
+            68,
+            "Barcelona",
+            "Basic Coverage",
+            50,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Torres Torres, Isabel",
+            "IT",
+            7,
+            "Quito",
+            "Public Health",
+            90,
+            null,
+            "no"
+          ],
+          [
+            "Vázquez Jiménez, Laura",
+            "LV",
+            14,
+            "Málaga",
+            "Workers Mutual",
+            85,
+            "mail.com",
+            "no"
+          ],
+          [
+            "Vázquez Ramírez, Irene",
+            "IV",
+            65,
+            "Murcia",
+            "FullLife",
+            60,
+            "mail.com",
+            "no"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Clinical timeline",
+      "description": "Merges admissions, appointments, labs and surgeries of the busiest patient into one sorted timeline.",
+      "folder": "Dates",
+      "color": "#e8ddf7",
+      "code": "const counts = new Map();\nconst add = (id) => counts.set(id, (counts.get(id) || 0) + 1);\ntables[\"admissions\"].forEach((row) => add(row.id_patient));\ntables[\"appointments\"].forEach((row) => add(row.id_patient));\ntables[\"labs\"].forEach((row) => add(row.id_patient));\ntables[\"surgeries\"].forEach((row) => add(row.id_patient));\nconst busiest = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];\nconst patientId = busiest[0];\nconst patient = tables[\"patients\"].find((row) => row.id_patient === patientId);\nconst events = [];\ntables[\"admissions\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.admission_date,\n    \"source\": \"admission\",\n    \"detail\": row.reason,\n    \"status\": row.discharge_date ? \"discharged\" : \"active\",\n  });\n});\ntables[\"appointments\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"appointment\",\n    \"detail\": `${row.type} · ${row.duration_min} min`,\n    \"status\": row.status,\n  });\n});\ntables[\"labs\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"lab\",\n    \"detail\": `${row.type}: glucose ${row.glucose}`,\n    \"status\": row.is_abnormal ? \"abnormal\" : \"normal\",\n  });\n});\ntables[\"surgeries\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"surgery\",\n    \"detail\": row.name,\n    \"status\": row.successful ? \"successful\" : \"unsuccessful\",\n  });\n});\nreturn events\n  .sort((a, b) => String(a.date).localeCompare(String(b.date)) || a.source.localeCompare(b.source))\n  .map((event, index) => ({\n    \"order\": index + 1,\n    \"patient\": `${patient.last_name}, ${patient.name}`,\n    \"date\": event.date,\n    \"source\": event.source,\n    \"detail\": event.detail,\n    \"status\": event.status,\n  }));",
+      "assert": {
+        "columns": [
+          "order",
+          "patient",
+          "date",
+          "source",
+          "detail",
+          "status"
+        ],
+        "rows": [
+          [
+            1,
+            "Torres Torres, Isabel",
+            "2024-01-16",
+            "appointment",
+            "first visit · 30 min",
+            "no-show"
+          ],
+          [
+            2,
+            "Torres Torres, Isabel",
+            "2024-01-28",
+            "lab",
+            "blood: glucose 85",
+            "normal"
+          ],
+          [
+            3,
+            "Torres Torres, Isabel",
+            "2024-06-12",
+            "appointment",
+            "first visit · 60 min",
+            "pending"
+          ],
+          [
+            4,
+            "Torres Torres, Isabel",
+            "2024-07-20",
+            "admission",
+            "Abdominal pain",
+            "discharged"
+          ],
+          [
+            5,
+            "Torres Torres, Isabel",
+            "2024-12-20",
+            "appointment",
+            "first visit · 60 min",
+            "pending"
+          ],
+          [
+            6,
+            "Torres Torres, Isabel",
+            "2025-01-20",
+            "appointment",
+            "follow-up · 60 min",
+            "attended"
+          ],
+          [
+            7,
+            "Torres Torres, Isabel",
+            "2025-03-16",
+            "surgery",
+            "Craniotomy",
+            "successful"
+          ],
+          [
+            8,
+            "Torres Torres, Isabel",
+            "2025-05-03",
+            "admission",
+            "Pneumonia",
+            "active"
+          ],
+          [
+            9,
+            "Torres Torres, Isabel",
+            "2025-06-03",
+            "lab",
+            "blood: glucose null",
+            "normal"
+          ],
+          [
+            10,
+            "Torres Torres, Isabel",
+            "2025-08-18",
+            "lab",
+            "blood: glucose 190",
+            "abnormal"
+          ],
+          [
+            11,
+            "Torres Torres, Isabel",
+            "2026-10-11",
+            "appointment",
+            "first visit · 15 min",
+            "cancelled"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Hospital scorecard",
+      "description": "Hospital capacity, services, occupancy and revenue joined with the admissions query C22.",
+      "folder": "JavaScript power",
+      "color": "#fce4e4",
+      "code": "const hospitals = tables[\"hospitals\"];\nconst services = new Map();\ntables[\"services\"].forEach((row) => {\n  const list = services.get(row.id_hospital) || [];\n  list.push(row.name);\n  services.set(row.id_hospital, list);\n});\nconst rooms = new Map(tables[\"rooms\"].map((row) => [row.id_room, row]));\nconst totals = new Map(hospitals.map((h) => [h.name, { rooms: 0, beds: 0, occupied: 0, cost: 0 }]));\ntables[\"rooms\"].forEach((room) => {\n  const hospital = hospitals.find((h) => h.id_hospital === room.id_hospital);\n  if (!hospital) return;\n  const total = totals.get(hospital.name);\n  total.rooms += 1;\n  total.beds += room.num_beds || 0;\n  if (room.occupied) total.occupied += 1;\n});\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\ntables[\"admissions\"].forEach((row) => {\n  const room = rooms.get(row.id_room);\n  const hospital = room ? hospitals.find((h) => h.id_hospital === room.id_hospital) : null;\n  if (!hospital) return;\n  totals.get(hospital.name).cost += daysBetween(row.admission_date, row.discharge_date) * (row.cost_per_day || 0);\n});\nconst admissions = new Map(queries[\"C22 · Hospitals with more admissions\"]().map((row) => [row.hospital, row.admissions]));\nreturn hospitals\n  .map((hospital) => {\n    const total = totals.get(hospital.name);\n    const count = admissions.get(hospital.name) || 0;\n    return {\n      \"hospital\": hospital.name,\n      \"level\": hospital.level,\n      \"university\": hospital.is_university ? \"yes\" : \"no\",\n      \"services\": (services.get(hospital.id_hospital) || []).length,\n      \"rooms\": total.rooms,\n      \"beds\": total.beds,\n      \"occupied_rooms\": total.occupied,\n      \"occupancy_percent\": total.rooms ? Math.round((total.occupied / total.rooms) * 1000) / 10 : 0,\n      \"admissions\": count,\n      \"revenue\": Math.round(total.cost),\n      \"cost_per_admission\": count ? Math.round(total.cost / count) : null,\n    };\n  })\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"] || a[\"hospital\"].localeCompare(b[\"hospital\"]));",
+      "assert": {
+        "columns": [
+          "hospital",
+          "level",
+          "university",
+          "services",
+          "rooms",
+          "beds",
+          "occupied_rooms",
+          "occupancy_percent",
+          "admissions",
+          "revenue",
+          "cost_per_admission"
+        ],
+        "rows": [
+          [
+            "La Paz University Hospital",
+            4,
+            "yes",
+            3,
+            6,
+            8,
+            6,
+            100,
+            10,
+            1179935,
+            117994
+          ],
+          [
+            "Virgen del Rocío Hospital",
+            4,
+            "no",
+            2,
+            6,
+            9,
+            3,
+            50,
+            10,
+            1303743,
+            130374
+          ],
+          [
+            "Barcelona Clínic Hospital",
+            4,
+            "yes",
+            2,
+            6,
+            9,
+            4,
+            66.7,
+            8,
+            429570,
+            53696
+          ],
+          [
+            "Quito Metropolitan Hospital",
+            3,
+            "no",
+            1,
+            5,
+            8,
+            2,
+            40,
+            8,
+            1051741,
+            131468
+          ],
+          [
+            "Valencia General Hospital",
+            3,
+            "no",
+            2,
+            5,
+            6,
+            2,
+            40,
+            6,
+            474964,
+            79161
+          ],
+          [
+            "Santa Elena Clinic",
+            2,
+            "no",
+            2,
+            4,
+            3,
+            1,
+            25,
+            5,
+            962766,
+            192553
+          ],
+          [
+            "San José Hospital",
+            2,
+            "no",
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Pharmacy cost forecast",
+      "description": "Drug price × prescribed units, with stock and the prescriptions behind each figure.",
+      "folder": "Aggregates",
+      "color": "#fce4e4",
+      "code": "const drugs = new Map(tables[\"drugs\"].map((row) => [row.id_drug, row]));\nconst groups = new Map();\ntables[\"prescriptions\"].forEach((row) => {\n  const drug = drugs.get(row.id_drug);\n  if (!drug) return;\n  const group = groups.get(row.id_drug) || { drug, prescriptions: 0, units: 0 };\n  group.prescriptions += 1;\n  group.units += (row.amount || 0) * (row.duration_days || 0);\n  groups.set(row.id_drug, group);\n});\nreturn [...groups.values()]\n  .map((group) => {\n    const cost = group.units * (group.drug.price || 0);\n    return {\n      \"drug\": group.drug.name,\n      \"route\": group.drug.route,\n      \"prescriptions\": group.prescriptions,\n      \"units\": group.units,\n      \"forecast_cost\": Math.round(cost),\n      \"stock\": group.drug.stock,\n      \"stock_alert\": (group.drug.stock || 0) < 50 ? \"low\" : \"ok\",\n      \"cost_per_unit\": group.drug.price,\n    };\n  })\n  .sort((a, b) => b[\"forecast_cost\"] - a[\"forecast_cost\"] || a[\"drug\"].localeCompare(b[\"drug\"]));",
+      "assert": {
+        "columns": [
+          "drug",
+          "route",
+          "prescriptions",
+          "units",
+          "forecast_cost",
+          "stock",
+          "stock_alert",
+          "cost_per_unit"
+        ],
+        "rows": [
+          [
+            "Insulin glargine",
+            "subcutaneous",
+            8,
+            781,
+            19447,
+            210,
+            "ok",
+            24.9
+          ],
+          [
+            "Amiodarone",
+            "oral",
+            9,
+            1256,
+            12309,
+            130,
+            "ok",
+            9.8
+          ],
+          [
+            "Adrenaline",
+            "intravenous",
+            6,
+            964,
+            11472,
+            75,
+            "ok",
+            11.9
+          ],
+          [
+            "Salbutamol",
+            "inhaled",
+            8,
+            1240,
+            8928,
+            430,
+            "ok",
+            7.2
+          ],
+          [
+            "Enoxaparin",
+            "subcutaneous",
+            4,
+            584,
+            7942,
+            175,
+            "ok",
+            13.6
+          ],
+          [
+            "Amoxicillin",
+            "oral",
+            6,
+            993,
+            6752,
+            800,
+            "ok",
+            6.8
+          ],
+          [
+            "Morphine",
+            "intravenous",
+            4,
+            523,
+            6538,
+            90,
+            "ok",
+            12.5
+          ],
+          [
+            "Dexamethasone",
+            "intravenous",
+            4,
+            619,
+            5757,
+            150,
+            "ok",
+            9.3
+          ],
+          [
+            "Furosemide",
+            "oral",
+            8,
+            1172,
+            5626,
+            540,
+            "ok",
+            4.8
+          ],
+          [
+            "Hydrocortisone",
+            "topical",
+            5,
+            608,
+            4742,
+            260,
+            "ok",
+            7.8
+          ],
+          [
+            "Atorvastatin",
+            "oral",
+            5,
+            541,
+            4544,
+            620,
+            "ok",
+            8.4
+          ],
+          [
+            "Penicillin G",
+            "intravenous",
+            4,
+            668,
+            4342,
+            45,
+            "low",
+            6.5
+          ],
+          [
+            "Azithromycin",
+            "oral",
+            5,
+            301,
+            3221,
+            280,
+            "ok",
+            10.7
+          ],
+          [
+            "Diazepam",
+            "oral",
+            4,
+            676,
+            2974,
+            190,
+            "ok",
+            4.4
+          ],
+          [
+            "Ondansetron",
+            "intravenous",
+            4,
+            331,
+            2946,
+            140,
+            "ok",
+            8.9
+          ],
+          [
+            "Loratadine",
+            "oral",
+            6,
+            795,
+            2862,
+            980,
+            "ok",
+            3.6
+          ],
+          [
+            "Enalapril",
+            "oral",
+            7,
+            727,
+            2835,
+            700,
+            "ok",
+            3.9
+          ],
+          [
+            "Omeprazole",
+            "oral",
+            5,
+            416,
+            2122,
+            950,
+            "ok",
+            5.1
+          ],
+          [
+            "Levothyroxine",
+            "oral",
+            4,
+            368,
+            2024,
+            610,
+            "ok",
+            5.5
+          ],
+          [
+            "Saline solution",
+            "intravenous",
+            9,
+            834,
+            1751,
+            2000,
+            "ok",
+            2.1
+          ],
+          [
+            "Warfarin",
+            "oral",
+            2,
+            210,
+            1302,
+            320,
+            "ok",
+            6.2
+          ],
+          [
+            "Ibuprofen",
+            "oral",
+            2,
+            279,
+            1256,
+            1200,
+            "ok",
+            4.5
+          ],
+          [
+            "Paracetamol",
+            "oral",
+            4,
+            370,
+            1184,
+            1500,
+            "ok",
+            3.2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Billing monthly report",
+      "description": "Invoices per month with paid and unpaid totals, collection rate and a running total.",
+      "folder": "Dates",
+      "color": "#e8ddf7",
+      "code": "const groups = new Map();\ntables[\"invoices\"].forEach((row) => {\n  const date = new Date(row.date);\n  const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, \"0\")}`;\n  const group = groups.get(month) || { month, invoices: 0, total: 0, paid: 0, unpaid: 0 };\n  group.invoices += 1;\n  group.total += row.amount || 0;\n  if (row.paid) group.paid += row.amount || 0;\n  else group.unpaid += row.amount || 0;\n  groups.set(month, group);\n});\nlet cumulative = 0;\nreturn [...groups.values()]\n  .sort((a, b) => a.month.localeCompare(b.month))\n  .map((group) => {\n    cumulative += group.total;\n    return {\n      \"month\": group.month,\n      \"invoices\": group.invoices,\n      \"amount\": Math.round(group.total),\n      \"paid\": Math.round(group.paid),\n      \"unpaid\": Math.round(group.unpaid),\n      \"collection_percent\": group.total ? Math.round((group.paid / group.total) * 1000) / 10 : 0,\n      \"cumulative\": Math.round(cumulative),\n    };\n  });",
+      "assert": {
+        "columns": [
+          "month",
+          "invoices",
+          "amount",
+          "paid",
+          "unpaid",
+          "collection_percent",
+          "cumulative"
+        ],
+        "rows": [
+          [
+            "2024-01",
+            1,
+            8640,
+            0,
+            8640,
+            0,
+            8640
+          ],
+          [
+            "2024-02",
+            1,
+            2396,
+            2396,
+            0,
+            100,
+            11036
+          ],
+          [
+            "2024-04",
+            2,
+            4328,
+            4328,
+            0,
+            100,
+            15364
+          ],
+          [
+            "2024-05",
+            2,
+            8374,
+            8374,
+            0,
+            100,
+            23738
+          ],
+          [
+            "2024-07",
+            3,
+            18562,
+            12093,
+            6469,
+            65.1,
+            42300
+          ],
+          [
+            "2024-08",
+            2,
+            8156,
+            8156,
+            0,
+            100,
+            50456
+          ],
+          [
+            "2024-09",
+            2,
+            4778,
+            4778,
+            0,
+            100,
+            55234
+          ],
+          [
+            "2024-10",
+            2,
+            7115,
+            2040,
+            5075,
+            28.7,
+            62349
+          ],
+          [
+            "2024-11",
+            3,
+            11769,
+            9755,
+            2014,
+            82.9,
+            74118
+          ],
+          [
+            "2024-12",
+            2,
+            9333,
+            4339,
+            4994,
+            46.5,
+            83451
+          ],
+          [
+            "2025-01",
+            4,
+            19283,
+            13461,
+            5822,
+            69.8,
+            102734
+          ],
+          [
+            "2025-02",
+            2,
+            11581,
+            11581,
+            0,
+            100,
+            114315
+          ],
+          [
+            "2025-03",
+            1,
+            6883,
+            6883,
+            0,
+            100,
+            121198
+          ],
+          [
+            "2025-04",
+            3,
+            12207,
+            10241,
+            1966,
+            83.9,
+            133405
+          ],
+          [
+            "2025-06",
+            2,
+            11086,
+            11086,
+            0,
+            100,
+            144491
+          ],
+          [
+            "2025-07",
+            2,
+            14734,
+            14734,
+            0,
+            100,
+            159225
+          ],
+          [
+            "2025-08",
+            3,
+            11984,
+            2224,
+            9760,
+            18.6,
+            171209
+          ],
+          [
+            "2025-09",
+            2,
+            7425,
+            4932,
+            2493,
+            66.4,
+            178634
+          ],
+          [
+            "2025-10",
+            1,
+            3157,
+            3157,
+            0,
+            100,
+            181791
+          ],
+          [
+            "2025-12",
+            1,
+            2924,
+            0,
+            2924,
+            0,
+            184715
+          ],
+          [
+            "2026-01",
+            2,
+            13211,
+            8283,
+            4928,
+            62.7,
+            197926
+          ],
+          [
+            "2026-02",
+            2,
+            8200,
+            0,
+            8200,
+            0,
+            206126
+          ],
+          [
+            "2026-04",
+            1,
+            6961,
+            0,
+            6961,
+            0,
+            213087
+          ],
+          [
+            "2026-05",
+            1,
+            6051,
+            6051,
+            0,
+            100,
+            219138
+          ],
+          [
+            "2026-06",
+            3,
+            16222,
+            10432,
+            5790,
+            64.3,
+            235360
+          ],
+          [
+            "2026-07",
+            1,
+            3899,
+            3899,
+            0,
+            100,
+            239259
+          ],
+          [
+            "2026-08",
+            1,
+            2019,
+            2019,
+            0,
+            100,
+            241278
+          ],
+          [
+            "2026-10",
+            1,
+            1364,
+            1364,
+            0,
+            100,
+            242642
+          ],
+          [
+            "2026-11",
+            3,
+            17410,
+            3407,
+            14003,
+            19.6,
+            260052
+          ],
+          [
+            "2026-12",
+            4,
+            11708,
+            11708,
+            0,
+            100,
+            271760
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Doctor leaderboard",
+      "description": "Doctors ranked by a score built from appointments, surgeries and the surgery query C16.",
+      "folder": "Queries and reports",
+      "color": "#fde8cd",
+      "code": "const doctors = new Map(tables[\"doctors\"].map((row) => [row.id_doctor, row]));\nconst surgeries = new Map(queries[\"C16 · Doctors with more surgeries\"]().map((row) => [row.doctor, row]));\nconst appointments = new Map();\ntables[\"appointments\"].forEach((row) => {\n  const group = appointments.get(row.id_doctor) || { count: 0, duration: 0 };\n  group.count += 1;\n  group.duration += row.duration_min || 0;\n  appointments.set(row.id_doctor, group);\n});\nconst rows = [...doctors.values()].map((doctor) => {\n  const agenda = appointments.get(doctor.id_doctor) || { count: 0, duration: 0 };\n  const surgery = surgeries.get(doctor.last_name) || { surgeries: 0, total_cost: 0 };\n  return {\n    \"doctor\": `${doctor.last_name}, ${doctor.name}`,\n    \"specialty_id\": doctor.id_specialty,\n    \"experience\": doctor.years_experience,\n    \"appointments\": agenda.count,\n    \"average_duration\": agenda.count ? Math.round((agenda.duration / agenda.count) * 10) / 10 : 0,\n    \"surgeries\": surgery.surgeries || 0,\n    \"surgery_cost\": Math.round(surgery.total_cost || 0),\n    \"score\": agenda.count * 2 + (surgery.surgeries || 0) * 5 + Math.round((doctor.years_experience || 0) / 2),\n  };\n});\nlet previous = null;\nlet rank = 0;\nreturn rows\n  .sort((a, b) => b[\"score\"] - a[\"score\"] || a[\"doctor\"].localeCompare(b[\"doctor\"]))\n  .slice(0, 20)\n  .map((row, index) => {\n    if (row[\"score\"] !== previous) {\n      rank = index + 1;\n      previous = row[\"score\"];\n    }\n    return { \"rank\": rank, ...row };\n  });",
+      "assert": {
+        "columns": [
+          "rank",
+          "doctor",
+          "specialty_id",
+          "experience",
+          "appointments",
+          "average_duration",
+          "surgeries",
+          "surgery_cost",
+          "score"
+        ],
+        "rows": [
+          [
+            1,
+            "Moreno Alonso, Daniel",
+            7,
+            29,
+            3,
+            31.7,
+            3,
+            14426,
+            36
+          ],
+          [
+            2,
+            "Martín Torres, Luis",
+            9,
+            25,
+            0,
+            0,
+            4,
+            35576,
+            33
+          ],
+          [
+            3,
+            "Gutiérrez Sánchez, Paula",
+            6,
+            27,
+            0,
+            0,
+            3,
+            22597,
+            29
+          ],
+          [
+            4,
+            "Fernández Torres, David",
+            1,
+            27,
+            7,
+            38.6,
+            0,
+            0,
+            28
+          ],
+          [
+            5,
+            "González Ortega, Silvia",
+            3,
+            5,
+            2,
+            22.5,
+            4,
+            25386,
+            27
+          ],
+          [
+            6,
+            "Delgado Gil, Patricia",
+            8,
+            9,
+            3,
+            36.7,
+            3,
+            15593,
+            26
+          ],
+          [
+            7,
+            "Rodríguez Rubio, Antonio",
+            1,
+            22,
+            2,
+            15,
+            2,
+            9051,
+            25
+          ],
+          [
+            8,
+            "Molina Muñoz, Francisco",
+            3,
+            4,
+            1,
+            15,
+            4,
+            18235,
+            24
+          ],
+          [
+            9,
+            "Romero López, Paula",
+            2,
+            25,
+            4,
+            37.5,
+            0,
+            0,
+            21
+          ],
+          [
+            10,
+            "Delgado Suárez, Diego",
+            3,
+            3,
+            4,
+            37.5,
+            2,
+            13058,
+            20
+          ],
+          [
+            10,
+            "López Fernández, Lucía",
+            null,
+            27,
+            3,
+            26.7,
+            0,
+            0,
+            20
+          ],
+          [
+            10,
+            "Rodríguez Martínez, Manuel",
+            2,
+            27,
+            3,
+            35,
+            0,
+            0,
+            20
+          ],
+          [
+            13,
+            "Moreno Rodríguez, Pablo",
+            5,
+            25,
+            3,
+            55,
+            0,
+            0,
+            19
+          ],
+          [
+            14,
+            "Castro Ramírez, Ángel",
+            8,
+            8,
+            2,
+            30,
+            2,
+            9466,
+            18
+          ],
+          [
+            14,
+            "Ortega Gómez, Silvia",
+            9,
+            19,
+            4,
+            31.3,
+            0,
+            0,
+            18
+          ],
+          [
+            14,
+            "Ruiz Jiménez, Clara",
+            3,
+            23,
+            3,
+            31.7,
+            0,
+            0,
+            18
+          ],
+          [
+            14,
+            "Torres Gómez, Elena",
+            5,
+            31,
+            1,
+            30,
+            0,
+            0,
+            18
+          ],
+          [
+            18,
+            "Rubio Muñoz, José",
+            3,
+            25,
+            2,
+            45,
+            0,
+            0,
+            17
+          ],
+          [
+            19,
+            "Romero Blanco, Juan",
+            null,
+            23,
+            2,
+            52.5,
+            0,
+            0,
+            16
+          ],
+          [
+            20,
+            "Gómez Romero, David",
+            7,
+            17,
+            3,
+            41.7,
+            0,
+            0,
+            15
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Patient risk profile",
+      "description": "Risk points from chronic conditions, severe allergies, abnormal labs and query C31.",
+      "folder": "Joins and integrity",
+      "color": "#dcf1d4",
+      "code": "const diagnoses = new Map(queries[\"C31 · Patients with more than one distinct diagnosis\"]().map((row) => [row.patient, row.diagnoses]));\nconst allergies = new Map();\ntables[\"allergies\"].forEach((row) => {\n  const group = allergies.get(row.id_patient) || { total: 0, severe: 0 };\n  group.total += 1;\n  if (row.severity === \"severe\") group.severe += 1;\n  allergies.set(row.id_patient, group);\n});\nconst abnormal = new Map();\ntables[\"labs\"].forEach((row) => {\n  if (!row.is_abnormal) return;\n  abnormal.set(row.id_patient, (abnormal.get(row.id_patient) || 0) + 1);\n});\nreturn tables[\"patients\"]\n  .map((patient) => {\n    const allergy = allergies.get(patient.id_patient) || { total: 0, severe: 0 };\n    const abnormalLabs = abnormal.get(patient.id_patient) || 0;\n    const distinctDiagnoses = diagnoses.get(patient.last_name) || 0;\n    const points = (patient.is_chronic ? 2 : 0) + allergy.severe * 2 + allergy.total + abnormalLabs + (distinctDiagnoses >= 4 ? 2 : 0);\n    return {\n      \"patient\": `${patient.last_name}, ${patient.name}`,\n      \"age\": Math.floor((new Date(\"2025-09-01\") - new Date(patient.birth_date)) / (365.25 * 86400000)),\n      \"chronic\": patient.is_chronic ? \"yes\" : \"no\",\n      \"allergies\": allergy.total,\n      \"severe_allergies\": allergy.severe,\n      \"abnormal_labs\": abnormalLabs,\n      \"risk_points\": points,\n      \"risk\": points >= 6 ? \"high\" : points >= 3 ? \"medium\" : \"low\",\n    };\n  })\n  .sort((a, b) => b[\"risk_points\"] - a[\"risk_points\"] || a[\"patient\"].localeCompare(b[\"patient\"]))\n  .slice(0, 20);",
+      "assert": {
+        "columns": [
+          "patient",
+          "age",
+          "chronic",
+          "allergies",
+          "severe_allergies",
+          "abnormal_labs",
+          "risk_points",
+          "risk"
+        ],
+        "rows": [
+          [
+            "Vázquez Jiménez, Laura",
+            14,
+            "no",
+            3,
+            2,
+            3,
+            10,
+            "high"
+          ],
+          [
+            "Díaz Ruiz, Beatriz",
+            36,
+            "yes",
+            3,
+            0,
+            1,
+            8,
+            "high"
+          ],
+          [
+            "García Domínguez, Pedro",
+            72,
+            "no",
+            2,
+            1,
+            2,
+            8,
+            "high"
+          ],
+          [
+            "Molina Morales, Sergio",
+            34,
+            "yes",
+            1,
+            1,
+            1,
+            8,
+            "high"
+          ],
+          [
+            "Delgado Gómez, Manuel",
+            38,
+            "yes",
+            3,
+            1,
+            0,
+            7,
+            "high"
+          ],
+          [
+            "Domínguez Jiménez, Beatriz",
+            46,
+            "no",
+            2,
+            2,
+            1,
+            7,
+            "high"
+          ],
+          [
+            "Domínguez Vázquez, Clara",
+            16,
+            "yes",
+            1,
+            0,
+            2,
+            7,
+            "high"
+          ],
+          [
+            "Romero García, Lucía",
+            24,
+            "no",
+            2,
+            2,
+            1,
+            7,
+            "high"
+          ],
+          [
+            "Fernández Alonso, Antonio",
+            79,
+            "no",
+            2,
+            1,
+            0,
+            6,
+            "high"
+          ],
+          [
+            "Navarro Molina, Beatriz",
+            6,
+            "no",
+            2,
+            0,
+            2,
+            6,
+            "high"
+          ],
+          [
+            "Ortega Martín, Pablo",
+            34,
+            "no",
+            2,
+            0,
+            2,
+            6,
+            "high"
+          ],
+          [
+            "Serrano Navarro, Lucía",
+            64,
+            "yes",
+            1,
+            1,
+            1,
+            6,
+            "high"
+          ],
+          [
+            "Iglesias Gutiérrez, Jorge",
+            75,
+            "no",
+            1,
+            0,
+            2,
+            5,
+            "medium"
+          ],
+          [
+            "López González, Pablo",
+            49,
+            "no",
+            1,
+            0,
+            2,
+            5,
+            "medium"
+          ],
+          [
+            "López Martín, María",
+            48,
+            "yes",
+            3,
+            0,
+            0,
+            5,
+            "medium"
+          ],
+          [
+            "Muñoz García, Francisco",
+            21,
+            "yes",
+            0,
+            0,
+            1,
+            5,
+            "medium"
+          ],
+          [
+            "Muñoz Ortega, Laura",
+            39,
+            "yes",
+            1,
+            1,
+            0,
+            5,
+            "medium"
+          ],
+          [
+            "Ortiz Gómez, Pedro",
+            10,
+            "no",
+            3,
+            1,
+            0,
+            5,
+            "medium"
+          ],
+          [
+            "Rubio González, Miguel",
+            58,
+            "no",
+            4,
+            0,
+            1,
+            5,
+            "medium"
+          ],
+          [
+            "Alonso González, Adrián",
+            77,
+            "no",
+            0,
+            0,
+            2,
+            4,
+            "medium"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Insurance coverage audit",
+      "description": "Billed, covered and patient share per insurer, using query B08 for the patient counts.",
+      "folder": "Joins and integrity",
+      "color": "#dcf1d4",
+      "code": "const insurers = new Map(tables[\"insurers\"].map((row) => [row.id_insurer, row]));\nconst patients = new Map(tables[\"patients\"].map((row) => [row.id_patient, row]));\nconst counts = new Map(queries[\"B08 · Patients by insurer\"]().map((row) => [row.insurance, row.patients]));\nconst billing = new Map();\ntables[\"invoices\"].forEach((row) => {\n  const patient = patients.get(row.id_patient);\n  if (!patient) return;\n  const key = patient.id_insurer;\n  const group = billing.get(key) || { total: 0, invoices: 0, paid: 0 };\n  group.total += row.amount || 0;\n  group.invoices += 1;\n  if (row.paid) group.paid += row.amount || 0;\n  billing.set(key, group);\n});\nreturn [...insurers.values()]\n  .map((insurer) => {\n    const bill = billing.get(insurer.id_insurer) || { total: 0, invoices: 0, paid: 0 };\n    const covered = bill.total * ((insurer.coverage_percent || 0) / 100);\n    return {\n      \"insurer\": insurer.name,\n      \"type\": insurer.type,\n      \"coverage_percent\": insurer.coverage_percent,\n      \"patients\": counts.get(insurer.name) || 0,\n      \"invoices\": bill.invoices,\n      \"billed\": Math.round(bill.total),\n      \"covered\": Math.round(covered),\n      \"patient_share\": Math.round(bill.total - covered),\n      \"paid\": Math.round(bill.paid),\n      \"unpaid\": Math.round(bill.total - bill.paid),\n    };\n  })\n  .sort((a, b) => b[\"billed\"] - a[\"billed\"] || a[\"insurer\"].localeCompare(b[\"insurer\"]));",
+      "assert": {
+        "columns": [
+          "insurer",
+          "type",
+          "coverage_percent",
+          "patients",
+          "invoices",
+          "billed",
+          "covered",
+          "patient_share",
+          "paid",
+          "unpaid"
+        ],
+        "rows": [
+          [
+            "Andes Health",
+            "private",
+            70,
+            4,
+            11,
+            55531,
+            38872,
+            16659,
+            24851,
+            30680
+          ],
+          [
+            "Public Health",
+            "public",
+            90,
+            8,
+            11,
+            47343,
+            42609,
+            4734,
+            40003,
+            7340
+          ],
+          [
+            "Workers Mutual",
+            "mixed",
+            85,
+            9,
+            13,
+            44430,
+            37766,
+            6665,
+            32923,
+            11507
+          ],
+          [
+            "Northern Medical Insurance",
+            "private",
+            75,
+            6,
+            10,
+            39547,
+            29660,
+            9887,
+            12215,
+            27332
+          ],
+          [
+            "Basic Coverage",
+            "public",
+            50,
+            6,
+            7,
+            37891,
+            18946,
+            18946,
+            31666,
+            6225
+          ],
+          [
+            "FullLife",
+            "private",
+            60,
+            2,
+            2,
+            7167,
+            4300,
+            2867,
+            7167,
             0
           ]
         ]

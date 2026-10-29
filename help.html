@@ -280,10 +280,12 @@
       <h2>Índice</h2>
       <nav id="es-indice-lista" class="help-menu" aria-label="Apartados de la ayuda">
             <ul>
+              <li><a class="help-item" title="Salpicadero con las cifras del proyecto abierto" href="#es-home">Inicio y salpicadero</a></li>
               <li><a class="help-item" title="Importar ficheros CSV y JSON, o texto pegado" href="#es-import">Importar datos</a></li>
               <li><a class="help-item" title="Tablas, filas, campos y claves ajenas" href="#es-tables">Tablas, filas y metadatos</a></li>
               <li><a class="help-item" title="Crear, ejecutar y exportar consultas" href="#es-queries">Consultas</a></li>
               <li><a class="help-item" title="Matriz de relaciones entre tablas y consultas que las citan" href="#es-relations">Relaciones</a></li>
+              <li><a class="help-item" title="Árbol de dependencias y dependientes de todo el proyecto" href="#es-dependencies">Dependencias</a></li>
               <li><a class="help-item" title="Scripts JavaScript guardados en el proyecto" href="#es-scripts">Scripts</a></li>
               <li><a class="help-item" title="Enlaces a los lugares que has visitado" href="#es-history">Histórico</a></li>
               <li class="help-grupo">
@@ -305,6 +307,18 @@
           </nav>
     </aside>
 <main class="help-main">
+
+            <section class="help-bloque" id="es-home">
+              <h3>Inicio y salpicadero</h3>
+              <ul>
+                <li>La <b>página de inicio</b> se abre al arrancar y al pulsar <b>DATILANDIA</b> en la barra superior. Sobre el título hay un <b>salpicadero</b> con las cifras del proyecto abierto; si no hay proyecto cargado, todas valen 0.</li>
+                <li><b>Tarjetas</b>: tablas, filas, campos, claves ajenas, consultas, consultas con test, scripts, scripts con test, vistas (consultas y scripts que otro objeto usa como tabla), parejas relacionadas, dependencias (enlaces de consultas y scripts con las tablas, consultas o scripts que leen) y <b>cobertura de pruebas</b> (porcentaje de consultas y scripts con resultado asertado).</li>
+                <li><b>Tablas por filas</b>: las seis tablas con más filas, con una barra comparativa y su número de filas; la pista del número recuerda el recuento completo.</li>
+                <li><b>Cobertura de pruebas</b>: barra verde con el porcentaje y una nota con cuántas consultas y scripts llevan <code>assert</code> sobre el total.</li>
+                <li><b>Campos por tipo</b>: cuántos campos son de texto, número y booleano, con una barra por tipo.</li>
+                <li>El salpicadero se <b>repinta solo</b> al abrir o crear un proyecto, al importar datos, al cambiar tablas, consultas, scripts o ajustes y al cambiar el idioma, así que siempre enseña las cifras del proyecto que tienes delante.</li>
+              </ul>
+            </section>
 
             <section class="help-bloque" id="es-import">
               <h3>Importar datos</h3>
@@ -382,22 +396,35 @@
               </ul>
             </section>
 
+            <section class="help-bloque" id="es-dependencies">
+              <h3>Dependencias</h3>
+              <ul>
+                <li>La entrada <b>Dependencias</b> de la barra lateral abre un <b>árbol</b> con las relaciones de todo el proyecto, sean tablas, consultas o scripts.</li>
+                <li>El selector <b>Objeto</b> elige la raíz. <b>Dependencias</b> muestra lo que ese objeto lee y <b>Dependientes</b> lo que lo lee; cada nodo se despliega con su flecha, se abre con su nombre o con el botón de abrir, y los ciclos se marcan como tales en vez de repetirse sin fin.</li>
+                <li>El grafo se calcula <b>sin ejecutar nada</b>: en las consultas se leen las fuentes del <code>FROM</code>/<code>JOIN</code> (también en subconsultas y uniones) y en los scripts los accesos literales <code>tables["…"]</code>, <code>queries["…"]()</code> y <code>scripts["…"]()</code>. Un acceso dinámico como <code>tables[variable]</code> se ejecuta, pero no aparece en el árbol ni se renombra solo.</li>
+                <li>Renombrar una tabla, una consulta o un script reescribe sus dependientes; al borrarlo se avisa de los que quedarán rotos. Los botones <b>Orígenes de datos</b> y <b>Es origen de...</b> de los editores muestran lo mismo agrupado, y la marca <b>vista</b> indica que otro objeto lo usa como fuente.</li>
+              </ul>
+            </section>
+
             <section class="help-bloque" id="es-scripts">
               <h3>Scripts (JavaScript)</h3>
               <ul>
-                <li>Los scripts se guardan en el proyecto (la clave <code>scripts</code> del JSON) y se ejecutan en el navegador. Cada uno tiene nombre, descripción, origen y código.</li>
-                <li>El panel <b>Scripts</b> de la barra lateral, debajo de <b>Relaciones</b>, lista los scripts. El botón <b>+</b> crea uno; pulsa su nombre para abrir el editor.</li>
-                <li>El <b>origen</b> es una tabla o una consulta del proyecto. Sus filas llegan al script como <code>datos</code>, un array de objetos con los nombres de los campos o columnas como claves. Sin origen, <code>datos</code> es un array vacío.</li>
-                <li>Además de <code>datos</code>, el script recibe <code>tablas</code> (cada tabla por su nombre) y <code>consultas</code> (cada consulta por su nombre, como función: <code>consultas["ventas"]()</code>).</li>
+                <li>Los scripts se guardan en el proyecto (la clave <code>scripts</code> del JSON) y se ejecutan en el navegador. Cada uno tiene nombre, descripción y código; ya no tienen un «origen» fijo.</li>
+                <li>El panel <b>Scripts</b> de la barra lateral lista los scripts. El botón <b>+</b> crea uno; pulsa su nombre para abrir el editor.</li>
+                <li>Los datos se leen solo con <code>tables</code> (cada tabla por su nombre), <code>queries</code> (cada consulta por su nombre, como función: <code>queries["ventas"]()</code>) y <code>scripts</code> (cada script por su nombre, como función: <code>scripts["resumen"]()</code>).</li>
+                <li>El resultado de un script se puede usar como tabla en una consulta (escribe su nombre en el <code>FROM</code>) o desde otro script con <code>scripts["nombre"]()</code>.</li>
                 <li>El resultado se muestra en un grid como el de las consultas. Devuelve un array de objetos (una columna por clave), un array de arrays (columnas <code>c1</code>, <code>c2</code>…) o un objeto (una fila); un valor suelto se muestra en la columna <code>valor</code>.</li>
                 <li>Puedes devolver el resultado con <code>return</code> o guardarlo en <code>resultado</code>. Si el script no devuelve nada, se avisa. Los objetos y arrays anidados se muestran como texto JSON.</li>
                 <li>Pulsa <b>Ejecutar</b> o <b>Ctrl+Enter</b>. Si hay un error, se indica el mensaje y la línea; el resultado se pagina con las filas por página de las consultas.</li>
-                <li>Si renombras la tabla o la consulta de origen, el origen del script se actualiza solo. Si lo borras, el script avisa de que ya no existe y puedes elegir otro.</li>
+                <li>Si renombras una tabla, una consulta o un script, se actualizan las consultas y los scripts que lo usan. Al borrarlo se avisa de los dependientes que quedarán rotos.</li>
+                <li>Los botones <b>Orígenes de datos</b> y <b>Es origen de...</b> muestran, agrupados, las tablas, consultas y scripts que usa o que lo leen. La marca <b>vista</b> indica que otro objeto lo usa como fuente.</li>
+                <li>La entrada <b>Dependencias</b>, al final de la barra lateral, abre un árbol para explorar lo que lee un objeto y lo que lo lee, con selector de objeto y ambos sentidos.</li>
                 <li><b>Carpetas y color</b>: el campo <b>Carpeta</b> del editor y la lista de scripts funcionan como en las consultas (crear, arrastrar, plegar, renombrar, duplicar y borrar). La muestra de color pinta la fila; los ficheros de prueba agrupan los scripts por tipo y usan un color para cada tipo.</li>
                 <li><b>Convertir en test</b> guarda el resultado del script como <code>assert</code>; <b>Quitar test</b> lo elimina. Los scripts con test aparecen en <b>Pruebas</b> como un caso más del proyecto.</li>
                 <li><b>Crear tabla…</b>, <b>Exportar CSV…</b> y <b>Exportar JSON…</b> trabajan sobre el resultado del script, igual que en las consultas.</li>
-                <li><b>Insertar tabla, consulta o campo…</b> (o <b>Ctrl+Space</b> en el editor) escribe <code>tablas["…"]</code>, <code>consultas["…"]()</code> o <code>["campo"]</code> en el cursor.</li>
+                <li><b>Insertar tabla, consulta o campo…</b> (o <b>Ctrl+Space</b> en el editor) escribe <code>tables["…"]</code>, <code>queries["…"]()</code>, <code>scripts["…"]()</code> o <code>["campo"]</code> en el cursor.</li>
                 <li>Los cuatro ficheros de prueba traen una batería de scripts variados convertidos en tests, clasificados en carpetas y coloreados por tipo; las versiones en español e inglés llevan los mismos casos.</li>
+                <li>La carpeta <b>Potencia de JavaScript</b> de esos ficheros añade ocho casos avanzados: directorios con <code>Intl.Collator</code>, cruces de una consulta con una tabla (<code>queries["…"]()</code> + <code>tables["…"]</code>), fichas con <code>Map</code> y <code>Set</code>, clasificaciones con puestos compartidos, líneas temporales con <code>Date</code>, listas de control que ejecutan varias consultas de integridad, pivots por estado y equilibrios de carga con <code>reduce</code>.</li>
               </ul>
 
               <div class="help-sql-columns">
@@ -411,34 +438,54 @@
                 </div>
                 <div class="help-sql-code">
                   <h4>Filtrar y transformar</h4>
-                  <pre class="sql-ejemplo"><code>return datos
-  .filter((fila) =&gt; fila.edad &gt; 30)
-  .map((fila) =&gt; ({ nombre: fila.nombre, edad: fila.edad }));</code></pre>
+                  <pre class="sql-ejemplo"><code>const rows = tables["sales"];
+return rows
+  .filter((row) =&gt; row.age &gt; 30)
+  .map((row) =&gt; ({ name: row.name, age: row.age }));</code></pre>
                   <h4>Agrupar con reduce</h4>
-                  <pre class="sql-ejemplo"><code>const porCiudad = datos.reduce((acc, fila) =&gt; {
-  acc[fila.ciudad] = (acc[fila.ciudad] || 0) + 1;
+                  <pre class="sql-ejemplo"><code>const rows = tables["sales"];
+const byCity = rows.reduce((acc, row) =&gt; {
+  acc[row.city] = (acc[row.city] || 0) + 1;
   return acc;
 }, {});
 
-return Object.entries(porCiudad)
-  .map(([ciudad, total]) =&gt; ({ ciudad, total }));</code></pre>
+return Object.entries(byCity)
+  .map(([city, total]) =&gt; ({ city, total }));</code></pre>
                   <h4>Guardar el resultado en resultado</h4>
-                  <pre class="sql-ejemplo"><code>resultado = datos.map((fila) =&gt; ({
-  ...fila,
-  doble: fila.importe * 2,
+                  <pre class="sql-ejemplo"><code>const rows = tables["sales"];
+resultado = rows.map((row) =&gt; ({
+  ...row,
+  double: row.amount * 2,
 }));</code></pre>
                 </div>
               </div>
 
-              <h4>Leer otra tabla o consulta</h4>
-              <p>El origen no limita el script: <code>tablas</code> y <code>consultas</code> dan acceso al resto del proyecto. Esta consulta se ejecuta al llamarla.</p>
-              <pre class="sql-ejemplo"><code>const adultos = consultas["adultos"]();
-const ventas = tablas["ventas"];
+              <h4>Leer una tabla, una consulta o otro script</h4>
+              <p><code>tables</code>, <code>queries</code> y <code>scripts</code> dan acceso a todo el proyecto. La consulta o el script se ejecutan al llamarlos.</p>
+              <pre class="sql-ejemplo"><code>const adults = queries["adults"]();
+const sales = tables["sales"];
 
-return adultos.map((fila) =&gt; ({
-  nombre: fila.nombre,
-  total_ventas: ventas.filter((venta) =&gt; venta.id_cliente === fila.id).length,
+return adults.map((row) =&gt; ({
+  name: row.name,
+  total_sales: sales.filter((sale) =&gt; sale.customer_id === row.id).length,
 }));</code></pre>
+
+              <h4>Combinar consultas, tablas y scripts</h4>
+              <p>El resultado de una consulta se cruza con una tabla usando un <code>Map</code>, y el de un script se reutiliza llamándolo. Así el SQL aporta los cálculos y JavaScript el enriquecimiento, el formato, las fechas y las clasificaciones.</p>
+              <pre class="sql-ejemplo"><code>const summary = queries["sales_summary"]();
+const customers = new Map(tables["customers"].map((c) =&gt; [c.id, c]));
+const extra = scripts["vip_customers"]();
+
+return summary.map((row, index) =&gt; {
+  const customer = customers.get(row.customer_id);
+  return {
+    position: index + 1,
+    customer: customer ? customer.name : "—",
+    total: row.total,
+    average: Math.round((row.total / row.orders) * 100) / 100,
+    vip: extra.some((vip) =&gt; vip.customer_id === row.customer_id),
+  };
+});</code></pre>
             </section>
 
             <section class="help-bloque" id="es-history">
@@ -473,7 +520,7 @@ return adultos.map((fila) =&gt; ({
                 <li>El botón <b>Convertir en test</b> del editor de consultas ejecuta esa consulta, guarda su resultado como su <code>assert</code> (columnas y filas, valor a valor) y pone el <b>proyecto en modo test</b>. Si la consulta ya comprobaba un resultado, te pregunta antes de sustituirlo; con <b>Quitar test</b> (activo solo si la consulta comprueba algo) vuelve a dejarla sin comprobar, sin sacar al proyecto del modo test.</li>
                 <li>El <b>modo test</b> del proyecto se ve <b>arriba del todo a la derecha</b> de la barra superior (<b>modo test</b> o <b>sin test</b>), y en la barra lateral cada consulta lleva su <b>marca</b>: <b>test</b> si tiene resultado asertado y <b>sin test</b> si no. El resumen de consultas lo detalla en su columna <b>Assert</b>.</li>
                 <li>Pulsa una fila del informe para abrir esa consulta en el editor; <b>Re-ejecutar</b> lanza otra vez la batería y <b>Copiar informe</b> lo deja como texto (si el navegador no deja copiar, queda seleccionado para Ctrl+C).</li>
-                <li>El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta con <code>assert</code>). Sin abrir ventanas: <code>window.datilandia.runProjectTests()</code>.</li>
+                <li>El botón <b>Pruebas</b> de la barra superior lanza la batería cuando quieras, pero <b>solo aparece si el proyecto tiene algún test</b> (alguna consulta o script con <code>assert</code>). Sin abrir ventanas: <code>window.datilandia.runProjectTests()</code>.</li>
                 <li>El botón <b>Auto-tests</b> de la barra superior comprueba <b>el propio programa</b> (motor SQL, utilidades, ficheros e interfaz), no tus datos: ejecuta la batería interna y abre el <b>Informe de auto-tests</b>.</li>
                 <li>Ese informe lleva el <b>recuento</b>, una fila por caso —número, caso, resultado y detalle— y el bloque <b>Casos que fallan</b> con el motivo de cada uno. <b>Re-ejecutar</b> la lanza otra vez, <b>Copiar informe</b> lo deja como texto y <b>Esc</b> cierra la ventana.</li>
                 <li>La batería <b>no toca tu proyecto</b>: cada caso se ejecuta sobre datos de prueba y lo deja todo como estaba. Se ejecuta <b>sin ningún proyecto cargado</b>: con un proyecto abierto avisa y lo cierra (los cambios sin guardar se pierden). Sin ventana: <code>window.datilandia.selfTest()</code> devuelve el informe con el total, los aciertos, los fallos y el detalle de cada caso.</li>
@@ -926,10 +973,12 @@ ORDER BY edificios DESC, sede;</pre>
       <h2>Contents</h2>
       <nav id="en-indice-lista" class="help-menu" aria-label="Help sections">
             <ul>
+              <li><a class="help-item" title="Dashboard with the figures of the open project" href="#en-home">Home and dashboard</a></li>
               <li><a class="help-item" title="Import CSV and JSON files, or pasted text" href="#en-import">Import data</a></li>
               <li><a class="help-item" title="Tables, rows, fields and foreign keys" href="#en-tables">Tables, rows and metadata</a></li>
               <li><a class="help-item" title="Create, run and export queries" href="#en-queries">Queries</a></li>
               <li><a class="help-item" title="Relation matrix between tables and the queries that cite them" href="#en-relations">Relations</a></li>
+              <li><a class="help-item" title="Dependency and dependent tree for the whole project" href="#en-dependencies">Dependencies</a></li>
               <li><a class="help-item" title="JavaScript scripts saved in the project" href="#en-scripts">Scripts</a></li>
               <li><a class="help-item" title="Links to the places you have visited" href="#en-history">History</a></li>
               <li class="help-grupo">
@@ -951,6 +1000,18 @@ ORDER BY edificios DESC, sede;</pre>
           </nav>
     </aside>
 <main class="help-main">
+
+            <section class="help-bloque" id="en-home">
+              <h3>Home and dashboard</h3>
+              <ul>
+                <li>The <b>home page</b> opens on start-up and when you press <b>DATILANDIA</b> in the top bar. Above the title there is a <b>dashboard</b> with the figures of the open project; with no project loaded every figure is 0.</li>
+                <li><b>Cards</b>: tables, rows, fields, foreign keys, queries, queries with a test, scripts, scripts with a test, views (queries and scripts another object reads as a table), related pairs, dependencies (links from queries and scripts to the tables, queries or scripts they read) and <b>test coverage</b> (share of queries and scripts with an asserted result).</li>
+                <li><b>Tables by rows</b>: the six tables with more rows, with a comparative bar and their row count; the tip of the number recalls the whole count.</li>
+                <li><b>Test coverage</b>: green meter with the percentage and a note with how many queries and scripts carry an <code>assert</code> out of the total.</li>
+                <li><b>Fields by type</b>: how many fields are text, number and boolean, with a bar per type.</li>
+                <li>The dashboard <b>repaints itself</b> when a project is opened or created, when data is imported, when tables, queries, scripts or settings change and when the language changes, so it always shows the figures of the project in front of you.</li>
+              </ul>
+            </section>
 
             <section class="help-bloque" id="en-import">
               <h3>Import data</h3>
@@ -1028,22 +1089,35 @@ ORDER BY edificios DESC, sede;</pre>
               </ul>
             </section>
 
+            <section class="help-bloque" id="en-dependencies">
+              <h3>Dependencies</h3>
+              <ul>
+                <li>The <b>Dependencies</b> entry of the sidebar opens a <b>tree</b> with the relations of the whole project, whether tables, queries or scripts.</li>
+                <li>The <b>Object</b> selector chooses the root. <b>Dependencies</b> shows what that object reads and <b>Dependents</b> what reads it; every node unfolds with its arrow, opens with its name or with the open button, and cycles are marked as such instead of repeating forever.</li>
+                <li>The graph is worked out <b>without running anything</b>: for queries, the sources of the <code>FROM</code>/<code>JOIN</code> (also in subqueries and unions) are read; for scripts, the literal accesses <code>tables["…"]</code>, <code>queries["…"]()</code> and <code>scripts["…"]()</code>. A dynamic access such as <code>tables[variable]</code> runs, but it neither appears in the tree nor is renamed on its own.</li>
+                <li>Renaming a table, a query or a script rewrites its dependents; deleting it warns about the ones that will stop working. The <b>Data sources</b> and <b>Is source of...</b> buttons of the editors show the same thing grouped, and the <b>view</b> mark means another object uses it as a source.</li>
+              </ul>
+            </section>
+
             <section class="help-bloque" id="en-scripts">
               <h3>Scripts (JavaScript)</h3>
               <ul>
-                <li>Scripts are saved in the project (the <code>scripts</code> key of the JSON) and run in the browser. Each one has a name, a description, a source and its code.</li>
-                <li>The <b>Scripts</b> panel in the sidebar, below <b>Relations</b>, lists the scripts. The <b>+</b> button creates one; press its name to open the editor.</li>
-                <li>The <b>source</b> is a table or a query of the project. Its rows reach the script as <code>datos</code>, an array of objects with the field or column names as keys. With no source, <code>datos</code> is an empty array.</li>
-                <li>Besides <code>datos</code>, the script receives <code>tablas</code> (every table by its name) and <code>consultas</code> (every query by its name, as a function: <code>consultas["sales"]()</code>).</li>
+                <li>Scripts are saved in the project (the <code>scripts</code> key of the JSON) and run in the browser. Each one has a name, a description and its code; they no longer have a fixed “source”.</li>
+                <li>The <b>Scripts</b> panel in the sidebar lists the scripts. The <b>+</b> button creates one; press its name to open the editor.</li>
+                <li>Data is read only with <code>tables</code> (every table by its name), <code>queries</code> (every query by its name, as a function: <code>queries["sales"]()</code>) and <code>scripts</code> (every script by its name, as a function: <code>scripts["summary"]()</code>).</li>
+                <li>A script result can be used as a table in a query (write its name in the <code>FROM</code>) or from another script with <code>scripts["name"]()</code>.</li>
                 <li>The result is shown in a grid like the one of the queries. Return an array of objects (one column per key), an array of arrays (columns <code>c1</code>, <code>c2</code>…) or an object (one row); a single value is shown in the <code>valor</code> column.</li>
                 <li>You can return the result with <code>return</code> or store it in <code>resultado</code>. If the script returns nothing, it warns you. Nested objects and arrays are shown as JSON text.</li>
                 <li>Press <b>Run</b> or <b>Ctrl+Enter</b>. If there is an error, the message and its line are shown; the result is paginated with the rows per page of the queries.</li>
-                <li>If you rename the source table or query, the script source is updated on its own. If you delete it, the script warns that it no longer exists and you can choose another one.</li>
+                <li>If you rename a table, a query or a script, the queries and scripts that use it are updated. When deleting it, the dependents that will stop working are named.</li>
+                <li>The <b>Data sources</b> and <b>Is source of...</b> buttons show, grouped, the tables, queries and scripts it reads or that read it. The <b>view</b> mark means another object uses it as a source.</li>
+                <li>The <b>Dependencies</b> entry at the end of the sidebar opens a tree to explore what an object reads and what reads it, with an object selector and both directions.</li>
                 <li><b>Folders and colour</b>: the <b>Folder</b> field of the editor and the script list work like the ones of the queries (create, drag, fold, rename, duplicate and delete). The colour swatch paints the row; the test files group the scripts by type and use one colour per type.</li>
                 <li><b>Turn into test</b> stores the script result as its <code>assert</code>; <b>Remove test</b> removes it. Scripts with a test appear in <b>Tests</b> as one more case of the project.</li>
                 <li><b>Create table…</b>, <b>Export CSV…</b> and <b>Export JSON…</b> work on the script result, just like in the queries.</li>
-                <li><b>Insert table, query or field…</b> (or <b>Ctrl+Space</b> in the editor) writes <code>tablas["…"]</code>, <code>consultas["…"]()</code> or <code>["field"]</code> at the cursor.</li>
+                <li><b>Insert table, query or field…</b> (or <b>Ctrl+Space</b> in the editor) writes <code>tables["…"]</code>, <code>queries["…"]()</code>, <code>scripts["…"]()</code> or <code>["field"]</code> at the cursor.</li>
                 <li>The four test files bring a battery of varied scripts turned into tests, grouped in folders and coloured by type; the Spanish and English versions carry the same cases.</li>
+                <li>The <b>JavaScript power</b> folder of those files adds eight advanced cases: directories with <code>Intl.Collator</code>, a query crossed with a table (<code>queries["…"]()</code> + <code>tables["…"]</code>), scorecards with <code>Map</code> and <code>Set</code>, leaderboards with shared places, timelines with <code>Date</code>, checklists that run several integrity queries, pivots by status and workload balances with <code>reduce</code>.</li>
               </ul>
 
               <div class="help-sql-columns">
@@ -1057,34 +1131,54 @@ ORDER BY edificios DESC, sede;</pre>
                 </div>
                 <div class="help-sql-code">
                   <h4>Filter and transform</h4>
-                  <pre class="sql-ejemplo"><code>return datos
-  .filter((fila) =&gt; fila.edad &gt; 30)
-  .map((fila) =&gt; ({ nombre: fila.nombre, edad: fila.edad }));</code></pre>
+                  <pre class="sql-ejemplo"><code>const rows = tables["sales"];
+return rows
+  .filter((row) =&gt; row.age &gt; 30)
+  .map((row) =&gt; ({ name: row.name, age: row.age }));</code></pre>
                   <h4>Group with reduce</h4>
-                  <pre class="sql-ejemplo"><code>const porCiudad = datos.reduce((acc, fila) =&gt; {
-  acc[fila.ciudad] = (acc[fila.ciudad] || 0) + 1;
+                  <pre class="sql-ejemplo"><code>const rows = tables["sales"];
+const byCity = rows.reduce((acc, row) =&gt; {
+  acc[row.city] = (acc[row.city] || 0) + 1;
   return acc;
 }, {});
 
-return Object.entries(porCiudad)
-  .map(([ciudad, total]) =&gt; ({ ciudad, total }));</code></pre>
+return Object.entries(byCity)
+  .map(([city, total]) =&gt; ({ city, total }));</code></pre>
                   <h4>Store the result in resultado</h4>
-                  <pre class="sql-ejemplo"><code>resultado = datos.map((fila) =&gt; ({
-  ...fila,
-  doble: fila.importe * 2,
+                  <pre class="sql-ejemplo"><code>const rows = tables["sales"];
+resultado = rows.map((row) =&gt; ({
+  ...row,
+  double: row.amount * 2,
 }));</code></pre>
                 </div>
               </div>
 
-              <h4>Read another table or query</h4>
-              <p>The source does not limit the script: <code>tablas</code> and <code>consultas</code> give access to the rest of the project. This query runs when it is called.</p>
-              <pre class="sql-ejemplo"><code>const adultos = consultas["adultos"]();
-const ventas = tablas["ventas"];
+              <h4>Read a table, a query or another script</h4>
+              <p><code>tables</code>, <code>queries</code> and <code>scripts</code> give access to the whole project. The query or script runs when it is called.</p>
+              <pre class="sql-ejemplo"><code>const adults = queries["adults"]();
+const sales = tables["sales"];
 
-return adultos.map((fila) =&gt; ({
-  nombre: fila.nombre,
-  total_ventas: ventas.filter((venta) =&gt; venta.id_cliente === fila.id).length,
+return adults.map((row) =&gt; ({
+  name: row.name,
+  total_sales: sales.filter((sale) =&gt; sale.customer_id === row.id).length,
 }));</code></pre>
+
+              <h4>Combine queries, tables and scripts</h4>
+              <p>A query result is crossed with a table using a <code>Map</code>, and a script result is reused by calling it. SQL brings the calculations and JavaScript brings the enrichment, formatting, dates and rankings.</p>
+              <pre class="sql-ejemplo"><code>const summary = queries["sales_summary"]();
+const customers = new Map(tables["customers"].map((c) =&gt; [c.id, c]));
+const extra = scripts["vip_customers"]();
+
+return summary.map((row, index) =&gt; {
+  const customer = customers.get(row.customer_id);
+  return {
+    position: index + 1,
+    customer: customer ? customer.name : "—",
+    total: row.total,
+    average: Math.round((row.total / row.orders) * 100) / 100,
+    vip: extra.some((vip) =&gt; vip.customer_id === row.customer_id),
+  };
+});</code></pre>
             </section>
 
             <section class="help-bloque" id="en-history">
@@ -1119,7 +1213,7 @@ return adultos.map((fila) =&gt; ({
                 <li>The editor's <b>Turn into a test</b> button runs that query, saves its result as its <code>assert</code> (columns and rows, value by value) and puts the <b>project in test mode</b>. If the query already checked a result, it asks you before replacing it; with <b>Remove test</b> (only active if the query checks something) it goes back to checking nothing, without taking the project out of test mode.</li>
                 <li>The project's <b>test mode</b> is shown <b>at the very top right</b> of the top bar (<b>test mode</b> or <b>no tests</b>), and in the sidebar every query carries its <b>mark</b>: <b>test</b> if it has an asserted result and <b>no tests</b> if not. The query summary goes into detail in its <b>Assert</b> column.</li>
                 <li>Press a row of the report to open that query in the editor; <b>Run again</b> launches the battery once more and <b>Copy report</b> leaves it as text (if the browser does not allow copying, it stays selected for Ctrl+C).</li>
-                <li>The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>only appears if the project has some test</b> (some query with an <code>assert</code>). Without opening windows: <code>window.datilandia.runProjectTests()</code>.</li>
+                <li>The <b>Tests</b> button of the top bar launches the battery whenever you want, but it <b>only appears if the project has some test</b> (some query or script with an <code>assert</code>). Without opening windows: <code>window.datilandia.runProjectTests()</code>.</li>
                 <li>The <b>Self-tests</b> button of the top bar checks <b>the program itself</b> (SQL engine, utilities, files and interface), not your data: it runs the internal battery and opens the <b>Self-test report</b>.</li>
                 <li>That report carries the <b>count</b>, one row per case —number, case, result and detail— and the <b>Failing cases</b> block with the reason of each one. <b>Run again</b> launches it once more, <b>Copy report</b> leaves it as text and <b>Esc</b> closes the window.</li>
                 <li>The battery <b>does not touch your project</b>: every case runs over test data and leaves everything as it was. It runs with <b>no project loaded</b>: with a project open it warns and closes it (unsaved changes are lost). Without a window: <code>window.datilandia.selfTest()</code> returns the report with the total, the passes, the failures and the detail of every case.</li>

@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 209 consultas)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 212 consultas, 32 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -9,7 +9,8 @@
     "D · Integridad",
     "E · Vistas",
     "F · Subconsultas",
-    "G · Uniones"
+    "G · Uniones",
+    "H · Scripts como tablas"
   ],
   "tableFolders": [
     "Centro",
@@ -23,7 +24,8 @@
     "Agregados",
     "Fechas",
     "Cruces e integridad",
-    "Consultas e informes"
+    "Consultas e informes",
+    "Potencia de JavaScript"
   ],
   "tables": [
     {
@@ -21151,17 +21153,117 @@
       },
       "folder": "G · Uniones",
       "color": "#e8ddf7"
+    },
+    {
+      "name": "H01 · Pacientes por ciudad, leídos del script",
+      "description": "Lee el resultado del script «Pacientes por ciudad» como si fuera una tabla.",
+      "sql": "SELECT ciudad, pacientes FROM [Pacientes por ciudad] ORDER BY pacientes DESC, ciudad",
+      "folder": "H · Scripts como tablas",
+      "assert": {
+        "columns": [
+          "ciudad",
+          "pacientes"
+        ],
+        "rows": [
+          [
+            "Bilbao",
+            6
+          ],
+          [
+            "Bogotá",
+            5
+          ],
+          [
+            "Málaga",
+            5
+          ],
+          [
+            "Quito",
+            5
+          ],
+          [
+            "Valencia",
+            5
+          ],
+          [
+            "Murcia",
+            4
+          ],
+          [
+            "Madrid",
+            3
+          ],
+          [
+            "Sevilla",
+            3
+          ],
+          [
+            "Barcelona",
+            2
+          ],
+          [
+            "Zaragoza",
+            2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "H02 · Cuántas ciudades devuelve el script",
+      "description": "Lee el resultado del script «Pacientes por ciudad» como si fuera una tabla.",
+      "sql": "SELECT COUNT(*) AS total FROM [Pacientes por ciudad]",
+      "folder": "H · Scripts como tablas",
+      "assert": {
+        "columns": [
+          "total"
+        ],
+        "rows": [
+          [
+            10
+          ]
+        ]
+      }
+    },
+    {
+      "name": "H03 · Ciudades con 5 o más pacientes",
+      "description": "Lee el resultado del script «Pacientes por ciudad» como si fuera una tabla.",
+      "sql": "SELECT ciudad, pacientes FROM [Pacientes por ciudad] WHERE pacientes >= 5 ORDER BY pacientes DESC, ciudad",
+      "folder": "H · Scripts como tablas",
+      "assert": {
+        "columns": [
+          "ciudad",
+          "pacientes"
+        ],
+        "rows": [
+          [
+            "Bilbao",
+            6
+          ],
+          [
+            "Bogotá",
+            5
+          ],
+          [
+            "Málaga",
+            5
+          ],
+          [
+            "Quito",
+            5
+          ],
+          [
+            "Valencia",
+            5
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
     {
       "name": "Pacientes crónicos",
       "description": "Filtra los pacientes crónicos y muestra nombre, ciudad, grupo sanguíneo y teléfono.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "return datos\n  .filter((fila) => fila.es_cronico)\n  .map((fila) => ({\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"ciudad\": fila.ciudad,\n    \"grupo_sanguineo\": fila.grupo_sanguineo,\n    \"telefono\": fila.telefono,\n  }));",
+      "code": "const datos = tables[\"pacientes\"];\nreturn datos\n  .filter((fila) => fila.es_cronico)\n  .map((fila) => ({\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"ciudad\": fila.ciudad,\n    \"grupo_sanguineo\": fila.grupo_sanguineo,\n    \"telefono\": fila.telefono,\n  }));",
       "folder": "Filtros y listas",
       "color": "#dcf1d4",
       "assert": {
@@ -21268,11 +21370,7 @@
     {
       "name": "Edad de los pacientes",
       "description": "Calcula la edad a 1 de septiembre de 2025 y ordena de mayor a menor.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "const reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.fecha_nacimiento);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"fecha_nacimiento\": fila.fecha_nacimiento,\n      \"edad\": age,\n    };\n  })\n  .sort((a, b) => b[\"edad\"] - a[\"edad\"]);",
+      "code": "const datos = tables[\"pacientes\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.fecha_nacimiento);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"fecha_nacimiento\": fila.fecha_nacimiento,\n      \"edad\": age,\n    };\n  })\n  .sort((a, b) => b[\"edad\"] - a[\"edad\"]);",
       "folder": "Fechas",
       "color": "#fde8cd",
       "assert": {
@@ -21488,11 +21586,7 @@
     {
       "name": "Pacientes por ciudad",
       "description": "Cuenta los pacientes de cada ciudad y calcula su porcentaje sobre el total.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.ciudad || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"ciudad\": city,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
+      "code": "const datos = tables[\"pacientes\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.ciudad || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"ciudad\": city,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
       "folder": "Agregados",
       "color": "#d3ecf3",
       "assert": {
@@ -21558,11 +21652,7 @@
     {
       "name": "Pacientes por seguro",
       "description": "Cruza pacientes con seguros, cuenta cuántos hay por seguro y muestra su cobertura.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "const insurers = new Map(tablas[\"seguros\"].map((i) => [i.id_seguro, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_seguro;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.nombre : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.cobertura_porcentaje : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"seguro\": name,\n    \"pacientes\": g.count,\n    \"cobertura\": g.coverage,\n    \"porcentaje\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
+      "code": "const datos = tables[\"pacientes\"];\nconst insurers = new Map(tables[\"seguros\"].map((i) => [i.id_seguro, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_seguro;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.nombre : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.cobertura_porcentaje : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"seguro\": name,\n    \"pacientes\": g.count,\n    \"cobertura\": g.coverage,\n    \"porcentaje\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -21621,11 +21711,7 @@
     {
       "name": "Contactos incompletos",
       "description": "Lista los pacientes a los que les falta el teléfono, el correo o los dos.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "return datos\n  .filter((fila) => !fila.telefono || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.telefono) missing.push(\"telefono\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"telefono\": fila.telefono,\n      \"email\": fila.email,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
+      "code": "const datos = tables[\"pacientes\"];\nreturn datos\n  .filter((fila) => !fila.telefono || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.telefono) missing.push(\"telefono\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"telefono\": fila.telefono,\n      \"email\": fila.email,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
       "folder": "Filtros y listas",
       "color": "#dcf1d4",
       "assert": {
@@ -21738,11 +21824,7 @@
     {
       "name": "Grupos sanguíneos",
       "description": "Cuenta los pacientes por grupo sanguíneo (sin los nulos) y calcula el porcentaje.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.grupo_sanguineo;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"grupo_sanguineo\": group,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
+      "code": "const datos = tables[\"pacientes\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.grupo_sanguineo;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"grupo_sanguineo\": group,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
       "folder": "Agregados",
       "color": "#d3ecf3",
       "assert": {
@@ -21793,11 +21875,7 @@
     {
       "name": "Ingresos y coste por hospital",
       "description": "Cruza ingresos, habitaciones y hospitales; cuenta ingresos, urgentes y coste estimado por estancia.",
-      "source": {
-        "kind": "table",
-        "name": "ingresos"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tablas[\"habitaciones\"].map((r) => [r.id_habitacion, r]));\nconst hospitals = new Map(tablas[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_habitacion);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste\": Math.round(g.cost),\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
+      "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tables[\"habitaciones\"].map((r) => [r.id_habitacion, r]));\nconst hospitals = new Map(tables[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_habitacion);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste\": Math.round(g.cost),\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -21864,11 +21942,7 @@
     {
       "name": "Coste y días de estancia",
       "description": "Calcula los días ingresados y el coste de los ingresos ya dados de alta; ordena por coste.",
-      "source": {
-        "kind": "table",
-        "name": "ingresos"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tablas[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nreturn datos\n  .filter((fila) => fila.fecha_alta)\n  .map((fila) => {\n    const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n    return {\n      \"paciente\": patients.get(fila.id_paciente) || `#${fila.id_paciente}`,\n      \"motivo\": fila.motivo,\n      \"dias\": days,\n      \"coste\": Math.round(days * (fila.coste_dia || 0)),\n    };\n  })\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"])\n  .slice(0, 20);",
+      "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nreturn datos\n  .filter((fila) => fila.fecha_alta)\n  .map((fila) => {\n    const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n    return {\n      \"paciente\": patients.get(fila.id_paciente) || `#${fila.id_paciente}`,\n      \"motivo\": fila.motivo,\n      \"dias\": days,\n      \"coste\": Math.round(days * (fila.coste_dia || 0)),\n    };\n  })\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"])\n  .slice(0, 20);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -22005,11 +22079,7 @@
     {
       "name": "Ingresos por motivo",
       "description": "Agrupa los ingresos por motivo, cuenta cuántos son urgentes y calcula el coste diario medio.",
-      "source": {
-        "kind": "table",
-        "name": "ingresos"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.motivo || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.coste_dia || 0;\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"motivo\": reason,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"]);",
+      "code": "const datos = tables[\"ingresos\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.motivo || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.coste_dia || 0;\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"motivo\": reason,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"]);",
       "folder": "Agregados",
       "color": "#d3ecf3",
       "assert": {
@@ -22080,11 +22150,7 @@
     {
       "name": "Facturación por método de pago",
       "description": "Agrupa las facturas por método de pago (incluidos los nulos) y suma importes y descuentos.",
-      "source": {
-        "kind": "table",
-        "name": "facturas"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.metodo_pago || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.importe || 0;\n  acc[key].discount += fila.descuento || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"metodo_pago\": method,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n    \"media\": Math.round(g.amount / g.count),\n    \"descuento\": Math.round((g.discount / g.count) * 10) / 10,\n    \"porcentaje\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
+      "code": "const datos = tables[\"facturas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.metodo_pago || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.importe || 0;\n  acc[key].discount += fila.descuento || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"metodo_pago\": method,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n    \"media\": Math.round(g.amount / g.count),\n    \"descuento\": Math.round((g.discount / g.count) * 10) / 10,\n    \"porcentaje\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
       "folder": "Agregados",
       "color": "#d3ecf3",
       "assert": {
@@ -22135,11 +22201,7 @@
     {
       "name": "Facturas impagadas por paciente",
       "description": "Filtra las facturas no pagadas, las agrupa por paciente y suma lo que deben.",
-      "source": {
-        "kind": "table",
-        "name": "facturas"
-      },
-      "code": "const patients = new Map(tablas[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos\n  .filter((fila) => fila.pagada === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_paciente;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.importe || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
+      "code": "const datos = tables[\"facturas\"];\nconst patients = new Map(tables[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos\n  .filter((fila) => fila.pagada === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_paciente;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.importe || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -22230,11 +22292,7 @@
     {
       "name": "Citas por estado y tipo (pivot)",
       "description": "Convierte los tipos de cita en columnas dinámicas y cuenta cuántas hay por estado.",
-      "source": {
-        "kind": "table",
-        "name": "citas"
-      },
-      "code": "const types = Array.from(new Set(datos.map((fila) => fila.tipo))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.estado;\n  const type = fila.tipo;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"estado\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"estado\"]).localeCompare(String(b[\"estado\"])));",
+      "code": "const datos = tables[\"citas\"];\nconst types = Array.from(new Set(datos.map((fila) => fila.tipo))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.estado;\n  const type = fila.tipo;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"estado\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"estado\"]).localeCompare(String(b[\"estado\"])));",
       "folder": "Agregados",
       "color": "#d3ecf3",
       "assert": {
@@ -22280,11 +22338,7 @@
     {
       "name": "Duración media de las citas por médico",
       "description": "Cruza las citas con los médicos, calcula la duración media y devuelve los diez primeros.",
-      "source": {
-        "kind": "table",
-        "name": "citas"
-      },
-      "code": "const doctors = new Map(tablas[\"medicos\"].map((d) => [d.id_medico, `${d.nombre} ${d.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_medico;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duracion_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"medico\": doctors.get(Number(id)) || `#${id}`,\n    \"citas\": g.count,\n    \"duracion_media\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"duracion_media\"] - a[\"duracion_media\"])\n  .slice(0, 10);",
+      "code": "const datos = tables[\"citas\"];\nconst doctors = new Map(tables[\"medicos\"].map((d) => [d.id_medico, `${d.nombre} ${d.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_medico;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duracion_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"medico\": doctors.get(Number(id)) || `#${id}`,\n    \"citas\": g.count,\n    \"duracion_media\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"duracion_media\"] - a[\"duracion_media\"])\n  .slice(0, 10);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -22350,11 +22404,7 @@
     {
       "name": "Médicos por especialidad",
       "description": "Agrupa los médicos por especialidad y calcula cuántos hay, su experiencia media y cuántos investigan.",
-      "source": {
-        "kind": "table",
-        "name": "medicos"
-      },
-      "code": "const specialties = new Map(tablas[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_especialidad;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.anios_experiencia || 0;\n  if (fila.es_investigador) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"especialidad\": specialties.get(Number(id)) || `#${id}`,\n    \"medicos\": g.count,\n    \"experiencia_media\": Math.round((g.experience / g.count) * 10) / 10,\n    \"investigadores\": g.researchers,\n  }))\n  .sort((a, b) => b[\"medicos\"] - a[\"medicos\"]);",
+      "code": "const datos = tables[\"medicos\"];\nconst specialties = new Map(tables[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_especialidad;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.anios_experiencia || 0;\n  if (fila.es_investigador) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"especialidad\": specialties.get(Number(id)) || `#${id}`,\n    \"medicos\": g.count,\n    \"experiencia_media\": Math.round((g.experience / g.count) * 10) / 10,\n    \"investigadores\": g.researchers,\n  }))\n  .sort((a, b) => b[\"medicos\"] - a[\"medicos\"]);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -22437,11 +22487,7 @@
     {
       "name": "Pacientes con más ingresos",
       "description": "Agrupa los ingresos por paciente, suma su coste estimado y devuelve los diez primeros.",
-      "source": {
-        "kind": "table",
-        "name": "ingresos"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tablas[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_paciente;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"ingresos\": g.count,\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"])\n  .slice(0, 10);",
+      "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_paciente;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"ingresos\": g.count,\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"])\n  .slice(0, 10);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -22507,11 +22553,7 @@
     {
       "name": "Ocupación de habitaciones por hospital",
       "description": "Cuenta habitaciones, ocupadas y camas por hospital y calcula el porcentaje de ocupación.",
-      "source": {
-        "kind": "table",
-        "name": "habitaciones"
-      },
-      "code": "const hospitals = new Map(tablas[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.ocupada) acc[id].occupied += 1;\n  acc[id].beds += fila.num_camas || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"habitaciones\": g.rooms,\n    \"ocupadas\": g.occupied,\n    \"camas\": g.beds,\n    \"ocupacion\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"ocupacion\"] - a[\"ocupacion\"]);",
+      "code": "const datos = tables[\"habitaciones\"];\nconst hospitals = new Map(tables[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.ocupada) acc[id].occupied += 1;\n  acc[id].beds += fila.num_camas || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"habitaciones\": g.rooms,\n    \"ocupadas\": g.occupied,\n    \"camas\": g.beds,\n    \"ocupacion\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"ocupacion\"] - a[\"ocupacion\"]);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -22571,11 +22613,7 @@
     {
       "name": "Analíticas anormales por tipo",
       "description": "Agrupa las analíticas por tipo y calcula el porcentaje de anormales y las medias de glucosa y colesterol.",
-      "source": {
-        "kind": "table",
-        "name": "analiticas"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.tipo || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.es_anormal) g.abnormal += 1;\n  if (fila.glucosa !== null && fila.glucosa !== undefined) { g.glucose += fila.glucosa; g.glucoseCount += 1; }\n  if (fila.colesterol !== null && fila.colesterol !== undefined) { g.cholesterol += fila.colesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"tipo\": type,\n    \"total\": g.count,\n    \"anormales\": g.abnormal,\n    \"porcentaje\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"glucosa_media\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"colesterol_medio\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"total\"] - a[\"total\"]);",
+      "code": "const datos = tables[\"analiticas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.tipo || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.es_anormal) g.abnormal += 1;\n  if (fila.glucosa !== null && fila.glucosa !== undefined) { g.glucose += fila.glucosa; g.glucoseCount += 1; }\n  if (fila.colesterol !== null && fila.colesterol !== undefined) { g.cholesterol += fila.colesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"tipo\": type,\n    \"total\": g.count,\n    \"anormales\": g.abnormal,\n    \"porcentaje\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"glucosa_media\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"colesterol_medio\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"total\"] - a[\"total\"]);",
       "folder": "Agregados",
       "color": "#d3ecf3",
       "assert": {
@@ -22610,11 +22648,7 @@
     {
       "name": "Medicamentos con stock bajo",
       "description": "Lista los medicamentos con menos de 50 unidades y calcula cuánto reponer.",
-      "source": {
-        "kind": "table",
-        "name": "medicamentos"
-      },
-      "code": "return datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"medicamento\": fila.nombre,\n    \"stock\": fila.stock,\n    \"reponer\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
+      "code": "const datos = tables[\"medicamentos\"];\nreturn datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"medicamento\": fila.nombre,\n    \"stock\": fila.stock,\n    \"reponer\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
       "folder": "Filtros y listas",
       "color": "#dcf1d4",
       "assert": {
@@ -22635,11 +22669,7 @@
     {
       "name": "Usar una consulta guardada",
       "description": "Llama a la consulta A19 (pacientes con tres o más ingresos) y muestra su resultado.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "const rows = consultas[\"A19 · Pacientes con tres o más ingresos\"]();\nreturn rows.map((row) => ({\n  \"paciente\": `${row.nombre} ${row.apellidos}`,\n  \"ingresos\": row.ingresos,\n}));",
+      "code": "const rows = queries[\"A19 · Pacientes con tres o más ingresos\"]();\nreturn rows.map((row) => ({\n  \"paciente\": `${row.nombre} ${row.apellidos}`,\n  \"ingresos\": row.ingresos,\n}));",
       "folder": "Consultas e informes",
       "color": "#fbf6c9",
       "assert": {
@@ -22674,11 +22704,7 @@
     {
       "name": "Informe con forEach y resultado",
       "description": "Construye un informe de facturas pagadas e impagadas con forEach, añade una fila TOTAL y lo guarda en resultado.",
-      "source": {
-        "kind": "table",
-        "name": "facturas"
-      },
-      "code": "const groups = {};\ndatos.forEach((fila) => {\n  const key = fila.pagada ? \"pagada\" : \"impagada\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.importe || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"estado_pago\": status,\n  \"facturas\": g.count,\n  \"importe\": Math.round(g.amount),\n  \"media\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"estado_pago\": \"TOTAL\",\n  \"facturas\": datos.length,\n  \"importe\": Math.round(datos.reduce((sum, fila) => sum + (fila.importe || 0), 0)),\n  \"media\": null,\n});\nresultado = rows;",
+      "code": "const datos = tables[\"facturas\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.pagada ? \"pagada\" : \"impagada\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.importe || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"estado_pago\": status,\n  \"facturas\": g.count,\n  \"importe\": Math.round(g.amount),\n  \"media\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"estado_pago\": \"TOTAL\",\n  \"facturas\": datos.length,\n  \"importe\": Math.round(datos.reduce((sum, fila) => sum + (fila.importe || 0), 0)),\n  \"media\": null,\n});\nresultado = rows;",
       "folder": "Consultas e informes",
       "color": "#fbf6c9",
       "assert": {
@@ -22713,11 +22739,7 @@
     {
       "name": "Ingresos huérfanos",
       "description": "Busca ingresos cuyo paciente, médico o habitación ya no existe en las tablas.",
-      "source": {
-        "kind": "table",
-        "name": "ingresos"
-      },
-      "code": "const patientIds = new Set(tablas[\"pacientes\"].map((p) => p.id_paciente));\nconst doctorIds = new Set(tablas[\"medicos\"].map((d) => d.id_medico));\nconst roomIds = new Set(tablas[\"habitaciones\"].map((r) => r.id_habitacion));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_paciente) || !doctorIds.has(fila.id_medico) || !roomIds.has(fila.id_habitacion))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_paciente)) missing.push(\"paciente\");\n    if (!doctorIds.has(fila.id_medico)) missing.push(\"medico\");\n    if (!roomIds.has(fila.id_habitacion)) missing.push(\"habitacion\");\n    return {\n      \"ingreso\": fila.id_ingreso,\n      \"paciente\": fila.id_paciente,\n      \"medico\": fila.id_medico,\n      \"habitacion\": fila.id_habitacion,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
+      "code": "const datos = tables[\"ingresos\"];\nconst patientIds = new Set(tables[\"pacientes\"].map((p) => p.id_paciente));\nconst doctorIds = new Set(tables[\"medicos\"].map((d) => d.id_medico));\nconst roomIds = new Set(tables[\"habitaciones\"].map((r) => r.id_habitacion));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_paciente) || !doctorIds.has(fila.id_medico) || !roomIds.has(fila.id_habitacion))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_paciente)) missing.push(\"paciente\");\n    if (!doctorIds.has(fila.id_medico)) missing.push(\"medico\");\n    if (!roomIds.has(fila.id_habitacion)) missing.push(\"habitacion\");\n    return {\n      \"ingreso\": fila.id_ingreso,\n      \"paciente\": fila.id_paciente,\n      \"medico\": fila.id_medico,\n      \"habitacion\": fila.id_habitacion,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -22777,11 +22799,7 @@
     {
       "name": "Pacientes por grupo de edad",
       "description": "Clasifica a los pacientes en menores, jóvenes, adultos y mayores, y calcula su edad media.",
-      "source": {
-        "kind": "table",
-        "name": "pacientes"
-      },
-      "code": "const reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.fecha_nacimiento);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"grupo_edad\": group,\n    \"pacientes\": g.count,\n    \"edad_media\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"grupo_edad\"]).localeCompare(String(b[\"grupo_edad\"])));",
+      "code": "const datos = tables[\"pacientes\"];\nconst reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.fecha_nacimiento);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"grupo_edad\": group,\n    \"pacientes\": g.count,\n    \"edad_media\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"grupo_edad\"]).localeCompare(String(b[\"grupo_edad\"])));",
       "folder": "Fechas",
       "color": "#fde8cd",
       "assert": {
@@ -22817,11 +22835,7 @@
     {
       "name": "Citas por mes",
       "description": "Agrupa las citas por año y mes, cuenta las canceladas y ordena cronológicamente.",
-      "source": {
-        "kind": "table",
-        "name": "citas"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = String(fila.fecha).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.estado === \"Cancelada\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"mes\": month,\n    \"citas\": g.count,\n    \"anuladas\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"mes\"]).localeCompare(String(b[\"mes\"])));",
+      "code": "const datos = tables[\"citas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = String(fila.fecha).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.estado === \"Cancelada\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"mes\": month,\n    \"citas\": g.count,\n    \"anuladas\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"mes\"]).localeCompare(String(b[\"mes\"])));",
       "folder": "Fechas",
       "color": "#fde8cd",
       "assert": {
@@ -22992,11 +23006,7 @@
     {
       "name": "Coste por especialidad",
       "description": "Cruza ingresos con médicos y especialidades y calcula el coste estimado y medio por especialidad.",
-      "source": {
-        "kind": "table",
-        "name": "ingresos"
-      },
-      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tablas[\"medicos\"].map((d) => [d.id_medico, d]));\nconst specialties = new Map(tablas[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_medico);\n  const specialty = doctor ? specialties.get(doctor.id_especialidad) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"especialidad\": specialty,\n    \"ingresos\": g.count,\n    \"coste_medio\": Math.round(g.cost / g.count),\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
+      "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tables[\"medicos\"].map((d) => [d.id_medico, d]));\nconst specialties = new Map(tables[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_medico);\n  const specialty = doctor ? specialties.get(doctor.id_especialidad) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"especialidad\": specialty,\n    \"ingresos\": g.count,\n    \"coste_medio\": Math.round(g.cost / g.count),\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
       "folder": "Cruces e integridad",
       "color": "#e8ddf7",
       "assert": {
@@ -23065,6 +23075,1748 @@
             "Traumatología",
             1,
             0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Directorio de pacientes con Intl",
+      "description": "Directorio ordenado con Intl.Collator, con edad, iniciales, seguro y cobertura.",
+      "folder": "Potencia de JavaScript",
+      "color": "#dde5fa",
+      "code": "const pacientes = tables[\"pacientes\"];\nconst seguros = new Map(tables[\"seguros\"].map((s) => [s.id_seguro, s]));\nconst referencia = new Date(\"2025-09-01\");\nconst collator = new Intl.Collator(\"es\", { sensitivity: \"base\" });\nreturn pacientes\n  .map((fila) => {\n    const nacimiento = new Date(fila.fecha_nacimiento);\n    let edad = referencia.getFullYear() - nacimiento.getFullYear();\n    const mes = referencia.getMonth() - nacimiento.getMonth();\n    if (mes < 0 || (mes === 0 && referencia.getDate() < nacimiento.getDate())) edad -= 1;\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    const seguro = seguros.get(fila.id_seguro);\n    return {\n      \"paciente\": `${fila.apellidos}, ${fila.nombre}`,\n      \"iniciales\": `${fila.nombre.charAt(0)}${fila.apellidos.charAt(0)}`.toUpperCase(),\n      \"edad\": edad,\n      \"ciudad\": fila.ciudad,\n      \"seguro\": seguro ? seguro.nombre : \"—\",\n      \"cobertura\": seguro ? seguro.cobertura_porcentaje : null,\n      \"dominio_correo\": at > 0 ? email.slice(at + 1) : null,\n      \"cronico\": fila.es_cronico ? \"sí\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"paciente\"], b[\"paciente\"]));",
+      "assert": {
+        "columns": [
+          "paciente",
+          "iniciales",
+          "edad",
+          "ciudad",
+          "seguro",
+          "cobertura",
+          "dominio_correo",
+          "cronico"
+        ],
+        "rows": [
+          [
+            "Alonso González, Adrián",
+            "AA",
+            77,
+            "Barcelona",
+            "Salud Pública",
+            90,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Castro Moreno, Eva",
+            "EC",
+            51,
+            "Bogotá",
+            "Cobertura Básica",
+            50,
+            null,
+            "sí"
+          ],
+          [
+            "Delgado Gómez, Manuel",
+            "MD",
+            38,
+            "Valencia",
+            "Cobertura Básica",
+            50,
+            null,
+            "sí"
+          ],
+          [
+            "Delgado Ruiz, Sergio",
+            "SD",
+            52,
+            "Bogotá",
+            "Cobertura Básica",
+            50,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Díaz Domínguez, Julia",
+            "JD",
+            64,
+            "Bilbao",
+            "Salud Pública",
+            90,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Díaz Martínez, Diego",
+            "DD",
+            70,
+            "Madrid",
+            "Salud Pública",
+            90,
+            null,
+            "sí"
+          ],
+          [
+            "Díaz Ruiz, Beatriz",
+            "BD",
+            36,
+            "Bilbao",
+            "Andes Salud",
+            70,
+            null,
+            "sí"
+          ],
+          [
+            "Domínguez Jiménez, Beatriz",
+            "BD",
+            46,
+            "Quito",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Domínguez Vázquez, Clara",
+            "CD",
+            16,
+            "Zaragoza",
+            "—",
+            null,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Fernández Alonso, Antonio",
+            "AF",
+            79,
+            "Málaga",
+            "—",
+            null,
+            "correo.com",
+            "no"
+          ],
+          [
+            "García Domínguez, Pedro",
+            "PG",
+            72,
+            "Murcia",
+            "Seguros Médicos del Norte",
+            75,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Gil Gutiérrez, Marina",
+            "MG",
+            49,
+            "Bogotá",
+            "Seguros Médicos del Norte",
+            75,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Gil Martínez, Elena",
+            "EG",
+            22,
+            "Quito",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Iglesias Gutiérrez, Jorge",
+            "JI",
+            75,
+            "Valencia",
+            "Cobertura Básica",
+            50,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Iglesias Navarro, Pilar",
+            "PI",
+            61,
+            "Valencia",
+            "Seguros Médicos del Norte",
+            75,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Jiménez Hernández, Elena",
+            "EJ",
+            24,
+            "Quito",
+            "—",
+            null,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Jiménez Romero, Adrián",
+            "AJ",
+            60,
+            "Sevilla",
+            "Seguros Médicos del Norte",
+            75,
+            "correo.com",
+            "no"
+          ],
+          [
+            "López González, Pablo",
+            "PL",
+            49,
+            "Sevilla",
+            "Salud Pública",
+            90,
+            null,
+            "no"
+          ],
+          [
+            "López Martín, María",
+            "ML",
+            48,
+            "Murcia",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Marín Iglesias, Luis",
+            "LM",
+            61,
+            "Bogotá",
+            "Salud Pública",
+            90,
+            null,
+            "no"
+          ],
+          [
+            "Marín Serrano, Irene",
+            "IM",
+            43,
+            "Valencia",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Martín Delgado, Nuria",
+            "NM",
+            26,
+            "Murcia",
+            "VidaPlena",
+            60,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Martínez Blanco, Diego",
+            "DM",
+            35,
+            "Zaragoza",
+            "—",
+            null,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Molina Morales, Sergio",
+            "SM",
+            34,
+            "Bogotá",
+            "Seguros Médicos del Norte",
+            75,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Muñoz García, Francisco",
+            "FM",
+            21,
+            "Madrid",
+            "Salud Pública",
+            90,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Muñoz Gómez, Lucía",
+            "LM",
+            81,
+            "Sevilla",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Muñoz Ortega, Laura",
+            "LM",
+            39,
+            "Madrid",
+            "Seguros Médicos del Norte",
+            75,
+            null,
+            "sí"
+          ],
+          [
+            "Navarro Molina, Beatriz",
+            "BN",
+            6,
+            "Málaga",
+            "Andes Salud",
+            70,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Ortega Martín, Pablo",
+            "PO",
+            34,
+            "Valencia",
+            "Andes Salud",
+            70,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Ortiz Gómez, Pedro",
+            "PO",
+            10,
+            "Bilbao",
+            "Cobertura Básica",
+            50,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Romero García, Lucía",
+            "LR",
+            24,
+            "Málaga",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Romero Molina, Alejandro",
+            "AR",
+            67,
+            "Bilbao",
+            "Andes Salud",
+            70,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Rubio González, Miguel",
+            "MR",
+            58,
+            "Quito",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Sánchez Romero, Marta",
+            "MS",
+            19,
+            "Bilbao",
+            "—",
+            null,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Sanz Alonso, Patricia",
+            "PS",
+            14,
+            "Bilbao",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Serrano Navarro, Lucía",
+            "LS",
+            64,
+            "Málaga",
+            "Salud Pública",
+            90,
+            "correo.com",
+            "sí"
+          ],
+          [
+            "Suárez Rodríguez, Raúl",
+            "RS",
+            68,
+            "Barcelona",
+            "Cobertura Básica",
+            50,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Torres Torres, Isabel",
+            "IT",
+            7,
+            "Quito",
+            "Salud Pública",
+            90,
+            null,
+            "no"
+          ],
+          [
+            "Vázquez Jiménez, Laura",
+            "LV",
+            14,
+            "Málaga",
+            "Mutua Laboral",
+            85,
+            "correo.com",
+            "no"
+          ],
+          [
+            "Vázquez Ramírez, Irene",
+            "IV",
+            65,
+            "Murcia",
+            "VidaPlena",
+            60,
+            "correo.com",
+            "no"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Línea temporal clínica",
+      "description": "Une ingresos, citas, analíticas e intervenciones del paciente con más actividad en una sola línea temporal.",
+      "folder": "Fechas",
+      "color": "#e8ddf7",
+      "code": "const cuentas = new Map();\nconst sumar = (id) => cuentas.set(id, (cuentas.get(id) || 0) + 1);\ntables[\"ingresos\"].forEach((fila) => sumar(fila.id_paciente));\ntables[\"citas\"].forEach((fila) => sumar(fila.id_paciente));\ntables[\"analiticas\"].forEach((fila) => sumar(fila.id_paciente));\ntables[\"intervenciones\"].forEach((fila) => sumar(fila.id_paciente));\nconst ocupado = [...cuentas.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];\nconst idPaciente = ocupado[0];\nconst paciente = tables[\"pacientes\"].find((fila) => fila.id_paciente === idPaciente);\nconst eventos = [];\ntables[\"ingresos\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha_ingreso,\n    \"origen\": \"ingreso\",\n    \"detalle\": fila.motivo,\n    \"estado\": fila.fecha_alta ? \"alta\" : \"activo\",\n  });\n});\ntables[\"citas\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha,\n    \"origen\": \"cita\",\n    \"detalle\": `${fila.tipo} · ${fila.duracion_min} min`,\n    \"estado\": fila.estado,\n  });\n});\ntables[\"analiticas\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha,\n    \"origen\": \"analítica\",\n    \"detalle\": `${fila.tipo}: glucosa ${fila.glucosa}`,\n    \"estado\": fila.es_anormal ? \"anormal\" : \"normal\",\n  });\n});\ntables[\"intervenciones\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha,\n    \"origen\": \"intervención\",\n    \"detalle\": fila.nombre,\n    \"estado\": fila.exitosa ? \"exitosa\" : \"fallida\",\n  });\n});\nreturn eventos\n  .sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)) || a.origen.localeCompare(b.origen))\n  .map((evento, indice) => ({\n    \"orden\": indice + 1,\n    \"paciente\": `${paciente.apellidos}, ${paciente.nombre}`,\n    \"fecha\": evento.fecha,\n    \"origen\": evento.origen,\n    \"detalle\": evento.detalle,\n    \"estado\": evento.estado,\n  }));",
+      "assert": {
+        "columns": [
+          "orden",
+          "paciente",
+          "fecha",
+          "origen",
+          "detalle",
+          "estado"
+        ],
+        "rows": [
+          [
+            1,
+            "Torres Torres, Isabel",
+            "2024-01-16",
+            "cita",
+            "Primera consulta · 30 min",
+            "No presentado"
+          ],
+          [
+            2,
+            "Torres Torres, Isabel",
+            "2024-01-28",
+            "analítica",
+            "Sangre: glucosa 85",
+            "normal"
+          ],
+          [
+            3,
+            "Torres Torres, Isabel",
+            "2024-06-12",
+            "cita",
+            "Primera consulta · 60 min",
+            "Pendiente"
+          ],
+          [
+            4,
+            "Torres Torres, Isabel",
+            "2024-07-20",
+            "ingreso",
+            "Dolor abdominal",
+            "alta"
+          ],
+          [
+            5,
+            "Torres Torres, Isabel",
+            "2024-12-20",
+            "cita",
+            "Primera consulta · 60 min",
+            "Pendiente"
+          ],
+          [
+            6,
+            "Torres Torres, Isabel",
+            "2025-01-20",
+            "cita",
+            "Revisión · 60 min",
+            "Atendida"
+          ],
+          [
+            7,
+            "Torres Torres, Isabel",
+            "2025-03-16",
+            "intervención",
+            "Craneotomía",
+            "exitosa"
+          ],
+          [
+            8,
+            "Torres Torres, Isabel",
+            "2025-05-03",
+            "ingreso",
+            "Neumonía",
+            "activo"
+          ],
+          [
+            9,
+            "Torres Torres, Isabel",
+            "2025-06-03",
+            "analítica",
+            "Sangre: glucosa null",
+            "normal"
+          ],
+          [
+            10,
+            "Torres Torres, Isabel",
+            "2025-08-18",
+            "analítica",
+            "Sangre: glucosa 190",
+            "anormal"
+          ],
+          [
+            11,
+            "Torres Torres, Isabel",
+            "2026-10-11",
+            "cita",
+            "Primera consulta · 15 min",
+            "Cancelada"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Ficha por hospital",
+      "description": "Capacidad, servicios, ocupación y facturación por hospital unidos a la consulta C22.",
+      "folder": "Potencia de JavaScript",
+      "color": "#fce4e4",
+      "code": "const hospitales = tables[\"hospitales\"];\nconst servicios = new Map();\ntables[\"servicios\"].forEach((fila) => {\n  const lista = servicios.get(fila.id_hospital) || [];\n  lista.push(fila.nombre);\n  servicios.set(fila.id_hospital, lista);\n});\nconst habitaciones = new Map(tables[\"habitaciones\"].map((fila) => [fila.id_habitacion, fila]));\nconst totales = new Map(hospitales.map((h) => [h.nombre, { habitaciones: 0, camas: 0, ocupadas: 0, coste: 0 }]));\ntables[\"habitaciones\"].forEach((habitacion) => {\n  const hospital = hospitales.find((h) => h.id_hospital === habitacion.id_hospital);\n  if (!hospital) return;\n  const total = totales.get(hospital.nombre);\n  total.habitaciones += 1;\n  total.camas += habitacion.num_camas || 0;\n  if (habitacion.ocupada) total.ocupadas += 1;\n});\nconst diasEntre = (desde, hasta) => {\n  if (!desde || !hasta) return 0;\n  return Math.max(0, Math.round((new Date(hasta) - new Date(desde)) / 86400000));\n};\ntables[\"ingresos\"].forEach((fila) => {\n  const habitacion = habitaciones.get(fila.id_habitacion);\n  const hospital = habitacion ? hospitales.find((h) => h.id_hospital === habitacion.id_hospital) : null;\n  if (!hospital) return;\n  totales.get(hospital.nombre).coste += diasEntre(fila.fecha_ingreso, fila.fecha_alta) * (fila.coste_dia || 0);\n});\nconst ingresos = new Map(queries[\"C22 · Hospitales con más ingresos\"]().map((fila) => [fila.hospital, fila.ingresos]));\nreturn hospitales\n  .map((hospital) => {\n    const total = totales.get(hospital.nombre);\n    const cuenta = ingresos.get(hospital.nombre) || 0;\n    return {\n      \"hospital\": hospital.nombre,\n      \"nivel\": hospital.nivel,\n      \"universitario\": hospital.es_universitario ? \"sí\" : \"no\",\n      \"servicios\": (servicios.get(hospital.id_hospital) || []).length,\n      \"habitaciones\": total.habitaciones,\n      \"camas\": total.camas,\n      \"ocupadas\": total.ocupadas,\n      \"porcentaje_ocupacion\": total.habitaciones ? Math.round((total.ocupadas / total.habitaciones) * 1000) / 10 : 0,\n      \"ingresos\": cuenta,\n      \"facturacion\": Math.round(total.coste),\n      \"coste_por_ingreso\": cuenta ? Math.round(total.coste / cuenta) : null,\n    };\n  })\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"] || a[\"hospital\"].localeCompare(b[\"hospital\"]));",
+      "assert": {
+        "columns": [
+          "hospital",
+          "nivel",
+          "universitario",
+          "servicios",
+          "habitaciones",
+          "camas",
+          "ocupadas",
+          "porcentaje_ocupacion",
+          "ingresos",
+          "facturacion",
+          "coste_por_ingreso"
+        ],
+        "rows": [
+          [
+            "Hospital Universitario La Paz",
+            4,
+            "sí",
+            3,
+            6,
+            8,
+            6,
+            100,
+            10,
+            1179935,
+            117994
+          ],
+          [
+            "Hospital Virgen del Rocío",
+            4,
+            "no",
+            2,
+            6,
+            9,
+            3,
+            50,
+            10,
+            1303743,
+            130374
+          ],
+          [
+            "Hospital Clínic de Barcelona",
+            4,
+            "sí",
+            2,
+            6,
+            9,
+            4,
+            66.7,
+            8,
+            429570,
+            53696
+          ],
+          [
+            "Hospital Metropolitano de Quito",
+            3,
+            "no",
+            1,
+            5,
+            8,
+            2,
+            40,
+            8,
+            1051741,
+            131468
+          ],
+          [
+            "Hospital General de Valencia",
+            3,
+            "no",
+            2,
+            5,
+            6,
+            2,
+            40,
+            6,
+            474964,
+            79161
+          ],
+          [
+            "Clínica Santa Elena",
+            2,
+            "no",
+            2,
+            4,
+            3,
+            1,
+            25,
+            5,
+            962766,
+            192553
+          ],
+          [
+            "Hospital San José",
+            2,
+            "no",
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Previsión de coste de farmacia",
+      "description": "Precio del medicamento × unidades prescritas, con stock y las recetas que hay detrás.",
+      "folder": "Agregados",
+      "color": "#fce4e4",
+      "code": "const medicamentos = new Map(tables[\"medicamentos\"].map((fila) => [fila.id_medicamento, fila]));\nconst grupos = new Map();\ntables[\"prescripciones\"].forEach((fila) => {\n  const medicamento = medicamentos.get(fila.id_medicamento);\n  if (!medicamento) return;\n  const grupo = grupos.get(fila.id_medicamento) || { medicamento, prescripciones: 0, unidades: 0 };\n  grupo.prescripciones += 1;\n  grupo.unidades += (fila.cantidad || 0) * (fila.duracion_dias || 0);\n  grupos.set(fila.id_medicamento, grupo);\n});\nreturn [...grupos.values()]\n  .map((grupo) => {\n    const coste = grupo.unidades * (grupo.medicamento.precio || 0);\n    return {\n      \"medicamento\": grupo.medicamento.nombre,\n      \"via\": grupo.medicamento.via,\n      \"prescripciones\": grupo.prescripciones,\n      \"unidades\": grupo.unidades,\n      \"coste_previsto\": Math.round(coste),\n      \"stock\": grupo.medicamento.stock,\n      \"alerta_stock\": (grupo.medicamento.stock || 0) < 50 ? \"bajo\" : \"correcto\",\n      \"coste_unitario\": grupo.medicamento.precio,\n    };\n  })\n  .sort((a, b) => b[\"coste_previsto\"] - a[\"coste_previsto\"] || a[\"medicamento\"].localeCompare(b[\"medicamento\"]));",
+      "assert": {
+        "columns": [
+          "medicamento",
+          "via",
+          "prescripciones",
+          "unidades",
+          "coste_previsto",
+          "stock",
+          "alerta_stock",
+          "coste_unitario"
+        ],
+        "rows": [
+          [
+            "Insulina glargina",
+            "Subcutánea",
+            8,
+            781,
+            19447,
+            210,
+            "correcto",
+            24.9
+          ],
+          [
+            "Amiodarona",
+            "Oral",
+            9,
+            1256,
+            12309,
+            130,
+            "correcto",
+            9.8
+          ],
+          [
+            "Adrenalina",
+            "Intravenosa",
+            6,
+            964,
+            11472,
+            75,
+            "correcto",
+            11.9
+          ],
+          [
+            "Salbutamol",
+            "Inhalada",
+            8,
+            1240,
+            8928,
+            430,
+            "correcto",
+            7.2
+          ],
+          [
+            "Enoxaparina",
+            "Subcutánea",
+            4,
+            584,
+            7942,
+            175,
+            "correcto",
+            13.6
+          ],
+          [
+            "Amoxicilina",
+            "Oral",
+            6,
+            993,
+            6752,
+            800,
+            "correcto",
+            6.8
+          ],
+          [
+            "Morfina",
+            "Intravenosa",
+            4,
+            523,
+            6538,
+            90,
+            "correcto",
+            12.5
+          ],
+          [
+            "Dexametasona",
+            "Intravenosa",
+            4,
+            619,
+            5757,
+            150,
+            "correcto",
+            9.3
+          ],
+          [
+            "Furosemida",
+            "Oral",
+            8,
+            1172,
+            5626,
+            540,
+            "correcto",
+            4.8
+          ],
+          [
+            "Hidrocortisona",
+            "Tópica",
+            5,
+            608,
+            4742,
+            260,
+            "correcto",
+            7.8
+          ],
+          [
+            "Atorvastatina",
+            "Oral",
+            5,
+            541,
+            4544,
+            620,
+            "correcto",
+            8.4
+          ],
+          [
+            "Penicilina G",
+            "Intravenosa",
+            4,
+            668,
+            4342,
+            45,
+            "bajo",
+            6.5
+          ],
+          [
+            "Azitromicina",
+            "Oral",
+            5,
+            301,
+            3221,
+            280,
+            "correcto",
+            10.7
+          ],
+          [
+            "Diazepam",
+            "Oral",
+            4,
+            676,
+            2974,
+            190,
+            "correcto",
+            4.4
+          ],
+          [
+            "Ondansetrón",
+            "Intravenosa",
+            4,
+            331,
+            2946,
+            140,
+            "correcto",
+            8.9
+          ],
+          [
+            "Loratadina",
+            "Oral",
+            6,
+            795,
+            2862,
+            980,
+            "correcto",
+            3.6
+          ],
+          [
+            "Enalapril",
+            "Oral",
+            7,
+            727,
+            2835,
+            700,
+            "correcto",
+            3.9
+          ],
+          [
+            "Omeprazol",
+            "Oral",
+            5,
+            416,
+            2122,
+            950,
+            "correcto",
+            5.1
+          ],
+          [
+            "Levotiroxina",
+            "Oral",
+            4,
+            368,
+            2024,
+            610,
+            "correcto",
+            5.5
+          ],
+          [
+            "Solución salina",
+            "Intravenosa",
+            9,
+            834,
+            1751,
+            2000,
+            "correcto",
+            2.1
+          ],
+          [
+            "Warfarina",
+            "Oral",
+            2,
+            210,
+            1302,
+            320,
+            "correcto",
+            6.2
+          ],
+          [
+            "Ibuprofeno",
+            "Oral",
+            2,
+            279,
+            1256,
+            1200,
+            "correcto",
+            4.5
+          ],
+          [
+            "Paracetamol",
+            "Oral",
+            4,
+            370,
+            1184,
+            1500,
+            "correcto",
+            3.2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Informe mensual de facturación",
+      "description": "Facturas por mes con importes pagados y pendientes, tasa de cobro y total acumulado.",
+      "folder": "Fechas",
+      "color": "#e8ddf7",
+      "code": "const grupos = new Map();\ntables[\"facturas\"].forEach((fila) => {\n  const fecha = new Date(fila.fecha);\n  const mes = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, \"0\")}`;\n  const grupo = grupos.get(mes) || { mes, facturas: 0, total: 0, pagado: 0, pendiente: 0 };\n  grupo.facturas += 1;\n  grupo.total += fila.importe || 0;\n  if (fila.pagada) grupo.pagado += fila.importe || 0;\n  else grupo.pendiente += fila.importe || 0;\n  grupos.set(mes, grupo);\n});\nlet acumulado = 0;\nreturn [...grupos.values()]\n  .sort((a, b) => a.mes.localeCompare(b.mes))\n  .map((grupo) => {\n    acumulado += grupo.total;\n    return {\n      \"mes\": grupo.mes,\n      \"facturas\": grupo.facturas,\n      \"importe\": Math.round(grupo.total),\n      \"pagado\": Math.round(grupo.pagado),\n      \"pendiente\": Math.round(grupo.pendiente),\n      \"porcentaje_cobrado\": grupo.total ? Math.round((grupo.pagado / grupo.total) * 1000) / 10 : 0,\n      \"acumulado\": Math.round(acumulado),\n    };\n  });",
+      "assert": {
+        "columns": [
+          "mes",
+          "facturas",
+          "importe",
+          "pagado",
+          "pendiente",
+          "porcentaje_cobrado",
+          "acumulado"
+        ],
+        "rows": [
+          [
+            "2024-01",
+            1,
+            8640,
+            0,
+            8640,
+            0,
+            8640
+          ],
+          [
+            "2024-02",
+            1,
+            2396,
+            2396,
+            0,
+            100,
+            11036
+          ],
+          [
+            "2024-04",
+            2,
+            4328,
+            4328,
+            0,
+            100,
+            15364
+          ],
+          [
+            "2024-05",
+            2,
+            8374,
+            8374,
+            0,
+            100,
+            23738
+          ],
+          [
+            "2024-07",
+            3,
+            18562,
+            12093,
+            6469,
+            65.1,
+            42300
+          ],
+          [
+            "2024-08",
+            2,
+            8156,
+            8156,
+            0,
+            100,
+            50456
+          ],
+          [
+            "2024-09",
+            2,
+            4778,
+            4778,
+            0,
+            100,
+            55234
+          ],
+          [
+            "2024-10",
+            2,
+            7115,
+            2040,
+            5075,
+            28.7,
+            62349
+          ],
+          [
+            "2024-11",
+            3,
+            11769,
+            9755,
+            2014,
+            82.9,
+            74118
+          ],
+          [
+            "2024-12",
+            2,
+            9333,
+            4339,
+            4994,
+            46.5,
+            83451
+          ],
+          [
+            "2025-01",
+            4,
+            19283,
+            13461,
+            5822,
+            69.8,
+            102734
+          ],
+          [
+            "2025-02",
+            2,
+            11581,
+            11581,
+            0,
+            100,
+            114315
+          ],
+          [
+            "2025-03",
+            1,
+            6883,
+            6883,
+            0,
+            100,
+            121198
+          ],
+          [
+            "2025-04",
+            3,
+            12207,
+            10241,
+            1966,
+            83.9,
+            133405
+          ],
+          [
+            "2025-06",
+            2,
+            11086,
+            11086,
+            0,
+            100,
+            144491
+          ],
+          [
+            "2025-07",
+            2,
+            14734,
+            14734,
+            0,
+            100,
+            159225
+          ],
+          [
+            "2025-08",
+            3,
+            11984,
+            2224,
+            9760,
+            18.6,
+            171209
+          ],
+          [
+            "2025-09",
+            2,
+            7425,
+            4932,
+            2493,
+            66.4,
+            178634
+          ],
+          [
+            "2025-10",
+            1,
+            3157,
+            3157,
+            0,
+            100,
+            181791
+          ],
+          [
+            "2025-12",
+            1,
+            2924,
+            0,
+            2924,
+            0,
+            184715
+          ],
+          [
+            "2026-01",
+            2,
+            13211,
+            8283,
+            4928,
+            62.7,
+            197926
+          ],
+          [
+            "2026-02",
+            2,
+            8200,
+            0,
+            8200,
+            0,
+            206126
+          ],
+          [
+            "2026-04",
+            1,
+            6961,
+            0,
+            6961,
+            0,
+            213087
+          ],
+          [
+            "2026-05",
+            1,
+            6051,
+            6051,
+            0,
+            100,
+            219138
+          ],
+          [
+            "2026-06",
+            3,
+            16222,
+            10432,
+            5790,
+            64.3,
+            235360
+          ],
+          [
+            "2026-07",
+            1,
+            3899,
+            3899,
+            0,
+            100,
+            239259
+          ],
+          [
+            "2026-08",
+            1,
+            2019,
+            2019,
+            0,
+            100,
+            241278
+          ],
+          [
+            "2026-10",
+            1,
+            1364,
+            1364,
+            0,
+            100,
+            242642
+          ],
+          [
+            "2026-11",
+            3,
+            17410,
+            3407,
+            14003,
+            19.6,
+            260052
+          ],
+          [
+            "2026-12",
+            4,
+            11708,
+            11708,
+            0,
+            100,
+            271760
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Clasificación de médicos",
+      "description": "Médicos clasificados por una puntuación con citas, intervenciones y la consulta C16.",
+      "folder": "Consultas e informes",
+      "color": "#fde8cd",
+      "code": "const medicos = new Map(tables[\"medicos\"].map((fila) => [fila.id_medico, fila]));\nconst intervenciones = new Map(queries[\"C16 · Médicos con más intervenciones\"]().map((fila) => [fila.medico, fila]));\nconst citas = new Map();\ntables[\"citas\"].forEach((fila) => {\n  const grupo = citas.get(fila.id_medico) || { cuenta: 0, duracion: 0 };\n  grupo.cuenta += 1;\n  grupo.duracion += fila.duracion_min || 0;\n  citas.set(fila.id_medico, grupo);\n});\nconst filas = [...medicos.values()].map((medico) => {\n  const agenda = citas.get(medico.id_medico) || { cuenta: 0, duracion: 0 };\n  const intervencion = intervenciones.get(medico.apellidos) || { intervenciones: 0, coste_total: 0 };\n  return {\n    \"medico\": `${medico.apellidos}, ${medico.nombre}`,\n    \"especialidad_id\": medico.id_especialidad,\n    \"experiencia\": medico.anios_experiencia,\n    \"citas\": agenda.cuenta,\n    \"duracion_media\": agenda.cuenta ? Math.round((agenda.duracion / agenda.cuenta) * 10) / 10 : 0,\n    \"intervenciones\": intervencion.intervenciones || 0,\n    \"coste_intervenciones\": Math.round(intervencion.coste_total || 0),\n    \"puntuacion\": agenda.cuenta * 2 + (intervencion.intervenciones || 0) * 5 + Math.round((medico.anios_experiencia || 0) / 2),\n  };\n});\nlet anterior = null;\nlet puesto = 0;\nreturn filas\n  .sort((a, b) => b[\"puntuacion\"] - a[\"puntuacion\"] || a[\"medico\"].localeCompare(b[\"medico\"]))\n  .slice(0, 20)\n  .map((fila, indice) => {\n    if (fila[\"puntuacion\"] !== anterior) {\n      puesto = indice + 1;\n      anterior = fila[\"puntuacion\"];\n    }\n    return { \"puesto\": puesto, ...fila };\n  });",
+      "assert": {
+        "columns": [
+          "puesto",
+          "medico",
+          "especialidad_id",
+          "experiencia",
+          "citas",
+          "duracion_media",
+          "intervenciones",
+          "coste_intervenciones",
+          "puntuacion"
+        ],
+        "rows": [
+          [
+            1,
+            "Moreno Alonso, Daniel",
+            7,
+            29,
+            3,
+            31.7,
+            3,
+            14426,
+            36
+          ],
+          [
+            2,
+            "Martín Torres, Luis",
+            9,
+            25,
+            0,
+            0,
+            4,
+            35576,
+            33
+          ],
+          [
+            3,
+            "Gutiérrez Sánchez, Paula",
+            6,
+            27,
+            0,
+            0,
+            3,
+            22597,
+            29
+          ],
+          [
+            4,
+            "Fernández Torres, David",
+            1,
+            27,
+            7,
+            38.6,
+            0,
+            0,
+            28
+          ],
+          [
+            5,
+            "González Ortega, Silvia",
+            3,
+            5,
+            2,
+            22.5,
+            4,
+            25386,
+            27
+          ],
+          [
+            6,
+            "Delgado Gil, Patricia",
+            8,
+            9,
+            3,
+            36.7,
+            3,
+            15593,
+            26
+          ],
+          [
+            7,
+            "Rodríguez Rubio, Antonio",
+            1,
+            22,
+            2,
+            15,
+            2,
+            9051,
+            25
+          ],
+          [
+            8,
+            "Molina Muñoz, Francisco",
+            3,
+            4,
+            1,
+            15,
+            4,
+            18235,
+            24
+          ],
+          [
+            9,
+            "Romero López, Paula",
+            2,
+            25,
+            4,
+            37.5,
+            0,
+            0,
+            21
+          ],
+          [
+            10,
+            "Delgado Suárez, Diego",
+            3,
+            3,
+            4,
+            37.5,
+            2,
+            13058,
+            20
+          ],
+          [
+            10,
+            "López Fernández, Lucía",
+            null,
+            27,
+            3,
+            26.7,
+            0,
+            0,
+            20
+          ],
+          [
+            10,
+            "Rodríguez Martínez, Manuel",
+            2,
+            27,
+            3,
+            35,
+            0,
+            0,
+            20
+          ],
+          [
+            13,
+            "Moreno Rodríguez, Pablo",
+            5,
+            25,
+            3,
+            55,
+            0,
+            0,
+            19
+          ],
+          [
+            14,
+            "Castro Ramírez, Ángel",
+            8,
+            8,
+            2,
+            30,
+            2,
+            9466,
+            18
+          ],
+          [
+            14,
+            "Ortega Gómez, Silvia",
+            9,
+            19,
+            4,
+            31.3,
+            0,
+            0,
+            18
+          ],
+          [
+            14,
+            "Ruiz Jiménez, Clara",
+            3,
+            23,
+            3,
+            31.7,
+            0,
+            0,
+            18
+          ],
+          [
+            14,
+            "Torres Gómez, Elena",
+            5,
+            31,
+            1,
+            30,
+            0,
+            0,
+            18
+          ],
+          [
+            18,
+            "Rubio Muñoz, José",
+            3,
+            25,
+            2,
+            45,
+            0,
+            0,
+            17
+          ],
+          [
+            19,
+            "Romero Blanco, Juan",
+            null,
+            23,
+            2,
+            52.5,
+            0,
+            0,
+            16
+          ],
+          [
+            20,
+            "Gómez Romero, David",
+            7,
+            17,
+            3,
+            41.7,
+            0,
+            0,
+            15
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Perfil de riesgo de pacientes",
+      "description": "Puntos de riesgo por cronicidad, alergias graves, analíticas anormales y la consulta C31.",
+      "folder": "Cruces e integridad",
+      "color": "#dcf1d4",
+      "code": "const diagnosticos = new Map(queries[\"C31 · Pacientes con más de un diagnóstico distinto\"]().map((fila) => [fila.paciente, fila.diagnosticos]));\nconst alergias = new Map();\ntables[\"alergias\"].forEach((fila) => {\n  const grupo = alergias.get(fila.id_paciente) || { total: 0, graves: 0 };\n  grupo.total += 1;\n  if (fila.severidad === \"Grave\") grupo.graves += 1;\n  alergias.set(fila.id_paciente, grupo);\n});\nconst anormales = new Map();\ntables[\"analiticas\"].forEach((fila) => {\n  if (!fila.es_anormal) return;\n  anormales.set(fila.id_paciente, (anormales.get(fila.id_paciente) || 0) + 1);\n});\nreturn tables[\"pacientes\"]\n  .map((paciente) => {\n    const alergia = alergias.get(paciente.id_paciente) || { total: 0, graves: 0 };\n    const analiticas = anormales.get(paciente.id_paciente) || 0;\n    const distintos = diagnosticos.get(paciente.apellidos) || 0;\n    const puntos = (paciente.es_cronico ? 2 : 0) + alergia.graves * 2 + alergia.total + analiticas + (distintos >= 4 ? 2 : 0);\n    return {\n      \"paciente\": `${paciente.apellidos}, ${paciente.nombre}`,\n      \"edad\": Math.floor((new Date(\"2025-09-01\") - new Date(paciente.fecha_nacimiento)) / (365.25 * 86400000)),\n      \"cronico\": paciente.es_cronico ? \"sí\" : \"no\",\n      \"alergias\": alergia.total,\n      \"alergias_graves\": alergia.graves,\n      \"analiticas_anormales\": analiticas,\n      \"puntos_riesgo\": puntos,\n      \"riesgo\": puntos >= 6 ? \"alto\" : puntos >= 3 ? \"medio\" : \"bajo\",\n    };\n  })\n  .sort((a, b) => b[\"puntos_riesgo\"] - a[\"puntos_riesgo\"] || a[\"paciente\"].localeCompare(b[\"paciente\"]))\n  .slice(0, 20);",
+      "assert": {
+        "columns": [
+          "paciente",
+          "edad",
+          "cronico",
+          "alergias",
+          "alergias_graves",
+          "analiticas_anormales",
+          "puntos_riesgo",
+          "riesgo"
+        ],
+        "rows": [
+          [
+            "Vázquez Jiménez, Laura",
+            14,
+            "no",
+            3,
+            2,
+            3,
+            10,
+            "alto"
+          ],
+          [
+            "Díaz Ruiz, Beatriz",
+            36,
+            "sí",
+            3,
+            0,
+            1,
+            8,
+            "alto"
+          ],
+          [
+            "García Domínguez, Pedro",
+            72,
+            "no",
+            2,
+            1,
+            2,
+            8,
+            "alto"
+          ],
+          [
+            "Molina Morales, Sergio",
+            34,
+            "sí",
+            1,
+            1,
+            1,
+            8,
+            "alto"
+          ],
+          [
+            "Delgado Gómez, Manuel",
+            38,
+            "sí",
+            3,
+            1,
+            0,
+            7,
+            "alto"
+          ],
+          [
+            "Domínguez Jiménez, Beatriz",
+            46,
+            "no",
+            2,
+            2,
+            1,
+            7,
+            "alto"
+          ],
+          [
+            "Domínguez Vázquez, Clara",
+            16,
+            "sí",
+            1,
+            0,
+            2,
+            7,
+            "alto"
+          ],
+          [
+            "Romero García, Lucía",
+            24,
+            "no",
+            2,
+            2,
+            1,
+            7,
+            "alto"
+          ],
+          [
+            "Fernández Alonso, Antonio",
+            79,
+            "no",
+            2,
+            1,
+            0,
+            6,
+            "alto"
+          ],
+          [
+            "Navarro Molina, Beatriz",
+            6,
+            "no",
+            2,
+            0,
+            2,
+            6,
+            "alto"
+          ],
+          [
+            "Ortega Martín, Pablo",
+            34,
+            "no",
+            2,
+            0,
+            2,
+            6,
+            "alto"
+          ],
+          [
+            "Serrano Navarro, Lucía",
+            64,
+            "sí",
+            1,
+            1,
+            1,
+            6,
+            "alto"
+          ],
+          [
+            "Iglesias Gutiérrez, Jorge",
+            75,
+            "no",
+            1,
+            0,
+            2,
+            5,
+            "medio"
+          ],
+          [
+            "López González, Pablo",
+            49,
+            "no",
+            1,
+            0,
+            2,
+            5,
+            "medio"
+          ],
+          [
+            "López Martín, María",
+            48,
+            "sí",
+            3,
+            0,
+            0,
+            5,
+            "medio"
+          ],
+          [
+            "Muñoz García, Francisco",
+            21,
+            "sí",
+            0,
+            0,
+            1,
+            5,
+            "medio"
+          ],
+          [
+            "Muñoz Ortega, Laura",
+            39,
+            "sí",
+            1,
+            1,
+            0,
+            5,
+            "medio"
+          ],
+          [
+            "Ortiz Gómez, Pedro",
+            10,
+            "no",
+            3,
+            1,
+            0,
+            5,
+            "medio"
+          ],
+          [
+            "Rubio González, Miguel",
+            58,
+            "no",
+            4,
+            0,
+            1,
+            5,
+            "medio"
+          ],
+          [
+            "Alonso González, Adrián",
+            77,
+            "no",
+            0,
+            0,
+            2,
+            4,
+            "medio"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Auditoría de cobertura de seguros",
+      "description": "Facturado, cubierto y parte del paciente por seguro, con los pacientes de la consulta B08.",
+      "folder": "Cruces e integridad",
+      "color": "#dcf1d4",
+      "code": "const seguros = new Map(tables[\"seguros\"].map((fila) => [fila.id_seguro, fila]));\nconst pacientes = new Map(tables[\"pacientes\"].map((fila) => [fila.id_paciente, fila]));\nconst cuentas = new Map(queries[\"B08 · Pacientes por seguro\"]().map((fila) => [fila.seguro, fila.pacientes]));\nconst facturacion = new Map();\ntables[\"facturas\"].forEach((fila) => {\n  const paciente = pacientes.get(fila.id_paciente);\n  if (!paciente) return;\n  const clave = paciente.id_seguro;\n  const grupo = facturacion.get(clave) || { total: 0, facturas: 0, pagado: 0 };\n  grupo.total += fila.importe || 0;\n  grupo.facturas += 1;\n  if (fila.pagada) grupo.pagado += fila.importe || 0;\n  facturacion.set(clave, grupo);\n});\nreturn [...seguros.values()]\n  .map((seguro) => {\n    const factura = facturacion.get(seguro.id_seguro) || { total: 0, facturas: 0, pagado: 0 };\n    const cubierto = factura.total * ((seguro.cobertura_porcentaje || 0) / 100);\n    return {\n      \"seguro\": seguro.nombre,\n      \"tipo\": seguro.tipo,\n      \"cobertura_porcentaje\": seguro.cobertura_porcentaje,\n      \"pacientes\": cuentas.get(seguro.nombre) || 0,\n      \"facturas\": factura.facturas,\n      \"facturado\": Math.round(factura.total),\n      \"cubierto\": Math.round(cubierto),\n      \"parte_paciente\": Math.round(factura.total - cubierto),\n      \"pagado\": Math.round(factura.pagado),\n      \"pendiente\": Math.round(factura.total - factura.pagado),\n    };\n  })\n  .sort((a, b) => b[\"facturado\"] - a[\"facturado\"] || a[\"seguro\"].localeCompare(b[\"seguro\"]));",
+      "assert": {
+        "columns": [
+          "seguro",
+          "tipo",
+          "cobertura_porcentaje",
+          "pacientes",
+          "facturas",
+          "facturado",
+          "cubierto",
+          "parte_paciente",
+          "pagado",
+          "pendiente"
+        ],
+        "rows": [
+          [
+            "Andes Salud",
+            "Privado",
+            70,
+            4,
+            11,
+            55531,
+            38872,
+            16659,
+            24851,
+            30680
+          ],
+          [
+            "Salud Pública",
+            "Público",
+            90,
+            8,
+            11,
+            47343,
+            42609,
+            4734,
+            40003,
+            7340
+          ],
+          [
+            "Mutua Laboral",
+            "Mixto",
+            85,
+            9,
+            13,
+            44430,
+            37766,
+            6665,
+            32923,
+            11507
+          ],
+          [
+            "Seguros Médicos del Norte",
+            "Privado",
+            75,
+            6,
+            10,
+            39547,
+            29660,
+            9887,
+            12215,
+            27332
+          ],
+          [
+            "Cobertura Básica",
+            "Público",
+            50,
+            6,
+            7,
+            37891,
+            18946,
+            18946,
+            31666,
+            6225
+          ],
+          [
+            "VidaPlena",
+            "Privado",
+            60,
+            2,
+            2,
+            7167,
+            4300,
+            2867,
+            7167,
             0
           ]
         ]

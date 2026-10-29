@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 152 queries)",
+  "name": "SQL tests · Education (8 tables, 155 queries, 29 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -9,7 +9,8 @@
     "D · Integrity",
     "E · Views",
     "F · Subqueries",
-    "G · Unions"
+    "G · Unions",
+    "H · Scripts as tables"
   ],
   "tableFolders": [
     "Structure",
@@ -22,7 +23,8 @@
     "Aggregates",
     "Dates",
     "Joins and integrity",
-    "Queries and reports"
+    "Queries and reports",
+    "JavaScript power"
   ],
   "tables": [
     {
@@ -7460,17 +7462,85 @@
       },
       "folder": "G · Unions",
       "color": "#e8ddf7"
+    },
+    {
+      "name": "H01 · Students per campus, read from the script",
+      "description": "Reads the result of the script “Students per campus” as if it were a table.",
+      "sql": "SELECT campus, students FROM [Students per campus] ORDER BY students DESC, campus",
+      "folder": "H · Scripts as tables",
+      "assert": {
+        "columns": [
+          "campus",
+          "students"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            9
+          ],
+          [
+            "Seaside Campus",
+            6
+          ],
+          [
+            "South Campus",
+            6
+          ],
+          [
+            "Andean Campus",
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "H02 · How many campuses the script returns",
+      "description": "Reads the result of the script “Students per campus” as if it were a table.",
+      "sql": "SELECT COUNT(*) AS total FROM [Students per campus]",
+      "folder": "H · Scripts as tables",
+      "assert": {
+        "columns": [
+          "total"
+        ],
+        "rows": [
+          [
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "H03 · Campuses with 6 or more students",
+      "description": "Reads the result of the script “Students per campus” as if it were a table.",
+      "sql": "SELECT campus, students FROM [Students per campus] WHERE students >= 6 ORDER BY students DESC, campus",
+      "folder": "H · Scripts as tables",
+      "assert": {
+        "columns": [
+          "campus",
+          "students"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            9
+          ],
+          [
+            "Seaside Campus",
+            6
+          ],
+          [
+            "South Campus",
+            6
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
     {
       "name": "Scholarship students and their contact",
       "description": "Filters scholarship students and shows their full name, e-mail and campus.",
-      "source": {
-        "kind": "table",
-        "name": "students"
-      },
-      "code": "return datos\n  .filter((fila) => fila.has_scholarship)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"email\": fila.email,\n    \"campus\": fila.id_campus,\n  }));",
+      "code": "const datos = tables[\"students\"];\nreturn datos\n  .filter((fila) => fila.has_scholarship)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"email\": fila.email,\n    \"campus\": fila.id_campus,\n  }));",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
       "assert": {
@@ -7531,11 +7601,7 @@
     {
       "name": "Student ages",
       "description": "Calculates the age on 1 September 2025 from the birth date and sorts from oldest to youngest.",
-      "source": {
-        "kind": "table",
-        "name": "students"
-      },
-      "code": "const reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
+      "code": "const datos = tables[\"students\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
       "folder": "Dates",
       "color": "#fde8cd",
       "assert": {
@@ -7671,11 +7737,7 @@
     {
       "name": "Ten oldest students",
       "description": "Sorts by birth date and returns the first ten rows with their rank.",
-      "source": {
-        "kind": "table",
-        "name": "students"
-      },
-      "code": "return datos\n  .slice()\n  .sort((a, b) => String(a.birth_date).localeCompare(String(b.birth_date)))\n  .slice(0, 10)\n  .map((fila, index) => ({\n    \"rank\": index + 1,\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"birth_date\": fila.birth_date,\n  }));",
+      "code": "const datos = tables[\"students\"];\nreturn datos\n  .slice()\n  .sort((a, b) => String(a.birth_date).localeCompare(String(b.birth_date)))\n  .slice(0, 10)\n  .map((fila, index) => ({\n    \"rank\": index + 1,\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"birth_date\": fila.birth_date,\n  }));",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
       "assert": {
@@ -7741,11 +7803,7 @@
     {
       "name": "Students per campus",
       "description": "Crosses students with the campuses table to count how many there are in each one.",
-      "source": {
-        "kind": "table",
-        "name": "students"
-      },
-      "code": "const campuses = new Map(tablas[\"campuses\"].map((c) => [c.id_campus, c.name]));\nconst counts = datos.reduce((acc, fila) => {\n  const name = campuses.get(fila.id_campus) || \"—\";\n  acc[name] = (acc[name] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.entries(counts)\n  .map(([name, count]) => ({ \"campus\": name, \"students\": count }))\n  .sort((a, b) => b[\"students\"] - a[\"students\"]);",
+      "code": "const datos = tables[\"students\"];\nconst campuses = new Map(tables[\"campuses\"].map((c) => [c.id_campus, c.name]));\nconst counts = datos.reduce((acc, fila) => {\n  const name = campuses.get(fila.id_campus) || \"—\";\n  acc[name] = (acc[name] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.entries(counts)\n  .map(([name, count]) => ({ \"campus\": name, \"students\": count }))\n  .sort((a, b) => b[\"students\"] - a[\"students\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -7776,11 +7834,7 @@
     {
       "name": "Incomplete contacts",
       "description": "Lists the students who are missing their e-mail, their phone or both.",
-      "source": {
-        "kind": "table",
-        "name": "students"
-      },
-      "code": "return datos\n  .filter((fila) => !fila.email || !fila.phone)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.phone) missing.push(\"phone\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"email\": fila.email,\n      \"phone\": fila.phone,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
+      "code": "const datos = tables[\"students\"];\nreturn datos\n  .filter((fila) => !fila.email || !fila.phone)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.phone) missing.push(\"phone\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"email\": fila.email,\n      \"phone\": fila.phone,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
       "assert": {
@@ -7875,11 +7929,7 @@
     {
       "name": "Scholarships by degree",
       "description": "Groups by degree code and calculates the total students, scholarship holders and percentage.",
-      "source": {
-        "kind": "table",
-        "name": "students"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.degree_code;\n  acc[key] = acc[key] || { total: 0, scholarship: 0 };\n  acc[key].total += 1;\n  if (fila.has_scholarship) acc[key].scholarship += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([degree, g]) => ({\n    \"degree\": degree,\n    \"students\": g.total,\n    \"scholarships\": g.scholarship,\n    \"percentage\": Math.round((g.scholarship / g.total) * 1000) / 10,\n  }))\n  .sort((a, b) => a[\"degree\"].localeCompare(b[\"degree\"]));",
+      "code": "const datos = tables[\"students\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.degree_code;\n  acc[key] = acc[key] || { total: 0, scholarship: 0 };\n  acc[key].total += 1;\n  if (fila.has_scholarship) acc[key].scholarship += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([degree, g]) => ({\n    \"degree\": degree,\n    \"students\": g.total,\n    \"scholarships\": g.scholarship,\n    \"percentage\": Math.round((g.scholarship / g.total) * 1000) / 10,\n  }))\n  .sort((a, b) => a[\"degree\"].localeCompare(b[\"degree\"]));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -7932,11 +7982,7 @@
     {
       "name": "Grades by status",
       "description": "Ignores null grades and calculates how many there are, their average, minimum and maximum per status.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const groups = datos\n  .filter((fila) => fila.grade !== null && fila.grade !== undefined)\n  .reduce((acc, fila) => {\n    const key = fila.status;\n    acc[key] = acc[key] || { count: 0, sum: 0, min: Infinity, max: -Infinity };\n    const g = acc[key];\n    g.count += 1;\n    g.sum += fila.grade;\n    g.min = Math.min(g.min, fila.grade);\n    g.max = Math.max(g.max, fila.grade);\n    return acc;\n  }, {});\nreturn Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  \"min\": g.min,\n  \"max\": g.max,\n}));",
+      "code": "const datos = tables[\"enrollments\"];\nconst groups = datos\n  .filter((fila) => fila.grade !== null && fila.grade !== undefined)\n  .reduce((acc, fila) => {\n    const key = fila.status;\n    acc[key] = acc[key] || { count: 0, sum: 0, min: Infinity, max: -Infinity };\n    const g = acc[key];\n    g.count += 1;\n    g.sum += fila.grade;\n    g.min = Math.min(g.min, fila.grade);\n    g.max = Math.max(g.max, fila.grade);\n    return acc;\n  }, {});\nreturn Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  \"min\": g.min,\n  \"max\": g.max,\n}));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -7961,11 +8007,7 @@
     {
       "name": "Pass rate by academic year",
       "description": "Counts enrollments, passed ones and the average grade of the graded ones in each academic year.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.academic_year;\n  acc[key] = acc[key] || { total: 0, passed: 0, graded: 0, sum: 0 };\n  const g = acc[key];\n  g.total += 1;\n  if (fila.status === \"passed\") g.passed += 1;\n  if (fila.grade !== null && fila.grade !== undefined) {\n    g.graded += 1;\n    g.sum += fila.grade;\n  }\n  return acc;\n}, {});\nreturn Object.entries(groups).map(([year, g]) => ({\n  \"year\": year,\n  \"count\": g.total,\n  \"passed\": g.passed,\n  \"percentage\": Math.round((g.passed / g.total) * 1000) / 10,\n  \"average\": g.graded ? Math.round((g.sum / g.graded) * 100) / 100 : null,\n}));",
+      "code": "const datos = tables[\"enrollments\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.academic_year;\n  acc[key] = acc[key] || { total: 0, passed: 0, graded: 0, sum: 0 };\n  const g = acc[key];\n  g.total += 1;\n  if (fila.status === \"passed\") g.passed += 1;\n  if (fila.grade !== null && fila.grade !== undefined) {\n    g.graded += 1;\n    g.sum += fila.grade;\n  }\n  return acc;\n}, {});\nreturn Object.entries(groups).map(([year, g]) => ({\n  \"year\": year,\n  \"count\": g.total,\n  \"passed\": g.passed,\n  \"percentage\": Math.round((g.passed / g.total) * 1000) / 10,\n  \"average\": g.graded ? Math.round((g.sum / g.graded) * 100) / 100 : null,\n}));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -7997,11 +8039,7 @@
     {
       "name": "Statuses by year (pivot)",
       "description": "Turns the statuses into columns: active, passed and cancelled per academic year.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const year = fila.academic_year;\n  const status = fila.status;\n  acc[year] = acc[year] || { year, active: 0, passed: 0, cancelled: 0 };\n  if (status === \"active\") acc[year].active += 1;\n  else if (status === \"passed\") acc[year].passed += 1;\n  else if (status === \"cancelled\") acc[year].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((g) => ({\n    \"year\": g.year,\n    \"active\": g.active,\n    \"passed\": g.passed,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"year\"]).localeCompare(String(b[\"year\"])));",
+      "code": "const datos = tables[\"enrollments\"];\nconst groups = datos.reduce((acc, fila) => {\n  const year = fila.academic_year;\n  const status = fila.status;\n  acc[year] = acc[year] || { year, active: 0, passed: 0, cancelled: 0 };\n  if (status === \"active\") acc[year].active += 1;\n  else if (status === \"passed\") acc[year].passed += 1;\n  else if (status === \"cancelled\") acc[year].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((g) => ({\n    \"year\": g.year,\n    \"active\": g.active,\n    \"passed\": g.passed,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"year\"]).localeCompare(String(b[\"year\"])));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -8030,11 +8068,7 @@
     {
       "name": "Subject ranking by average grade",
       "description": "Groups graded enrollments by subject, crosses their name and sorts by average.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const subjects = new Map(tablas[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  if (fila.grade === null || fila.grade === undefined) return acc;\n  const key = fila.id_subject;\n  acc[key] = acc[key] || { sum: 0, count: 0 };\n  acc[key].sum += fila.grade;\n  acc[key].count += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"subject\": subjects.get(Number(id)) || `#${id}`,\n    \"count\": g.count,\n    \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  }))\n  .sort((a, b) => b[\"average\"] - a[\"average\"])\n  .map((row, index) => ({ \"rank\": index + 1, ...row }));",
+      "code": "const datos = tables[\"enrollments\"];\nconst subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  if (fila.grade === null || fila.grade === undefined) return acc;\n  const key = fila.id_subject;\n  acc[key] = acc[key] || { sum: 0, count: 0 };\n  acc[key].sum += fila.grade;\n  acc[key].count += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"subject\": subjects.get(Number(id)) || `#${id}`,\n    \"count\": g.count,\n    \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  }))\n  .sort((a, b) => b[\"average\"] - a[\"average\"])\n  .map((row, index) => ({ \"rank\": index + 1, ...row }));",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -8123,11 +8157,7 @@
     {
       "name": "Enrollment summary per student",
       "description": "Groups by student, lists their subjects and calculates their average grade.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const students = new Map(tablas[\"students\"].map((s) => [s.id_student, `${s.name} ${s.last_name}`]));\nconst subjects = new Map(tablas[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_student;\n  acc[id] = acc[id] || { subjects: new Set(), grades: [] };\n  acc[id].subjects.add(subjects.get(fila.id_subject) || `#${fila.id_subject}`);\n  if (fila.grade !== null && fila.grade !== undefined) acc[id].grades.push(fila.grade);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"student\": students.get(Number(id)) || `#${id}`,\n    \"subjects\": g.subjects.size,\n    \"average\": g.grades.length ? Math.round((g.grades.reduce((a, b) => a + b, 0) / g.grades.length) * 100) / 100 : null,\n    \"list\": Array.from(g.subjects).join(\" · \"),\n  }))\n  .sort((a, b) => b[\"subjects\"] - a[\"subjects\"]);",
+      "code": "const datos = tables[\"enrollments\"];\nconst students = new Map(tables[\"students\"].map((s) => [s.id_student, `${s.name} ${s.last_name}`]));\nconst subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_student;\n  acc[id] = acc[id] || { subjects: new Set(), grades: [] };\n  acc[id].subjects.add(subjects.get(fila.id_subject) || `#${fila.id_subject}`);\n  if (fila.grade !== null && fila.grade !== undefined) acc[id].grades.push(fila.grade);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"student\": students.get(Number(id)) || `#${id}`,\n    \"subjects\": g.subjects.size,\n    \"average\": g.grades.length ? Math.round((g.grades.reduce((a, b) => a + b, 0) / g.grades.length) * 100) / 100 : null,\n    \"list\": Array.from(g.subjects).join(\" · \"),\n  }))\n  .sort((a, b) => b[\"subjects\"] - a[\"subjects\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -8270,11 +8300,7 @@
     {
       "name": "Grade distribution",
       "description": "Sorts the grades into four ranges and calculates how many there are and their percentage.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const buckets = { \"0-4.9\": 0, \"5-6.9\": 0, \"7-8.9\": 0, \"9-10\": 0 };\ndatos.forEach((fila) => {\n  const g = fila.grade;\n  if (g === null || g === undefined) return;\n  if (g < 5) buckets[\"0-4.9\"] += 1;\n  else if (g < 7) buckets[\"5-6.9\"] += 1;\n  else if (g < 9) buckets[\"7-8.9\"] += 1;\n  else buckets[\"9-10\"] += 1;\n});\nconst total = Object.values(buckets).reduce((a, b) => a + b, 0);\nreturn Object.entries(buckets).map(([range, count]) => ({\n  \"range\": range,\n  \"count\": count,\n  \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n}));",
+      "code": "const datos = tables[\"enrollments\"];\nconst buckets = { \"0-4.9\": 0, \"5-6.9\": 0, \"7-8.9\": 0, \"9-10\": 0 };\ndatos.forEach((fila) => {\n  const g = fila.grade;\n  if (g === null || g === undefined) return;\n  if (g < 5) buckets[\"0-4.9\"] += 1;\n  else if (g < 7) buckets[\"5-6.9\"] += 1;\n  else if (g < 9) buckets[\"7-8.9\"] += 1;\n  else buckets[\"9-10\"] += 1;\n});\nconst total = Object.values(buckets).reduce((a, b) => a + b, 0);\nreturn Object.entries(buckets).map(([range, count]) => ({\n  \"range\": range,\n  \"count\": count,\n  \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n}));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -8310,11 +8336,7 @@
     {
       "name": "Subjects by year",
       "description": "Counts subjects, credits and average classroom hours per year.",
-      "source": {
-        "kind": "table",
-        "name": "subjects"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.year;\n  acc[key] = acc[key] || { count: 0, credits: 0, hours: 0 };\n  acc[key].count += 1;\n  acc[key].credits += fila.credits;\n  acc[key].hours += fila.classroom_hours;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([year, g]) => ({\n    \"year\": Number(year),\n    \"count\": g.count,\n    \"credits\": g.credits,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => a[\"year\"] - b[\"year\"]);",
+      "code": "const datos = tables[\"subjects\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.year;\n  acc[key] = acc[key] || { count: 0, credits: 0, hours: 0 };\n  acc[key].count += 1;\n  acc[key].credits += fila.credits;\n  acc[key].hours += fila.classroom_hours;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([year, g]) => ({\n    \"year\": Number(year),\n    \"count\": g.count,\n    \"credits\": g.credits,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => a[\"year\"] - b[\"year\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -8361,11 +8383,7 @@
     {
       "name": "Teachers by category",
       "description": "Groups by category and calculates how many there are, the average hours and how many research.",
-      "source": {
-        "kind": "table",
-        "name": "teachers"
-      },
-      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.category;\n  acc[key] = acc[key] || { count: 0, hours: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].hours += fila.weekly_hours;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([category, g]) => ({\n    \"category\": category,\n    \"count\": g.count,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
+      "code": "const datos = tables[\"teachers\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.category;\n  acc[key] = acc[key] || { count: 0, hours: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].hours += fila.weekly_hours;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([category, g]) => ({\n    \"category\": category,\n    \"count\": g.count,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -8406,11 +8424,7 @@
     {
       "name": "Teachers without an office or e-mail",
       "description": "Lists the teachers who are missing their office, their e-mail or both.",
-      "source": {
-        "kind": "table",
-        "name": "teachers"
-      },
-      "code": "return datos\n  .filter((fila) => !fila.email || !fila.office)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.office) missing.push(\"office\");\n    return {\n      \"teacher\": `${fila.name} ${fila.last_name}`,\n      \"category\": fila.category,\n      \"email\": fila.email,\n      \"office\": fila.office,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
+      "code": "const datos = tables[\"teachers\"];\nreturn datos\n  .filter((fila) => !fila.email || !fila.office)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.office) missing.push(\"office\");\n    return {\n      \"teacher\": `${fila.name} ${fila.last_name}`,\n      \"category\": fila.category,\n      \"email\": fila.email,\n      \"office\": fila.office,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
       "assert": {
@@ -8470,11 +8484,7 @@
     {
       "name": "Classroom capacity by building",
       "description": "Adds up the capacity of the classrooms of each building and crosses its name.",
-      "source": {
-        "kind": "table",
-        "name": "classrooms"
-      },
-      "code": "const buildings = new Map(tablas[\"buildings\"].map((b) => [b.id_building, b.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_building;\n  acc[key] = acc[key] || { count: 0, capacity: 0 };\n  acc[key].count += 1;\n  acc[key].capacity += fila.capacity;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"building\": buildings.get(Number(id)) || `#${id}`,\n    \"classrooms\": g.count,\n    \"capacity\": g.capacity,\n    \"average\": Math.round((g.capacity / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
+      "code": "const datos = tables[\"classrooms\"];\nconst buildings = new Map(tables[\"buildings\"].map((b) => [b.id_building, b.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_building;\n  acc[key] = acc[key] || { count: 0, capacity: 0 };\n  acc[key].count += 1;\n  acc[key].capacity += fila.capacity;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"building\": buildings.get(Number(id)) || `#${id}`,\n    \"classrooms\": g.count,\n    \"capacity\": g.capacity,\n    \"average\": Math.round((g.capacity / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -8533,11 +8543,7 @@
     {
       "name": "Campus summary",
       "description": "Calculates the share of each campus capacity over the total and sorts by capacity.",
-      "source": {
-        "kind": "table",
-        "name": "campuses"
-      },
-      "code": "const total = datos.reduce((sum, fila) => sum + fila.max_capacity, 0);\nreturn datos\n  .map((fila) => ({\n    \"campus\": fila.name,\n    \"city\": fila.city,\n    \"capacity\": fila.max_capacity,\n    \"percentage\": Math.round((fila.max_capacity / total) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
+      "code": "const datos = tables[\"campuses\"];\nconst total = datos.reduce((sum, fila) => sum + fila.max_capacity, 0);\nreturn datos\n  .map((fila) => ({\n    \"campus\": fila.name,\n    \"city\": fila.city,\n    \"capacity\": fila.max_capacity,\n    \"percentage\": Math.round((fila.max_capacity / total) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -8578,11 +8584,7 @@
     {
       "name": "Use a saved query",
       "description": "Calls query A19 (students with three or more enrollments) and shows its result.",
-      "source": {
-        "kind": "table",
-        "name": "students"
-      },
-      "code": "const rows = consultas[\"A19 · Students with three or more enrollments\"]();\nreturn rows.map((row) => ({\n  \"student\": row.id_student,\n  \"enrollments\": row.enrollments,\n}));",
+      "code": "const rows = queries[\"A19 · Students with three or more enrollments\"]();\nreturn rows.map((row) => ({\n  \"student\": row.id_student,\n  \"enrollments\": row.enrollments,\n}));",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
       "assert": {
@@ -8637,11 +8639,7 @@
     {
       "name": "Report with forEach and resultado",
       "description": "Builds a report per status with forEach, adds a TOTAL row and stores it in resultado.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const groups = {};\ndatos.forEach((fila) => {\n  const key = fila.status;\n  groups[key] = groups[key] || { count: 0, sum: 0 };\n  groups[key].count += 1;\n  if (fila.grade !== null && fila.grade !== undefined) groups[key].sum += fila.grade;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": g.count ? Math.round((g.sum / g.count) * 100) / 100 : null,\n}));\nrows.push({\n  \"status\": \"TOTAL\",\n  \"count\": datos.length,\n  \"average\": null,\n});\nresultado = rows;",
+      "code": "const datos = tables[\"enrollments\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.status;\n  groups[key] = groups[key] || { count: 0, sum: 0 };\n  groups[key].count += 1;\n  if (fila.grade !== null && fila.grade !== undefined) groups[key].sum += fila.grade;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": g.count ? Math.round((g.sum / g.count) * 100) / 100 : null,\n}));\nrows.push({\n  \"status\": \"TOTAL\",\n  \"count\": datos.length,\n  \"average\": null,\n});\nresultado = rows;",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
       "assert": {
@@ -8677,11 +8675,7 @@
     {
       "name": "Orphan enrollments",
       "description": "Finds enrollments whose student or subject no longer exists in the tables.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const studentIds = new Set(tablas[\"students\"].map((s) => s.id_student));\nconst subjectIds = new Set(tablas[\"subjects\"].map((s) => s.id_subject));\nreturn datos\n  .filter((fila) => !studentIds.has(fila.id_student) || !subjectIds.has(fila.id_subject))\n  .map((fila) => ({\n    \"enrollment\": fila.id_enrollment,\n    \"student\": fila.id_student,\n    \"subject\": fila.id_subject,\n    \"missing\": !studentIds.has(fila.id_student) ? \"student\" : \"subject\",\n  }));",
+      "code": "const datos = tables[\"enrollments\"];\nconst studentIds = new Set(tables[\"students\"].map((s) => s.id_student));\nconst subjectIds = new Set(tables[\"subjects\"].map((s) => s.id_subject));\nreturn datos\n  .filter((fila) => !studentIds.has(fila.id_student) || !subjectIds.has(fila.id_subject))\n  .map((fila) => ({\n    \"enrollment\": fila.id_enrollment,\n    \"student\": fila.id_student,\n    \"subject\": fila.id_subject,\n    \"missing\": !studentIds.has(fila.id_student) ? \"student\" : \"subject\",\n  }));",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
       "assert": {
@@ -8691,11 +8685,7 @@
     {
       "name": "Credit-weighted average",
       "description": "Weights the grade of each enrollment by the credits of its subject and returns one row.",
-      "source": {
-        "kind": "table",
-        "name": "enrollments"
-      },
-      "code": "const subjects = new Map(tablas[\"subjects\"].map((s) => [s.id_subject, s.credits]));\nlet sum = 0;\nlet credits = 0;\ndatos.forEach((fila) => {\n  if (fila.grade === null || fila.grade === undefined) return;\n  const c = subjects.get(fila.id_subject) || 0;\n  sum += fila.grade * c;\n  credits += c;\n});\nreturn [{\n  \"average\": credits ? Math.round((sum / credits) * 100) / 100 : null,\n  \"credits\": credits,\n}];",
+      "code": "const datos = tables[\"enrollments\"];\nconst subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s.credits]));\nlet sum = 0;\nlet credits = 0;\ndatos.forEach((fila) => {\n  if (fila.grade === null || fila.grade === undefined) return;\n  const c = subjects.get(fila.id_subject) || 0;\n  sum += fila.grade * c;\n  credits += c;\n});\nreturn [{\n  \"average\": credits ? Math.round((sum / credits) * 100) / 100 : null,\n  \"credits\": credits,\n}];",
       "folder": "Aggregates",
       "color": "#d3ecf3",
       "assert": {
@@ -8707,6 +8697,911 @@
           [
             7.3,
             196
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Student directory with Intl",
+      "description": "Directory sorted with Intl.Collator, with initials, e-mail parts and campus.",
+      "folder": "JavaScript power",
+      "color": "#dde5fa",
+      "code": "const students = tables[\"students\"];\nconst campuses = new Map(tables[\"campuses\"].map((c) => [c.id_campus, c.name]));\nconst collator = new Intl.Collator(\"en\", { sensitivity: \"base\" });\nreturn students\n  .map((fila) => {\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    return {\n      \"student\": `${fila.last_name}, ${fila.name}`,\n      \"initials\": `${fila.name.charAt(0)}${fila.last_name.charAt(0)}`.toUpperCase(),\n      \"campus\": campuses.get(fila.id_campus) || \"—\",\n      \"email_user\": at > 0 ? email.slice(0, at) : null,\n      \"email_domain\": at > 0 ? email.slice(at + 1) : null,\n      \"scholarship\": fila.has_scholarship ? \"yes\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"student\"], b[\"student\"]));",
+      "assert": {
+        "columns": [
+          "student",
+          "initials",
+          "campus",
+          "email_user",
+          "email_domain",
+          "scholarship"
+        ],
+        "rows": [
+          [
+            "Bermúdez Soler, Julia",
+            "JB",
+            "Seaside Campus",
+            "julia.bermudez",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Cabrera Luna, Adrián",
+            "AC",
+            "South Campus",
+            "adrian.cabrera",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Castro Peña, Nerea",
+            "NC",
+            "South Campus",
+            "nerea.castro",
+            "alu.es",
+            "yes"
+          ],
+          [
+            "Delgado Cano, Marcos",
+            "MD",
+            "Andean Campus",
+            null,
+            null,
+            "no"
+          ],
+          [
+            "Domínguez Rey, Álvaro",
+            "ÁD",
+            "Andean Campus",
+            "alvaro.dominguez",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Esteban Quiles, Marc",
+            "ME",
+            "Seaside Campus",
+            null,
+            null,
+            "no"
+          ],
+          [
+            "Fernández Blanco, Diego",
+            "DF",
+            "South Campus",
+            "diego.fernandez",
+            "alu.es",
+            "no"
+          ],
+          [
+            "García López, Ana",
+            "AG",
+            "North Campus",
+            "ana.garcia",
+            "alu.es",
+            "yes"
+          ],
+          [
+            "Gómez Frías, Pablo",
+            "PG",
+            "North Campus",
+            "pablo.gomez",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Guerrero Vidal, Sara",
+            "SG",
+            "North Campus",
+            "sara.guerrero",
+            "alu.es",
+            "yes"
+          ],
+          [
+            "Hernández Ruiz, Sofía",
+            "SH",
+            "North Campus",
+            null,
+            null,
+            "yes"
+          ],
+          [
+            "Lozano Prieto, Óscar",
+            "ÓL",
+            "Andean Campus",
+            "oscar.lozano",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Martín Soto, Luis",
+            "LM",
+            "North Campus",
+            "luis.martin",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Molina Ríos, Elena",
+            "EM",
+            "North Campus",
+            "elena.molina",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Moreno Pascual, Lucía",
+            "LM",
+            "South Campus",
+            null,
+            null,
+            "yes"
+          ],
+          [
+            "Ortega Díaz, Javier",
+            "JO",
+            "Seaside Campus",
+            "javier.ortega",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Parra Aguilar, Rubén",
+            "RP",
+            "South Campus",
+            null,
+            null,
+            "yes"
+          ],
+          [
+            "Ramírez Cortés, Iván",
+            "IR",
+            "North Campus",
+            null,
+            null,
+            "no"
+          ],
+          [
+            "Reyes Baena, Claudia",
+            "CR",
+            "North Campus",
+            "claudia.reyes",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Ruiz Navarro, Marta",
+            "MR",
+            "North Campus",
+            "marta.ruiz",
+            "alu.es",
+            "no"
+          ],
+          [
+            "Santos Iglesias, Carmen",
+            "CS",
+            "Seaside Campus",
+            "carmen.santos",
+            "alu.es",
+            "yes"
+          ],
+          [
+            "Serrano Bravo, Hugo",
+            "HS",
+            "South Campus",
+            "hugo.serrano",
+            "alu.es",
+            "yes"
+          ],
+          [
+            "Suárez Nieto, Irene",
+            "IS",
+            "Seaside Campus",
+            "irene.suarez",
+            "alu.es",
+            "yes"
+          ],
+          [
+            "Vega Salas, Paula",
+            "PV",
+            "Seaside Campus",
+            "paula.vega",
+            "alu.es",
+            "no"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Campus capacity ratio",
+      "description": "The students-per-campus query crossed with the campus capacity table.",
+      "folder": "Joins and integrity",
+      "color": "#dcf1d4",
+      "code": "const counts = queries[\"H01 · Students per campus, read from the script\"]();\nconst campuses = new Map(tables[\"campuses\"].map((c) => [c.name, c]));\nlet cumulative = 0;\nconst total = counts.reduce((sum, row) => sum + row.students, 0);\nreturn counts.map((row) => {\n  const campus = campuses.get(row.campus);\n  const capacity = campus ? campus.max_capacity : 0;\n  const ratio = capacity ? Math.round((row.students / capacity) * 1000) / 10 : null;\n  cumulative += row.students;\n  return {\n    \"campus\": row.campus,\n    \"students\": row.students,\n    \"capacity\": capacity,\n    \"fill_percent\": ratio,\n    \"share_percent\": total ? Math.round((row.students / total) * 1000) / 10 : 0,\n    \"cumulative\": cumulative,\n    \"status\": ratio === null ? \"no capacity\" : ratio >= 75 ? \"full\" : ratio >= 50 ? \"busy\" : \"room left\",\n  };\n});",
+      "assert": {
+        "columns": [
+          "campus",
+          "students",
+          "capacity",
+          "fill_percent",
+          "share_percent",
+          "cumulative",
+          "status"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            9,
+            4500,
+            0.2,
+            37.5,
+            9,
+            "room left"
+          ],
+          [
+            "Seaside Campus",
+            6,
+            1900,
+            0.3,
+            25,
+            15,
+            "room left"
+          ],
+          [
+            "South Campus",
+            6,
+            2800,
+            0.2,
+            25,
+            21,
+            "room left"
+          ],
+          [
+            "Andean Campus",
+            3,
+            3200,
+            0.1,
+            12.5,
+            24,
+            "room left"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Degree scorecard",
+      "description": "Degree totals from the tables joined to the per-subject averages of query A31.",
+      "folder": "JavaScript power",
+      "color": "#fce4e4",
+      "code": "const degrees = tables[\"degrees\"];\nconst subjectsById = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s]));\nconst averages = queries[\"A31 · Average grade per subject (HAVING and ORDER BY by alias)\"]();\nconst groups = new Map(degrees.map((d) => [d.code, { degree: d, subjects: 0, graded: 0, weighted: 0 }]));\ntables[\"subjects\"].forEach((subject) => {\n  const group = groups.get(subject.degree_code);\n  if (group) group.subjects += 1;\n});\naverages.forEach((row) => {\n  const subject = subjectsById.get(row.id_subject);\n  const group = subject ? groups.get(subject.degree_code) : null;\n  if (!group) return;\n  group.graded += row.graded;\n  group.weighted += row.average_grade * row.graded;\n});\nreturn [...groups.values()]\n  .map((group) => ({\n    \"degree\": group.degree.name,\n    \"level\": group.degree.level,\n    \"subjects\": group.subjects,\n    \"graded_enrollments\": group.graded,\n    \"average_grade\": group.graded ? Math.round((group.weighted / group.graded) * 100) / 100 : null,\n    \"official\": group.degree.is_official ? \"yes\" : \"no\",\n  }))\n  .sort((a, b) => (b[\"average_grade\"] || 0) - (a[\"average_grade\"] || 0));",
+      "assert": {
+        "columns": [
+          "degree",
+          "level",
+          "subjects",
+          "graded_enrollments",
+          "average_grade",
+          "official"
+        ],
+        "rows": [
+          [
+            "Software Engineering",
+            "Master",
+            2,
+            2,
+            8.5,
+            "yes"
+          ],
+          [
+            "Data Science",
+            "Master",
+            2,
+            2,
+            7.5,
+            "no"
+          ],
+          [
+            "Medicine",
+            "Bachelor",
+            3,
+            7,
+            7.36,
+            "yes"
+          ],
+          [
+            "Primary Education",
+            "Bachelor",
+            3,
+            8,
+            7.25,
+            "yes"
+          ],
+          [
+            "Computer Engineering",
+            "Bachelor",
+            4,
+            11,
+            7.14,
+            "yes"
+          ],
+          [
+            "Law",
+            "Bachelor",
+            2,
+            0,
+            null,
+            "yes"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Student leaderboard",
+      "description": "Query C03 ranked with competition ranking and enriched with grades and scholarships.",
+      "folder": "Queries and reports",
+      "color": "#fde8cd",
+      "code": "const load = queries[\"C03 · Load of every student (subjects and credits)\"]();\nconst students = new Map(tables[\"students\"].map((s) => [s.id_student, s]));\nconst grades = new Map();\ntables[\"enrollments\"].forEach((row) => {\n  if (row.grade === null || row.grade === undefined) return;\n  const group = grades.get(row.id_student) || { sum: 0, count: 0 };\n  group.sum += row.grade;\n  group.count += 1;\n  grades.set(row.id_student, group);\n});\nlet previous = null;\nlet rank = 0;\nreturn load.map((row, index) => {\n  if (row.credits !== previous) {\n    rank = index + 1;\n    previous = row.credits;\n  }\n  const grade = grades.get(row.id_student);\n  const student = students.get(row.id_student);\n  return {\n    \"rank\": rank,\n    \"student\": `${row.last_name}, ${row.name}`,\n    \"subjects\": row.subjects,\n    \"credits\": row.credits,\n    \"average_grade\": grade ? Math.round((grade.sum / grade.count) * 100) / 100 : null,\n    \"scholarship\": student && student.has_scholarship ? \"yes\" : \"no\",\n  };\n});",
+      "assert": {
+        "columns": [
+          "rank",
+          "student",
+          "subjects",
+          "credits",
+          "average_grade",
+          "scholarship"
+        ],
+        "rows": [
+          [
+            1,
+            "García López, Ana",
+            4,
+            24,
+            8,
+            "yes"
+          ],
+          [
+            2,
+            "Fernández Blanco, Diego",
+            3,
+            19,
+            6.75,
+            "no"
+          ],
+          [
+            2,
+            "Santos Iglesias, Carmen",
+            3,
+            19,
+            7.75,
+            "yes"
+          ],
+          [
+            2,
+            "Suárez Nieto, Irene",
+            3,
+            19,
+            8.75,
+            "yes"
+          ],
+          [
+            5,
+            "Martín Soto, Luis",
+            3,
+            18,
+            5.5,
+            "no"
+          ],
+          [
+            5,
+            "Gómez Frías, Pablo",
+            3,
+            18,
+            6.75,
+            "no"
+          ],
+          [
+            5,
+            "Reyes Baena, Claudia",
+            3,
+            18,
+            8,
+            "no"
+          ],
+          [
+            5,
+            "Guerrero Vidal, Sara",
+            3,
+            18,
+            7,
+            "yes"
+          ],
+          [
+            9,
+            "Ruiz Navarro, Marta",
+            3,
+            15,
+            6,
+            "no"
+          ],
+          [
+            9,
+            "Serrano Bravo, Hugo",
+            3,
+            15,
+            9,
+            "yes"
+          ],
+          [
+            11,
+            "Vega Salas, Paula",
+            2,
+            13,
+            5,
+            "no"
+          ],
+          [
+            12,
+            "Hernández Ruiz, Sofía",
+            2,
+            12,
+            9,
+            "yes"
+          ],
+          [
+            12,
+            "Domínguez Rey, Álvaro",
+            2,
+            12,
+            7.5,
+            "no"
+          ],
+          [
+            14,
+            "Castro Peña, Nerea",
+            2,
+            11,
+            6,
+            "yes"
+          ],
+          [
+            15,
+            "Bermúdez Soler, Julia",
+            2,
+            10,
+            null,
+            "no"
+          ],
+          [
+            16,
+            "Parra Aguilar, Rubén",
+            2,
+            9,
+            7,
+            "yes"
+          ],
+          [
+            17,
+            "Ortega Díaz, Javier",
+            1,
+            6,
+            6,
+            "no"
+          ],
+          [
+            17,
+            "Moreno Pascual, Lucía",
+            1,
+            6,
+            8,
+            "yes"
+          ],
+          [
+            17,
+            "Molina Ríos, Elena",
+            1,
+            6,
+            9,
+            "no"
+          ],
+          [
+            17,
+            "Cabrera Luna, Adrián",
+            1,
+            6,
+            8,
+            "no"
+          ],
+          [
+            17,
+            "Esteban Quiles, Marc",
+            1,
+            6,
+            null,
+            "no"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Enrollment timeline",
+      "description": "Enrollments per month with Date, status columns and a running total.",
+      "folder": "Dates",
+      "color": "#e8ddf7",
+      "code": "const groups = new Map();\ntables[\"enrollments\"].forEach((row) => {\n  const date = new Date(row.enrollment_date);\n  const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, \"0\")}`;\n  const group = groups.get(month) || { month, total: 0, active: 0, passed: 0, cancelled: 0 };\n  group.total += 1;\n  if (group[row.status] !== undefined) group[row.status] += 1;\n  groups.set(month, group);\n});\nlet cumulative = 0;\nreturn [...groups.values()]\n  .sort((a, b) => a.month.localeCompare(b.month))\n  .map((group) => {\n    cumulative += group.total;\n    return {\n      \"month\": group.month,\n      \"enrollments\": group.total,\n      \"active\": group.active,\n      \"passed\": group.passed,\n      \"cancelled\": group.cancelled,\n      \"cumulative\": cumulative,\n    };\n  });",
+      "assert": {
+        "columns": [
+          "month",
+          "enrollments",
+          "active",
+          "passed",
+          "cancelled",
+          "cumulative"
+        ],
+        "rows": [
+          [
+            "2024-09",
+            27,
+            0,
+            26,
+            1,
+            27
+          ],
+          [
+            "2025-09",
+            21,
+            13,
+            6,
+            2,
+            48
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Data quality checklist",
+      "description": "Runs five integrity queries and turns their row counts into a checklist.",
+      "folder": "Joins and integrity",
+      "color": "#dcf1d4",
+      "code": "const checks = [\n  [\"Enrollments without a student\", \"D01 · Enrollments with no student (integrity of the 1:M)\"],\n  [\"Enrollments without a subject\", \"D02 · Enrollments with no subject (integrity of the other 1:M)\"],\n  [\"Subjects without a degree\", \"D03 · Subjects with no degree (integrity of the text code)\"],\n  [\"Subjects without a teacher\", \"D04 · Subjects with no teacher\"],\n  [\"Repeated student/subject pairs\", \"D08 · Repeated enrollments of the same student/subject pair\"],\n];\nreturn checks.map(([label, query]) => {\n  const rows = queries[query]();\n  return {\n    \"check\": label,\n    \"issues\": rows.length,\n    \"status\": rows.length === 0 ? \"ok\" : \"review\",\n    \"query\": query,\n  };\n});",
+      "assert": {
+        "columns": [
+          "check",
+          "issues",
+          "status",
+          "query"
+        ],
+        "rows": [
+          [
+            "Enrollments without a student",
+            0,
+            "ok",
+            "D01 · Enrollments with no student (integrity of the 1:M)"
+          ],
+          [
+            "Enrollments without a subject",
+            0,
+            "ok",
+            "D02 · Enrollments with no subject (integrity of the other 1:M)"
+          ],
+          [
+            "Subjects without a degree",
+            0,
+            "ok",
+            "D03 · Subjects with no degree (integrity of the text code)"
+          ],
+          [
+            "Subjects without a teacher",
+            0,
+            "ok",
+            "D04 · Subjects with no teacher"
+          ],
+          [
+            "Repeated student/subject pairs",
+            0,
+            "ok",
+            "D08 · Repeated enrollments of the same student/subject pair"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Subject popularity pivot",
+      "description": "One row per subject with status counts, a pass rate and a top-five mark from query C13.",
+      "folder": "Aggregates",
+      "color": "#fce4e4",
+      "code": "const subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s]));\nconst top = new Set(queries[\"C13 · Subjects with more enrollments (ORDER BY of an aggregate)\"]().map((row) => row.subject));\nconst groups = new Map();\ntables[\"enrollments\"].forEach((row) => {\n  const subject = subjects.get(row.id_subject);\n  if (!subject) return;\n  const group = groups.get(row.id_subject) || { subject, total: 0, passed: 0, active: 0, cancelled: 0 };\n  group.total += 1;\n  if (group[row.status] !== undefined) group[row.status] += 1;\n  groups.set(row.id_subject, group);\n});\nreturn [...groups.values()]\n  .map((group) => ({\n    \"subject\": group.subject.name,\n    \"degree\": group.subject.degree_code,\n    \"enrollments\": group.total,\n    \"passed\": group.passed,\n    \"active\": group.active,\n    \"cancelled\": group.cancelled,\n    \"pass_percent\": group.total ? Math.round((group.passed / group.total) * 1000) / 10 : 0,\n    \"top_five\": top.has(group.subject.name) ? \"yes\" : \"no\",\n  }))\n  .sort((a, b) => b[\"enrollments\"] - a[\"enrollments\"] || a[\"subject\"].localeCompare(b[\"subject\"]));",
+      "assert": {
+        "columns": [
+          "subject",
+          "degree",
+          "enrollments",
+          "passed",
+          "active",
+          "cancelled",
+          "pass_percent",
+          "top_five"
+        ],
+        "rows": [
+          [
+            "Data Structures",
+            "GINF",
+            5,
+            5,
+            0,
+            0,
+            100,
+            "yes"
+          ],
+          [
+            "Databases",
+            "GINF",
+            5,
+            4,
+            1,
+            0,
+            80,
+            "yes"
+          ],
+          [
+            "Public Health",
+            "GMED",
+            5,
+            0,
+            5,
+            0,
+            0,
+            "yes"
+          ],
+          [
+            "Compilers",
+            "GINF",
+            4,
+            2,
+            2,
+            0,
+            50,
+            "yes"
+          ],
+          [
+            "Computer Networks",
+            "GINF",
+            4,
+            0,
+            4,
+            0,
+            0,
+            "yes"
+          ],
+          [
+            "Human Anatomy",
+            "GMED",
+            4,
+            4,
+            0,
+            0,
+            100,
+            "no"
+          ],
+          [
+            "Pharmacology",
+            "GMED",
+            4,
+            3,
+            0,
+            1,
+            75,
+            "no"
+          ],
+          [
+            "Teaching Mathematics",
+            "GEDU",
+            4,
+            4,
+            0,
+            0,
+            100,
+            "no"
+          ],
+          [
+            "Developmental Psychology",
+            "GEDU",
+            3,
+            2,
+            1,
+            0,
+            66.7,
+            "no"
+          ],
+          [
+            "Inclusive Education",
+            "GEDU",
+            3,
+            2,
+            0,
+            1,
+            66.7,
+            "no"
+          ],
+          [
+            "Applied Statistics",
+            "MBD",
+            2,
+            2,
+            0,
+            0,
+            100,
+            "no"
+          ],
+          [
+            "Constitutional Law",
+            "TDER",
+            2,
+            1,
+            0,
+            1,
+            50,
+            "no"
+          ],
+          [
+            "Software Architecture",
+            "MSW",
+            2,
+            2,
+            0,
+            0,
+            100,
+            "no"
+          ],
+          [
+            "Machine Learning",
+            "MBD",
+            1,
+            1,
+            0,
+            0,
+            100,
+            "no"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "JavaScript · Teacher workload balance",
+      "description": "Weekly hours against the project average, with the subjects each teacher gives.",
+      "folder": "Queries and reports",
+      "color": "#fde8cd",
+      "code": "const teachers = tables[\"teachers\"];\nconst subjectsByTeacher = new Map();\ntables[\"subjects\"].forEach((subject) => {\n  const list = subjectsByTeacher.get(subject.id_teacher) || [];\n  list.push(subject.name);\n  subjectsByTeacher.set(subject.id_teacher, list);\n});\nconst average = teachers.length\n  ? teachers.reduce((sum, teacher) => sum + teacher.weekly_hours, 0) / teachers.length\n  : 0;\nreturn teachers\n  .map((teacher) => {\n    const subjects = subjectsByTeacher.get(teacher.id_teacher) || [];\n    const difference = Math.round((teacher.weekly_hours - average) * 10) / 10;\n    return {\n      \"teacher\": `${teacher.last_name}, ${teacher.name}`,\n      \"category\": teacher.category,\n      \"subjects\": subjects.length,\n      \"weekly_hours\": teacher.weekly_hours,\n      \"average_hours\": Math.round(average * 10) / 10,\n      \"difference\": difference,\n      \"load\": difference >= 6 ? \"overloaded\" : difference <= -6 ? \"light\" : \"balanced\",\n      \"subject_list\": subjects.join(\" · \"),\n    };\n  })\n  .sort((a, b) => b[\"difference\"] - a[\"difference\"] || a[\"teacher\"].localeCompare(b[\"teacher\"]));",
+      "assert": {
+        "columns": [
+          "teacher",
+          "category",
+          "subjects",
+          "weekly_hours",
+          "average_hours",
+          "difference",
+          "load",
+          "subject_list"
+        ],
+        "rows": [
+          [
+            "Oliver Pons, Marc",
+            "Senior lecturer",
+            2,
+            20,
+            13.4,
+            6.6,
+            "overloaded",
+            "Databases · Software Architecture"
+          ],
+          [
+            "Ferrer Gil, Paula",
+            "Senior lecturer",
+            2,
+            19,
+            13.4,
+            5.6,
+            "balanced",
+            "Teaching Mathematics · Constitutional Law"
+          ],
+          [
+            "Vargas Ruiz, Elena",
+            "Full professor",
+            2,
+            18,
+            13.4,
+            4.6,
+            "balanced",
+            "Data Structures · Human Anatomy"
+          ],
+          [
+            "Sáenz Molina, Lucía",
+            "Senior lecturer",
+            2,
+            17,
+            13.4,
+            3.6,
+            "balanced",
+            "Computer Networks · Testing and Quality"
+          ],
+          [
+            "Salgado Ortiz, Nieves",
+            "Senior lecturer",
+            1,
+            16,
+            13.4,
+            2.6,
+            "balanced",
+            "Developmental Psychology"
+          ],
+          [
+            "Ibáñez Luna, Carmen",
+            "Full professor",
+            3,
+            15,
+            13.4,
+            1.6,
+            "balanced",
+            "Compilers · Pharmacology · Applied Statistics"
+          ],
+          [
+            "Kovalchuk Marín, Sofía",
+            "Full professor",
+            2,
+            14,
+            13.4,
+            0.6,
+            "balanced",
+            "Public Health · Machine Learning"
+          ],
+          [
+            "Amrani Belkacem, Youssef",
+            "Assistant",
+            0,
+            12,
+            13.4,
+            -1.4,
+            "balanced",
+            ""
+          ],
+          [
+            "Arroyo Vidal, Tomás",
+            "Assistant",
+            1,
+            10,
+            13.4,
+            -3.4,
+            "balanced",
+            "Inclusive Education"
+          ],
+          [
+            "Naranjo Peña, Hugo",
+            "Associate",
+            0,
+            8,
+            13.4,
+            -5.4,
+            "balanced",
+            ""
+          ],
+          [
+            "Cano Duarte, Andrés",
+            "Associate",
+            1,
+            6,
+            13.4,
+            -7.4,
+            "light",
+            "Business Law"
+          ],
+          [
+            "Requena Soto, Iván",
+            "Associate",
+            0,
+            6,
+            13.4,
+            -7.4,
+            "light",
+            ""
           ]
         ]
       }
