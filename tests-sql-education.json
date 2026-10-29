@@ -17,6 +17,13 @@
     "Academic",
     "Enrollments"
   ],
+  "scriptFolders": [
+    "Filters and lists",
+    "Aggregates",
+    "Dates",
+    "Joins and integrity",
+    "Queries and reports"
+  ],
   "tables": [
     {
       "name": "campuses",
@@ -7453,6 +7460,1256 @@
       },
       "folder": "G · Unions",
       "color": "#e8ddf7"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "Scholarship students and their contact",
+      "description": "Filters scholarship students and shows their full name, e-mail and campus.",
+      "source": {
+        "kind": "table",
+        "name": "students"
+      },
+      "code": "return datos\n  .filter((fila) => fila.has_scholarship)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"email\": fila.email,\n    \"campus\": fila.id_campus,\n  }));",
+      "folder": "Filters and lists",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "full_name",
+          "email",
+          "campus"
+        ],
+        "rows": [
+          [
+            "Ana García López",
+            "ana.garcia@alu.es",
+            1
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            null,
+            1
+          ],
+          [
+            "Lucía Moreno Pascual",
+            null,
+            2
+          ],
+          [
+            "Carmen Santos Iglesias",
+            "carmen.santos@alu.es",
+            3
+          ],
+          [
+            "Nerea Castro Peña",
+            "nerea.castro@alu.es",
+            2
+          ],
+          [
+            "Hugo Serrano Bravo",
+            "hugo.serrano@alu.es",
+            2
+          ],
+          [
+            "Irene Suárez Nieto",
+            "irene.suarez@alu.es",
+            3
+          ],
+          [
+            "Rubén Parra Aguilar",
+            null,
+            2
+          ],
+          [
+            "Sara Guerrero Vidal",
+            "sara.guerrero@alu.es",
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Student ages",
+      "description": "Calculates the age on 1 September 2025 from the birth date and sorts from oldest to youngest.",
+      "source": {
+        "kind": "table",
+        "name": "students"
+      },
+      "code": "const reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
+      "folder": "Dates",
+      "color": "#fde8cd",
+      "assert": {
+        "columns": [
+          "full_name",
+          "birth_date",
+          "age"
+        ],
+        "rows": [
+          [
+            "Iván Ramírez Cortés",
+            "2001-08-16",
+            24
+          ],
+          [
+            "Marcos Delgado Cano",
+            "2001-05-19",
+            24
+          ],
+          [
+            "Rubén Parra Aguilar",
+            "2001-01-29",
+            24
+          ],
+          [
+            "Marc Esteban Quiles",
+            "2001-03-27",
+            24
+          ],
+          [
+            "Diego Fernández Blanco",
+            "2001-11-05",
+            23
+          ],
+          [
+            "Javier Ortega Díaz",
+            "2002-03-09",
+            23
+          ],
+          [
+            "Pablo Gómez Frías",
+            "2001-12-14",
+            23
+          ],
+          [
+            "Álvaro Domínguez Rey",
+            "2002-06-21",
+            23
+          ],
+          [
+            "Hugo Serrano Bravo",
+            "2002-04-25",
+            23
+          ],
+          [
+            "Óscar Lozano Prieto",
+            "2002-08-02",
+            23
+          ],
+          [
+            "Ana García López",
+            "2003-04-12",
+            22
+          ],
+          [
+            "Luis Martín Soto",
+            "2002-09-30",
+            22
+          ],
+          [
+            "Marta Ruiz Navarro",
+            "2003-07-18",
+            22
+          ],
+          [
+            "Carmen Santos Iglesias",
+            "2003-02-03",
+            22
+          ],
+          [
+            "Adrián Cabrera Luna",
+            "2002-11-23",
+            22
+          ],
+          [
+            "Julia Bermúdez Soler",
+            "2003-06-06",
+            22
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            "2004-01-22",
+            21
+          ],
+          [
+            "Lucía Moreno Pascual",
+            "2004-05-27",
+            21
+          ],
+          [
+            "Paula Vega Salas",
+            "2003-12-01",
+            21
+          ],
+          [
+            "Elena Molina Ríos",
+            "2004-07-07",
+            21
+          ],
+          [
+            "Irene Suárez Nieto",
+            "2003-09-11",
+            21
+          ],
+          [
+            "Claudia Reyes Baena",
+            "2004-03-15",
+            21
+          ],
+          [
+            "Nerea Castro Peña",
+            "2004-10-08",
+            20
+          ],
+          [
+            "Sara Guerrero Vidal",
+            "2004-11-19",
+            20
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Ten oldest students",
+      "description": "Sorts by birth date and returns the first ten rows with their rank.",
+      "source": {
+        "kind": "table",
+        "name": "students"
+      },
+      "code": "return datos\n  .slice()\n  .sort((a, b) => String(a.birth_date).localeCompare(String(b.birth_date)))\n  .slice(0, 10)\n  .map((fila, index) => ({\n    \"rank\": index + 1,\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"birth_date\": fila.birth_date,\n  }));",
+      "folder": "Filters and lists",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "rank",
+          "full_name",
+          "birth_date"
+        ],
+        "rows": [
+          [
+            1,
+            "Rubén Parra Aguilar",
+            "2001-01-29"
+          ],
+          [
+            2,
+            "Marc Esteban Quiles",
+            "2001-03-27"
+          ],
+          [
+            3,
+            "Marcos Delgado Cano",
+            "2001-05-19"
+          ],
+          [
+            4,
+            "Iván Ramírez Cortés",
+            "2001-08-16"
+          ],
+          [
+            5,
+            "Diego Fernández Blanco",
+            "2001-11-05"
+          ],
+          [
+            6,
+            "Pablo Gómez Frías",
+            "2001-12-14"
+          ],
+          [
+            7,
+            "Javier Ortega Díaz",
+            "2002-03-09"
+          ],
+          [
+            8,
+            "Hugo Serrano Bravo",
+            "2002-04-25"
+          ],
+          [
+            9,
+            "Álvaro Domínguez Rey",
+            "2002-06-21"
+          ],
+          [
+            10,
+            "Óscar Lozano Prieto",
+            "2002-08-02"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Students per campus",
+      "description": "Crosses students with the campuses table to count how many there are in each one.",
+      "source": {
+        "kind": "table",
+        "name": "students"
+      },
+      "code": "const campuses = new Map(tablas[\"campuses\"].map((c) => [c.id_campus, c.name]));\nconst counts = datos.reduce((acc, fila) => {\n  const name = campuses.get(fila.id_campus) || \"—\";\n  acc[name] = (acc[name] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.entries(counts)\n  .map(([name, count]) => ({ \"campus\": name, \"students\": count }))\n  .sort((a, b) => b[\"students\"] - a[\"students\"]);",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "campus",
+          "students"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            9
+          ],
+          [
+            "South Campus",
+            6
+          ],
+          [
+            "Seaside Campus",
+            6
+          ],
+          [
+            "Andean Campus",
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Incomplete contacts",
+      "description": "Lists the students who are missing their e-mail, their phone or both.",
+      "source": {
+        "kind": "table",
+        "name": "students"
+      },
+      "code": "return datos\n  .filter((fila) => !fila.email || !fila.phone)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.phone) missing.push(\"phone\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"email\": fila.email,\n      \"phone\": fila.phone,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
+      "folder": "Filters and lists",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "full_name",
+          "email",
+          "phone",
+          "missing"
+        ],
+        "rows": [
+          [
+            "Luis Martín Soto",
+            "luis.martin@alu.es",
+            null,
+            "phone"
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            null,
+            "611333444",
+            "email"
+          ],
+          [
+            "Marta Ruiz Navarro",
+            "marta.ruiz@alu.es",
+            null,
+            "phone"
+          ],
+          [
+            "Lucía Moreno Pascual",
+            null,
+            "644999000",
+            "email"
+          ],
+          [
+            "Carmen Santos Iglesias",
+            "carmen.santos@alu.es",
+            null,
+            "phone"
+          ],
+          [
+            "Nerea Castro Peña",
+            "nerea.castro@alu.es",
+            null,
+            "phone"
+          ],
+          [
+            "Iván Ramírez Cortés",
+            null,
+            "677555666",
+            "email"
+          ],
+          [
+            "Hugo Serrano Bravo",
+            "hugo.serrano@alu.es",
+            null,
+            "phone"
+          ],
+          [
+            "Marcos Delgado Cano",
+            null,
+            null,
+            "email, phone"
+          ],
+          [
+            "Adrián Cabrera Luna",
+            "adrian.cabrera@alu.es",
+            null,
+            "phone"
+          ],
+          [
+            "Rubén Parra Aguilar",
+            null,
+            "632666777",
+            "email"
+          ],
+          [
+            "Óscar Lozano Prieto",
+            "oscar.lozano@alu.es",
+            null,
+            "phone"
+          ],
+          [
+            "Marc Esteban Quiles",
+            null,
+            "676222333",
+            "email"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Scholarships by degree",
+      "description": "Groups by degree code and calculates the total students, scholarship holders and percentage.",
+      "source": {
+        "kind": "table",
+        "name": "students"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.degree_code;\n  acc[key] = acc[key] || { total: 0, scholarship: 0 };\n  acc[key].total += 1;\n  if (fila.has_scholarship) acc[key].scholarship += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([degree, g]) => ({\n    \"degree\": degree,\n    \"students\": g.total,\n    \"scholarships\": g.scholarship,\n    \"percentage\": Math.round((g.scholarship / g.total) * 1000) / 10,\n  }))\n  .sort((a, b) => a[\"degree\"].localeCompare(b[\"degree\"]));",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "degree",
+          "students",
+          "scholarships",
+          "percentage"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            4,
+            3,
+            75
+          ],
+          [
+            "GINF",
+            7,
+            3,
+            42.9
+          ],
+          [
+            "GMED",
+            5,
+            2,
+            40
+          ],
+          [
+            "MBD",
+            2,
+            0,
+            0
+          ],
+          [
+            "MSW",
+            2,
+            1,
+            50
+          ],
+          [
+            "TDER",
+            4,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Grades by status",
+      "description": "Ignores null grades and calculates how many there are, their average, minimum and maximum per status.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const groups = datos\n  .filter((fila) => fila.grade !== null && fila.grade !== undefined)\n  .reduce((acc, fila) => {\n    const key = fila.status;\n    acc[key] = acc[key] || { count: 0, sum: 0, min: Infinity, max: -Infinity };\n    const g = acc[key];\n    g.count += 1;\n    g.sum += fila.grade;\n    g.min = Math.min(g.min, fila.grade);\n    g.max = Math.max(g.max, fila.grade);\n    return acc;\n  }, {});\nreturn Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  \"min\": g.min,\n  \"max\": g.max,\n}));",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "status",
+          "count",
+          "average",
+          "min",
+          "max"
+        ],
+        "rows": [
+          [
+            "passed",
+            32,
+            7.31,
+            5,
+            10
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Pass rate by academic year",
+      "description": "Counts enrollments, passed ones and the average grade of the graded ones in each academic year.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.academic_year;\n  acc[key] = acc[key] || { total: 0, passed: 0, graded: 0, sum: 0 };\n  const g = acc[key];\n  g.total += 1;\n  if (fila.status === \"passed\") g.passed += 1;\n  if (fila.grade !== null && fila.grade !== undefined) {\n    g.graded += 1;\n    g.sum += fila.grade;\n  }\n  return acc;\n}, {});\nreturn Object.entries(groups).map(([year, g]) => ({\n  \"year\": year,\n  \"count\": g.total,\n  \"passed\": g.passed,\n  \"percentage\": Math.round((g.passed / g.total) * 1000) / 10,\n  \"average\": g.graded ? Math.round((g.sum / g.graded) * 100) / 100 : null,\n}));",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "year",
+          "count",
+          "passed",
+          "percentage",
+          "average"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            27,
+            26,
+            96.3,
+            7.08
+          ],
+          [
+            "2025-2026",
+            21,
+            6,
+            28.6,
+            8.33
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Statuses by year (pivot)",
+      "description": "Turns the statuses into columns: active, passed and cancelled per academic year.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const year = fila.academic_year;\n  const status = fila.status;\n  acc[year] = acc[year] || { year, active: 0, passed: 0, cancelled: 0 };\n  if (status === \"active\") acc[year].active += 1;\n  else if (status === \"passed\") acc[year].passed += 1;\n  else if (status === \"cancelled\") acc[year].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((g) => ({\n    \"year\": g.year,\n    \"active\": g.active,\n    \"passed\": g.passed,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"year\"]).localeCompare(String(b[\"year\"])));",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "year",
+          "active",
+          "passed",
+          "cancelled"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            0,
+            26,
+            1
+          ],
+          [
+            "2025-2026",
+            13,
+            6,
+            2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Subject ranking by average grade",
+      "description": "Groups graded enrollments by subject, crosses their name and sorts by average.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const subjects = new Map(tablas[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  if (fila.grade === null || fila.grade === undefined) return acc;\n  const key = fila.id_subject;\n  acc[key] = acc[key] || { sum: 0, count: 0 };\n  acc[key].sum += fila.grade;\n  acc[key].count += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"subject\": subjects.get(Number(id)) || `#${id}`,\n    \"count\": g.count,\n    \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  }))\n  .sort((a, b) => b[\"average\"] - a[\"average\"])\n  .map((row, index) => ({ \"rank\": index + 1, ...row }));",
+      "folder": "Joins and integrity",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "rank",
+          "subject",
+          "count",
+          "average"
+        ],
+        "rows": [
+          [
+            1,
+            "Software Architecture",
+            2,
+            8.5
+          ],
+          [
+            2,
+            "Data Structures",
+            5,
+            8.2
+          ],
+          [
+            3,
+            "Inclusive Education",
+            2,
+            8
+          ],
+          [
+            4,
+            "Machine Learning",
+            1,
+            8
+          ],
+          [
+            5,
+            "Pharmacology",
+            3,
+            7.5
+          ],
+          [
+            6,
+            "Applied Statistics",
+            2,
+            7.5
+          ],
+          [
+            7,
+            "Human Anatomy",
+            4,
+            7.25
+          ],
+          [
+            8,
+            "Teaching Mathematics",
+            4,
+            7
+          ],
+          [
+            9,
+            "Developmental Psychology",
+            2,
+            7
+          ],
+          [
+            10,
+            "Databases",
+            4,
+            6.38
+          ],
+          [
+            11,
+            "Compilers",
+            2,
+            6
+          ],
+          [
+            12,
+            "Constitutional Law",
+            1,
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Enrollment summary per student",
+      "description": "Groups by student, lists their subjects and calculates their average grade.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const students = new Map(tablas[\"students\"].map((s) => [s.id_student, `${s.name} ${s.last_name}`]));\nconst subjects = new Map(tablas[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_student;\n  acc[id] = acc[id] || { subjects: new Set(), grades: [] };\n  acc[id].subjects.add(subjects.get(fila.id_subject) || `#${fila.id_subject}`);\n  if (fila.grade !== null && fila.grade !== undefined) acc[id].grades.push(fila.grade);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"student\": students.get(Number(id)) || `#${id}`,\n    \"subjects\": g.subjects.size,\n    \"average\": g.grades.length ? Math.round((g.grades.reduce((a, b) => a + b, 0) / g.grades.length) * 100) / 100 : null,\n    \"list\": Array.from(g.subjects).join(\" · \"),\n  }))\n  .sort((a, b) => b[\"subjects\"] - a[\"subjects\"]);",
+      "folder": "Joins and integrity",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "student",
+          "subjects",
+          "average",
+          "list"
+        ],
+        "rows": [
+          [
+            "Ana García López",
+            4,
+            8,
+            "Data Structures · Databases · Compilers · Computer Networks"
+          ],
+          [
+            "Luis Martín Soto",
+            3,
+            5.5,
+            "Data Structures · Databases · Computer Networks"
+          ],
+          [
+            "Diego Fernández Blanco",
+            3,
+            6.75,
+            "Human Anatomy · Pharmacology · Public Health"
+          ],
+          [
+            "Marta Ruiz Navarro",
+            3,
+            6,
+            "Teaching Mathematics · Developmental Psychology · Inclusive Education"
+          ],
+          [
+            "Pablo Gómez Frías",
+            3,
+            6.75,
+            "Databases · Compilers · Computer Networks"
+          ],
+          [
+            "Carmen Santos Iglesias",
+            3,
+            7.75,
+            "Human Anatomy · Pharmacology · Public Health"
+          ],
+          [
+            "Hugo Serrano Bravo",
+            3,
+            9,
+            "Teaching Mathematics · Developmental Psychology · Inclusive Education"
+          ],
+          [
+            "Irene Suárez Nieto",
+            3,
+            8.75,
+            "Human Anatomy · Pharmacology · Public Health"
+          ],
+          [
+            "Claudia Reyes Baena",
+            3,
+            8,
+            "Data Structures · Compilers · Computer Networks"
+          ],
+          [
+            "Sara Guerrero Vidal",
+            3,
+            7,
+            "Data Structures · Databases · Compilers"
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            2,
+            9,
+            "Data Structures · Databases"
+          ],
+          [
+            "Álvaro Domínguez Rey",
+            2,
+            7.5,
+            "Applied Statistics · Machine Learning"
+          ],
+          [
+            "Nerea Castro Peña",
+            2,
+            6,
+            "Teaching Mathematics · Developmental Psychology"
+          ],
+          [
+            "Paula Vega Salas",
+            2,
+            5,
+            "Human Anatomy · Public Health"
+          ],
+          [
+            "Rubén Parra Aguilar",
+            2,
+            7,
+            "Teaching Mathematics · Inclusive Education"
+          ],
+          [
+            "Julia Bermúdez Soler",
+            2,
+            null,
+            "Pharmacology · Public Health"
+          ],
+          [
+            "Javier Ortega Díaz",
+            1,
+            6,
+            "Constitutional Law"
+          ],
+          [
+            "Lucía Moreno Pascual",
+            1,
+            8,
+            "Software Architecture"
+          ],
+          [
+            "Elena Molina Ríos",
+            1,
+            9,
+            "Software Architecture"
+          ],
+          [
+            "Adrián Cabrera Luna",
+            1,
+            8,
+            "Applied Statistics"
+          ],
+          [
+            "Marc Esteban Quiles",
+            1,
+            null,
+            "Constitutional Law"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Grade distribution",
+      "description": "Sorts the grades into four ranges and calculates how many there are and their percentage.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const buckets = { \"0-4.9\": 0, \"5-6.9\": 0, \"7-8.9\": 0, \"9-10\": 0 };\ndatos.forEach((fila) => {\n  const g = fila.grade;\n  if (g === null || g === undefined) return;\n  if (g < 5) buckets[\"0-4.9\"] += 1;\n  else if (g < 7) buckets[\"5-6.9\"] += 1;\n  else if (g < 9) buckets[\"7-8.9\"] += 1;\n  else buckets[\"9-10\"] += 1;\n});\nconst total = Object.values(buckets).reduce((a, b) => a + b, 0);\nreturn Object.entries(buckets).map(([range, count]) => ({\n  \"range\": range,\n  \"count\": count,\n  \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n}));",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "range",
+          "count",
+          "percentage"
+        ],
+        "rows": [
+          [
+            "0-4.9",
+            0,
+            0
+          ],
+          [
+            "5-6.9",
+            11,
+            34.4
+          ],
+          [
+            "7-8.9",
+            15,
+            46.9
+          ],
+          [
+            "9-10",
+            6,
+            18.8
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Subjects by year",
+      "description": "Counts subjects, credits and average classroom hours per year.",
+      "source": {
+        "kind": "table",
+        "name": "subjects"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.year;\n  acc[key] = acc[key] || { count: 0, credits: 0, hours: 0 };\n  acc[key].count += 1;\n  acc[key].credits += fila.credits;\n  acc[key].hours += fila.classroom_hours;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([year, g]) => ({\n    \"year\": Number(year),\n    \"count\": g.count,\n    \"credits\": g.credits,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => a[\"year\"] - b[\"year\"]);",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "year",
+          "count",
+          "credits",
+          "average_hours"
+        ],
+        "rows": [
+          [
+            1,
+            6,
+            37,
+            52.5
+          ],
+          [
+            2,
+            5,
+            29,
+            50.2
+          ],
+          [
+            3,
+            3,
+            17,
+            47.3
+          ],
+          [
+            4,
+            1,
+            4,
+            32
+          ],
+          [
+            5,
+            1,
+            4,
+            30
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Teachers by category",
+      "description": "Groups by category and calculates how many there are, the average hours and how many research.",
+      "source": {
+        "kind": "table",
+        "name": "teachers"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.category;\n  acc[key] = acc[key] || { count: 0, hours: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].hours += fila.weekly_hours;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([category, g]) => ({\n    \"category\": category,\n    \"count\": g.count,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "category",
+          "count",
+          "average_hours",
+          "researchers"
+        ],
+        "rows": [
+          [
+            "Senior lecturer",
+            4,
+            18,
+            2
+          ],
+          [
+            "Full professor",
+            3,
+            15.7,
+            3
+          ],
+          [
+            "Associate",
+            3,
+            6.7,
+            0
+          ],
+          [
+            "Assistant",
+            2,
+            11,
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Teachers without an office or e-mail",
+      "description": "Lists the teachers who are missing their office, their e-mail or both.",
+      "source": {
+        "kind": "table",
+        "name": "teachers"
+      },
+      "code": "return datos\n  .filter((fila) => !fila.email || !fila.office)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.office) missing.push(\"office\");\n    return {\n      \"teacher\": `${fila.name} ${fila.last_name}`,\n      \"category\": fila.category,\n      \"email\": fila.email,\n      \"office\": fila.office,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
+      "folder": "Filters and lists",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "teacher",
+          "category",
+          "email",
+          "office",
+          "missing"
+        ],
+        "rows": [
+          [
+            "Nieves Salgado Ortiz",
+            "Senior lecturer",
+            null,
+            "D-115",
+            "email"
+          ],
+          [
+            "Iván Requena Soto",
+            "Associate",
+            "ivan.requena@uni.es",
+            null,
+            "office"
+          ],
+          [
+            "Youssef Amrani Belkacem",
+            "Assistant",
+            null,
+            "D-041",
+            "email"
+          ],
+          [
+            "Hugo Naranjo Peña",
+            "Associate",
+            "hugo.naranjo@uni.es",
+            null,
+            "office"
+          ],
+          [
+            "Tomás Arroyo Vidal",
+            "Assistant",
+            null,
+            "D-042",
+            "email"
+          ],
+          [
+            "Andrés Cano Duarte",
+            "Associate",
+            "andres.cano@uni.es",
+            null,
+            "office"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Classroom capacity by building",
+      "description": "Adds up the capacity of the classrooms of each building and crosses its name.",
+      "source": {
+        "kind": "table",
+        "name": "classrooms"
+      },
+      "code": "const buildings = new Map(tablas[\"buildings\"].map((b) => [b.id_building, b.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_building;\n  acc[key] = acc[key] || { count: 0, capacity: 0 };\n  acc[key].count += 1;\n  acc[key].capacity += fila.capacity;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"building\": buildings.get(Number(id)) || `#${id}`,\n    \"classrooms\": g.count,\n    \"capacity\": g.capacity,\n    \"average\": Math.round((g.capacity / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
+      "folder": "Joins and integrity",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "building",
+          "classrooms",
+          "capacity",
+          "average"
+        ],
+        "rows": [
+          [
+            "Pythagoras Lecture Hall",
+            3,
+            150,
+            50
+          ],
+          [
+            "Kepler Lecture Hall",
+            3,
+            135,
+            45
+          ],
+          [
+            "Ramón y Cajal Building",
+            2,
+            105,
+            52.5
+          ],
+          [
+            "Central Library",
+            2,
+            92,
+            46
+          ],
+          [
+            "Bolívar Block",
+            2,
+            75,
+            37.5
+          ],
+          [
+            "Curie Laboratories",
+            2,
+            44,
+            22
+          ],
+          [
+            "Marina Annex",
+            2,
+            40,
+            20
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Campus summary",
+      "description": "Calculates the share of each campus capacity over the total and sorts by capacity.",
+      "source": {
+        "kind": "table",
+        "name": "campuses"
+      },
+      "code": "const total = datos.reduce((sum, fila) => sum + fila.max_capacity, 0);\nreturn datos\n  .map((fila) => ({\n    \"campus\": fila.name,\n    \"city\": fila.city,\n    \"capacity\": fila.max_capacity,\n    \"percentage\": Math.round((fila.max_capacity / total) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "campus",
+          "city",
+          "capacity",
+          "percentage"
+        ],
+        "rows": [
+          [
+            "North Campus",
+            "Madrid",
+            4500,
+            36.3
+          ],
+          [
+            "Andean Campus",
+            "Bogota",
+            3200,
+            25.8
+          ],
+          [
+            "South Campus",
+            "Seville",
+            2800,
+            22.6
+          ],
+          [
+            "Seaside Campus",
+            "Valencia",
+            1900,
+            15.3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Use a saved query",
+      "description": "Calls query A19 (students with three or more enrollments) and shows its result.",
+      "source": {
+        "kind": "table",
+        "name": "students"
+      },
+      "code": "const rows = consultas[\"A19 · Students with three or more enrollments\"]();\nreturn rows.map((row) => ({\n  \"student\": row.id_student,\n  \"enrollments\": row.enrollments,\n}));",
+      "folder": "Queries and reports",
+      "color": "#fbf6c9",
+      "assert": {
+        "columns": [
+          "student",
+          "enrollments"
+        ],
+        "rows": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            8,
+            3
+          ],
+          [
+            9,
+            3
+          ],
+          [
+            14,
+            3
+          ],
+          [
+            17,
+            3
+          ],
+          [
+            19,
+            3
+          ],
+          [
+            23,
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Report with forEach and resultado",
+      "description": "Builds a report per status with forEach, adds a TOTAL row and stores it in resultado.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const groups = {};\ndatos.forEach((fila) => {\n  const key = fila.status;\n  groups[key] = groups[key] || { count: 0, sum: 0 };\n  groups[key].count += 1;\n  if (fila.grade !== null && fila.grade !== undefined) groups[key].sum += fila.grade;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": g.count ? Math.round((g.sum / g.count) * 100) / 100 : null,\n}));\nrows.push({\n  \"status\": \"TOTAL\",\n  \"count\": datos.length,\n  \"average\": null,\n});\nresultado = rows;",
+      "folder": "Queries and reports",
+      "color": "#fbf6c9",
+      "assert": {
+        "columns": [
+          "status",
+          "count",
+          "average"
+        ],
+        "rows": [
+          [
+            "passed",
+            32,
+            7.31
+          ],
+          [
+            "active",
+            13,
+            0
+          ],
+          [
+            "cancelled",
+            3,
+            0
+          ],
+          [
+            "TOTAL",
+            48,
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Orphan enrollments",
+      "description": "Finds enrollments whose student or subject no longer exists in the tables.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const studentIds = new Set(tablas[\"students\"].map((s) => s.id_student));\nconst subjectIds = new Set(tablas[\"subjects\"].map((s) => s.id_subject));\nreturn datos\n  .filter((fila) => !studentIds.has(fila.id_student) || !subjectIds.has(fila.id_subject))\n  .map((fila) => ({\n    \"enrollment\": fila.id_enrollment,\n    \"student\": fila.id_student,\n    \"subject\": fila.id_subject,\n    \"missing\": !studentIds.has(fila.id_student) ? \"student\" : \"subject\",\n  }));",
+      "folder": "Joins and integrity",
+      "color": "#e8ddf7",
+      "assert": {
+        "rowCount": 0
+      }
+    },
+    {
+      "name": "Credit-weighted average",
+      "description": "Weights the grade of each enrollment by the credits of its subject and returns one row.",
+      "source": {
+        "kind": "table",
+        "name": "enrollments"
+      },
+      "code": "const subjects = new Map(tablas[\"subjects\"].map((s) => [s.id_subject, s.credits]));\nlet sum = 0;\nlet credits = 0;\ndatos.forEach((fila) => {\n  if (fila.grade === null || fila.grade === undefined) return;\n  const c = subjects.get(fila.id_subject) || 0;\n  sum += fila.grade * c;\n  credits += c;\n});\nreturn [{\n  \"average\": credits ? Math.round((sum / credits) * 100) / 100 : null,\n  \"credits\": credits,\n}];",
+      "folder": "Aggregates",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "average",
+          "credits"
+        ],
+        "rows": [
+          [
+            7.3,
+            196
+          ]
+        ]
+      }
     }
   ],
   "settings": {

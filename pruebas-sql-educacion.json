@@ -17,6 +17,13 @@
     "Académico",
     "Matrículas"
   ],
+  "scriptFolders": [
+    "Filtros y listas",
+    "Agregados",
+    "Fechas",
+    "Cruces e integridad",
+    "Consultas e informes"
+  ],
   "tables": [
     {
       "name": "sedes",
@@ -7453,6 +7460,1256 @@
       },
       "folder": "G · Uniones",
       "color": "#e8ddf7"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "Becados con su contacto",
+      "description": "Filtra los estudiantes becados y muestra nombre completo, correo y sede.",
+      "source": {
+        "kind": "table",
+        "name": "estudiantes"
+      },
+      "code": "return datos\n  .filter((fila) => fila.es_becado)\n  .map((fila) => ({\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"email\": fila.email,\n    \"sede\": fila.id_sede,\n  }));",
+      "folder": "Filtros y listas",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "nombre_completo",
+          "email",
+          "sede"
+        ],
+        "rows": [
+          [
+            "Ana García López",
+            "ana.garcia@alu.es",
+            1
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            null,
+            1
+          ],
+          [
+            "Lucía Moreno Pascual",
+            null,
+            2
+          ],
+          [
+            "Carmen Santos Iglesias",
+            "carmen.santos@alu.es",
+            3
+          ],
+          [
+            "Nerea Castro Peña",
+            "nerea.castro@alu.es",
+            2
+          ],
+          [
+            "Hugo Serrano Bravo",
+            "hugo.serrano@alu.es",
+            2
+          ],
+          [
+            "Irene Suárez Nieto",
+            "irene.suarez@alu.es",
+            3
+          ],
+          [
+            "Rubén Parra Aguilar",
+            null,
+            2
+          ],
+          [
+            "Sara Guerrero Vidal",
+            "sara.guerrero@alu.es",
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Edad de los estudiantes",
+      "description": "Calcula la edad a 1 de septiembre de 2025 desde la fecha de nacimiento y ordena de mayor a menor.",
+      "source": {
+        "kind": "table",
+        "name": "estudiantes"
+      },
+      "code": "const reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.fecha_nacimiento);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"fecha_nacimiento\": fila.fecha_nacimiento,\n      \"edad\": age,\n    };\n  })\n  .sort((a, b) => b[\"edad\"] - a[\"edad\"]);",
+      "folder": "Fechas",
+      "color": "#fde8cd",
+      "assert": {
+        "columns": [
+          "nombre_completo",
+          "fecha_nacimiento",
+          "edad"
+        ],
+        "rows": [
+          [
+            "Iván Ramírez Cortés",
+            "2001-08-16",
+            24
+          ],
+          [
+            "Marcos Delgado Cano",
+            "2001-05-19",
+            24
+          ],
+          [
+            "Rubén Parra Aguilar",
+            "2001-01-29",
+            24
+          ],
+          [
+            "Marc Esteban Quiles",
+            "2001-03-27",
+            24
+          ],
+          [
+            "Diego Fernández Blanco",
+            "2001-11-05",
+            23
+          ],
+          [
+            "Javier Ortega Díaz",
+            "2002-03-09",
+            23
+          ],
+          [
+            "Pablo Gómez Frías",
+            "2001-12-14",
+            23
+          ],
+          [
+            "Álvaro Domínguez Rey",
+            "2002-06-21",
+            23
+          ],
+          [
+            "Hugo Serrano Bravo",
+            "2002-04-25",
+            23
+          ],
+          [
+            "Óscar Lozano Prieto",
+            "2002-08-02",
+            23
+          ],
+          [
+            "Ana García López",
+            "2003-04-12",
+            22
+          ],
+          [
+            "Luis Martín Soto",
+            "2002-09-30",
+            22
+          ],
+          [
+            "Marta Ruiz Navarro",
+            "2003-07-18",
+            22
+          ],
+          [
+            "Carmen Santos Iglesias",
+            "2003-02-03",
+            22
+          ],
+          [
+            "Adrián Cabrera Luna",
+            "2002-11-23",
+            22
+          ],
+          [
+            "Julia Bermúdez Soler",
+            "2003-06-06",
+            22
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            "2004-01-22",
+            21
+          ],
+          [
+            "Lucía Moreno Pascual",
+            "2004-05-27",
+            21
+          ],
+          [
+            "Paula Vega Salas",
+            "2003-12-01",
+            21
+          ],
+          [
+            "Elena Molina Ríos",
+            "2004-07-07",
+            21
+          ],
+          [
+            "Irene Suárez Nieto",
+            "2003-09-11",
+            21
+          ],
+          [
+            "Claudia Reyes Baena",
+            "2004-03-15",
+            21
+          ],
+          [
+            "Nerea Castro Peña",
+            "2004-10-08",
+            20
+          ],
+          [
+            "Sara Guerrero Vidal",
+            "2004-11-19",
+            20
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Diez estudiantes de más edad",
+      "description": "Ordena por fecha de nacimiento y devuelve las diez primeras filas con su puesto.",
+      "source": {
+        "kind": "table",
+        "name": "estudiantes"
+      },
+      "code": "return datos\n  .slice()\n  .sort((a, b) => String(a.fecha_nacimiento).localeCompare(String(b.fecha_nacimiento)))\n  .slice(0, 10)\n  .map((fila, index) => ({\n    \"puesto\": index + 1,\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"fecha_nacimiento\": fila.fecha_nacimiento,\n  }));",
+      "folder": "Filtros y listas",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "puesto",
+          "nombre_completo",
+          "fecha_nacimiento"
+        ],
+        "rows": [
+          [
+            1,
+            "Rubén Parra Aguilar",
+            "2001-01-29"
+          ],
+          [
+            2,
+            "Marc Esteban Quiles",
+            "2001-03-27"
+          ],
+          [
+            3,
+            "Marcos Delgado Cano",
+            "2001-05-19"
+          ],
+          [
+            4,
+            "Iván Ramírez Cortés",
+            "2001-08-16"
+          ],
+          [
+            5,
+            "Diego Fernández Blanco",
+            "2001-11-05"
+          ],
+          [
+            6,
+            "Pablo Gómez Frías",
+            "2001-12-14"
+          ],
+          [
+            7,
+            "Javier Ortega Díaz",
+            "2002-03-09"
+          ],
+          [
+            8,
+            "Hugo Serrano Bravo",
+            "2002-04-25"
+          ],
+          [
+            9,
+            "Álvaro Domínguez Rey",
+            "2002-06-21"
+          ],
+          [
+            10,
+            "Óscar Lozano Prieto",
+            "2002-08-02"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Estudiantes por sede",
+      "description": "Cruza estudiantes con la tabla de sedes para contar cuántos hay en cada una.",
+      "source": {
+        "kind": "table",
+        "name": "estudiantes"
+      },
+      "code": "const campuses = new Map(tablas[\"sedes\"].map((c) => [c.id_sede, c.nombre]));\nconst counts = datos.reduce((acc, fila) => {\n  const name = campuses.get(fila.id_sede) || \"—\";\n  acc[name] = (acc[name] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.entries(counts)\n  .map(([name, count]) => ({ \"sede\": name, \"estudiantes\": count }))\n  .sort((a, b) => b[\"estudiantes\"] - a[\"estudiantes\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "sede",
+          "estudiantes"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            9
+          ],
+          [
+            "Campus Sur",
+            6
+          ],
+          [
+            "Campus del Mar",
+            6
+          ],
+          [
+            "Campus Andino",
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Contactos incompletos",
+      "description": "Lista los estudiantes a los que les falta el correo, el teléfono o los dos.",
+      "source": {
+        "kind": "table",
+        "name": "estudiantes"
+      },
+      "code": "return datos\n  .filter((fila) => !fila.email || !fila.telefono)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.telefono) missing.push(\"telefono\");\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"email\": fila.email,\n      \"telefono\": fila.telefono,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
+      "folder": "Filtros y listas",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "nombre_completo",
+          "email",
+          "telefono",
+          "faltan"
+        ],
+        "rows": [
+          [
+            "Luis Martín Soto",
+            "luis.martin@alu.es",
+            null,
+            "telefono"
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            null,
+            "611333444",
+            "email"
+          ],
+          [
+            "Marta Ruiz Navarro",
+            "marta.ruiz@alu.es",
+            null,
+            "telefono"
+          ],
+          [
+            "Lucía Moreno Pascual",
+            null,
+            "644999000",
+            "email"
+          ],
+          [
+            "Carmen Santos Iglesias",
+            "carmen.santos@alu.es",
+            null,
+            "telefono"
+          ],
+          [
+            "Nerea Castro Peña",
+            "nerea.castro@alu.es",
+            null,
+            "telefono"
+          ],
+          [
+            "Iván Ramírez Cortés",
+            null,
+            "677555666",
+            "email"
+          ],
+          [
+            "Hugo Serrano Bravo",
+            "hugo.serrano@alu.es",
+            null,
+            "telefono"
+          ],
+          [
+            "Marcos Delgado Cano",
+            null,
+            null,
+            "email, telefono"
+          ],
+          [
+            "Adrián Cabrera Luna",
+            "adrian.cabrera@alu.es",
+            null,
+            "telefono"
+          ],
+          [
+            "Rubén Parra Aguilar",
+            null,
+            "632666777",
+            "email"
+          ],
+          [
+            "Óscar Lozano Prieto",
+            "oscar.lozano@alu.es",
+            null,
+            "telefono"
+          ],
+          [
+            "Marc Esteban Quiles",
+            null,
+            "676222333",
+            "email"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Becas por estudio",
+      "description": "Agrupa por código de estudio y calcula el total de estudiantes, becados y porcentaje.",
+      "source": {
+        "kind": "table",
+        "name": "estudiantes"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.codigo_estudio;\n  acc[key] = acc[key] || { total: 0, scholarship: 0 };\n  acc[key].total += 1;\n  if (fila.es_becado) acc[key].scholarship += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([degree, g]) => ({\n    \"estudio\": degree,\n    \"estudiantes\": g.total,\n    \"becados\": g.scholarship,\n    \"porcentaje\": Math.round((g.scholarship / g.total) * 1000) / 10,\n  }))\n  .sort((a, b) => a[\"estudio\"].localeCompare(b[\"estudio\"]));",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "estudio",
+          "estudiantes",
+          "becados",
+          "porcentaje"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            4,
+            3,
+            75
+          ],
+          [
+            "GINF",
+            7,
+            3,
+            42.9
+          ],
+          [
+            "GMED",
+            5,
+            2,
+            40
+          ],
+          [
+            "MBD",
+            2,
+            0,
+            0
+          ],
+          [
+            "MSW",
+            2,
+            1,
+            50
+          ],
+          [
+            "TDER",
+            4,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Notas por estado",
+      "description": "Ignora las notas nulas y calcula cuántas hay, su media, el mínimo y el máximo por estado.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const groups = datos\n  .filter((fila) => fila.nota !== null && fila.nota !== undefined)\n  .reduce((acc, fila) => {\n    const key = fila.estado;\n    acc[key] = acc[key] || { count: 0, sum: 0, min: Infinity, max: -Infinity };\n    const g = acc[key];\n    g.count += 1;\n    g.sum += fila.nota;\n    g.min = Math.min(g.min, fila.nota);\n    g.max = Math.max(g.max, fila.nota);\n    return acc;\n  }, {});\nreturn Object.entries(groups).map(([status, g]) => ({\n  \"estado\": status,\n  \"total\": g.count,\n  \"media\": Math.round((g.sum / g.count) * 100) / 100,\n  \"minimo\": g.min,\n  \"maximo\": g.max,\n}));",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "estado",
+          "total",
+          "media",
+          "minimo",
+          "maximo"
+        ],
+        "rows": [
+          [
+            "superada",
+            32,
+            7.31,
+            5,
+            10
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Tasa de aprobados por curso",
+      "description": "Cuenta matrículas, superadas y nota media de las calificadas en cada curso académico.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.curso_academico;\n  acc[key] = acc[key] || { total: 0, passed: 0, graded: 0, sum: 0 };\n  const g = acc[key];\n  g.total += 1;\n  if (fila.estado === \"superada\") g.passed += 1;\n  if (fila.nota !== null && fila.nota !== undefined) {\n    g.graded += 1;\n    g.sum += fila.nota;\n  }\n  return acc;\n}, {});\nreturn Object.entries(groups).map(([year, g]) => ({\n  \"curso\": year,\n  \"total\": g.total,\n  \"superadas\": g.passed,\n  \"porcentaje\": Math.round((g.passed / g.total) * 1000) / 10,\n  \"media\": g.graded ? Math.round((g.sum / g.graded) * 100) / 100 : null,\n}));",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "curso",
+          "total",
+          "superadas",
+          "porcentaje",
+          "media"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            27,
+            26,
+            96.3,
+            7.08
+          ],
+          [
+            "2025-2026",
+            21,
+            6,
+            28.6,
+            8.33
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Estados por curso (pivot)",
+      "description": "Convierte los estados en columnas: activas, superadas y anuladas por curso académico.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const year = fila.curso_academico;\n  const status = fila.estado;\n  acc[year] = acc[year] || { year, active: 0, passed: 0, cancelled: 0 };\n  if (status === \"activa\") acc[year].active += 1;\n  else if (status === \"superada\") acc[year].passed += 1;\n  else if (status === \"anulada\") acc[year].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((g) => ({\n    \"curso\": g.year,\n    \"activas\": g.active,\n    \"superadas\": g.passed,\n    \"anuladas\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"curso\"]).localeCompare(String(b[\"curso\"])));",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "curso",
+          "activas",
+          "superadas",
+          "anuladas"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            0,
+            26,
+            1
+          ],
+          [
+            "2025-2026",
+            13,
+            6,
+            2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Ranking de asignaturas por nota media",
+      "description": "Agrupa las matrículas calificadas por asignatura, cruza su nombre y ordena por media.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const subjects = new Map(tablas[\"asignaturas\"].map((s) => [s.id_asignatura, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  if (fila.nota === null || fila.nota === undefined) return acc;\n  const key = fila.id_asignatura;\n  acc[key] = acc[key] || { sum: 0, count: 0 };\n  acc[key].sum += fila.nota;\n  acc[key].count += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"asignatura\": subjects.get(Number(id)) || `#${id}`,\n    \"total\": g.count,\n    \"media\": Math.round((g.sum / g.count) * 100) / 100,\n  }))\n  .sort((a, b) => b[\"media\"] - a[\"media\"])\n  .map((row, index) => ({ \"puesto\": index + 1, ...row }));",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "puesto",
+          "asignatura",
+          "total",
+          "media"
+        ],
+        "rows": [
+          [
+            1,
+            "Arquitectura de Software",
+            2,
+            8.5
+          ],
+          [
+            2,
+            "Estructuras de Datos",
+            5,
+            8.2
+          ],
+          [
+            3,
+            "Educación Inclusiva",
+            2,
+            8
+          ],
+          [
+            4,
+            "Aprendizaje Automático",
+            1,
+            8
+          ],
+          [
+            5,
+            "Farmacología",
+            3,
+            7.5
+          ],
+          [
+            6,
+            "Estadística Aplicada",
+            2,
+            7.5
+          ],
+          [
+            7,
+            "Anatomía Humana",
+            4,
+            7.25
+          ],
+          [
+            8,
+            "Didáctica de las Matemáticas",
+            4,
+            7
+          ],
+          [
+            9,
+            "Psicología del Desarrollo",
+            2,
+            7
+          ],
+          [
+            10,
+            "Bases de Datos",
+            4,
+            6.38
+          ],
+          [
+            11,
+            "Compiladores",
+            2,
+            6
+          ],
+          [
+            12,
+            "Derecho Constitucional",
+            1,
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Resumen de matrículas por estudiante",
+      "description": "Agrupa por estudiante, lista sus asignaturas y calcula su nota media.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const students = new Map(tablas[\"estudiantes\"].map((s) => [s.id_estudiante, `${s.nombre} ${s.apellidos}`]));\nconst subjects = new Map(tablas[\"asignaturas\"].map((s) => [s.id_asignatura, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_estudiante;\n  acc[id] = acc[id] || { subjects: new Set(), grades: [] };\n  acc[id].subjects.add(subjects.get(fila.id_asignatura) || `#${fila.id_asignatura}`);\n  if (fila.nota !== null && fila.nota !== undefined) acc[id].grades.push(fila.nota);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"estudiante\": students.get(Number(id)) || `#${id}`,\n    \"asignaturas\": g.subjects.size,\n    \"media\": g.grades.length ? Math.round((g.grades.reduce((a, b) => a + b, 0) / g.grades.length) * 100) / 100 : null,\n    \"lista\": Array.from(g.subjects).join(\" · \"),\n  }))\n  .sort((a, b) => b[\"asignaturas\"] - a[\"asignaturas\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "estudiante",
+          "asignaturas",
+          "media",
+          "lista"
+        ],
+        "rows": [
+          [
+            "Ana García López",
+            4,
+            8,
+            "Estructuras de Datos · Bases de Datos · Compiladores · Redes de Computadores"
+          ],
+          [
+            "Luis Martín Soto",
+            3,
+            5.5,
+            "Estructuras de Datos · Bases de Datos · Redes de Computadores"
+          ],
+          [
+            "Diego Fernández Blanco",
+            3,
+            6.75,
+            "Anatomía Humana · Farmacología · Salud Pública"
+          ],
+          [
+            "Marta Ruiz Navarro",
+            3,
+            6,
+            "Didáctica de las Matemáticas · Psicología del Desarrollo · Educación Inclusiva"
+          ],
+          [
+            "Pablo Gómez Frías",
+            3,
+            6.75,
+            "Bases de Datos · Compiladores · Redes de Computadores"
+          ],
+          [
+            "Carmen Santos Iglesias",
+            3,
+            7.75,
+            "Anatomía Humana · Farmacología · Salud Pública"
+          ],
+          [
+            "Hugo Serrano Bravo",
+            3,
+            9,
+            "Didáctica de las Matemáticas · Psicología del Desarrollo · Educación Inclusiva"
+          ],
+          [
+            "Irene Suárez Nieto",
+            3,
+            8.75,
+            "Anatomía Humana · Farmacología · Salud Pública"
+          ],
+          [
+            "Claudia Reyes Baena",
+            3,
+            8,
+            "Estructuras de Datos · Compiladores · Redes de Computadores"
+          ],
+          [
+            "Sara Guerrero Vidal",
+            3,
+            7,
+            "Estructuras de Datos · Bases de Datos · Compiladores"
+          ],
+          [
+            "Sofía Hernández Ruiz",
+            2,
+            9,
+            "Estructuras de Datos · Bases de Datos"
+          ],
+          [
+            "Álvaro Domínguez Rey",
+            2,
+            7.5,
+            "Estadística Aplicada · Aprendizaje Automático"
+          ],
+          [
+            "Nerea Castro Peña",
+            2,
+            6,
+            "Didáctica de las Matemáticas · Psicología del Desarrollo"
+          ],
+          [
+            "Paula Vega Salas",
+            2,
+            5,
+            "Anatomía Humana · Salud Pública"
+          ],
+          [
+            "Rubén Parra Aguilar",
+            2,
+            7,
+            "Didáctica de las Matemáticas · Educación Inclusiva"
+          ],
+          [
+            "Julia Bermúdez Soler",
+            2,
+            null,
+            "Farmacología · Salud Pública"
+          ],
+          [
+            "Javier Ortega Díaz",
+            1,
+            6,
+            "Derecho Constitucional"
+          ],
+          [
+            "Lucía Moreno Pascual",
+            1,
+            8,
+            "Arquitectura de Software"
+          ],
+          [
+            "Elena Molina Ríos",
+            1,
+            9,
+            "Arquitectura de Software"
+          ],
+          [
+            "Adrián Cabrera Luna",
+            1,
+            8,
+            "Estadística Aplicada"
+          ],
+          [
+            "Marc Esteban Quiles",
+            1,
+            null,
+            "Derecho Constitucional"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Distribución de notas",
+      "description": "Clasifica las notas en cuatro tramos y calcula cuántas hay y su porcentaje.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const buckets = { \"0-4.9\": 0, \"5-6.9\": 0, \"7-8.9\": 0, \"9-10\": 0 };\ndatos.forEach((fila) => {\n  const g = fila.nota;\n  if (g === null || g === undefined) return;\n  if (g < 5) buckets[\"0-4.9\"] += 1;\n  else if (g < 7) buckets[\"5-6.9\"] += 1;\n  else if (g < 9) buckets[\"7-8.9\"] += 1;\n  else buckets[\"9-10\"] += 1;\n});\nconst total = Object.values(buckets).reduce((a, b) => a + b, 0);\nreturn Object.entries(buckets).map(([range, count]) => ({\n  \"rango\": range,\n  \"total\": count,\n  \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n}));",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "rango",
+          "total",
+          "porcentaje"
+        ],
+        "rows": [
+          [
+            "0-4.9",
+            0,
+            0
+          ],
+          [
+            "5-6.9",
+            11,
+            34.4
+          ],
+          [
+            "7-8.9",
+            15,
+            46.9
+          ],
+          [
+            "9-10",
+            6,
+            18.8
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Asignaturas por curso",
+      "description": "Cuenta asignaturas, créditos y media de horas presenciales por curso.",
+      "source": {
+        "kind": "table",
+        "name": "asignaturas"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.curso;\n  acc[key] = acc[key] || { count: 0, credits: 0, hours: 0 };\n  acc[key].count += 1;\n  acc[key].credits += fila.creditos;\n  acc[key].hours += fila.horas_presenciales;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([year, g]) => ({\n    \"curso\": Number(year),\n    \"total\": g.count,\n    \"creditos\": g.credits,\n    \"media_horas\": Math.round((g.hours / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => a[\"curso\"] - b[\"curso\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "curso",
+          "total",
+          "creditos",
+          "media_horas"
+        ],
+        "rows": [
+          [
+            1,
+            6,
+            37,
+            52.5
+          ],
+          [
+            2,
+            5,
+            29,
+            50.2
+          ],
+          [
+            3,
+            3,
+            17,
+            47.3
+          ],
+          [
+            4,
+            1,
+            4,
+            32
+          ],
+          [
+            5,
+            1,
+            4,
+            30
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Docentes por categoría",
+      "description": "Agrupa por categoría y calcula cuántos hay, la media de horas y cuántos investigan.",
+      "source": {
+        "kind": "table",
+        "name": "docentes"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.categoria;\n  acc[key] = acc[key] || { count: 0, hours: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].hours += fila.horas_semanales;\n  if (fila.es_investigador) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([category, g]) => ({\n    \"categoria\": category,\n    \"total\": g.count,\n    \"media_horas\": Math.round((g.hours / g.count) * 10) / 10,\n    \"investigadores\": g.researchers,\n  }))\n  .sort((a, b) => b[\"total\"] - a[\"total\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "categoria",
+          "total",
+          "media_horas",
+          "investigadores"
+        ],
+        "rows": [
+          [
+            "Titular",
+            4,
+            18,
+            2
+          ],
+          [
+            "Catedrática",
+            3,
+            15.7,
+            3
+          ],
+          [
+            "Asociado",
+            3,
+            6.7,
+            0
+          ],
+          [
+            "Ayudante",
+            2,
+            11,
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Docentes sin despacho o correo",
+      "description": "Lista los docentes a los que les falta el despacho, el correo o los dos.",
+      "source": {
+        "kind": "table",
+        "name": "docentes"
+      },
+      "code": "return datos\n  .filter((fila) => !fila.email || !fila.despacho)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.despacho) missing.push(\"despacho\");\n    return {\n      \"docente\": `${fila.nombre} ${fila.apellidos}`,\n      \"categoria\": fila.categoria,\n      \"email\": fila.email,\n      \"despacho\": fila.despacho,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
+      "folder": "Filtros y listas",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "docente",
+          "categoria",
+          "email",
+          "despacho",
+          "faltan"
+        ],
+        "rows": [
+          [
+            "Nieves Salgado Ortiz",
+            "Titular",
+            null,
+            "D-115",
+            "email"
+          ],
+          [
+            "Iván Requena Soto",
+            "Asociado",
+            "ivan.requena@uni.es",
+            null,
+            "despacho"
+          ],
+          [
+            "Youssef Amrani Belkacem",
+            "Ayudante",
+            null,
+            "D-041",
+            "email"
+          ],
+          [
+            "Hugo Naranjo Peña",
+            "Asociado",
+            "hugo.naranjo@uni.es",
+            null,
+            "despacho"
+          ],
+          [
+            "Tomás Arroyo Vidal",
+            "Ayudante",
+            null,
+            "D-042",
+            "email"
+          ],
+          [
+            "Andrés Cano Duarte",
+            "Asociado",
+            "andres.cano@uni.es",
+            null,
+            "despacho"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Capacidad de aulas por edificio",
+      "description": "Suma la capacidad de las aulas de cada edificio y cruza su nombre.",
+      "source": {
+        "kind": "table",
+        "name": "aulas"
+      },
+      "code": "const buildings = new Map(tablas[\"edificios\"].map((b) => [b.id_edificio, b.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_edificio;\n  acc[key] = acc[key] || { count: 0, capacity: 0 };\n  acc[key].count += 1;\n  acc[key].capacity += fila.capacidad;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"edificio\": buildings.get(Number(id)) || `#${id}`,\n    \"aulas\": g.count,\n    \"capacidad\": g.capacity,\n    \"media\": Math.round((g.capacity / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"capacidad\"] - a[\"capacidad\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "edificio",
+          "aulas",
+          "capacidad",
+          "media"
+        ],
+        "rows": [
+          [
+            "Aulario Pitágoras",
+            3,
+            150,
+            50
+          ],
+          [
+            "Aulario Kepler",
+            3,
+            135,
+            45
+          ],
+          [
+            "Edificio Ramón y Cajal",
+            2,
+            105,
+            52.5
+          ],
+          [
+            "Biblioteca Central",
+            2,
+            92,
+            46
+          ],
+          [
+            "Bloque Bolívar",
+            2,
+            75,
+            37.5
+          ],
+          [
+            "Laboratorios Curie",
+            2,
+            44,
+            22
+          ],
+          [
+            "Anexo Marina",
+            2,
+            40,
+            20
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Resumen de sedes",
+      "description": "Calcula el porcentaje de aforo de cada sede sobre el total y ordena por capacidad.",
+      "source": {
+        "kind": "table",
+        "name": "sedes"
+      },
+      "code": "const total = datos.reduce((sum, fila) => sum + fila.aforo_maximo, 0);\nreturn datos\n  .map((fila) => ({\n    \"sede\": fila.nombre,\n    \"ciudad\": fila.ciudad,\n    \"capacidad\": fila.aforo_maximo,\n    \"porcentaje\": Math.round((fila.aforo_maximo / total) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"capacidad\"] - a[\"capacidad\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "sede",
+          "ciudad",
+          "capacidad",
+          "porcentaje"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            "Madrid",
+            4500,
+            36.3
+          ],
+          [
+            "Campus Andino",
+            "Bogotá",
+            3200,
+            25.8
+          ],
+          [
+            "Campus Sur",
+            "Sevilla",
+            2800,
+            22.6
+          ],
+          [
+            "Campus del Mar",
+            "Valencia",
+            1900,
+            15.3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Usar una consulta guardada",
+      "description": "Llama a la consulta A19 (estudiantes con tres o más matrículas) y muestra su resultado.",
+      "source": {
+        "kind": "table",
+        "name": "estudiantes"
+      },
+      "code": "const rows = consultas[\"A19 · Estudiantes con tres o más matrículas\"]();\nreturn rows.map((row) => ({\n  \"estudiante\": row.id_estudiante,\n  \"matriculas\": row.matriculas,\n}));",
+      "folder": "Consultas e informes",
+      "color": "#fbf6c9",
+      "assert": {
+        "columns": [
+          "estudiante",
+          "matriculas"
+        ],
+        "rows": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            8,
+            3
+          ],
+          [
+            9,
+            3
+          ],
+          [
+            14,
+            3
+          ],
+          [
+            17,
+            3
+          ],
+          [
+            19,
+            3
+          ],
+          [
+            23,
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Informe con forEach y resultado",
+      "description": "Construye un informe por estado con forEach, añade una fila TOTAL y lo guarda en resultado.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const groups = {};\ndatos.forEach((fila) => {\n  const key = fila.estado;\n  groups[key] = groups[key] || { count: 0, sum: 0 };\n  groups[key].count += 1;\n  if (fila.nota !== null && fila.nota !== undefined) groups[key].sum += fila.nota;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"estado\": status,\n  \"total\": g.count,\n  \"media\": g.count ? Math.round((g.sum / g.count) * 100) / 100 : null,\n}));\nrows.push({\n  \"estado\": \"TOTAL\",\n  \"total\": datos.length,\n  \"media\": null,\n});\nresultado = rows;",
+      "folder": "Consultas e informes",
+      "color": "#fbf6c9",
+      "assert": {
+        "columns": [
+          "estado",
+          "total",
+          "media"
+        ],
+        "rows": [
+          [
+            "superada",
+            32,
+            7.31
+          ],
+          [
+            "activa",
+            13,
+            0
+          ],
+          [
+            "anulada",
+            3,
+            0
+          ],
+          [
+            "TOTAL",
+            48,
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Matrículas huérfanas",
+      "description": "Busca matrículas cuyo estudiante o asignatura ya no existe en las tablas.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const studentIds = new Set(tablas[\"estudiantes\"].map((s) => s.id_estudiante));\nconst subjectIds = new Set(tablas[\"asignaturas\"].map((s) => s.id_asignatura));\nreturn datos\n  .filter((fila) => !studentIds.has(fila.id_estudiante) || !subjectIds.has(fila.id_asignatura))\n  .map((fila) => ({\n    \"matricula\": fila.id_matricula,\n    \"estudiante\": fila.id_estudiante,\n    \"asignatura\": fila.id_asignatura,\n    \"faltan\": !studentIds.has(fila.id_estudiante) ? \"estudiante\" : \"asignatura\",\n  }));",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "rowCount": 0
+      }
+    },
+    {
+      "name": "Media ponderada por créditos",
+      "description": "Pondera la nota de cada matrícula por los créditos de su asignatura y devuelve una fila.",
+      "source": {
+        "kind": "table",
+        "name": "matriculas"
+      },
+      "code": "const subjects = new Map(tablas[\"asignaturas\"].map((s) => [s.id_asignatura, s.creditos]));\nlet sum = 0;\nlet credits = 0;\ndatos.forEach((fila) => {\n  if (fila.nota === null || fila.nota === undefined) return;\n  const c = subjects.get(fila.id_asignatura) || 0;\n  sum += fila.nota * c;\n  credits += c;\n});\nreturn [{\n  \"media\": credits ? Math.round((sum / credits) * 100) / 100 : null,\n  \"creditos\": credits,\n}];",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "media",
+          "creditos"
+        ],
+        "rows": [
+          [
+            7.3,
+            196
+          ]
+        ]
+      }
     }
   ],
   "settings": {

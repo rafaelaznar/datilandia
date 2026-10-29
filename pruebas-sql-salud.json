@@ -18,6 +18,13 @@
     "Asistencial",
     "Facturación"
   ],
+  "scriptFolders": [
+    "Filtros y listas",
+    "Agregados",
+    "Fechas",
+    "Cruces e integridad",
+    "Consultas e informes"
+  ],
   "tables": [
     {
       "name": "hospitales",
@@ -21144,6 +21151,1924 @@
       },
       "folder": "G · Uniones",
       "color": "#e8ddf7"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "Pacientes crónicos",
+      "description": "Filtra los pacientes crónicos y muestra nombre, ciudad, grupo sanguíneo y teléfono.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "return datos\n  .filter((fila) => fila.es_cronico)\n  .map((fila) => ({\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"ciudad\": fila.ciudad,\n    \"grupo_sanguineo\": fila.grupo_sanguineo,\n    \"telefono\": fila.telefono,\n  }));",
+      "folder": "Filtros y listas",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "nombre_completo",
+          "ciudad",
+          "grupo_sanguineo",
+          "telefono"
+        ],
+        "rows": [
+          [
+            "Francisco Muñoz García",
+            "Madrid",
+            "O-",
+            "626361949"
+          ],
+          [
+            "María López Martín",
+            "Murcia",
+            "A-",
+            null
+          ],
+          [
+            "Beatriz Díaz Ruiz",
+            "Bilbao",
+            null,
+            "642584220"
+          ],
+          [
+            "Clara Domínguez Vázquez",
+            "Zaragoza",
+            "AB+",
+            "650767706"
+          ],
+          [
+            "Lucía Serrano Navarro",
+            "Málaga",
+            "B+",
+            "659391116"
+          ],
+          [
+            "Eva Castro Moreno",
+            "Bogotá",
+            null,
+            "691574821"
+          ],
+          [
+            "Pilar Iglesias Navarro",
+            "Valencia",
+            "O+",
+            null
+          ],
+          [
+            "Manuel Delgado Gómez",
+            "Valencia",
+            "A-",
+            "698825264"
+          ],
+          [
+            "Diego Díaz Martínez",
+            "Madrid",
+            "B+",
+            null
+          ],
+          [
+            "Sergio Molina Morales",
+            "Bogotá",
+            null,
+            "618243672"
+          ],
+          [
+            "Lucía Muñoz Gómez",
+            "Sevilla",
+            "B+",
+            "638601614"
+          ],
+          [
+            "Elena Jiménez Hernández",
+            "Quito",
+            "A-",
+            "673708240"
+          ],
+          [
+            "Laura Muñoz Ortega",
+            "Madrid",
+            "O+",
+            "682572505"
+          ],
+          [
+            "Sergio Delgado Ruiz",
+            "Bogotá",
+            "A-",
+            null
+          ],
+          [
+            "Nuria Martín Delgado",
+            "Murcia",
+            "A-",
+            "637192769"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Edad de los pacientes",
+      "description": "Calcula la edad a 1 de septiembre de 2025 y ordena de mayor a menor.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "const reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.fecha_nacimiento);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"fecha_nacimiento\": fila.fecha_nacimiento,\n      \"edad\": age,\n    };\n  })\n  .sort((a, b) => b[\"edad\"] - a[\"edad\"]);",
+      "folder": "Fechas",
+      "color": "#fde8cd",
+      "assert": {
+        "columns": [
+          "nombre_completo",
+          "fecha_nacimiento",
+          "edad"
+        ],
+        "rows": [
+          [
+            "Lucía Muñoz Gómez",
+            "1944-08-02",
+            81
+          ],
+          [
+            "Antonio Fernández Alonso",
+            "1945-11-27",
+            79
+          ],
+          [
+            "Adrián Alonso González",
+            "1948-08-18",
+            77
+          ],
+          [
+            "Jorge Iglesias Gutiérrez",
+            "1950-06-21",
+            75
+          ],
+          [
+            "Pedro García Domínguez",
+            "1953-05-27",
+            72
+          ],
+          [
+            "Diego Díaz Martínez",
+            "1955-05-21",
+            70
+          ],
+          [
+            "Raúl Suárez Rodríguez",
+            "1957-02-26",
+            68
+          ],
+          [
+            "Alejandro Romero Molina",
+            "1957-10-06",
+            67
+          ],
+          [
+            "Irene Vázquez Ramírez",
+            "1959-12-27",
+            65
+          ],
+          [
+            "Julia Díaz Domínguez",
+            "1961-06-09",
+            64
+          ],
+          [
+            "Lucía Serrano Navarro",
+            "1961-07-03",
+            64
+          ],
+          [
+            "Pilar Iglesias Navarro",
+            "1964-07-11",
+            61
+          ],
+          [
+            "Luis Marín Iglesias",
+            "1963-10-12",
+            61
+          ],
+          [
+            "Adrián Jiménez Romero",
+            "1964-09-16",
+            60
+          ],
+          [
+            "Miguel Rubio González",
+            "1967-05-16",
+            58
+          ],
+          [
+            "Sergio Delgado Ruiz",
+            "1973-01-10",
+            52
+          ],
+          [
+            "Eva Castro Moreno",
+            "1973-10-02",
+            51
+          ],
+          [
+            "Marina Gil Gutiérrez",
+            "1976-04-24",
+            49
+          ],
+          [
+            "Pablo López González",
+            "1975-11-20",
+            49
+          ],
+          [
+            "María López Martín",
+            "1977-02-15",
+            48
+          ],
+          [
+            "Beatriz Domínguez Jiménez",
+            "1978-09-23",
+            46
+          ],
+          [
+            "Irene Marín Serrano",
+            "1982-07-16",
+            43
+          ],
+          [
+            "Laura Muñoz Ortega",
+            "1986-05-21",
+            39
+          ],
+          [
+            "Manuel Delgado Gómez",
+            "1987-08-09",
+            38
+          ],
+          [
+            "Beatriz Díaz Ruiz",
+            "1989-03-01",
+            36
+          ],
+          [
+            "Diego Martínez Blanco",
+            "1989-09-26",
+            35
+          ],
+          [
+            "Sergio Molina Morales",
+            "1991-06-21",
+            34
+          ],
+          [
+            "Pablo Ortega Martín",
+            "1990-09-21",
+            34
+          ],
+          [
+            "Nuria Martín Delgado",
+            "1999-06-06",
+            26
+          ],
+          [
+            "Elena Jiménez Hernández",
+            "2001-02-11",
+            24
+          ],
+          [
+            "Lucía Romero García",
+            "2001-04-26",
+            24
+          ],
+          [
+            "Elena Gil Martínez",
+            "2003-03-04",
+            22
+          ],
+          [
+            "Francisco Muñoz García",
+            "2004-08-27",
+            21
+          ],
+          [
+            "Marta Sánchez Romero",
+            "2006-01-09",
+            19
+          ],
+          [
+            "Clara Domínguez Vázquez",
+            "2009-03-04",
+            16
+          ],
+          [
+            "Patricia Sanz Alonso",
+            "2010-12-06",
+            14
+          ],
+          [
+            "Laura Vázquez Jiménez",
+            "2010-12-10",
+            14
+          ],
+          [
+            "Pedro Ortiz Gómez",
+            "2015-03-21",
+            10
+          ],
+          [
+            "Isabel Torres Torres",
+            "2017-11-24",
+            7
+          ],
+          [
+            "Beatriz Navarro Molina",
+            "2019-05-28",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Pacientes por ciudad",
+      "description": "Cuenta los pacientes de cada ciudad y calcula su porcentaje sobre el total.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.ciudad || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"ciudad\": city,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "ciudad",
+          "pacientes",
+          "porcentaje"
+        ],
+        "rows": [
+          [
+            "Bilbao",
+            6,
+            15
+          ],
+          [
+            "Quito",
+            5,
+            12.5
+          ],
+          [
+            "Málaga",
+            5,
+            12.5
+          ],
+          [
+            "Bogotá",
+            5,
+            12.5
+          ],
+          [
+            "Valencia",
+            5,
+            12.5
+          ],
+          [
+            "Murcia",
+            4,
+            10
+          ],
+          [
+            "Madrid",
+            3,
+            7.5
+          ],
+          [
+            "Sevilla",
+            3,
+            7.5
+          ],
+          [
+            "Zaragoza",
+            2,
+            5
+          ],
+          [
+            "Barcelona",
+            2,
+            5
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Pacientes por seguro",
+      "description": "Cruza pacientes con seguros, cuenta cuántos hay por seguro y muestra su cobertura.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "const insurers = new Map(tablas[\"seguros\"].map((i) => [i.id_seguro, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_seguro;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.nombre : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.cobertura_porcentaje : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"seguro\": name,\n    \"pacientes\": g.count,\n    \"cobertura\": g.coverage,\n    \"porcentaje\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "seguro",
+          "pacientes",
+          "cobertura",
+          "porcentaje"
+        ],
+        "rows": [
+          [
+            "Mutua Laboral",
+            9,
+            85,
+            22.5
+          ],
+          [
+            "Salud Pública",
+            8,
+            90,
+            20
+          ],
+          [
+            "Seguros Médicos del Norte",
+            6,
+            75,
+            15
+          ],
+          [
+            "Cobertura Básica",
+            6,
+            50,
+            15
+          ],
+          [
+            "—",
+            5,
+            null,
+            12.5
+          ],
+          [
+            "Andes Salud",
+            4,
+            70,
+            10
+          ],
+          [
+            "VidaPlena",
+            2,
+            60,
+            5
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Contactos incompletos",
+      "description": "Lista los pacientes a los que les falta el teléfono, el correo o los dos.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "return datos\n  .filter((fila) => !fila.telefono || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.telefono) missing.push(\"telefono\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"telefono\": fila.telefono,\n      \"email\": fila.email,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
+      "folder": "Filtros y listas",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "nombre_completo",
+          "telefono",
+          "email",
+          "faltan"
+        ],
+        "rows": [
+          [
+            "María López Martín",
+            null,
+            "paciente4@correo.com",
+            "telefono"
+          ],
+          [
+            "Beatriz Díaz Ruiz",
+            "642584220",
+            null,
+            "email"
+          ],
+          [
+            "Raúl Suárez Rodríguez",
+            null,
+            "paciente10@correo.com",
+            "telefono"
+          ],
+          [
+            "Eva Castro Moreno",
+            "691574821",
+            null,
+            "email"
+          ],
+          [
+            "Pilar Iglesias Navarro",
+            null,
+            "paciente15@correo.com",
+            "telefono"
+          ],
+          [
+            "Isabel Torres Torres",
+            "651222840",
+            null,
+            "email"
+          ],
+          [
+            "Luis Marín Iglesias",
+            "619683124",
+            null,
+            "email"
+          ],
+          [
+            "Jorge Iglesias Gutiérrez",
+            null,
+            "paciente20@correo.com",
+            "telefono"
+          ],
+          [
+            "Manuel Delgado Gómez",
+            "698825264",
+            null,
+            "email"
+          ],
+          [
+            "Irene Marín Serrano",
+            null,
+            "paciente23@correo.com",
+            "telefono"
+          ],
+          [
+            "Marina Gil Gutiérrez",
+            null,
+            "paciente24@correo.com",
+            "telefono"
+          ],
+          [
+            "Diego Díaz Martínez",
+            null,
+            null,
+            "telefono, email"
+          ],
+          [
+            "Pablo López González",
+            null,
+            null,
+            "telefono, email"
+          ],
+          [
+            "Alejandro Romero Molina",
+            null,
+            "paciente33@correo.com",
+            "telefono"
+          ],
+          [
+            "Laura Muñoz Ortega",
+            "682572505",
+            null,
+            "email"
+          ],
+          [
+            "Sergio Delgado Ruiz",
+            null,
+            "paciente38@correo.com",
+            "telefono"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Grupos sanguíneos",
+      "description": "Cuenta los pacientes por grupo sanguíneo (sin los nulos) y calcula el porcentaje.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.grupo_sanguineo;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"grupo_sanguineo\": group,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "grupo_sanguineo",
+          "pacientes",
+          "porcentaje"
+        ],
+        "rows": [
+          [
+            "A-",
+            9,
+            25.7
+          ],
+          [
+            "B+",
+            8,
+            22.9
+          ],
+          [
+            "B-",
+            5,
+            14.3
+          ],
+          [
+            "AB+",
+            4,
+            11.4
+          ],
+          [
+            "A+",
+            3,
+            8.6
+          ],
+          [
+            "O-",
+            3,
+            8.6
+          ],
+          [
+            "O+",
+            3,
+            8.6
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Ingresos y coste por hospital",
+      "description": "Cruza ingresos, habitaciones y hospitales; cuenta ingresos, urgentes y coste estimado por estancia.",
+      "source": {
+        "kind": "table",
+        "name": "ingresos"
+      },
+      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tablas[\"habitaciones\"].map((r) => [r.id_habitacion, r]));\nconst hospitals = new Map(tablas[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_habitacion);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste\": Math.round(g.cost),\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "hospital",
+          "ingresos",
+          "urgentes",
+          "coste",
+          "coste_medio"
+        ],
+        "rows": [
+          [
+            "Hospital Virgen del Rocío",
+            10,
+            7,
+            1303743,
+            130374
+          ],
+          [
+            "Hospital Universitario La Paz",
+            10,
+            5,
+            1179935,
+            117994
+          ],
+          [
+            "Hospital Metropolitano de Quito",
+            8,
+            7,
+            1051741,
+            131468
+          ],
+          [
+            "Clínica Santa Elena",
+            5,
+            3,
+            962766,
+            192553
+          ],
+          [
+            "Hospital General de Valencia",
+            6,
+            3,
+            474964,
+            79161
+          ],
+          [
+            "Hospital Clínic de Barcelona",
+            8,
+            6,
+            429570,
+            53696
+          ],
+          [
+            "—",
+            3,
+            2,
+            198691,
+            66230
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Coste y días de estancia",
+      "description": "Calcula los días ingresados y el coste de los ingresos ya dados de alta; ordena por coste.",
+      "source": {
+        "kind": "table",
+        "name": "ingresos"
+      },
+      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tablas[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nreturn datos\n  .filter((fila) => fila.fecha_alta)\n  .map((fila) => {\n    const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n    return {\n      \"paciente\": patients.get(fila.id_paciente) || `#${fila.id_paciente}`,\n      \"motivo\": fila.motivo,\n      \"dias\": days,\n      \"coste\": Math.round(days * (fila.coste_dia || 0)),\n    };\n  })\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"])\n  .slice(0, 20);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "paciente",
+          "motivo",
+          "dias",
+          "coste"
+        ],
+        "rows": [
+          [
+            "Julia Díaz Domínguez",
+            "Crisis epiléptica",
+            719,
+            591018
+          ],
+          [
+            "Marta Sánchez Romero",
+            "Cirugía programada",
+            611,
+            499798
+          ],
+          [
+            "Irene Marín Serrano",
+            "Dolor abdominal",
+            521,
+            450144
+          ],
+          [
+            "Nuria Martín Delgado",
+            "Neumonía",
+            481,
+            405964
+          ],
+          [
+            "#88",
+            "Dolor torácico",
+            776,
+            328248
+          ],
+          [
+            "Patricia Sanz Alonso",
+            "Neumonía",
+            452,
+            304648
+          ],
+          [
+            "Nuria Martín Delgado",
+            "Insuficiencia respiratoria",
+            472,
+            301608
+          ],
+          [
+            "Sergio Molina Morales",
+            "Insuficiencia respiratoria",
+            402,
+            301098
+          ],
+          [
+            "Eva Castro Moreno",
+            "Cirugía programada",
+            442,
+            293046
+          ],
+          [
+            "Eva Castro Moreno",
+            "Fractura de cadera",
+            335,
+            192625
+          ],
+          [
+            "Pablo Ortega Martín",
+            "Insuficiencia respiratoria",
+            264,
+            189288
+          ],
+          [
+            "Lucía Romero García",
+            "Insuficiencia respiratoria",
+            353,
+            187443
+          ],
+          [
+            "Lucía Serrano Navarro",
+            "Infección urinaria",
+            548,
+            161112
+          ],
+          [
+            "Adrián Alonso González",
+            "Insuficiencia respiratoria",
+            253,
+            159896
+          ],
+          [
+            "Francisco Muñoz García",
+            "Crisis epiléptica",
+            244,
+            119560
+          ],
+          [
+            "Lucía Romero García",
+            "Cirugía programada",
+            602,
+            115584
+          ],
+          [
+            "Elena Gil Martínez",
+            "Cirugía programada",
+            481,
+            108225
+          ],
+          [
+            "#88",
+            "Infección urinaria",
+            170,
+            101320
+          ],
+          [
+            "Lucía Romero García",
+            "Crisis epiléptica",
+            113,
+            93903
+          ],
+          [
+            "Isabel Torres Torres",
+            "Dolor abdominal",
+            180,
+            86940
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Ingresos por motivo",
+      "description": "Agrupa los ingresos por motivo, cuenta cuántos son urgentes y calcula el coste diario medio.",
+      "source": {
+        "kind": "table",
+        "name": "ingresos"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.motivo || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.coste_dia || 0;\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"motivo\": reason,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "motivo",
+          "ingresos",
+          "urgentes",
+          "coste_medio"
+        ],
+        "rows": [
+          [
+            "Insuficiencia respiratoria",
+            11,
+            7,
+            674
+          ],
+          [
+            "Cirugía programada",
+            8,
+            6,
+            494
+          ],
+          [
+            "Ictus isquémico",
+            8,
+            5,
+            525
+          ],
+          [
+            "Neumonía",
+            5,
+            4,
+            642
+          ],
+          [
+            "Dolor abdominal",
+            5,
+            1,
+            676
+          ],
+          [
+            "Infección urinaria",
+            5,
+            3,
+            577
+          ],
+          [
+            "Crisis epiléptica",
+            4,
+            4,
+            732
+          ],
+          [
+            "Fractura de cadera",
+            3,
+            3,
+            670
+          ],
+          [
+            "Dolor torácico",
+            1,
+            0,
+            423
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Facturación por método de pago",
+      "description": "Agrupa las facturas por método de pago (incluidos los nulos) y suma importes y descuentos.",
+      "source": {
+        "kind": "table",
+        "name": "facturas"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.metodo_pago || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.importe || 0;\n  acc[key].discount += fila.descuento || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"metodo_pago\": method,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n    \"media\": Math.round(g.amount / g.count),\n    \"descuento\": Math.round((g.discount / g.count) * 10) / 10,\n    \"porcentaje\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "metodo_pago",
+          "facturas",
+          "importe",
+          "media",
+          "descuento",
+          "porcentaje"
+        ],
+        "rows": [
+          [
+            "Transferencia",
+            18,
+            77938,
+            4330,
+            7.1,
+            28.7
+          ],
+          [
+            "—",
+            14,
+            71141,
+            5082,
+            2,
+            26.2
+          ],
+          [
+            "Tarjeta",
+            13,
+            62237,
+            4787,
+            3.5,
+            22.9
+          ],
+          [
+            "Efectivo",
+            15,
+            60444,
+            4030,
+            7.9,
+            22.2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Facturas impagadas por paciente",
+      "description": "Filtra las facturas no pagadas, las agrupa por paciente y suma lo que deben.",
+      "source": {
+        "kind": "table",
+        "name": "facturas"
+      },
+      "code": "const patients = new Map(tablas[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos\n  .filter((fila) => fila.pagada === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_paciente;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.importe || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "paciente",
+          "facturas",
+          "importe"
+        ],
+        "rows": [
+          [
+            "Alejandro Romero Molina",
+            3,
+            22070
+          ],
+          [
+            "Pilar Iglesias Navarro",
+            2,
+            10726
+          ],
+          [
+            "Beatriz Domínguez Jiménez",
+            1,
+            7048
+          ],
+          [
+            "Marta Sánchez Romero",
+            1,
+            6955
+          ],
+          [
+            "Sergio Delgado Ruiz",
+            1,
+            6225
+          ],
+          [
+            "Marina Gil Gutiérrez",
+            1,
+            5822
+          ],
+          [
+            "Pedro García Domínguez",
+            1,
+            5790
+          ],
+          [
+            "Beatriz Díaz Ruiz",
+            1,
+            5075
+          ],
+          [
+            "Adrián Jiménez Romero",
+            1,
+            4994
+          ],
+          [
+            "Beatriz Navarro Molina",
+            1,
+            3535
+          ],
+          [
+            "Lucía Serrano Navarro",
+            1,
+            2924
+          ],
+          [
+            "Patricia Sanz Alonso",
+            1,
+            2493
+          ],
+          [
+            "Pablo López González",
+            1,
+            2402
+          ],
+          [
+            "Julia Díaz Domínguez",
+            1,
+            2014
+          ],
+          [
+            "Laura Vázquez Jiménez",
+            1,
+            1966
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Citas por estado y tipo (pivot)",
+      "description": "Convierte los tipos de cita en columnas dinámicas y cuenta cuántas hay por estado.",
+      "source": {
+        "kind": "table",
+        "name": "citas"
+      },
+      "code": "const types = Array.from(new Set(datos.map((fila) => fila.tipo))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.estado;\n  const type = fila.tipo;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"estado\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"estado\"]).localeCompare(String(b[\"estado\"])));",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "estado",
+          "Primera consulta",
+          "Revisión",
+          "Telemedicina",
+          "Urgencia"
+        ],
+        "rows": [
+          [
+            "Atendida",
+            3,
+            2,
+            2,
+            4
+          ],
+          [
+            "Cancelada",
+            2,
+            1,
+            1,
+            3
+          ],
+          [
+            "No presentado",
+            2,
+            2,
+            0,
+            1
+          ],
+          [
+            "Pendiente",
+            13,
+            7,
+            19,
+            8
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Duración media de las citas por médico",
+      "description": "Cruza las citas con los médicos, calcula la duración media y devuelve los diez primeros.",
+      "source": {
+        "kind": "table",
+        "name": "citas"
+      },
+      "code": "const doctors = new Map(tablas[\"medicos\"].map((d) => [d.id_medico, `${d.nombre} ${d.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_medico;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duracion_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"medico\": doctors.get(Number(id)) || `#${id}`,\n    \"citas\": g.count,\n    \"duracion_media\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"duracion_media\"] - a[\"duracion_media\"])\n  .slice(0, 10);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "medico",
+          "citas",
+          "duracion_media"
+        ],
+        "rows": [
+          [
+            "Pablo Moreno Rodríguez",
+            3,
+            55
+          ],
+          [
+            "Juan Romero Blanco",
+            2,
+            52.5
+          ],
+          [
+            "Eva Gil Serrano",
+            1,
+            45
+          ],
+          [
+            "José Rubio Muñoz",
+            2,
+            45
+          ],
+          [
+            "Alejandro Ruiz Alonso",
+            1,
+            45
+          ],
+          [
+            "#999",
+            1,
+            45
+          ],
+          [
+            "David Gómez Romero",
+            3,
+            41.7
+          ],
+          [
+            "David Fernández Torres",
+            7,
+            38.6
+          ],
+          [
+            "Diego Delgado Suárez",
+            4,
+            37.5
+          ],
+          [
+            "Paula Romero López",
+            4,
+            37.5
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Médicos por especialidad",
+      "description": "Agrupa los médicos por especialidad y calcula cuántos hay, su experiencia media y cuántos investigan.",
+      "source": {
+        "kind": "table",
+        "name": "medicos"
+      },
+      "code": "const specialties = new Map(tablas[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_especialidad;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.anios_experiencia || 0;\n  if (fila.es_investigador) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"especialidad\": specialties.get(Number(id)) || `#${id}`,\n    \"medicos\": g.count,\n    \"experiencia_media\": Math.round((g.experience / g.count) * 10) / 10,\n    \"investigadores\": g.researchers,\n  }))\n  .sort((a, b) => b[\"medicos\"] - a[\"medicos\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "especialidad",
+          "medicos",
+          "experiencia_media",
+          "investigadores"
+        ],
+        "rows": [
+          [
+            "Neurología",
+            5,
+            12.8,
+            2
+          ],
+          [
+            "Pediatría",
+            5,
+            12,
+            2
+          ],
+          [
+            "Urgencias",
+            5,
+            11.8,
+            3
+          ],
+          [
+            "Cardiología",
+            3,
+            17.7,
+            1
+          ],
+          [
+            "Cirugía General",
+            3,
+            17.3,
+            0
+          ],
+          [
+            "Oncología",
+            2,
+            28,
+            0
+          ],
+          [
+            "Medicina Interna",
+            2,
+            23,
+            0
+          ],
+          [
+            "#null",
+            2,
+            25,
+            0
+          ],
+          [
+            "Traumatología",
+            1,
+            16,
+            0
+          ],
+          [
+            "Dermatología",
+            1,
+            27,
+            1
+          ],
+          [
+            "Ginecología",
+            1,
+            7,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Pacientes con más ingresos",
+      "description": "Agrupa los ingresos por paciente, suma su coste estimado y devuelve los diez primeros.",
+      "source": {
+        "kind": "table",
+        "name": "ingresos"
+      },
+      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tablas[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_paciente;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"ingresos\": g.count,\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"])\n  .slice(0, 10);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "paciente",
+          "ingresos",
+          "coste"
+        ],
+        "rows": [
+          [
+            "María López Martín",
+            4,
+            160440
+          ],
+          [
+            "Eva Castro Moreno",
+            4,
+            544207
+          ],
+          [
+            "Francisco Muñoz García",
+            3,
+            119560
+          ],
+          [
+            "Lucía Romero García",
+            3,
+            396930
+          ],
+          [
+            "Nuria Martín Delgado",
+            3,
+            707572
+          ],
+          [
+            "Beatriz Navarro Molina",
+            2,
+            3155
+          ],
+          [
+            "Patricia Sanz Alonso",
+            2,
+            304648
+          ],
+          [
+            "Pilar Iglesias Navarro",
+            2,
+            57069
+          ],
+          [
+            "Isabel Torres Torres",
+            2,
+            86940
+          ],
+          [
+            "Adrián Alonso González",
+            2,
+            159896
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Ocupación de habitaciones por hospital",
+      "description": "Cuenta habitaciones, ocupadas y camas por hospital y calcula el porcentaje de ocupación.",
+      "source": {
+        "kind": "table",
+        "name": "habitaciones"
+      },
+      "code": "const hospitals = new Map(tablas[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.ocupada) acc[id].occupied += 1;\n  acc[id].beds += fila.num_camas || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"habitaciones\": g.rooms,\n    \"ocupadas\": g.occupied,\n    \"camas\": g.beds,\n    \"ocupacion\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"ocupacion\"] - a[\"ocupacion\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "hospital",
+          "habitaciones",
+          "ocupadas",
+          "camas",
+          "ocupacion"
+        ],
+        "rows": [
+          [
+            "Hospital Universitario La Paz",
+            6,
+            6,
+            8,
+            100
+          ],
+          [
+            "Hospital Clínic de Barcelona",
+            6,
+            4,
+            9,
+            66.7
+          ],
+          [
+            "Hospital Virgen del Rocío",
+            6,
+            3,
+            9,
+            50
+          ],
+          [
+            "Hospital General de Valencia",
+            5,
+            2,
+            6,
+            40
+          ],
+          [
+            "Hospital Metropolitano de Quito",
+            5,
+            2,
+            8,
+            40
+          ],
+          [
+            "Clínica Santa Elena",
+            4,
+            1,
+            3,
+            25
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Analíticas anormales por tipo",
+      "description": "Agrupa las analíticas por tipo y calcula el porcentaje de anormales y las medias de glucosa y colesterol.",
+      "source": {
+        "kind": "table",
+        "name": "analiticas"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = fila.tipo || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.es_anormal) g.abnormal += 1;\n  if (fila.glucosa !== null && fila.glucosa !== undefined) { g.glucose += fila.glucosa; g.glucoseCount += 1; }\n  if (fila.colesterol !== null && fila.colesterol !== undefined) { g.cholesterol += fila.colesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"tipo\": type,\n    \"total\": g.count,\n    \"anormales\": g.abnormal,\n    \"porcentaje\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"glucosa_media\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"colesterol_medio\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"total\"] - a[\"total\"]);",
+      "folder": "Agregados",
+      "color": "#d3ecf3",
+      "assert": {
+        "columns": [
+          "tipo",
+          "total",
+          "anormales",
+          "porcentaje",
+          "glucosa_media",
+          "colesterol_medio"
+        ],
+        "rows": [
+          [
+            "Sangre",
+            44,
+            27,
+            61.4,
+            148.4,
+            218.9
+          ],
+          [
+            "Orina",
+            16,
+            11,
+            68.8,
+            155.8,
+            236.1
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Medicamentos con stock bajo",
+      "description": "Lista los medicamentos con menos de 50 unidades y calcula cuánto reponer.",
+      "source": {
+        "kind": "table",
+        "name": "medicamentos"
+      },
+      "code": "return datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"medicamento\": fila.nombre,\n    \"stock\": fila.stock,\n    \"reponer\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
+      "folder": "Filtros y listas",
+      "color": "#dcf1d4",
+      "assert": {
+        "columns": [
+          "medicamento",
+          "stock",
+          "reponer"
+        ],
+        "rows": [
+          [
+            "Penicilina G",
+            45,
+            55
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Usar una consulta guardada",
+      "description": "Llama a la consulta A19 (pacientes con tres o más ingresos) y muestra su resultado.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "const rows = consultas[\"A19 · Pacientes con tres o más ingresos\"]();\nreturn rows.map((row) => ({\n  \"paciente\": `${row.nombre} ${row.apellidos}`,\n  \"ingresos\": row.ingresos,\n}));",
+      "folder": "Consultas e informes",
+      "color": "#fbf6c9",
+      "assert": {
+        "columns": [
+          "paciente",
+          "ingresos"
+        ],
+        "rows": [
+          [
+            "Eva Castro Moreno",
+            4
+          ],
+          [
+            "María López Martín",
+            4
+          ],
+          [
+            "Nuria Martín Delgado",
+            3
+          ],
+          [
+            "Francisco Muñoz García",
+            3
+          ],
+          [
+            "Lucía Romero García",
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Informe con forEach y resultado",
+      "description": "Construye un informe de facturas pagadas e impagadas con forEach, añade una fila TOTAL y lo guarda en resultado.",
+      "source": {
+        "kind": "table",
+        "name": "facturas"
+      },
+      "code": "const groups = {};\ndatos.forEach((fila) => {\n  const key = fila.pagada ? \"pagada\" : \"impagada\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.importe || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"estado_pago\": status,\n  \"facturas\": g.count,\n  \"importe\": Math.round(g.amount),\n  \"media\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"estado_pago\": \"TOTAL\",\n  \"facturas\": datos.length,\n  \"importe\": Math.round(datos.reduce((sum, fila) => sum + (fila.importe || 0), 0)),\n  \"media\": null,\n});\nresultado = rows;",
+      "folder": "Consultas e informes",
+      "color": "#fbf6c9",
+      "assert": {
+        "columns": [
+          "estado_pago",
+          "facturas",
+          "importe",
+          "media"
+        ],
+        "rows": [
+          [
+            "pagada",
+            42,
+            181721,
+            4327
+          ],
+          [
+            "impagada",
+            18,
+            90039,
+            5002
+          ],
+          [
+            "TOTAL",
+            60,
+            271760,
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Ingresos huérfanos",
+      "description": "Busca ingresos cuyo paciente, médico o habitación ya no existe en las tablas.",
+      "source": {
+        "kind": "table",
+        "name": "ingresos"
+      },
+      "code": "const patientIds = new Set(tablas[\"pacientes\"].map((p) => p.id_paciente));\nconst doctorIds = new Set(tablas[\"medicos\"].map((d) => d.id_medico));\nconst roomIds = new Set(tablas[\"habitaciones\"].map((r) => r.id_habitacion));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_paciente) || !doctorIds.has(fila.id_medico) || !roomIds.has(fila.id_habitacion))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_paciente)) missing.push(\"paciente\");\n    if (!doctorIds.has(fila.id_medico)) missing.push(\"medico\");\n    if (!roomIds.has(fila.id_habitacion)) missing.push(\"habitacion\");\n    return {\n      \"ingreso\": fila.id_ingreso,\n      \"paciente\": fila.id_paciente,\n      \"medico\": fila.id_medico,\n      \"habitacion\": fila.id_habitacion,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "ingreso",
+          "paciente",
+          "medico",
+          "habitacion",
+          "faltan"
+        ],
+        "rows": [
+          [
+            1,
+            4,
+            999,
+            14,
+            "medico"
+          ],
+          [
+            13,
+            28,
+            9,
+            null,
+            "habitacion"
+          ],
+          [
+            17,
+            88,
+            12,
+            21,
+            "paciente"
+          ],
+          [
+            26,
+            14,
+            10,
+            null,
+            "habitacion"
+          ],
+          [
+            34,
+            88,
+            4,
+            2,
+            "paciente"
+          ],
+          [
+            39,
+            14,
+            6,
+            null,
+            "habitacion"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Pacientes por grupo de edad",
+      "description": "Clasifica a los pacientes en menores, jóvenes, adultos y mayores, y calcula su edad media.",
+      "source": {
+        "kind": "table",
+        "name": "pacientes"
+      },
+      "code": "const reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.fecha_nacimiento);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"grupo_edad\": group,\n    \"pacientes\": g.count,\n    \"edad_media\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"grupo_edad\"]).localeCompare(String(b[\"grupo_edad\"])));",
+      "folder": "Fechas",
+      "color": "#fde8cd",
+      "assert": {
+        "columns": [
+          "grupo_edad",
+          "pacientes",
+          "edad_media"
+        ],
+        "rows": [
+          [
+            "<18",
+            6,
+            11.2
+          ],
+          [
+            "18-39",
+            12,
+            29.3
+          ],
+          [
+            "40-64",
+            13,
+            54.3
+          ],
+          [
+            "65+",
+            9,
+            72.7
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Citas por mes",
+      "description": "Agrupa las citas por año y mes, cuenta las canceladas y ordena cronológicamente.",
+      "source": {
+        "kind": "table",
+        "name": "citas"
+      },
+      "code": "const groups = datos.reduce((acc, fila) => {\n  const key = String(fila.fecha).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.estado === \"Cancelada\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"mes\": month,\n    \"citas\": g.count,\n    \"anuladas\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"mes\"]).localeCompare(String(b[\"mes\"])));",
+      "folder": "Fechas",
+      "color": "#fde8cd",
+      "assert": {
+        "columns": [
+          "mes",
+          "citas",
+          "anuladas"
+        ],
+        "rows": [
+          [
+            "2024-01",
+            2,
+            0
+          ],
+          [
+            "2024-02",
+            2,
+            0
+          ],
+          [
+            "2024-03",
+            4,
+            1
+          ],
+          [
+            "2024-05",
+            1,
+            0
+          ],
+          [
+            "2024-06",
+            2,
+            0
+          ],
+          [
+            "2024-07",
+            2,
+            1
+          ],
+          [
+            "2024-08",
+            1,
+            0
+          ],
+          [
+            "2024-10",
+            2,
+            0
+          ],
+          [
+            "2024-12",
+            2,
+            0
+          ],
+          [
+            "2025-01",
+            3,
+            1
+          ],
+          [
+            "2025-02",
+            1,
+            0
+          ],
+          [
+            "2025-03",
+            4,
+            0
+          ],
+          [
+            "2025-04",
+            1,
+            0
+          ],
+          [
+            "2025-05",
+            1,
+            1
+          ],
+          [
+            "2025-06",
+            2,
+            1
+          ],
+          [
+            "2025-07",
+            3,
+            0
+          ],
+          [
+            "2025-08",
+            1,
+            0
+          ],
+          [
+            "2025-09",
+            6,
+            0
+          ],
+          [
+            "2025-10",
+            1,
+            0
+          ],
+          [
+            "2025-11",
+            2,
+            0
+          ],
+          [
+            "2025-12",
+            4,
+            0
+          ],
+          [
+            "2026-01",
+            2,
+            0
+          ],
+          [
+            "2026-03",
+            1,
+            0
+          ],
+          [
+            "2026-04",
+            5,
+            0
+          ],
+          [
+            "2026-05",
+            1,
+            0
+          ],
+          [
+            "2026-06",
+            1,
+            1
+          ],
+          [
+            "2026-07",
+            3,
+            0
+          ],
+          [
+            "2026-09",
+            2,
+            0
+          ],
+          [
+            "2026-10",
+            4,
+            1
+          ],
+          [
+            "2026-11",
+            1,
+            0
+          ],
+          [
+            "2026-12",
+            3,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Coste por especialidad",
+      "description": "Cruza ingresos con médicos y especialidades y calcula el coste estimado y medio por especialidad.",
+      "source": {
+        "kind": "table",
+        "name": "ingresos"
+      },
+      "code": "const daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tablas[\"medicos\"].map((d) => [d.id_medico, d]));\nconst specialties = new Map(tablas[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_medico);\n  const specialty = doctor ? specialties.get(doctor.id_especialidad) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"especialidad\": specialty,\n    \"ingresos\": g.count,\n    \"coste_medio\": Math.round(g.cost / g.count),\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
+      "folder": "Cruces e integridad",
+      "color": "#e8ddf7",
+      "assert": {
+        "columns": [
+          "especialidad",
+          "ingresos",
+          "coste_medio",
+          "coste"
+        ],
+        "rows": [
+          [
+            "Neurología",
+            6,
+            245230,
+            1471382
+          ],
+          [
+            "—",
+            11,
+            120633,
+            1326961
+          ],
+          [
+            "Cardiología",
+            5,
+            179270,
+            896350
+          ],
+          [
+            "Cirugía General",
+            3,
+            150048,
+            450144
+          ],
+          [
+            "Urgencias",
+            8,
+            48684,
+            389468
+          ],
+          [
+            "Ginecología",
+            1,
+            328248,
+            328248
+          ],
+          [
+            "Pediatría",
+            7,
+            43451,
+            304157
+          ],
+          [
+            "Oncología",
+            5,
+            54961,
+            274804
+          ],
+          [
+            "Medicina Interna",
+            3,
+            53299,
+            159896
+          ],
+          [
+            "Traumatología",
+            1,
+            0,
+            0
+          ]
+        ]
+      }
     }
   ],
   "settings": {
