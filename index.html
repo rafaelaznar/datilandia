@@ -8529,20 +8529,39 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return result + source.slice(copiado);
       },
 
+      /** Last readings of SQL texts, keyed by the text itself: the analysis of
+       *  the same query is asked for several times in a repaint (the usage
+       *  graph, the tips and even a rename), and tokenising it again is the
+       *  expensive part. The parsed object is shared and must be read, never
+       *  changed. */
+      parseCache: new Map(),
+
+      /** How many SQL texts the cache keeps; the oldest one leaves first. */
+      PARSE_CACHE_MAX: 2000,
+
       /** Tokens and analysis of a SQL, or null when it cannot be read (a half-
        *  written query must not stop renaming or deleting in the rest of the
        *  project: it is simply left alone and not counted). */
       parse(sql) {
         const source = String(sql);
+        if (SqlRename.parseCache.has(source)) {
+          return SqlRename.parseCache.get(source);
+        }
+        let parsed;
         try {
           const tokens = new SqlLexer(source).tokenize();
-          return { source, tokens, info: SqlRename.analyzeSql(tokens) };
+          parsed = { source, tokens, info: SqlRename.analyzeSql(tokens) };
         } catch (err) {
-          if (err instanceof SqlParseError) {
-            return null;
+          if (!(err instanceof SqlParseError)) {
+            throw err;
           }
-          throw err;
+          parsed = null;
         }
+        SqlRename.parseCache.set(source, parsed);
+        if (SqlRename.parseCache.size > SqlRename.PARSE_CACHE_MAX) {
+          SqlRename.parseCache.delete(SqlRename.parseCache.keys().next().value);
+        }
+        return parsed;
       },
 
       /** Does the SQL text carry that name at all? A name is always written
@@ -9202,7 +9221,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** State of one run: stack of queries in progress (to detect circles),
        *  cache of materialisations and accumulated time. */
       newState() {
-        return { stack: [], cache: new Map(), ms: 0 };
+        return { stack: [], cache: new Map(), ms: 0, names: null };
       },
 
       /** Finds a source by name. Returns { table, query } — the project table or
@@ -9210,19 +9229,34 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  neither exists. */
       findSource(name, project, state) {
         const buscado = String(name).toLowerCase();
-        const table = project.tables.find((candidate) => candidate.name.toLowerCase() === buscado);
+        // A run reuses one name index: resolving each FROM/JOIN by walking the
+        // three lists again was quadratic when a query is read as a table.
+        let index = null;
+        if (state) {
+          if (!state.names) {
+            state.names = ProjectGraph.nameIndex(project);
+          }
+          index = state.names;
+        }
+        const table = index
+          ? index.tables.get(buscado)
+          : project.tables.find((candidate) => candidate.name.toLowerCase() === buscado);
         if (table) {
           return { table, query: null };
         }
-        const query = (project.queries || []).find(
-          (candidate) => candidate.name.toLowerCase() === buscado,
-        );
+        const query = index
+          ? index.queries.get(buscado)
+          : (project.queries || []).find(
+            (candidate) => candidate.name.toLowerCase() === buscado,
+          );
         if (query) {
           return { table: SqlViews.materialize(query, project, state), query, script: null };
         }
-        const script = (project.scripts || []).find(
-          (candidate) => candidate.name.toLowerCase() === buscado,
-        );
+        const script = index
+          ? index.scripts.get(buscado)
+          : (project.scripts || []).find(
+            (candidate) => candidate.name.toLowerCase() === buscado,
+          );
         if (!script) {
           return null;
         }
@@ -9305,8 +9339,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Is there a query with that name and no table covering it? It is the
        *  check findSource does, but without running anything. */
-      isQuery(project, name) {
+      isQuery(project, name, index) {
         const buscado = String(name).toLowerCase();
+        if (index) {
+          return !index.tables.has(buscado) && index.queries.has(buscado);
+        }
         const esTable = (project.tables || []).some(
           (table) => table.name.toLowerCase() === buscado,
         );
@@ -9318,7 +9355,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Names of the queries that a SQL reads as a table: the identifiers of
        *  the FROM/JOIN that exist as a query and not as a table. It only looks
        *  at the text: when it cannot be parsed, none. */
-      sourceNames(sql, project) {
+      sourceNames(sql, project, index) {
         const parsed = SqlRename.parse(sql);
         if (!parsed) {
           return [];
@@ -9326,10 +9363,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const { tokens, info } = parsed;
         const names = [];
         const vistos = new Set();
-        info.tables.forEach((index) => {
-          const name = tokens[index].value;
+        info.tables.forEach((tokenIndex) => {
+          const name = tokens[tokenIndex].value;
           const key = name.toLowerCase();
-          if (vistos.has(key) || !SqlViews.isQuery(project, name)) {
+          if (vistos.has(key) || !SqlViews.isQuery(project, name, index)) {
             return;
           }
           vistos.add(key);
@@ -9344,18 +9381,19 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  (nothing is stored) and runs no query. The answer is kept while the
        *  SQL and the names do not change, which is what repainting the sidebar
        *  after renaming a folder asks for. */
-      usage(project) {
-        const key = SqlViews.usageKey(project);
-        if (SqlViews.usageMemo.key === key) {
+      usage(project, key) {
+        const firma = key === undefined ? SqlViews.usageKey(project) : key;
+        if (SqlViews.usageMemo.key === firma) {
           return SqlViews.usageMemo.usage;
         }
         const queries = project.queries || [];
+        const names = ProjectGraph.nameIndex(project);
         const porKey = new Map(queries.map((query) => [query.name.toLowerCase(), query.name]));
         const lee = new Map();
         const leen = new Map();
         queries.forEach((query) => {
           const targets = [];
-          SqlViews.sourceNames(query.sql, project).forEach((name) => {
+          SqlViews.sourceNames(query.sql, project, names).forEach((name) => {
             const canonico = porKey.get(name.toLowerCase()) || name;
             if (!targets.includes(canonico)) {
               targets.push(canonico);
@@ -9372,7 +9410,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             }
           });
         });
-        SqlViews.usageMemo = { key, usage: { lee, leen } };
+        SqlViews.usageMemo = { key: firma, usage: { lee, leen } };
         return SqlViews.usageMemo.usage;
       },
 
@@ -9441,24 +9479,61 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return left.kind === right.kind && left.name === right.name;
       },
 
-      /** Source of a FROM/JOIN: a table first, then a query and then a script. */
-      resolveSqlSource(project, name) {
+      /** Names of the project indexed by lower-case name and kind. The first
+       *  object of each name wins, exactly as the searches below do. It lets
+       *  the graph and the validator resolve a FROM/JOIN without walking the
+       *  three lists once per source. */
+      nameIndex(project) {
+        const index = {
+          tables: new Map(),
+          queries: new Map(),
+          scripts: new Map(),
+          exact: { tables: new Set(), queries: new Set(), scripts: new Set() },
+        };
+        const add = (map, exact, item) => {
+          const key = item.name.toLowerCase();
+          if (!map.has(key)) {
+            map.set(key, item);
+          }
+          exact.add(item.name);
+        };
+        (project.tables || []).forEach((item) => add(index.tables, index.exact.tables, item));
+        (project.queries || []).forEach((item) => add(index.queries, index.exact.queries, item));
+        (project.scripts || []).forEach((item) => add(index.scripts, index.exact.scripts, item));
+        return index;
+      },
+
+      /** Source of a FROM/JOIN: a table first, then a query and then a script.
+       *  With an index the three lookups are direct instead of linear. */
+      resolveSqlSource(project, name, index) {
         const buscado = String(name).toLowerCase();
-        const table = (project.tables || []).find(
-          (candidate) => candidate.name.toLowerCase() === buscado,
-        );
+        if (!index) {
+          const table = (project.tables || []).find(
+            (candidate) => candidate.name.toLowerCase() === buscado,
+          );
+          if (table) {
+            return { kind: "table", name: table.name };
+          }
+          const query = (project.queries || []).find(
+            (candidate) => candidate.name.toLowerCase() === buscado,
+          );
+          if (query) {
+            return { kind: "query", name: query.name };
+          }
+          const script = (project.scripts || []).find(
+            (candidate) => candidate.name.toLowerCase() === buscado,
+          );
+          return script ? { kind: "script", name: script.name } : null;
+        }
+        const table = index.tables.get(buscado);
         if (table) {
           return { kind: "table", name: table.name };
         }
-        const query = (project.queries || []).find(
-          (candidate) => candidate.name.toLowerCase() === buscado,
-        );
+        const query = index.queries.get(buscado);
         if (query) {
           return { kind: "query", name: query.name };
         }
-        const script = (project.scripts || []).find(
-          (candidate) => candidate.name.toLowerCase() === buscado,
-        );
+        const script = index.scripts.get(buscado);
         return script ? { kind: "script", name: script.name } : null;
       },
 
@@ -9505,7 +9580,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Data sources of a query: every table, query or script named in its
        *  FROM/JOIN, in the order it appears. */
-      querySources(project, query) {
+      querySources(project, query, names) {
         const parsed = SqlRename.parse(query.sql);
         if (!parsed) {
           return [];
@@ -9513,7 +9588,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const sources = [];
         const seen = new Set();
         parsed.info.tables.forEach((index) => {
-          const resolved = ProjectGraph.resolveSqlSource(project, parsed.tokens[index].value);
+          const resolved = ProjectGraph.resolveSqlSource(project, parsed.tokens[index].value, names);
           if (!resolved) {
             return;
           }
@@ -9529,15 +9604,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Data sources of a script: the literal accesses that name something
        *  that exists in the project, in code order. */
-      scriptSources(project, script) {
+      scriptSources(project, script, names) {
         const sources = [];
         const seen = new Set();
+        const index = names || ProjectGraph.nameIndex(project);
         ProjectGraph.scriptRefs(script.code).forEach((ref) => {
-          const exists = ref.kind === "table"
-            ? (project.tables || []).some((item) => item.name === ref.name)
-            : (ref.kind === "query"
-              ? (project.queries || []).some((item) => item.name === ref.name)
-              : (project.scripts || []).some((item) => item.name === ref.name));
+          const list = ref.kind === "table"
+            ? index.exact.tables
+            : (ref.kind === "query" ? index.exact.queries : index.exact.scripts);
+          const exists = list.has(ref.name);
           if (!exists) {
             return;
           }
@@ -9562,12 +9637,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Last graph, with the signature of the project it was built from. */
       memo: { key: null, graph: null },
 
-      /** Whole graph: { nodes, sources, dependents }. */
-      build(project) {
-        const key = ProjectGraph.signature(project);
-        if (ProjectGraph.memo.key === key) {
+      /** Whole graph: { nodes, sources, dependents }. The signature can be
+       *  passed already worked out, so a repaint does not build it twice. */
+      build(project, key) {
+        const signature = key === undefined ? ProjectGraph.signature(project) : key;
+        if (ProjectGraph.memo.key === signature) {
           return ProjectGraph.memo.graph;
         }
+        const names = ProjectGraph.nameIndex(project);
         const nodes = new Map();
         const sources = new Map();
         const dependents = new Map();
@@ -9586,7 +9663,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         (project.scripts || []).forEach((script) => register("script", script.name));
         (project.queries || []).forEach((query) => {
           const node = nodes.get(ProjectGraph.nodeKey("query", query.name));
-          node.sources = ProjectGraph.querySources(project, query);
+          node.sources = ProjectGraph.querySources(project, query, names);
           sources.set(ProjectGraph.nodeKey("query", query.name), node.sources);
           node.sources.forEach((source) => {
             const target = nodes.get(ProjectGraph.refKey(source));
@@ -9597,7 +9674,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         });
         (project.scripts || []).forEach((script) => {
           const node = nodes.get(ProjectGraph.nodeKey("script", script.name));
-          node.sources = ProjectGraph.scriptSources(project, script);
+          node.sources = ProjectGraph.scriptSources(project, script, names);
           sources.set(ProjectGraph.nodeKey("script", script.name), node.sources);
           node.sources.forEach((source) => {
             const target = nodes.get(ProjectGraph.refKey(source));
@@ -9607,22 +9684,30 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           });
         });
         const graph = { nodes, sources, dependents };
-        ProjectGraph.memo = { key, graph };
+        ProjectGraph.memo = { key: signature, graph };
         return graph;
+      },
+
+      /** Direct sources of a node of an already built graph. */
+      sourcesIn(graph, kind, name) {
+        const list = graph.sources.get(ProjectGraph.nodeKey(kind, name));
+        return list || [];
+      },
+
+      /** Direct dependents of a node of an already built graph. */
+      dependentsIn(graph, kind, name) {
+        const list = graph.dependents.get(ProjectGraph.nodeKey(kind, name));
+        return list || [];
       },
 
       /** Direct sources of a node. */
       sourcesOf(project, kind, name) {
-        const graph = ProjectGraph.build(project);
-        const node = graph.nodes.get(ProjectGraph.nodeKey(kind, name));
-        return node ? node.sources : [];
+        return ProjectGraph.sourcesIn(ProjectGraph.build(project), kind, name);
       },
 
       /** Direct dependents of a node. */
       dependentsOf(project, kind, name) {
-        const graph = ProjectGraph.build(project);
-        const node = graph.nodes.get(ProjectGraph.nodeKey(kind, name));
-        return node ? node.dependents : [];
+        return ProjectGraph.dependentsIn(ProjectGraph.build(project), kind, name);
       },
 
       /** Nodes of one kind, in project order. */
@@ -11459,10 +11544,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Names of the columns the query would return, without running it
        *  (the plan already has them resolved: alias and asterisk included).
        *  Returns { ok: true, columns } or { ok: false, error }. */
-      columnsSafe(sql, project) {
+      columnsSafe(sql, project, state) {
         try {
           const ast = new SqlParser(sql).parse();
-          const resolved = SqlValidator.validate(ast, project, SqlViews.newState());
+          const resolved = SqlValidator.validate(ast, project, state || SqlViews.newState());
           return { ok: true, columns: SqlPlanner.build(ast, resolved).columns };
         } catch (err) {
           return { ok: false, error: err };
@@ -11492,16 +11577,111 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  change a tip (a field, a foreign key, another query) can go stale. */
       tipMemo: new WeakMap(),
 
-      /** Cheap signature of everything a tip depends on: the tables with their
-       *  fields and foreign keys, and the queries with their SQL. */
-      projectShape(project) {
-        const tables = project.tables
+      /** Shape the tips were last painted for: while it does not change, the
+       *  per-tip inputs do not need to be worked out again. */
+      lastTipShape: null,
+
+      /** Signature of the table schema: the tables with their fields, types
+       *  and foreign keys. It is the part of a tip that comes from the data
+       *  model (not from the queries themselves). */
+      schemaShape(project) {
+        return project.tables
           .map((table) => `${table.name}:${table.fields.map((field) => field.name + field.type
             + (field.references ? `>${field.references.table}.${field.references.field}` : "")).join(",")}`)
           .join("|");
+      },
+
+      /** Cheap signature of everything a tip depends on: the tables with their
+       *  fields and foreign keys, and the queries with their SQL. */
+      projectShape(project, schema) {
+        const tables = schema === undefined ? Ui.schemaShape(project) : schema;
         const queries = project.queries.map((query) => `${query.name}#${query.sql}`).join("~");
         const scripts = (project.scripts || []).map((script) => `${script.name}#${script.code}`).join("~");
         return `${tables}@${queries}@${scripts}`;
+      },
+
+      /** The three signatures a repaint asks for, worked out in one pass over
+       *  the project so the queries and scripts are joined only once. */
+      projectSignatures(project) {
+        const schemaParts = [];
+        const tableNames = [];
+        (project.tables || []).forEach((table) => {
+          tableNames.push(table.name);
+          schemaParts.push(`${table.name}:${table.fields.map((field) => field.name + field.type
+            + (field.references ? `>${field.references.table}.${field.references.field}` : "")).join(",")}`);
+        });
+        const queries = (project.queries || []).map((query) => `${query.name}#${query.sql}`).join("~");
+        const scripts = (project.scripts || []).map((script) => `${script.name}#${script.code}`).join("~");
+        const schema = schemaParts.join("|");
+        const tables = tableNames.join("|");
+        return {
+          schema,
+          shape: `${schema}@${queries}@${scripts}`,
+          graph: `${tables}@${queries}@${scripts}`,
+          usage: `${queries}@${tables}`,
+        };
+      },
+
+      /** Short numeric hash of a text, to compare contents without keeping
+       *  them all: the tip inputs only need to detect a change. */
+      hashText(text) {
+        const source = String(text);
+        let hash = 2166136261;
+        for (let index = 0; index < source.length; index += 1) {
+          hash ^= source.charCodeAt(index);
+          hash = Math.imul(hash, 16777619);
+        }
+        return hash >>> 0;
+      },
+
+      /** Signature of the inputs of each query tip. Unlike the whole project
+       *  shape, it only changes when something that can change that tip
+       *  changes: its own SQL or description, the table schema, the content
+       *  of the queries it reads (transitively) and the names of the queries
+       *  that read it. The content of the sources is combined as a hash, so a
+       *  chain of views does not build a string as long as the chain. */
+      tipInputs(project, graph, schema) {
+        const queries = new Map((project.queries || []).map((query) => [query.name.toLowerCase(), query]));
+        const scripts = new Map((project.scripts || []).map((script) => [script.name.toLowerCase(), script]));
+        const memo = new Map();
+        const visiting = new Set();
+        const contentHash = (kind, name) => {
+          const key = ProjectGraph.nodeKey(kind, name);
+          if (memo.has(key)) {
+            return memo.get(key);
+          }
+          if (visiting.has(key)) {
+            return 0;
+          }
+          visiting.add(key);
+          let own = "";
+          if (kind === "query") {
+            const query = queries.get(name.toLowerCase());
+            own = query ? query.sql : "";
+          } else if (kind === "script") {
+            const script = scripts.get(name.toLowerCase());
+            own = script ? script.code : "";
+          }
+          let hash = Ui.hashText(`${kind}\u0000${name}\u0000${own}`);
+          ProjectGraph.sourcesIn(graph, kind, name).forEach((source) => {
+            hash = (hash ^ Ui.hashText(`${source.kind}:${source.name}`)) >>> 0;
+            hash = Math.imul(hash, 16777619) >>> 0;
+            hash = (hash ^ contentHash(source.kind, source.name)) >>> 0;
+            hash = Math.imul(hash, 16777619) >>> 0;
+          });
+          visiting.delete(key);
+          memo.set(key, hash);
+          return hash;
+        };
+        const inputs = new Map();
+        (project.queries || []).forEach((query) => {
+          const dependents = ProjectGraph.dependentsIn(graph, "query", query.name)
+            .map((dependent) => `${dependent.kind}:${dependent.name}`)
+            .join(",");
+          const description = query.description || "";
+          inputs.set(query.name, `${schema}\u0001${description}\u0001${contentHash("query", query.name)}\u0001${dependents}`);
+        });
+        return inputs;
       },
 
       /** Shows one of the main views (#view-empty, table, …). */
@@ -11522,13 +11702,29 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Repaints the sidebar and the active view. */
       renderAll() {
+        Ui.renderSidebars();
+        Ui.renderChrome();
+        Ui.renderActiveView();
+      },
+
+      /** Repaints the three lists of the sidebar. The graph of the project is
+       *  built once and shared by the three, and the signatures they need are
+       *  worked out in a single pass instead of once per list. */
+      renderSidebars() {
+        const signatures = Ui.projectSignatures(Store.project);
+        const graph = ProjectGraph.build(Store.project, signatures.graph);
+        Ui.renderSidebarTables(graph);
+        Ui.renderSidebarQueries(graph, signatures);
+        Ui.renderSidebarScripts(graph);
+      },
+
+      /** Repaints the parts that do not belong to the open view: the header,
+       *  the dashboard and the auxiliary panels. */
+      renderChrome() {
         UiTests.updateButton();
         UiProject.updateTestingIndicator();
         UiProject.updateDirtyIndicator();
         UiQueries.updateTestControls();
-        Ui.renderSidebarTables();
-        Ui.renderSidebarQueries();
-        Ui.renderSidebarScripts();
         UiDashboard.render();
         UiSummary.renderIfVisible();
         UiRelations.renderIfVisible();
@@ -11536,6 +11732,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiDependencies.renderIfVisible();
         UiDataLinks.update();
         UiHistory.render();
+      },
+
+      /** Repaints the content of the view on screen. The data grid is only
+       *  repainted when the table view is the one open: repainting it from the
+       *  query or script editor would walk its rows for nothing. */
+      renderActiveView() {
         if (Ui.state.activeScript && !UiScripts.activeScriptOrNull()) {
           Ui.state.activeScript = null;
           if (Ui.state.view === "script") {
@@ -11551,7 +11753,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           return;
         }
-        Ui.renderTable(table);
+        if (Ui.state.view === "table") {
+          Ui.renderTable(table);
+        }
       },
 
       /** Wires the events of the table view (delegation). */
@@ -11689,22 +11893,25 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return marcas.length > 0 ? `${field.name} ${marcas.join(" ")}` : field.name;
       },
 
-      renderSidebarTables() {
+      renderSidebarTables(graph) {
         const list = document.getElementById("list-tables");
         list.textContent = "";
+        const grafo = graph === undefined ? ProjectGraph.build(Store.project) : graph;
         const withFolders = Model.foldersOf(Store.project, "tables").length > 0;
-        // Without folders of tables the list keeps the group it always had,
-        // which folds every table at once.
-        if (Store.project.tables.length > 0 && !withFolders) {
-          list.appendChild(Ui.tableListHeader());
-        }
         if (withFolders) {
-          UiFolders.render("tables", list, (table, folder) => Ui.tableItem(table, folder));
+          UiFolders.render("tables", list, (table, folder) => Ui.tableItem(table, folder, grafo));
           return;
         }
+        const fragment = document.createDocumentFragment();
+        // Without folders of tables the list keeps the group it always had,
+        // which folds every table at once.
+        if (Store.project.tables.length > 0) {
+          fragment.appendChild(Ui.tableListHeader());
+        }
         Store.project.tables.forEach((table) => {
-          list.appendChild(Ui.tableItem(table, ""));
+          fragment.appendChild(Ui.tableItem(table, "", grafo));
         });
+        list.appendChild(fragment);
         // With no folders of tables there is nothing to fold all: the button of
         // the panel has to hide itself here too, or deleting the last folder
         // would leave it on screen doing nothing.
@@ -11714,11 +11921,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** One table of the sidebar list: its name and how many rows it has.
        *  `folder` is the folder it is shown under ("" = none). */
-      tableItem(table, folder) {
+      tableItem(table, folder, graph) {
         const item = document.createElement("li");
         item.dataset.name = table.name;
         item.dataset.folder = folder;
-        const dependents = ProjectGraph.dependentsOf(Store.project, "table", table.name);
+        const dependents = ProjectGraph.dependentsIn(graph, "table", table.name);
         item.title = dependents.length === 0
           ? Ui.fieldsTip(
             table.description,
@@ -11806,24 +12013,38 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         setStatus(I18n.t(Model.tablesFolded(Store.project) ? "tables.folded" : "tables.unfolded"));
       },
 
-      renderSidebarQueries() {
+      renderSidebarQueries(graph, signatures) {
         // The palette hangs under a swatch of this list: repainting it leaves
         // that swatch behind, so the palette goes with it.
         UiQueries.closeColor();
         const list = document.getElementById("list-queries");
         list.textContent = "";
-        const usage = SqlViews.usage(Store.project);
+        const grafo = graph === undefined ? ProjectGraph.build(Store.project) : graph;
+        const usage = SqlViews.usage(Store.project, signatures && signatures.usage);
         UiDataLinks.update(usage);
-        const shape = Ui.projectShape(Store.project);
-        UiFolders.render("queries", list, (query, folder) => Ui.queryItem(query, usage, shape, folder));
+        const schema = signatures === undefined ? Ui.schemaShape(Store.project) : signatures.schema;
+        const shape = signatures === undefined ? Ui.projectShape(Store.project, schema) : signatures.shape;
+        // One validation state for the whole list: a query that reads another
+        // one reuses the materialised result instead of running the chain once
+        // per tip. Without it, a project of chained views took seconds to
+        // repaint.
+        const validation = SqlViews.newState();
+        // The per-tip inputs are only needed when the global shape changed:
+        // while it stays the same, every tip answers from its own cache.
+        const tipInputs = Ui.lastTipShape === shape
+          ? undefined
+          : Ui.tipInputs(Store.project, grafo, schema);
+        Ui.lastTipShape = shape;
+        UiFolders.render("queries", list, (query, folder, placement) => Ui.queryItem(query, usage, shape, folder, grafo, placement, validation, tipInputs));
       },
 
       /** Paints the list of scripts of the sidebar. */
-      renderSidebarScripts() {
+      renderSidebarScripts(graph) {
         UiQueries.closeColor();
         const list = document.getElementById("list-scripts");
         list.textContent = "";
-        UiFolders.render("scripts", list, (script, folder) => Ui.scriptItem(script, folder));
+        const grafo = graph === undefined ? ProjectGraph.build(Store.project) : graph;
+        UiFolders.render("scripts", list, (script, folder, placement) => Ui.scriptItem(script, folder, grafo, placement));
       },
 
       /** Icon of the direct-SVG set with that name (its source is the
@@ -11850,13 +12071,21 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return button;
       },
 
+      /** Position of an item inside its folder, for the cases that build an
+       *  item outside a grouped repaint. The lists paint with the position
+       *  already worked out, so they do not filter the whole list per item. */
+      groupOfItem(item, folder, kind) {
+        const group = Model.itemsInFolder(Store.project, folder || null, kind);
+        return { position: group.indexOf(item), total: group.length };
+      },
+
       /** One query of the sidebar list: its name, its test mark and its view
        *  mark. `folder` is the folder it is shown under ("" = none). */
-      queryItem(query, usage, shape, folder) {
+      queryItem(query, usage, shape, folder, graph, placement, validation, tipInputs) {
         const item = document.createElement("li");
         item.dataset.name = query.name;
         item.dataset.folder = folder;
-        item.title = Ui.queryTip(query, usage, shape);
+        item.title = Ui.queryTip(query, usage, shape, graph, validation, tipInputs);
         if (folder) {
           item.classList.add("folder-open");
         }
@@ -11875,7 +12104,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           ? I18n.t("ui.testLabel", { assertion: UiSummary.assertText(query) })
           : I18n.t("ui.noAssertedResult");
         marcas.appendChild(mark);
-        const lectores = ProjectGraph.dependentsOf(Store.project, "query", query.name);
+        const lectores = ProjectGraph.dependentsIn(graph, "query", query.name);
         if (lectores.length > 0) {
           const view = document.createElement("span");
           view.className = "detail mark-view";
@@ -11887,16 +12116,18 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         actions.className = "row-actions";
         actions.appendChild(marcas);
         // The order inside the folder is the order of the project: an arrow is
-        // left out when the query is already at the end it leads to.
-        const group = Model.itemsInFolder(Store.project, folder || null, "queries");
-        const position = group.indexOf(query);
+        // left out when the query is already at the end it leads to. The
+        // position arrives with the item, worked out in the same pass that
+        // groups the list: filtering the whole list once per query was
+        // quadratic.
+        const group = placement || Ui.groupOfItem(query, folder, "queries");
         const up = Ui.rowButton("chevron-up", "move-query", query.name, I18n.t("queries.moveUpTip", { name: query.name }));
         up.dataset.step = "-1";
-        up.disabled = position <= 0;
+        up.disabled = group.position <= 0;
         actions.appendChild(up);
         const down = Ui.rowButton("chevron-down", "move-query", query.name, I18n.t("queries.moveDownTip", { name: query.name }));
         down.dataset.step = "1";
-        down.disabled = position < 0 || position >= group.length - 1;
+        down.disabled = group.position < 0 || group.position >= group.total - 1;
         actions.appendChild(down);
         actions.appendChild(Ui.rowButton("copy", "duplicate-query", query.name, I18n.t("queries.duplicateTip", { name: query.name })));
         const color = Ui.rowButton(null, "color-query", query.name, I18n.t("queries.colorTip", { name: query.name }));
@@ -11914,11 +12145,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** One script of the sidebar list: its name, its test mark and the same
        *  actions as a query (move, duplicate, colour and delete). */
-      scriptItem(script, folder) {
+      scriptItem(script, folder, graph, placement) {
         const item = document.createElement("li");
         item.dataset.name = script.name;
         item.dataset.folder = folder;
-        item.title = Ui.scriptTip(script);
+        item.title = Ui.scriptTip(script, graph);
         if (folder) {
           item.classList.add("folder-open");
         }
@@ -11937,7 +12168,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           ? I18n.t("ui.testLabel", { assertion: UiSummary.assertText(script) })
           : I18n.t("ui.noAssertedResult");
         marcas.appendChild(mark);
-        const lectores = ProjectGraph.dependentsOf(Store.project, "script", script.name);
+        const lectores = ProjectGraph.dependentsIn(graph, "script", script.name);
         if (lectores.length > 0) {
           const view = document.createElement("span");
           view.className = "detail mark-view";
@@ -11948,15 +12179,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const actions = document.createElement("span");
         actions.className = "row-actions";
         actions.appendChild(marcas);
-        const group = Model.itemsInFolder(Store.project, folder || null, "scripts");
-        const position = group.indexOf(script);
+        const group = placement || Ui.groupOfItem(script, folder, "scripts");
         const up = Ui.rowButton("chevron-up", "move-query", script.name, I18n.t("scripts.moveUpTip", { name: script.name }));
         up.dataset.step = "-1";
-        up.disabled = position <= 0;
+        up.disabled = group.position <= 0;
         actions.appendChild(up);
         const down = Ui.rowButton("chevron-down", "move-query", script.name, I18n.t("scripts.moveDownTip", { name: script.name }));
         down.dataset.step = "1";
-        down.disabled = position < 0 || position >= group.length - 1;
+        down.disabled = group.position < 0 || group.position >= group.total - 1;
         actions.appendChild(down);
         actions.appendChild(Ui.rowButton("copy", "duplicate-query", script.name, I18n.t("scripts.duplicateTip", { name: script.name })));
         const color = Ui.rowButton(null, "color-query", script.name, I18n.t("scripts.colorTip", { name: script.name }));
@@ -11985,44 +12215,54 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Tip of a sidebar query: its description, the columns the SELECT
        *  returns (when the query cannot be parsed, the reason instead of the
        *  columns), its data sources and the objects that read it. */
-      queryTip(query, usage, shape) {
+      queryTip(query, usage, shape, graph, validation, tipInputs) {
         // The tip validates the SQL of the query, and the sidebar rebuilds every
-        // tip on every repaint: the last one is reused while the project keeps
-        // the same shape (any field, foreign key, script or query changes it).
+        // tip on every repaint. Two checks keep that from happening: the whole
+        // project shape (cheap) and, when it changed, the inputs of this tip
+        // (its own SQL, the schema, the queries it reads and who reads it).
         const signature = shape === undefined ? Ui.projectShape(Store.project) : shape;
+        const input = tipInputs === undefined ? undefined : tipInputs.get(query.name);
         const cached = Ui.tipMemo.get(query);
         if (cached && cached.signature === signature) {
           return cached.text;
         }
-        const columns = SqlEngine.columnsSafe(query.sql, Store.project);
+        if (cached && input !== undefined && cached.input === input) {
+          // Something else changed, not what this tip shows: keep the text and
+          // only refresh the global gate.
+          cached.signature = signature;
+          return cached.text;
+        }
+        const columns = SqlEngine.columnsSafe(query.sql, Store.project, validation);
         const lineas = [columns.ok
           ? Ui.fieldsTip(query.description, I18n.t("ui.resultFields"), columns.columns)
           : Ui.joinTip(query.description, I18n.t("ui.resultFieldsError", { message: columns.error.message }))];
-        const sources = ProjectGraph.sourcesOf(Store.project, "query", query.name);
+        const graphNow = graph === undefined ? ProjectGraph.build(Store.project) : graph;
+        const sources = ProjectGraph.sourcesIn(graphNow, "query", query.name);
         if (sources.length > 0) {
           lineas.push(I18n.t("ui.dataSourcesLine", { total: sources.length, names: Ui.refList(sources) }));
         }
-        const dependents = ProjectGraph.dependentsOf(Store.project, "query", query.name);
+        const dependents = ProjectGraph.dependentsIn(graphNow, "query", query.name);
         if (dependents.length > 0) {
           lineas.push(I18n.t("ui.isSourceOfLine", { total: dependents.length, names: Ui.refList(dependents) }));
         }
         const text = lineas.join("\n");
-        Ui.tipMemo.set(query, { signature, text });
+        Ui.tipMemo.set(query, { signature, input, text });
         return text;
       },
 
       /** Tip of a sidebar script: its description, its data sources and the
        *  objects that read it. */
-      scriptTip(script) {
+      scriptTip(script, graph) {
         const lineas = [];
         if (script.description) {
           lineas.push(script.description);
         }
-        const sources = ProjectGraph.sourcesOf(Store.project, "script", script.name);
+        const graphNow = graph === undefined ? ProjectGraph.build(Store.project) : graph;
+        const sources = ProjectGraph.sourcesIn(graphNow, "script", script.name);
         if (sources.length > 0) {
           lineas.push(I18n.t("ui.dataSourcesLine", { total: sources.length, names: Ui.refList(sources) }));
         }
-        const dependents = ProjectGraph.dependentsOf(Store.project, "script", script.name);
+        const dependents = ProjectGraph.dependentsIn(graphNow, "script", script.name);
         if (dependents.length > 0) {
           lineas.push(I18n.t("ui.isSourceOfLine", { total: dependents.length, names: Ui.refList(dependents) }));
         }
@@ -12040,6 +12280,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         Ui.state.activeTable = name;
         Ui.state.selectedRow = null;
         Ui.state.page = 0;
+        // The table is the view that is being opened: it is set before the
+        // repaint so only that view's content is painted.
+        Ui.state.view = "table";
         Ui.renderAll();
         UiFolders.reveal("tables", name);
         Ui.showView("table");
@@ -12057,11 +12300,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /* --- Data grid ------------------------------------------------------ */
 
       /** Width in characters a column needs to show all its content (at least
-       *  6). When the columns add up to more than the width available, the grid
-       *  box shows a horizontal scrollbar. */
-      columnWidth(table, field) {
+       *  6). Only the rows that are about to be painted are measured: the grid
+       *  is paginated, so walking the whole table would make every repaint as
+       *  slow as its number of rows. When the columns add up to more than the
+       *  width available, the grid box shows a horizontal scrollbar. */
+      columnWidth(table, field, start, end) {
         let width = field.name.length;
-        for (let index = 0; index < table.rows.length; index += 1) {
+        const from = start === undefined ? 0 : start;
+        const to = end === undefined ? table.rows.length : Math.min(end, table.rows.length);
+        for (let index = from; index < to; index += 1) {
           const text = Utils.formatValue(table.rows[index][field.name]);
           if (text.length > width) {
             width = text.length;
@@ -12074,6 +12321,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const grid = document.getElementById("table-grid");
         grid.textContent = "";
         const entrantes = Ui.incomingReferences(table);
+        const relatedIndexes = Ui.relatedRowIndexes(table);
+        const originCounts = Ui.originCounts(entrantes);
         const head = document.createElement("thead");
         const headRow = document.createElement("tr");
         const corner = document.createElement("th");
@@ -12119,17 +12368,19 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           row.appendChild(cell);
           body.appendChild(row);
         }
-        const widths = new Map(table.fields.map((field) => [field.name, Ui.columnWidth(table, field)]));
         const start = Ui.state.page * Ui.state.pageSize;
         const end = Math.min(start + Ui.state.pageSize, table.rows.length);
+        const widths = new Map(table.fields.map(
+          (field) => [field.name, Ui.columnWidth(table, field, start, end)],
+        ));
         for (let index = start; index < end; index += 1) {
-          body.appendChild(Ui.buildRow(table, index, widths, entrantes));
+          body.appendChild(Ui.buildRow(table, index, widths, entrantes, relatedIndexes, originCounts));
         }
         grid.appendChild(body);
         Ui.renderPagination(table);
       },
 
-      buildRow(table, index, widths, entrantes) {
+      buildRow(table, index, widths, entrantes, relatedIndexes, originCounts) {
         const row = table.rows[index];
         const tr = document.createElement("tr");
         tr.dataset.index = String(index);
@@ -12157,12 +12408,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           if (field.description) {
             input.title = field.description;
           }
+          let related = null;
           if (field.references) {
-            input.title = Ui.referenceTip(field, row[field.name], field.description);
+            const index = relatedIndexes && relatedIndexes.get(field.name);
+            related = Ui.relatedRowIn(index, field, row[field.name]);
+            input.title = Ui.referenceTip(field, row[field.name], field.description, related);
           }
           Ui.fillInput(input, row[field.name]);
           td.appendChild(input);
-          if (field.references && Ui.relatedRow(field, row[field.name])) {
+          if (field.references && related) {
             td.appendChild(Ui.buildReferenceLink(table, field, row[field.name]));
           }
           tr.appendChild(td);
@@ -12175,7 +12429,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           const td = document.createElement("td");
           td.className = "cell-origins";
           const value = row[ref.fieldTarget];
-          const howMany = Ui.countOrigins(ref, value);
+          const counts = originCounts && originCounts.get(ref);
+          const howMany = value === null || value === undefined
+            ? 0
+            : (counts ? (counts.get(Ui.referenceKey(value, ref.type)) || 0) : Ui.countOrigins(ref, value));
           if (howMany === 0) {
             const number = document.createElement("span");
             number.className = "count-origins";
@@ -12249,6 +12506,79 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return false;
       },
 
+      /** Key that groups the values `sameValue` treats as equal. It lets the
+       *  grid index a table by a foreign key instead of scanning it once per
+       *  cell: a number field groups text and number forms of the same value,
+       *  and the rest compares the raw value, exactly as `sameValue` does. */
+      referenceKey(value, type) {
+        if (type === "number") {
+          const number = Utils.numericValue(value);
+          if (number !== null) {
+            return `n:${number}`;
+          }
+        }
+        return `r:${typeof value}:${String(value)}`;
+      },
+
+      /** Index of each foreign key of the table: a map from the value of the
+       *  target field to the first target row that brings it. The grid builds
+       *  it once and reads every painted cell from it, instead of walking the
+       *  target table per cell. */
+      relatedRowIndexes(table) {
+        const indexes = new Map();
+        table.fields.forEach((field) => {
+          if (!field.references) {
+            return;
+          }
+          const target = Model.findTable(Store.project, field.references.table);
+          if (!target) {
+            return;
+          }
+          const byValue = new Map();
+          target.rows.forEach((row) => {
+            const value = row[field.references.field];
+            if (value === null || value === undefined) {
+              return;
+            }
+            const key = Ui.referenceKey(value, field.type);
+            if (!byValue.has(key)) {
+              byValue.set(key, row);
+            }
+          });
+          indexes.set(field.name, byValue);
+        });
+        return indexes;
+      },
+
+      /** Related row of a foreign key value, read from its index (null when
+       *  there is no index, the value is empty or nothing matches). */
+      relatedRowIn(index, field, value) {
+        if (!index || value === null || value === undefined) {
+          return null;
+        }
+        return index.get(Ui.referenceKey(value, field.type)) || null;
+      },
+
+      /** How many rows of each source table bring each value of its foreign
+       *  key, keyed by the incoming reference. The grid counts its cells from
+       *  this map instead of filtering the source table per cell. */
+      originCounts(entrantes) {
+        const indexes = new Map();
+        entrantes.forEach((ref) => {
+          const counts = new Map();
+          ref.origin.rows.forEach((row) => {
+            const value = row[ref.field];
+            if (value === null || value === undefined) {
+              return;
+            }
+            const key = Ui.referenceKey(value, ref.type);
+            counts.set(key, (counts.get(key) || 0) + 1);
+          });
+          indexes.set(ref, counts);
+        });
+        return indexes;
+      },
+
       /** Rows of the source table that bring a value of the target. */
       countOrigins(ref, value) {
         if (value === null || value === undefined) {
@@ -12302,7 +12632,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Tip of a cell with a foreign key: which table and field it points to
        *  and which is the related row (or why there is none). */
-      referenceTip(field, value, description) {
+      referenceTip(field, value, description, relatedRow) {
         const target = Model.findTable(Store.project, field.references.table);
         const fieldTarget = field.references.field;
         const partes = [I18n.t("ui.foreignKeyQuoted", { fieldName: field.name, tableName: field.references.table, targetField: fieldTarget })];
@@ -12311,7 +12641,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         } else if (value === null || value === undefined) {
           partes.push(I18n.t("ui.rowHasNoValue", { tableName: target.name }));
         } else {
-          const relacionada = Ui.relatedRow(field, value);
+          // The grid already knows the related row (from its index): it is
+          // reused instead of scanning the target table again per cell.
+          const relacionada = relatedRow === undefined ? Ui.relatedRow(field, value) : relatedRow;
           if (relacionada) {
             const fields = target.fields
               .map((targetField) => `${targetField.name} = ${Utils.formatValue(relacionada[targetField.name])}`)
@@ -14605,7 +14937,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           Store.project.queries.push({ name, description, sql });
         }
         UiProject.markDirty();
-        Ui.renderSidebarQueries();
+        // select() repaints the list and leaves the new query open; repainting
+        // it here as well painted the whole sidebar twice.
         UiQueries.select(name);
         UiQueries.execute();
       },
@@ -19359,21 +19692,43 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       render(kind, list, itemFactory) {
         const folders = Model.foldersOf(Store.project, kind);
         const counts = Model.folderCounts(Store.project, kind);
-        folders.forEach((name) => {
-          list.appendChild(UiFolders.header(kind, name, counts.counts.get(name) || 0));
-          Model.itemsInFolder(Store.project, name, kind).forEach((item) => {
-            list.appendChild(itemFactory(item, name));
+        // One pass over the list fills the group of every folder and the group
+        // without folder. The previous version filtered the whole list once per
+        // folder and once more for the items without one, which was quadratic
+        // on the number of queries; the item of an unknown folder is left out,
+        // exactly as before.
+        const groups = new Map(folders.map((name) => [name, []]));
+        const none = [];
+        Store.project[Model.groupOf(kind).items].forEach((item) => {
+          const folder = item.folder || null;
+          if (!folder) {
+            none.push(item);
+          } else if (groups.has(folder)) {
+            groups.get(folder).push(item);
+          }
+        });
+        // The list is built off-screen and attached once: appending every row
+        // of a long list to the page forces a style and layout pass per row.
+        const fragment = document.createDocumentFragment();
+        const paint = (items, folder) => {
+          items.forEach((item, index) => {
+            fragment.appendChild(itemFactory(item, folder, { position: index, total: items.length }));
           });
+        };
+        folders.forEach((name) => {
+          const items = groups.get(name);
+          fragment.appendChild(UiFolders.header(kind, name, counts.counts.get(name) || 0));
+          paint(items, name);
         });
         // Without any folder the items are listed as they always were, with no
         // «no folder» group; with folders, that header is also the target to
         // drop an item out of its folder.
         if (folders.length > 0) {
-          list.appendChild(UiFolders.header(kind, "", counts.none));
+          fragment.appendChild(UiFolders.header(kind, "", counts.none));
         }
-        Model.itemsInFolder(Store.project, null, kind).forEach((item) => {
-          list.appendChild(itemFactory(item, ""));
-        });
+        paint(none, "");
+        list.textContent = "";
+        list.appendChild(fragment);
         UiFolders.applyCollapsed(kind);
       },
 
