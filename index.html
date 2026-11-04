@@ -414,46 +414,42 @@
       font-size: 9px;
     }
 
-    /*  A circle before the name of a query or a script tells them apart in the
-        shared list: «c» for a query, «s» for a script. It is painted by CSS
-        from the kind of the row, so the name stays the only text of the span. */
-    #list-queries li[data-kind] > .name::before {
-      content: "";
+    /*  An icon before the name of a query or a script tells them apart in the
+        shared list: a magnifier over a document for a query and code brackets
+        for a script. The icon travels with the name, so it is never separated
+        from it when the row is narrow. */
+    #list-queries li[data-kind] > .name {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      width: 1.35em;
-      height: 1.35em;
-      margin-right: 3px;
-      border: 1px solid currentColor;
-      border-radius: 50%;
-      font-size: 8px;
-      font-weight: bold;
-      line-height: 1;
-      vertical-align: middle;
+      gap: 3px;
+      min-width: 0;
     }
 
-    #list-queries li[data-kind="query"] > .name::before {
-      content: "c";
-    }
-
-    #list-queries li[data-kind="script"] > .name::before {
-      content: "s";
-    }
-
-    /*  Circle of the kind in other places (the keyword search results).  */
-    .kind-badge {
+    .kind-icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex: 0 0 auto;
-      width: 1.5em;
-      height: 1.5em;
-      border: 1px solid currentColor;
-      border-radius: 50%;
-      font-size: 9px;
-      font-weight: bold;
+      width: 1.35em;
+      height: 1.35em;
       line-height: 1;
+    }
+
+    .kind-icon .icon {
+      width: 1.15em;
+      height: 1.15em;
+    }
+
+    #list-queries li[data-kind="query"] .kind-icon {
+      color: #1a4f8a;
+    }
+
+    #list-queries li[data-kind="script"] .kind-icon {
+      color: #7a3e00;
+    }
+
+    #list-queries li.selected .kind-icon {
+      color: inherit;
     }
 
     /*  Results of the keyword search: one button per query or script.  */
@@ -483,6 +479,14 @@
     .keyword-results button:focus-visible {
       background: #eef4fb;
       border-color: #1a4f8a;
+    }
+
+    .keyword-results button[data-kind="query"] .kind-icon {
+      color: #1a4f8a;
+    }
+
+    .keyword-results button[data-kind="script"] .kind-icon {
+      color: #7a3e00;
     }
 
     .keyword-results .result-name {
@@ -2095,6 +2099,8 @@
   <template data-icon="chevron-double-down"><svg class="icon" data-icon="chevron-double-down" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 12L12.7071 15.2929C12.3166 15.6834 11.6834 15.6834 11.2929 15.2929L8 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8L12.7071 11.2929C12.3166 11.6834 11.6834 11.6834 11.2929 11.2929L8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
   <template data-icon="copy"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg></template>
   <template data-icon="note-text"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
+  <template data-icon="query"><svg class="icon" data-icon="query" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M13.5 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 8H15M9 12H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="15.5" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M19 18L21 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
+  <template data-icon="script"><svg class="icon" data-icon="script" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M8 7L3 12L8 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 7L21 12L16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4L10 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <template data-icon="edit"><svg class="icon" data-icon="edit" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M21 18V18.5C21 19.8807 19.8807 21 18.5 21H5.5C4.11929 21 3 19.8807 3 18.5V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.4048 12.1062L13.0741 3.99909C13.4236 3.49921 13.9636 3.15449 14.5753 3.04075C15.1869 2.92701 15.82 3.05359 16.3355 3.39262L18.9697 5.12543C20.0429 5.83143 20.3229 7.24759 19.595 8.28853L13.9257 16.3956C13.5761 16.8955 13.0361 17.2402 12.4245 17.354L9.06104 17.9794C8.42423 18.0978 7.809 17.6931 7.6869 17.0755L7.04201 13.8134C6.92475 13.2202 7.05525 12.6061 7.4048 12.1062Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10.85" y1="13.5496" x2="11.15" y2="13.1496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.1092" y1="7.63042" x2="16.6813" y2="11.0967" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <template data-icon="trash"><svg class="icon" data-icon="trash" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 9V17.5C5 19.9853 7.01472 22 9.5 22H14.5C16.9853 22 19 19.9853 19 17.5V9" stroke="currentColor" stroke-width="1.5"/><path d="M20 8H13.12H9.94667H6.77333H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 6C7 4.34315 8.34315 3 10 3H14C15.6569 3 17 4.34315 17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.99998 17L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 17L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 17L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <!-- =====================================================================
@@ -5327,6 +5333,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         Store.project.tables = source.tables;
         Store.project.queries = source.queries;
         Store.project.scripts = Array.isArray(source.scripts) ? source.scripts : [];
+        if (Array.isArray(source.objectOrder) && source.objectOrder.length > 0) {
+          Store.project.objectOrder = source.objectOrder.slice();
+        } else {
+          delete Store.project.objectOrder;
+        }
         Store.project.settings = source.settings;
       },
     };
@@ -5427,13 +5438,52 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return Array.isArray(raw) ? raw : [];
       },
 
+      /** Key of one object in the shared order of the list of queries and
+       *  scripts. The kind never carries a colon, so the name may have one. */
+      objectKey(kind, name) {
+        return `${kind === "script" ? "script" : "query"}:${name}`;
+      },
+
+      /** Entries { kind, item } of every query and script in the order of the
+       *  shared list. The order lives in `project.objectOrder`; the entries it
+       *  does not name (an old file, a new item) are appended at the end, the
+       *  queries first and then the scripts, as the list used to show them. */
+      objectsInOrder(project) {
+        const entries = [];
+        const byKey = new Map();
+        (project.queries || []).forEach((item) => {
+          const key = Model.objectKey("query", item.name);
+          byKey.set(key, { kind: "query", item });
+        });
+        (project.scripts || []).forEach((item) => {
+          const key = Model.objectKey("script", item.name);
+          byKey.set(key, { kind: "script", item });
+        });
+        const seen = new Set();
+        const order = Array.isArray(project.objectOrder) ? project.objectOrder : [];
+        order.forEach((key) => {
+          if (typeof key === "string" && byKey.has(key) && !seen.has(key)) {
+            seen.add(key);
+            entries.push(byKey.get(key));
+          }
+        });
+        byKey.forEach((entry, key) => {
+          if (!seen.has(key)) {
+            entries.push(entry);
+          }
+        });
+        return entries;
+      },
+
       /** Items of a folder of a kind of list, in project order; null (or "") is
-       *  «no folder». */
+       *  «no folder». The shared kind mixes queries and scripts in the order of
+       *  the list. */
       itemsInFolder(project, folder, kind) {
         const wanted = folder || null;
         if (kind === "objects") {
-          const inFolder = (item) => (item.folder || null) === wanted;
-          return (project.queries || []).filter(inFolder).concat((project.scripts || []).filter(inFolder));
+          return Model.objectsInOrder(project)
+            .filter((entry) => (entry.item.folder || null) === wanted)
+            .map((entry) => entry.item);
         }
         return project[Model.groupOf(kind).items].filter((item) => (item.folder || null) === wanted);
       },
@@ -5726,6 +5776,57 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return Model.moveItem(project, name, step, "queries");
       },
 
+      /** Moves a query or a script one place up or down inside its folder,
+       *  among the ones of both kinds that share it. The shared order is
+       *  written down the first time it changes. */
+      moveObject(project, kind, name, step) {
+        const objectKind = kind === "script" ? "script" : "query";
+        const entries = Model.objectsInOrder(project);
+        const entry = entries.find((candidate) => candidate.kind === objectKind
+          && candidate.item.name === name);
+        if (!entry) {
+          return { ok: false, error: I18n.t(objectKind === "script" ? "scripts.unknown" : "queries.unknown", { name: name }) };
+        }
+        const folder = entry.item.folder || null;
+        const group = entries.filter((candidate) => (candidate.item.folder || null) === folder);
+        const position = group.indexOf(entry);
+        const neighbour = group[position + (step < 0 ? -1 : 1)];
+        if (position < 0 || !neighbour) {
+          return { ok: false, error: "" };
+        }
+        const order = entries.map((candidate) => Model.objectKey(candidate.kind, candidate.item.name));
+        const from = entries.indexOf(entry);
+        const to = entries.indexOf(neighbour);
+        order[from] = Model.objectKey(neighbour.kind, neighbour.item.name);
+        order[to] = Model.objectKey(entry.kind, entry.item.name);
+        project.objectOrder = order;
+        return { ok: true, error: "" };
+      },
+
+      /** Puts a new object right after the one it was copied from, keeping the
+       *  mixed order when the list already has one. */
+      insertObjectOrderAfter(project, kind, afterName, newName) {
+        if (!Array.isArray(project.objectOrder)) {
+          return;
+        }
+        const afterKey = Model.objectKey(kind, afterName);
+        const newKey = Model.objectKey(kind, newName);
+        const index = project.objectOrder.indexOf(afterKey);
+        if (index >= 0) {
+          project.objectOrder.splice(index + 1, 0, newKey);
+        }
+      },
+
+      /** Keeps the mixed order pointing at the new name of an object. */
+      renameObjectOrder(project, kind, from, to) {
+        if (!Array.isArray(project.objectOrder)) {
+          return;
+        }
+        const oldKey = Model.objectKey(kind, from);
+        const newKey = Model.objectKey(kind, to);
+        project.objectOrder = project.objectOrder.map((key) => (key === oldKey ? newKey : key));
+      },
+
       /* --- Duplicating queries and their folders ------------------------- */
 
       /** First name of a list that is free: the base one or base_2, base_3… */
@@ -5752,6 +5853,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const copy = Utils.cloneJson(items[index]);
         copy.name = Model.freeName(new Set(items.map((item) => item.name)), name);
         items.splice(index + 1, 0, copy);
+        Model.insertObjectOrderAfter(project, kind === "scripts" ? "script" : "query", name, copy.name);
         return { ok: true, item: copy };
       },
 
@@ -5777,7 +5879,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           project.folders = folders.slice(0, position).concat([copyName], folders.slice(position));
           let queries = 0;
           let scripts = 0;
-          const duplicate = (items, count) => {
+          const duplicate = (items, count, objectKind) => {
             const taken = new Set(items.map((item) => item.name));
             const copies = [];
             items.forEach((item) => {
@@ -5790,12 +5892,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
               taken.add(copy.name);
               copy.folder = copyName;
               copies.push(copy);
+              Model.insertObjectOrderAfter(project, objectKind, item.name, copy.name);
               count();
             });
             return copies;
           };
-          project.queries = duplicate(project.queries || [], () => { queries += 1; });
-          project.scripts = duplicate(project.scripts || [], () => { scripts += 1; });
+          project.queries = duplicate(project.queries || [], () => { queries += 1; }, "query");
+          project.scripts = duplicate(project.scripts || [], () => { scripts += 1; }, "script");
           return { ok: true, folder: copyName, count: queries + scripts, queries: queries, scripts: scripts };
         }
         const copyName = Model.freeName(new Set(folders), name);
@@ -6828,14 +6931,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         if (folders.length > 0) {
           content.folders = folders;
         }
-        // Which folders are folded, by name; the «no folder» group is written
-        // with an empty name.
-        const folded = folders.length > 0
-          ? Model.foldedOf(project, "queries").filter((name) => name === "" || folders.includes(name))
-          : [];
-        if (folded.length > 0) {
-          content.foldedFolders = folded;
-        }
+        // The open or folded state of the folders of the queries and scripts is
+        // not written: the file only carries the folders, and opening it shows
+        // every one of them closed.
         // Folders of the tables, with which ones are folded, the same way.
         if (tableFolders.length > 0) {
           content.tableFolders = tableFolders;
@@ -6853,11 +6951,6 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           && scriptFolders.every((name, index) => name === folders[index]);
         if (scriptFolders.length > 0 && !sameFolders) {
           content.scriptFolders = scriptFolders;
-          const foldedScripts = Model.foldedOf(project, "scripts")
-            .filter((name) => name === "" || scriptFolders.includes(name));
-          if (foldedScripts.length > 0) {
-            content.foldedScriptFolders = foldedScripts;
-          }
         }
         // The whole list of tables is one group: it is folded or it is not.
         // With folders of tables that group steps aside, so it is not written.
@@ -6869,6 +6962,19 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const scripts = Array.isArray(project.scripts) ? project.scripts : [];
         if (scripts.length > 0) {
           content.scripts = scripts.map((script) => Persistence.scriptToJson(script));
+        }
+        // The mixed order of the queries and scripts is written only when it
+        // differs from the natural one: files that never mixed the two kinds
+        // keep exactly the keys they had.
+        const naturalOrder = (project.queries || [])
+          .map((query) => Model.objectKey("query", query.name))
+          .concat(scripts.map((script) => Model.objectKey("script", script.name)));
+        const objectOrder = Array.isArray(project.objectOrder) ? project.objectOrder : [];
+        const mixed = objectOrder.length > 0
+          && (objectOrder.length !== naturalOrder.length
+            || objectOrder.some((key, index) => key !== naturalOrder[index]));
+        if (mixed) {
+          content.objectOrder = objectOrder.slice();
         }
         content.settings = project.settings || Utils.cloneJson(DEFAULT_SETTINGS);
         return content;
@@ -6985,6 +7091,18 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           seenScripts.add(script.name);
         });
+        // Mixed order of the queries and scripts. Unknown and repeated keys are
+        // left out, so a hand-edited file still loads.
+        const objectOrder = [];
+        const knownObjects = new Set(
+          queries.map((query) => Model.objectKey("query", query.name))
+            .concat(scripts.map((script) => Model.objectKey("script", script.name))),
+        );
+        (Array.isArray(root.objectOrder) ? root.objectOrder : []).forEach((key) => {
+          if (typeof key === "string" && knownObjects.has(key) && !objectOrder.includes(key)) {
+            objectOrder.push(key);
+          }
+        });
         const settings = Persistence.parseSettings(root.settings, errors);
         if (errors.length > 0) {
           return { ok: false, errors };
@@ -7042,6 +7160,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         if (foldedScriptFolders.length > 0) {
           project.foldedScriptFolders = foldedScriptFolders;
+        }
+        if (objectOrder.length > 0) {
+          project.objectOrder = objectOrder;
         }
         // With folders of tables the whole list is painted by its folders, so
         // the flag of the folded list of tables is left out.
@@ -12528,6 +12649,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  shared folder and the queries and scripts that name it under it. */
       renderSidebarObjects(graph, signatures) {
         UiQueries.closeColor();
+        // Both kinds share one list, so only one row may stay selected. When
+        // the state carries both (an old place, a test), the open view wins.
+        if (Ui.state.activeQuery && Ui.state.activeScript) {
+          if (Ui.state.view === "script") {
+            Ui.state.activeQuery = null;
+          } else {
+            Ui.state.activeScript = null;
+          }
+        }
         const list = document.getElementById("list-queries");
         list.textContent = "";
         const grafo = graph === undefined ? ProjectGraph.build(Store.project) : graph;
@@ -12543,51 +12673,35 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
         const folders = Model.foldersOf(Store.project, "objects");
         const counts = Model.folderCounts(Store.project, "objects");
-        const queryGroups = new Map(folders.map((name) => [name, []]));
-        const scriptGroups = new Map(folders.map((name) => [name, []]));
-        const queryNone = [];
-        const scriptNone = [];
-        const group = (item, groups, none) => {
-          const folder = item.folder || null;
+        const groups = new Map(folders.map((name) => [name, []]));
+        const none = [];
+        Model.objectsInOrder(Store.project).forEach((entry) => {
+          const folder = entry.item.folder || null;
           if (!folder) {
-            none.push(item);
+            none.push(entry);
           } else if (groups.has(folder)) {
-            groups.get(folder).push(item);
+            groups.get(folder).push(entry);
           }
-        };
-        (Store.project.queries || []).forEach((query) => group(query, queryGroups, queryNone));
-        (Store.project.scripts || []).forEach((script) => group(script, scriptGroups, scriptNone));
+        });
 
         const fragment = document.createDocumentFragment();
-        const paint = (folder) => {
-          const queries = queryGroups.get(folder) || [];
-          const scripts = scriptGroups.get(folder) || [];
-          queries.forEach((query, index) => {
-            fragment.appendChild(Ui.queryItem(
-              query, usage, shape, folder, grafo,
-              { position: index, total: queries.length }, validation, tipInputs,
-            ));
-          });
-          scripts.forEach((script, index) => {
-            fragment.appendChild(Ui.scriptItem(script, folder, grafo, { position: index, total: scripts.length }));
+        const paint = (entries, folder) => {
+          entries.forEach((entry, index) => {
+            const placement = { position: index, total: entries.length };
+            fragment.appendChild(entry.kind === "query"
+              ? Ui.queryItem(entry.item, usage, shape, folder, grafo, placement, validation, tipInputs)
+              : Ui.scriptItem(entry.item, folder, grafo, placement));
           });
         };
         folders.forEach((name) => {
+          const entries = groups.get(name) || [];
           fragment.appendChild(UiFolders.header("objects", name, counts.counts.get(name) || 0));
-          paint(name);
+          paint(entries, name);
         });
         if (folders.length > 0) {
           fragment.appendChild(UiFolders.header("objects", "", counts.none));
         }
-        queryNone.forEach((query, index) => {
-          fragment.appendChild(Ui.queryItem(
-            query, usage, shape, "", grafo,
-            { position: index, total: queryNone.length }, validation, tipInputs,
-          ));
-        });
-        scriptNone.forEach((script, index) => {
-          fragment.appendChild(Ui.scriptItem(script, "", grafo, { position: index, total: scriptNone.length }));
-        });
+        paint(none, "");
         list.appendChild(fragment);
         UiFolders.applyCollapsed("objects");
       },
@@ -12650,7 +12764,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         const name = document.createElement("span");
         name.className = "name";
-        name.textContent = query.name;
+        const kindIcon = document.createElement("span");
+        kindIcon.className = "kind-icon";
+        kindIcon.setAttribute("aria-hidden", "true");
+        kindIcon.appendChild(Ui.icon("query"));
+        name.appendChild(kindIcon);
+        name.append(query.name);
         item.appendChild(name);
         const marcas = document.createElement("span");
         marcas.className = "marcas";
@@ -12677,7 +12796,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         // position arrives with the item, worked out in the same pass that
         // groups the list: filtering the whole list once per query was
         // quadratic.
-        const group = placement || Ui.groupOfItem(query, folder, "queries");
+        const group = placement || Ui.groupOfItem(query, folder, "objects");
         const up = Ui.rowButton("chevron-up", "move-query", query.name, I18n.t("queries.moveUpTip", { name: query.name }));
         up.dataset.step = "-1";
         up.disabled = group.position <= 0;
@@ -12717,7 +12836,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         const name = document.createElement("span");
         name.className = "name";
-        name.textContent = script.name;
+        const kindIcon = document.createElement("span");
+        kindIcon.className = "kind-icon";
+        kindIcon.setAttribute("aria-hidden", "true");
+        kindIcon.appendChild(Ui.icon("script"));
+        name.appendChild(kindIcon);
+        name.append(script.name);
         item.appendChild(name);
         const marcas = document.createElement("span");
         marcas.className = "marcas";
@@ -12739,7 +12863,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const actions = document.createElement("span");
         actions.className = "row-actions";
         actions.appendChild(marcas);
-        const group = placement || Ui.groupOfItem(script, folder, "scripts");
+        const group = placement || Ui.groupOfItem(script, folder, "objects");
         const up = Ui.rowButton("chevron-up", "move-query", script.name, I18n.t("scripts.moveUpTip", { name: script.name }));
         up.dataset.step = "-1";
         up.disabled = group.position <= 0;
@@ -15438,7 +15562,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Moves a query one place up or down inside its folder, with the arrows
        *  of its row of the list. */
       move(name, step) {
-        const result = Model.moveQuery(Store.project, name, step);
+        const result = Model.moveObject(Store.project, "query", name, step);
         if (!result.ok) {
           if (result.error) {
             setStatus(result.error);
@@ -15619,6 +15743,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         UiQueryInsert.hide();
         UiDataLinks.hide();
+        // Queries and scripts share one list: only one of them is ever open.
+        Ui.state.activeScript = null;
         Ui.state.activeQuery = name;
         Ui.renderSidebarQueries();
         UiFolders.reveal("queries", name);
@@ -15687,6 +15813,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           : SqlRename.renameTableInProject(Store.project, oldName, name);
         const scriptsChanged = ProjectGraph.renameScriptRefs(Store.project, "query", oldName, name);
         UiProject.markDirty();
+        Model.renameObjectOrder(Store.project, "query", oldName, name);
+        Ui.state.activeScript = null;
         Ui.state.activeQuery = name;
         UiQueries.refreshEditor();
         Ui.renderAll();
@@ -16369,6 +16497,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         if (!script) {
           return;
         }
+        // Queries and scripts share one list: only one of them is ever open.
+        Ui.state.activeQuery = null;
         Ui.state.activeScript = name;
         Ui.renderSidebarScripts();
         UiFolders.reveal("scripts", name);
@@ -16430,6 +16560,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           : 0;
         const scriptsChanged = ProjectGraph.renameScriptRefs(Store.project, "script", oldName, name);
         UiProject.markDirty();
+        Model.renameObjectOrder(Store.project, "script", oldName, name);
+        Ui.state.activeQuery = null;
         Ui.state.activeScript = name;
         Ui.renderAll();
         const note = changed === 0 && scriptsChanged === 0
@@ -16557,9 +16689,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         setStatus(I18n.t("scripts.removed", { name: name, orphans: orphans }));
       },
 
-      /** Moves a script one place up or down inside its folder. */
+      /** Moves a script one place up or down inside its folder, mixed with the
+       *  queries that share the folder. */
       move(name, step) {
-        const result = Model.moveItem(Store.project, name, step, "scripts");
+        const result = Model.moveObject(Store.project, "script", name, step);
         if (!result.ok) {
           if (result.error) {
             setStatus(result.error);
@@ -20260,7 +20393,16 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  it is. */
       foldEveryFolder() {
         UiFolders.KINDS.forEach((kind) => {
-          Model.foldersOf(Store.project, kind).forEach((name) => Model.foldFolder(Store.project, name, kind));
+          const folders = Model.foldersOf(Store.project, kind);
+          if (folders.length === 0) {
+            return;
+          }
+          // The «no folder» group is folded too when it has anything, so the
+          // file opens with every group closed, as if it were one more folder.
+          const groups = Model.folderCounts(Store.project, kind).none > 0
+            ? folders.concat([""])
+            : folders;
+          groups.forEach((name) => Model.foldFolder(Store.project, name, kind));
         });
       },
 
@@ -20889,9 +21031,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           button.dataset.name = match.name;
           button.title = I18n.t(match.kind === "query" ? "ui.refQuery" : "ui.refScript", { name: match.name });
           const badge = document.createElement("span");
-          badge.className = "kind-badge";
+          badge.className = "kind-icon";
           badge.dataset.kind = match.kind;
-          badge.textContent = match.kind === "query" ? "c" : "s";
+          badge.appendChild(Ui.icon(match.kind === "query" ? "query" : "script"));
           badge.setAttribute("aria-hidden", "true");
           const name = document.createElement("span");
           name.className = "result-name";
@@ -27271,7 +27413,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(button().title, "Unfold every folder", "the button offers the opposite");
       assertEqual(button().querySelector('[data-icon="chevron-double-down"]') !== null, true, "with the icon that unfolds them again");
       assertEqual(Store.dirty, true, "and the project is left pending save");
-      assert(Persistence.serializeProject(Store.project).indexOf("foldedFolders") >= 0, "with the state written in the file");
+      assert(Persistence.serializeProject(Store.project).indexOf("foldedFolders") < 0, "and the state is not written to the file");
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
@@ -27651,17 +27793,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assert(!read('["Sales","Sales"]').ok, "the same folder twice is rejected");
       assert(read('["Sales","Sales"]').errors.some((error) => error.includes("foldedFolders[1]")), "pointing at the repeated one: " + JSON.stringify(read('["Sales","Sales"]').errors));
       assert(!read('[7]').ok, "a name that is not text is rejected");
-      // It is written after the folders and only when there is something to say.
+      // It is not written: the file only carries the folders.
       const project = folderProject();
       const plain = JSON.parse(Persistence.serializeProject(project));
       assertEqual(Object.keys(plain), ["format", "version", "name", "folders", "tables", "queries", "settings"], "without folded folders the file does not carry the key");
       Model.foldFolder(project, "Sales");
       const written = JSON.parse(Persistence.serializeProject(project));
-      assertEqual(written.foldedFolders, ["Sales"], "with a folded folder it does");
-      assertEqual(Object.keys(written).indexOf("foldedFolders"), Object.keys(written).indexOf("folders") + 1, "right after the list of folders");
-      // A name that is not a folder any more is not written back.
-      project.foldedFolders.push("Gone");
-      assertEqual(JSON.parse(Persistence.serializeProject(project)).foldedFolders, ["Sales"], "and a folder that is gone is not written");
+      assertEqual(written.foldedFolders, undefined, "and folding a folder does not add it");
+      assertEqual(Object.keys(written).indexOf("foldedFolders"), -1, "so the file never carries the key");
     });
 
     /* --- Folders of the tables in the file ------------------------------ */
@@ -27707,9 +27846,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       });
       assertEqual(
         Object.keys(JSON.parse(both)),
-        ["format", "version", "name", "folders", "foldedFolders", "tableFolders", "foldedTableFolders",
+        ["format", "version", "name", "folders", "tableFolders", "foldedTableFolders",
           "tables", "queries", "settings"],
-        "each kind of folder keeps its place, before its own list",
+        "each kind of folder keeps its place, before its own list, without the folded folders of the queries",
       );
       assertEqual(Persistence.parseProject(Persistence.serializeProject(read.project)).project.tableFolders, ["Staff", "Rooms"], "and the round trip keeps them");
     });
@@ -27792,14 +27931,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       folderToggle("Sales").click();
       assertEqual(Store.dirty, true, "folding leaves the project pending save");
       const text = Persistence.serializeProject(Store.project);
-      assert(text.indexOf("foldedFolders") >= 0, "and the file remembers it");
+      assert(text.indexOf("foldedFolders") < 0, "and the file does not remember it");
       const again = Persistence.parseProject(text);
       assert(again.ok, "the file is read back: " + JSON.stringify(again.errors));
-      assertEqual(Model.foldedOf(again.project), ["Sales"], "with the folder that was folded");
-      Store.replaceProject(again.project);
-      Ui.renderSidebarQueries();
-      assertEqual(queryItem("q1").hidden, true, "so opening the project shows it folded");
-      assertEqual(folderToggle("Sales").querySelector('[data-icon="chevron-right"]') !== null, true, "with the arrow of the folded state");
+      assertEqual(Model.foldedOf(again.project), [], "without the folded state");
+      assertEqual(queryItem("q1").hidden, true, "while the open project keeps it folded");
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
@@ -27881,8 +28017,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(folderToggle("").title, "Unfold “No folder”", "the button names the group");
       assertEqual(Model.foldedOf(Store.project), [""], "the group without folder is folded in the project");
       const text = Persistence.serializeProject(Store.project);
-      assert(/"foldedFolders": \[\s*""\s*\]/.test(text), "and the file writes it as an empty name: " + text.slice(text.indexOf("foldedFolders"), text.indexOf("foldedFolders") + 40));
-      assertEqual(Model.foldedOf(Persistence.parseProject(text).project), [""], "which is read back folded");
+      assert(!text.includes("foldedFolders"), "and the file does not carry that state");
+      assertEqual(Model.foldedOf(Persistence.parseProject(text).project), [], "so it is not read back folded");
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
@@ -28667,11 +28803,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         settings: {},
       });
       assertEqual(UiProject.openText(text, "folded.json"), true, "the project opens");
-      assertEqual(Model.foldedOf(Store.project, "queries"), ["Sales", "2026"], "every folder of the queries starts folded");
+      assertEqual(Model.foldedOf(Store.project, "queries"), ["Sales", "2026", ""], "every group of the queries starts folded");
       assertEqual(Model.foldedOf(Store.project, "tables"), ["Staff"], "and every folder of the tables too");
       assertEqual(queryItem("q1").hidden, true, "the queries of the folders stay out of sight");
       assertEqual(queryItem("q2").hidden, true, "all of them");
-      assertEqual(queryItem("q3").hidden, false, "the ones without a folder are still seen: the group is not a folder");
+      assertEqual(queryItem("q3").hidden, true, "and the «no folder» group starts folded too");
       Store.replaceProject(before.project);
       Ui.state.activeQuery = before.query;
       Ui.state.activeTable = before.table;
@@ -28718,12 +28854,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(arrows("q1")[1].disabled, false, "but it can go down");
       assertEqual(arrows("q4")[1].disabled, true, "the last one cannot go down");
       arrows("q1")[1].click();
-      assertEqual(Model.itemsInFolder(Store.project, "Sales", "queries").map((query) => query.name), ["q4", "q1"], "the arrow swaps it with the next one of the folder");
+      assertEqual(Model.itemsInFolder(Store.project, "Sales", "objects").map((query) => query.name), ["q4", "q1"], "the arrow swaps it with the next one of the folder");
       assertEqual(queryItem("q1").dataset.folder, "Sales", "and the query stays in its folder");
       assertEqual(Store.dirty, true, "the project is left pending save");
       assertEqual(arrows("q1")[0].disabled, false, "now it can go back up");
       arrows("q1")[0].click();
-      assertEqual(Model.itemsInFolder(Store.project, "Sales", "queries").map((query) => query.name), ["q1", "q4"], "and the other arrow undoes it");
+      assertEqual(Model.itemsInFolder(Store.project, "Sales", "objects").map((query) => query.name), ["q1", "q4"], "and the other arrow undoes it");
       assert(document.getElementById("status").textContent.includes("q1"), "the status names the query: " + document.getElementById("status").textContent);
       Store.replaceProject(before.project);
       Ui.state.activeQuery = before.query;
