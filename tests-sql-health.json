@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Health and hospitals (20 tables, 212 queries, 32 scripts)",
+  "name": "SQL tests · Health and hospitals (20 tables, 213 queries, 32 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -13712,6 +13712,34 @@
             "Pneumonia",
             4,
             4
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A60 · REGEXPR_REPLACE: spaces, groups and global replacement",
+      "description": "Normalizes spaces, reorders a comma-separated name with a group and rewrites every code with a global regular expression.",
+      "keywords": [
+        "health",
+        "basics",
+        "regexpr-replace",
+        "groups",
+        "global"
+      ],
+      "sql": "SELECT TRIM(REGEXPR_REPLACE('  Cardiology   Medical  ', '[ ]+', ' ')) AS normalized,\n       REGEXPR_REPLACE('Medical, Cardiology', '([^,]+), (.+)', '$2 $1') AS reordered,\n       REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codes\nFROM specialties\nWHERE id_specialty = 1",
+      "assert": {
+        "columns": [
+          "normalized",
+          "reordered",
+          "codes"
+        ],
+        "rows": [
+          [
+            "Cardiology Medical",
+            "Cardiology Medical",
+            "code-01 / code-02"
           ]
         ]
       },

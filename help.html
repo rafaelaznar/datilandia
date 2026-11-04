@@ -633,7 +633,7 @@ ORDER BY 1;</pre>
                 <dt>Literales e identificadores</dt>
                 <dd><code>'texto'</code> y <code>"texto"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.</dd>
                 <dt>Funciones</dt>
-                <dd><code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>CONCAT(x, y, …)</code> (textos unidos; <code>null</code> si algún argumento lo es), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
+                <dd><code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>REGEXPR_REPLACE(x, patrón, sustitución[, banderas])</code> (sustituye todas las coincidencias; en la sustitución <code>$1</code>, <code>$&</code>… y banderas como <code>i</code>), <code>CONCAT(x, y, …)</code> (textos unidos; <code>null</code> si algún argumento lo es), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
                 <dt>Tipos y conversión</dt>
                 <dd>El <b>tipo del campo</b> convierte al consultar: un campo <code>number</code> con valores «31» responde a <code>= 31</code>, y uno <code>boolean</code> a <code>= true</code>. Los datos guardados no se tocan.</dd>
                 <dt>Solo lectura</dt>
@@ -873,7 +873,7 @@ LIMIT 3 OFFSET 2;</pre>
                   </section>
                   <section>
                     <h3>Funciones</h3>
-                    <p><code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.</p>
+                    <p><code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>REGEXPR_REPLACE(x, patrón, sustitución[, banderas])</code> reemplaza todas las coincidencias de la expresión regular: en la sustitución, <code>$1</code>, <code>$2</code>… son los grupos y <code>$&</code> el texto encontrado; las banderas opcionales son <code>i</code> (mayúsculas/minúsculas), <code>m</code> (multilínea), <code>s</code> (el punto incluye saltos) y <code>u</code> (Unicode), y la <code>g</code> ya va incluida (también se acepta el nombre <code>REGEXP_REPLACE</code>) · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.</p>
                     <p>Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.</p>
                   </section>
                   <section>
@@ -892,6 +892,10 @@ LIMIT 3 OFFSET 2;</pre>
 FROM alumnos
 WHERE LOWER(SUBSTR(nombre, 1, 1)) = 'a'
 ORDER BY letras DESC;</pre>
+                  <h4>Expresiones regulares con REGEXPR_REPLACE</h4>
+                  <pre class="sql-ejemplo mono">SELECT TRIM(REGEXPR_REPLACE('  Ana   García  ', '[ ]+', ' ')) AS nombre_limpio,
+       REGEXPR_REPLACE('García, Ana', '([^,]+), (.+)', '$2 $1') AS nombre_ordenado,
+       REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codigos;</pre>
                   <h4>Comentarios, comillas y nombres entre corchetes</h4>
                   <pre class="sql-ejemplo mono">-- Ventas sin anular (nombre con espacios)
 SELECT [fecha pedido] AS fecha,
@@ -1326,7 +1330,7 @@ ORDER BY 1;</pre>
                 <dt>Literals and identifiers</dt>
                 <dd><code>'text'</code> and <code>"text"</code> are <b>both text</b> (to include the quote, double it); <code>[Name with spaces]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.</dd>
                 <dt>Functions</dt>
-                <dd><code>ABS</code>, <code>ROUND(x[, dec])</code> (the half moves away from zero: 2.5 → 3 and −2.5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, start[, length])</code> (1 = first character; negative ones count from the end), <code>CONCAT(x, y, …)</code> (texts joined; <code>null</code> if any argument is), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
+                <dd><code>ABS</code>, <code>ROUND(x[, dec])</code> (the half moves away from zero: 2.5 → 3 and −2.5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, start[, length])</code> (1 = first character; negative ones count from the end), <code>REGEXPR_REPLACE(x, pattern, replacement[, flags])</code> (replaces every match; in the replacement <code>$1</code>, <code>$&</code>… and flags such as <code>i</code>), <code>CONCAT(x, y, …)</code> (texts joined; <code>null</code> if any argument is), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
                 <dt>Types and conversion</dt>
                 <dd>The <b>field type</b> converts when querying: a <code>number</code> field with «31» values responds to <code>= 31</code>, and a <code>boolean</code> one to <code>= true</code>. The stored data is not touched.</dd>
                 <dt>Read-only</dt>
@@ -1566,7 +1570,7 @@ LIMIT 3 OFFSET 2;</pre>
                   </section>
                   <section>
                     <h3>Functions</h3>
-                    <p><code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>CONCAT(a, b, …)</code> joins texts, with <code>null</code> if any argument is · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal.</p>
+                    <p><code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>REGEXPR_REPLACE(x, pattern, replacement[, flags])</code> replaces every match of the regular expression: in the replacement, <code>$1</code>, <code>$2</code>… are the groups and <code>$&</code> the matched text; the optional flags are <code>i</code> (case), <code>m</code> (multiline), <code>s</code> (dot includes line breaks) and <code>u</code> (Unicode), and <code>g</code> is included by default (the name <code>REGEXP_REPLACE</code> is also accepted) · <code>CONCAT(a, b, …)</code> joins texts, with <code>null</code> if any argument is · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal.</p>
                     <p>They can be nested inside each other and used both in the <code>SELECT</code> and in the <code>WHERE</code>, <code>GROUP BY</code> or <code>ORDER BY</code>. If the argument is <code>null</code>, the result is usually <code>null</code>.</p>
                   </section>
                   <section>
@@ -1585,6 +1589,10 @@ LIMIT 3 OFFSET 2;</pre>
 FROM alumnos
 WHERE LOWER(SUBSTR(nombre, 1, 1)) = 'a'
 ORDER BY letras DESC;</pre>
+                  <h4>Regular expressions with REGEXPR_REPLACE</h4>
+                  <pre class="sql-ejemplo mono">SELECT TRIM(REGEXPR_REPLACE('  Ana   García  ', '[ ]+', ' ')) AS nombre_limpio,
+       REGEXPR_REPLACE('García, Ana', '([^,]+), (.+)', '$2 $1') AS nombre_ordenado,
+       REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codigos;</pre>
                   <h4>Comments, quotes and names in brackets</h4>
                   <pre class="sql-ejemplo mono">-- Ventas sin anular (nombre con espacios)
 SELECT [fecha pedido] AS fecha,

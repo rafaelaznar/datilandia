@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 155 consultas, 29 scripts)",
+  "name": "Pruebas SQL · Educación (8 tablas, 156 consultas, 29 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -3937,6 +3937,34 @@
             2,
             4,
             1
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A47 · REGEXPR_REPLACE: espacios, grupos y reemplazo global",
+      "description": "Normaliza espacios, reordena un nombre separado por coma con un grupo y reescribe todos los códigos con una expresión regular global.",
+      "keywords": [
+        "educacion",
+        "basicas",
+        "regexpr-replace",
+        "grupos",
+        "global"
+      ],
+      "sql": "SELECT TRIM(REGEXPR_REPLACE('  Campus   Norte  ', '[ ]+', ' ')) AS normalizado,\n       REGEXPR_REPLACE('Norte, Campus', '([^,]+), (.+)', '$2 $1') AS reordenado,\n       REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codigos\nFROM sedes\nWHERE id_sede = 1",
+      "assert": {
+        "columns": [
+          "normalizado",
+          "reordenado",
+          "codigos"
+        ],
+        "rows": [
+          [
+            "Campus Norte",
+            "Campus Norte",
+            "code-01 / code-02"
           ]
         ]
       },

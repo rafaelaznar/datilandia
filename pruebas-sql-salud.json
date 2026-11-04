@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 212 consultas, 32 scripts)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 213 consultas, 32 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -13712,6 +13712,34 @@
             "Neumonía",
             4,
             4
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A60 · REGEXPR_REPLACE: espacios, grupos y reemplazo global",
+      "description": "Normaliza espacios, reordena un nombre separado por coma con un grupo y reescribe todos los códigos con una expresión regular global.",
+      "keywords": [
+        "salud",
+        "basicas",
+        "regexpr-replace",
+        "grupos",
+        "global"
+      ],
+      "sql": "SELECT TRIM(REGEXPR_REPLACE('  Cardiología   Médica  ', '[ ]+', ' ')) AS normalizado,\n       REGEXPR_REPLACE('Médica, Cardiología', '([^,]+), (.+)', '$2 $1') AS reordenado,\n       REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codigos\nFROM especialidades\nWHERE id_especialidad = 1",
+      "assert": {
+        "columns": [
+          "normalizado",
+          "reordenado",
+          "codigos"
+        ],
+        "rows": [
+          [
+            "Cardiología Médica",
+            "Cardiología Médica",
+            "code-01 / code-02"
           ]
         ]
       },

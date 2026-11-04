@@ -3065,6 +3065,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlFunctions.trim": "TRIM(text)",
         "sqlFunctions.sum": "SUM([DISTINCT] number)",
         "sqlFunctions.substr": "SUBSTR(text, start, [length])",
+        "sqlFunctions.regexprReplace": "REGEXPR_REPLACE(text, pattern, replacement[, flags])",
         "sqlFunctions.concat": "CONCAT(text, text, …)",
         "sqlFunctions.round": "ROUND(number, decimals)",
         "sqlFunctions.nullif": "NULLIF(value1, value2)",
@@ -3529,6 +3530,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlExecutor.scalarSubqueryManyRowsHint": "Narrow the subquery with WHERE, or aggregate it (for example with MAX) so it returns a single row.",
         "sqlExecutor.textValue": "the text “{value}”",
         "sqlExecutor.unknownPlanOp": "Unknown plan operation: “{operation}”.",
+        "sqlExecutor.invalidRegex": "Invalid regular expression: {message}",
+        "sqlExecutor.invalidRegexHint": "Check the pattern and the optional flags (for example: \"gi\").",
         "sqlExecutor.unsupportedFunction": "Unsupported function: “{func}”.",
         "sqlExecutor.unsupportedOperator": "Unsupported operator: “{operator}”.",
         "sqlLexer.closeCommentHint": "Close the comment with */.",
@@ -4119,6 +4122,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlFunctions.trim": "TRIM(texto)",
         "sqlFunctions.sum": "SUM([DISTINCT] número)",
         "sqlFunctions.substr": "SUBSTR(texto, inicio, [longitud])",
+        "sqlFunctions.regexprReplace": "REGEXPR_REPLACE(texto, patrón, sustitución[, banderas])",
         "sqlFunctions.concat": "CONCAT(texto, texto, …)",
         "sqlFunctions.round": "ROUND(número, decimales)",
         "sqlFunctions.nullif": "NULLIF(valor1, valor2)",
@@ -4583,6 +4587,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlExecutor.scalarSubqueryManyRowsHint": "Acota la subconsulta con WHERE, o agrégala (por ejemplo con MAX) para que devuelva una sola fila.",
         "sqlExecutor.textValue": "el texto «{value}»",
         "sqlExecutor.unknownPlanOp": "Operación de plan desconocida: «{operation}».",
+        "sqlExecutor.invalidRegex": "Expresión regular no válida: {message}",
+        "sqlExecutor.invalidRegexHint": "Revisa el patrón y las banderas opcionales (por ejemplo: «gi»).",
         "sqlExecutor.unsupportedFunction": "Función no soportada: «{func}».",
         "sqlExecutor.unsupportedOperator": "Operador no soportado: «{operator}».",
         "sqlLexer.closeCommentHint": "Cierra el comentario con */.",
@@ -9933,6 +9939,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       LENGTH: { min: 1, max: 1, doc: "sqlFunctions.length" },
       TRIM: { min: 1, max: 1, doc: "sqlFunctions.trim" },
       SUBSTR: { min: 2, max: 3, doc: "sqlFunctions.substr" },
+      REGEXPR_REPLACE: { min: 3, max: 4, doc: "sqlFunctions.regexprReplace" },
+      REGEXP_REPLACE: { min: 3, max: 4, doc: "sqlFunctions.regexprReplace" },
       CONCAT: { min: 1, max: 9, doc: "sqlFunctions.concat" },
       COALESCE: { min: 1, max: 9, doc: "sqlFunctions.coalesce" },
       IFNULL: { min: 2, max: 2, doc: "sqlFunctions.ifnull" },
@@ -11641,6 +11649,27 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             }
             const length = Math.max(SqlExecutor.coerceNumber(args[2], "SUBSTR"), 0);
             return text.slice(begin, begin + length);
+          }
+          case "REGEXPR_REPLACE":
+          case "REGEXP_REPLACE": {
+            if (args[0] === null || args[1] === null || args[2] === null) {
+              return null;
+            }
+            const text = String(args[0]);
+            const pattern = String(args[1]);
+            const replacement = String(args[2]);
+            const extra = args.length > 3 && args[3] !== null ? String(args[3]) : "";
+            const flags = extra.includes("g") ? extra : `g${extra}`;
+            let regex;
+            try {
+              regex = new RegExp(pattern, flags);
+            } catch (err) {
+              throw new SqlRuntimeError(
+                I18n.t("sqlExecutor.invalidRegex", { message: err.message }),
+                { hint: I18n.t("sqlExecutor.invalidRegexHint") },
+              );
+            }
+            return text.replace(regex, replacement);
           }
           case "CONCAT":
             return args.some((value) => value === null) ? null : args.join("");
@@ -23228,6 +23257,22 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       const nulo = SqlEngine.runSafe("SELECT CONCAT(name, NULL) AS t FROM employees LIMIT 1", buildSqlTestProject());
       assert(nulo.ok, "valid query: " + (nulo.error && nulo.error.message));
       assertEqual(nulo.result.rows[0][0], null, "null if any argument is null");
+    });
+
+    SelfTests.add("When_RegexprReplaceFunction_Expect_GlobalReplacementWithGroups", () => {
+      const project = buildSqlTestProject();
+      const sql = "SELECT REGEXPR_REPLACE(name, '[aeiou]', '_', 'gi') AS vowels, "
+        + "REGEXPR_REPLACE('García, Ana', '([^,]+), (.+)', '$2 $1') AS reordered, "
+        + "REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codes "
+        + "FROM employees LIMIT 1";
+      const result = SqlEngine.runSafe(sql, project);
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.rows[0], ["_n_", "Ana García", "code-01 / code-02"], "groups, flags and every match replaced");
+      const nulo = SqlEngine.runSafe("SELECT REGEXPR_REPLACE(name, NULL, 'x') AS r FROM employees LIMIT 1", project);
+      assert(nulo.ok, "valid query: " + (nulo.error && nulo.error.message));
+      assertEqual(nulo.result.rows[0][0], null, "null when an argument is null");
+      const malo = SqlEngine.runSafe("SELECT REGEXPR_REPLACE(name, '[', 'x') AS r FROM employees LIMIT 1", project);
+      assert(!malo.ok, "an invalid regular expression is an error");
     });
 
     SelfTests.add("When_EquiJoin_Expect_HashJoinUsed", () => {
