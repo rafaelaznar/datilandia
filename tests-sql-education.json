@@ -1828,6 +1828,12 @@
     {
       "name": "A01 · All campuses",
       "description": "SELECT * over campuses: the columns in table order and the 4 rows by identifier.",
+      "keywords": [
+        "education",
+        "basics",
+        "campuses",
+        "select-star"
+      ],
       "sql": "SELECT * FROM campuses ORDER BY id_campus",
       "assert": {
         "columns": [
@@ -1889,6 +1895,11 @@
     {
       "name": "A02 · Projection with aliases and arithmetic",
       "description": "Divides the capacity by 1000 and sorts by capacity descending: the 4 campuses from largest to smallest.",
+      "keywords": [
+        "education",
+        "basics",
+        "campuses"
+      ],
       "sql": "SELECT name AS campus, city, max_capacity / 1000 AS capacity_thousands, founded_year FROM campuses ORDER BY max_capacity DESC",
       "assert": {
         "columns": [
@@ -1930,6 +1941,11 @@
     {
       "name": "A03 · Large classrooms (>= 55 seats)",
       "description": "Numeric filter with >= and order by capacity descending and code: 5 classrooms.",
+      "keywords": [
+        "education",
+        "basics",
+        "classrooms"
+      ],
       "sql": "SELECT code, capacity, floor FROM classrooms WHERE capacity >= 55 ORDER BY capacity DESC, code",
       "assert": {
         "columns": [
@@ -1971,6 +1987,11 @@
     {
       "name": "A04 · Classrooms with a projector",
       "description": "Boolean filter (has_projector = true): 10 classrooms sorted by capacity.",
+      "keywords": [
+        "education",
+        "basics",
+        "classrooms"
+      ],
       "sql": "SELECT code, capacity FROM classrooms WHERE has_projector = true ORDER BY capacity DESC, code",
       "assert": {
         "columns": [
@@ -2026,6 +2047,11 @@
     {
       "name": "A05 · Teachers who do not research and have a heavy load",
       "description": "AND of a boolean (false) and a range (>= 10 h): 3 teachers.",
+      "keywords": [
+        "education",
+        "basics",
+        "teachers"
+      ],
       "sql": "SELECT name, last_name, category, weekly_hours FROM teachers WHERE is_researcher = false AND weekly_hours >= 10 ORDER BY weekly_hours DESC, last_name",
       "assert": {
         "columns": [
@@ -2061,6 +2087,12 @@
     {
       "name": "A06 · Students with no phone",
       "description": "IS NULL over a field with gaps: 8 students.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "null"
+      ],
       "sql": "SELECT name, last_name FROM students WHERE phone IS NULL ORDER BY last_name",
       "assert": {
         "columns": [
@@ -2108,6 +2140,12 @@
     {
       "name": "A07 · Teachers with an office (IS NOT NULL) in upper case",
       "description": "IS NOT NULL plus UPPER over two columns: 9 teachers with an office, the 3 associates without one are left out.",
+      "keywords": [
+        "education",
+        "basics",
+        "teachers",
+        "null"
+      ],
       "sql": "SELECT id_teacher, UPPER(name) AS name, UPPER(last_name) AS last_name, office FROM teachers WHERE office IS NOT NULL ORDER BY id_teacher",
       "assert": {
         "columns": [
@@ -2179,6 +2217,12 @@
     {
       "name": "A08 · Last names that start with G",
       "description": "LIKE with a trailing wildcard: 3 students called García, Gómez and Guerrero.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "like"
+      ],
       "sql": "SELECT name, last_name FROM students WHERE last_name LIKE 'G%' ORDER BY id_student",
       "assert": {
         "columns": [
@@ -2206,6 +2250,12 @@
     {
       "name": "A09 · Institutional addresses that do not start with a",
       "description": "LIKE and NOT LIKE combined with LIMIT 5 over the sorted address.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "like"
+      ],
       "sql": "SELECT name, last_name, email FROM students WHERE email LIKE '%@alu.es' AND email NOT LIKE 'a%' ORDER BY email LIMIT 5",
       "assert": {
         "columns": [
@@ -2247,6 +2297,12 @@
     {
       "name": "A10 · Three given classrooms (IN) and the remainder of the division",
       "description": "IN with a list of codes and the remainder operator (%): the remainder of dividing the capacity by 10.",
+      "keywords": [
+        "education",
+        "basics",
+        "classrooms",
+        "in"
+      ],
       "sql": "SELECT code, capacity, capacity % 10 AS remainder FROM classrooms WHERE code IN ('K-101', 'B-SALA', 'M-001') ORDER BY code",
       "assert": {
         "columns": [
@@ -2278,6 +2334,12 @@
     {
       "name": "A11 · Degrees that are neither computing nor education (NOT IN)",
       "description": "NOT IN with three codes: Data Science, Software Engineering and Law are left.",
+      "keywords": [
+        "education",
+        "basics",
+        "degrees",
+        "in"
+      ],
       "sql": "SELECT code, name, level FROM degrees WHERE code NOT IN ('GINF', 'GMED', 'GEDU') ORDER BY code",
       "assert": {
         "columns": [
@@ -2309,6 +2371,12 @@
     {
       "name": "A12 · Enrollments passed with a grade between 7 and 8 (BETWEEN)",
       "description": "BETWEEN includes the ends: 12 enrollments with a grade of 7, 7.5 or 8, sorted by grade.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "between"
+      ],
       "sql": "SELECT id_enrollment, grade FROM enrollments WHERE grade BETWEEN 7 AND 8 ORDER BY grade, id_enrollment",
       "assert": {
         "columns": [
@@ -2376,6 +2444,12 @@
     {
       "name": "A13 · First and second year subjects with few credits",
       "description": "Parentheses with OR, a boolean and NOT BETWEEN: 9 compulsory subjects of years 1 and 2 with fewer than 7 credits.",
+      "keywords": [
+        "education",
+        "basics",
+        "subjects",
+        "between"
+      ],
       "sql": "SELECT name, year, credits FROM subjects WHERE (year = 1 OR year = 2) AND is_compulsory = true AND credits NOT BETWEEN 7 AND 10 ORDER BY name",
       "assert": {
         "columns": [
@@ -2437,6 +2511,12 @@
     {
       "name": "A14 · Teacher categories (DISTINCT)",
       "description": "DISTINCT over a text column: 4 professional categories.",
+      "keywords": [
+        "education",
+        "basics",
+        "teachers",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT category FROM teachers ORDER BY category",
       "assert": {
         "columns": [
@@ -2463,6 +2543,12 @@
     {
       "name": "A15 · Level/officialness combinations (DISTINCT of two columns)",
       "description": "DISTINCT over two columns, a boolean included: 3 combinations.",
+      "keywords": [
+        "education",
+        "basics",
+        "degrees",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT level, is_official FROM degrees ORDER BY level, is_official",
       "assert": {
         "columns": [
@@ -2490,6 +2576,13 @@
     {
       "name": "A16 · Totals of the records (COUNT, DISTINCT, MIN, MAX, SUM)",
       "description": "Aggregates with no GROUP BY: 48 enrollments, 32 graded, 21 students and 14 subjects with enrollments.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT COUNT(*) AS enrollments, COUNT(grade) AS with_grade, COUNT(DISTINCT id_student) AS students, COUNT(DISTINCT id_subject) AS subjects, MIN(grade) AS min_grade, MAX(grade) AS max_grade, SUM(grade) AS grade_sum FROM enrollments",
       "assert": {
         "columns": [
@@ -2519,6 +2612,13 @@
     {
       "name": "A17 · Enrollments by status",
       "description": "GROUP BY with two aggregates: the 13 active and the 3 cancelled have no grade, the 32 passed do.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT status, COUNT(*) AS total, COUNT(grade) AS graded FROM enrollments GROUP BY status ORDER BY total DESC, status",
       "assert": {
         "columns": [
@@ -2550,6 +2650,14 @@
     {
       "name": "A18 · Enrollments by academic year (HAVING)",
       "description": "GROUP BY with HAVING COUNT(*) > 20: both years go over the threshold.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT academic_year, COUNT(*) AS total FROM enrollments GROUP BY academic_year HAVING COUNT(*) > 20 ORDER BY academic_year",
       "assert": {
         "columns": [
@@ -2573,6 +2681,14 @@
     {
       "name": "A19 · Students with three or more enrollments",
       "description": "GROUP BY over the M:M plus HAVING >= 3: 10 students, one of them with 4 enrollments.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_student, COUNT(*) AS enrollments FROM enrollments GROUP BY id_student HAVING COUNT(*) >= 3 ORDER BY enrollments DESC, id_student",
       "assert": {
         "columns": [
@@ -2628,6 +2744,13 @@
     {
       "name": "A20 · Classrooms by the first letter of the code (GROUP BY with an expression)",
       "description": "GROUP BY over SUBSTR: 7 different initials with their number of classrooms and added seats.",
+      "keywords": [
+        "education",
+        "basics",
+        "classrooms",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT SUBSTR(code, 1, 1) AS initial, COUNT(*) AS classrooms, SUM(capacity) AS seats FROM classrooms GROUP BY SUBSTR(code, 1, 1) ORDER BY initial",
       "assert": {
         "columns": [
@@ -2679,6 +2802,11 @@
     {
       "name": "A21 · Grades of subject 6, from highest to lowest (NULLS LAST)",
       "description": "ORDER BY ... DESC NULLS LAST: the cancelled enrollment with no grade goes last.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments"
+      ],
       "sql": "SELECT id_enrollment, grade FROM enrollments WHERE id_subject = 6 ORDER BY grade DESC NULLS LAST, id_enrollment",
       "assert": {
         "columns": [
@@ -2710,6 +2838,11 @@
     {
       "name": "A22 · Grades of subject 6, from lowest to highest (nulls first)",
       "description": "In ASC the nulls go first by default: the enrollment with no grade heads the result.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments"
+      ],
       "sql": "SELECT id_enrollment, grade FROM enrollments WHERE id_subject = 6 ORDER BY grade ASC, id_enrollment",
       "assert": {
         "columns": [
@@ -2741,6 +2874,11 @@
     {
       "name": "A23 · Oldest students, page 2 (LIMIT/OFFSET)",
       "description": "It sorts by date of birth and skips the first two rows: 4 rows from the third one on.",
+      "keywords": [
+        "education",
+        "basics",
+        "students"
+      ],
       "sql": "SELECT name, last_name, birth_date FROM students ORDER BY birth_date LIMIT 4 OFFSET 2",
       "assert": {
         "columns": [
@@ -2777,6 +2915,11 @@
     {
       "name": "A24 · Four students starting at the fourth (MySQL style LIMIT)",
       "description": "LIMIT 3, 4 is the same as OFFSET 3 LIMIT 4: it returns identifiers 4 to 7.",
+      "keywords": [
+        "education",
+        "basics",
+        "students"
+      ],
       "sql": "SELECT id_student, name FROM students ORDER BY id_student LIMIT 3, 4",
       "assert": {
         "columns": [
@@ -2808,6 +2951,12 @@
     {
       "name": "A25 · Record of three students (concatenation and text functions)",
       "description": "|| concatenates, LENGTH counts characters and SUBSTR trims: last names in upper case and three initials.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "in"
+      ],
       "sql": "SELECT UPPER(last_name) || ', ' || name AS record, LENGTH(name) AS letters, SUBSTR(name, 1, 3) AS initials FROM students WHERE id_student IN (1, 9, 14) ORDER BY id_student",
       "assert": {
         "columns": [
@@ -2839,6 +2988,12 @@
     {
       "name": "A26 · Missing grades: COALESCE, IFNULL, NULLIF and ROUND",
       "description": "The null values are replaced by -1 and 0; NULLIF turns «cancelled» into null and the distance to 7.5 spreads the null.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "in"
+      ],
       "sql": "SELECT id_enrollment, COALESCE(grade, -1) AS grade_coalesce, IFNULL(grade, 0) AS grade_ifnull, NULLIF(status, 'cancelled') AS status_or_null, ROUND(ABS(grade - 7.5), 2) AS distance FROM enrollments WHERE id_enrollment IN (2, 6, 28, 30, 48) ORDER BY id_enrollment",
       "assert": {
         "columns": [
@@ -2892,6 +3047,11 @@
     {
       "name": "A27 · Campus phone normalised",
       "description": "IFNULL + TRIM + NULLIF: the campus with no phone returns null instead of an empty string.",
+      "keywords": [
+        "education",
+        "basics",
+        "campuses"
+      ],
       "sql": "SELECT id_campus, NULLIF(TRIM(IFNULL(phone, '')), '') AS phone, name FROM campuses ORDER BY id_campus",
       "assert": {
         "columns": [
@@ -2928,6 +3088,11 @@
     {
       "name": "A28 · Boards that are not digital (comment and brackets)",
       "description": "The -- comment is ignored, [code] is the same as code and <> also discards the nulls.",
+      "keywords": [
+        "education",
+        "basics",
+        "classrooms"
+      ],
       "sql": "-- Classrooms with a chalk board (those with an unknown board do not count)\nSELECT [code] AS classroom, [board_type] AS board, capacity FROM classrooms WHERE board_type <> 'digital' ORDER BY code",
       "assert": {
         "columns": [
@@ -2964,6 +3129,11 @@
     {
       "name": "A29 · Teachers who are not associates (NOT)",
       "description": "NOT over an equality: 9 of the 12 teachers are left.",
+      "keywords": [
+        "education",
+        "basics",
+        "teachers"
+      ],
       "sql": "SELECT name, category FROM teachers WHERE NOT (category = 'Associate') ORDER BY id_teacher",
       "assert": {
         "columns": [
@@ -3015,6 +3185,11 @@
     {
       "name": "A30 · A query with no results",
       "description": "No classroom goes over 200 seats: the result has the columns and zero rows (rowCount 0).",
+      "keywords": [
+        "education",
+        "basics",
+        "classrooms"
+      ],
       "sql": "SELECT code FROM classrooms WHERE capacity > 200",
       "assert": {
         "columns": [
@@ -3029,6 +3204,14 @@
     {
       "name": "A31 · Average grade per subject (HAVING and ORDER BY by alias)",
       "description": "Only subjects with two or more grades; it sorts by the average and a tie is broken by identifier.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_subject, COUNT(*) AS enrollments, COUNT(grade) AS graded, ROUND(AVG(grade), 2) AS average_grade FROM enrollments GROUP BY id_subject HAVING COUNT(grade) >= 2 ORDER BY average_grade DESC, id_subject",
       "assert": {
         "columns": [
@@ -3106,6 +3289,13 @@
     {
       "name": "A32 · Students and addresses per campus",
       "description": "GROUP BY id_campus with COUNT(*) and COUNT(email): 18 of the 24 students have an address.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT id_campus, COUNT(*) AS students, COUNT(email) AS with_email FROM students GROUP BY id_campus ORDER BY id_campus",
       "assert": {
         "columns": [
@@ -3142,6 +3332,11 @@
     {
       "name": "A33 · Records with CONCAT (text and numbers)",
       "description": "Joins name and surname with CONCAT, and the degree code with the identifier: the first 7 students by identifier. The contact is null when there is no email.",
+      "keywords": [
+        "education",
+        "basics",
+        "students"
+      ],
       "sql": "SELECT CONCAT(name, ' ', last_name) AS student, CONCAT(degree_code, '-', id_student) AS enrollment_code, CONCAT(degree_code, ' · ', email) AS contact FROM students ORDER BY id_student LIMIT 7",
       "assert": {
         "columns": [
@@ -3193,6 +3388,13 @@
     {
       "name": "A34 · Global totals with every aggregate (no GROUP BY)",
       "description": "Aggregates without GROUP BY, one of each kind: 48 enrollments, 32 graded, 21 students and 3 different statuses; total 234, minimum 5, maximum 10 and rounded average 7.31.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT COUNT(*) AS enrollments, COUNT(grade) AS graded, COUNT(DISTINCT id_student) AS students, COUNT(DISTINCT status) AS statuses, SUM(grade) AS total_grade, MIN(grade) AS minimum, MAX(grade) AS maximum, ROUND(AVG(grade), 2) AS average FROM enrollments",
       "assert": {
         "columns": [
@@ -3224,6 +3426,14 @@
     {
       "name": "A35 · Every aggregate by status (GROUP BY)",
       "description": "GROUP BY status with COUNT(*), COUNT(DISTINCT), SUM, MIN, MAX and AVG: only the 32 passed have grades; active and cancelled give NULL in the grade aggregates.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT status, COUNT(*) AS total, COUNT(DISTINCT id_student) AS students, SUM(grade) AS total_grade, MIN(grade) AS minimum, MAX(grade) AS maximum, ROUND(AVG(grade), 2) AS average FROM enrollments GROUP BY status ORDER BY total DESC, status",
       "assert": {
         "columns": [
@@ -3271,6 +3481,14 @@
     {
       "name": "A36 · Subjects with four enrollments and a high average (double HAVING)",
       "description": "HAVING with two aggregates at once: subjects with at least 4 enrollments and an average of 7 or more; four subjects meet both thresholds.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_subject, COUNT(*) AS enrollments, COUNT(grade) AS graded, ROUND(AVG(grade), 2) AS average FROM enrollments GROUP BY id_subject HAVING COUNT(*) >= 4 AND AVG(grade) >= 7 ORDER BY average DESC, id_subject",
       "assert": {
         "columns": [
@@ -3312,6 +3530,14 @@
     {
       "name": "A37 · Students and contact details per campus (COUNT of columns with NULL)",
       "description": "COUNT(*) counts rows and COUNT(column) only the non-null values: campus 2 has 6 students but fewer e-mails and phones. HAVING keeps the campuses with 5 students or more.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_campus, COUNT(*) AS students, COUNT(email) AS with_email, COUNT(phone) AS with_phone FROM students GROUP BY id_campus HAVING COUNT(*) >= 5 ORDER BY students DESC, id_campus",
       "assert": {
         "columns": [
@@ -3347,6 +3573,15 @@
     {
       "name": "A38 · Teachers by category with distinct offices (HAVING COUNT DISTINCT)",
       "description": "COUNT(office) ignores nulls and COUNT(DISTINCT office) counts distinct offices: the three assistant teachers have no office and are filtered out by the HAVING.",
+      "keywords": [
+        "education",
+        "basics",
+        "teachers",
+        "group-by",
+        "having",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT category, COUNT(*) AS teachers, COUNT(office) AS with_office, COUNT(DISTINCT office) AS offices FROM teachers GROUP BY category HAVING COUNT(DISTINCT office) >= 2 ORDER BY offices DESC, category",
       "assert": {
         "columns": [
@@ -3382,6 +3617,14 @@
     {
       "name": "A39 · Enrollments by academic year and status (GROUP BY of two columns)",
       "description": "Grouping by two columns with HAVING: only two combinations reach 10 enrollments; the active one has no grades and its total is NULL.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT academic_year, status, COUNT(*) AS total, SUM(grade) AS total_grade FROM enrollments GROUP BY academic_year, status HAVING COUNT(*) >= 10 ORDER BY academic_year, status",
       "assert": {
         "columns": [
@@ -3411,6 +3654,15 @@
     {
       "name": "A40 · Subjects averaging above 7.5 among graded enrollments (WHERE and HAVING)",
       "description": "WHERE removes enrollments without a grade before grouping and HAVING filters the groups by their average: four subjects remain, one of them with a single grade.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate",
+        "null"
+      ],
       "sql": "SELECT id_subject, COUNT(*) AS enrollments, ROUND(AVG(grade), 2) AS average FROM enrollments WHERE grade IS NOT NULL GROUP BY id_subject HAVING AVG(grade) > 7.5 ORDER BY average DESC, id_subject",
       "assert": {
         "columns": [
@@ -3447,6 +3699,14 @@
     {
       "name": "A41 · Classrooms per floor with SUM, MIN and MAX (HAVING SUM)",
       "description": "Per floor, COUNT(*), SUM, MIN and MAX of the capacity; HAVING keeps the floors adding up to 100 seats or more.",
+      "keywords": [
+        "education",
+        "basics",
+        "classrooms",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT floor, COUNT(*) AS classrooms, SUM(capacity) AS seats, MIN(capacity) AS minimum, MAX(capacity) AS maximum FROM classrooms GROUP BY floor HAVING SUM(capacity) >= 100 ORDER BY seats DESC",
       "assert": {
         "columns": [
@@ -3479,6 +3739,14 @@
     {
       "name": "A42 · Weekly teacher hours by category with MIN, MAX and AVG (HAVING AVG)",
       "description": "MIN, MAX and rounded AVG of the weekly hours by category; the HAVING requires an average of 10 hours or more.",
+      "keywords": [
+        "education",
+        "basics",
+        "teachers",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT category, COUNT(*) AS teachers, MIN(weekly_hours) AS min_hours, MAX(weekly_hours) AS max_hours, ROUND(AVG(weekly_hours), 1) AS average_hours FROM teachers GROUP BY category HAVING AVG(weekly_hours) >= 10 ORDER BY average_hours DESC",
       "assert": {
         "columns": [
@@ -3518,6 +3786,14 @@
     {
       "name": "A43 · Students by birth year (GROUP BY with an expression and HAVING)",
       "description": "GROUP BY on the year of the date (SUBSTR) with COUNT(*) and COUNT(phone); HAVING requires at least two students per year.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT SUBSTR(birth_date, 1, 4) AS year, COUNT(*) AS students, COUNT(phone) AS with_phone FROM students GROUP BY SUBSTR(birth_date, 1, 4) HAVING COUNT(*) >= 2 ORDER BY year",
       "assert": {
         "columns": [
@@ -3554,6 +3830,14 @@
     {
       "name": "A44 · Aggregates over the grouped column itself (COUNT of status)",
       "description": "Aggregates over the grouped column and over others: COUNT(status) matches COUNT(*) and COUNT(DISTINCT status) is 1; graded only shows up in the passed rows.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT status, COUNT(*) AS total, COUNT(status) AS with_status, COUNT(DISTINCT status) AS statuses, MAX(id_enrollment) AS last_id, COUNT(grade) AS graded FROM enrollments GROUP BY status ORDER BY total DESC, status",
       "assert": {
         "columns": [
@@ -3597,6 +3881,14 @@
     {
       "name": "A45 · HAVING with aggregates that are not in the SELECT",
       "description": "The HAVING uses COUNT(*) and SUM(grade), which do not appear in the SELECT: only the passed enrollments meet both thresholds.",
+      "keywords": [
+        "education",
+        "basics",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT status FROM enrollments GROUP BY status HAVING COUNT(*) >= 13 AND SUM(grade) > 200 ORDER BY status",
       "assert": {
         "columns": [
@@ -3614,6 +3906,15 @@
     {
       "name": "A46 · Students with an e-mail per campus (WHERE, GROUP BY and HAVING)",
       "description": "WHERE filters before grouping: per campus, COUNT(*) of students with an institutional e-mail and COUNT(phone) of those with a phone; HAVING requires 4 or more.",
+      "keywords": [
+        "education",
+        "basics",
+        "students",
+        "group-by",
+        "having",
+        "aggregate",
+        "like"
+      ],
       "sql": "SELECT id_campus, COUNT(*) AS students, COUNT(phone) AS with_phone FROM students WHERE email LIKE '%@alu.es' GROUP BY id_campus HAVING COUNT(*) >= 4 ORDER BY students DESC, id_campus",
       "assert": {
         "columns": [
@@ -3645,6 +3946,13 @@
     {
       "name": "B01 · Campuses with their buildings (INNER JOIN)",
       "description": "1:M join by id_campus: the 8 buildings with the name of their campus, sorted by campus and building.",
+      "keywords": [
+        "education",
+        "joins",
+        "campuses",
+        "buildings",
+        "join"
+      ],
       "sql": "SELECT s.name AS campus, e.name AS building, e.floors, e.has_lift FROM campuses AS s INNER JOIN buildings AS e ON e.id_campus = s.id_campus ORDER BY s.id_campus, e.id_building",
       "assert": {
         "columns": [
@@ -3710,6 +4018,14 @@
     {
       "name": "B02 · Three tables: large classrooms of campus 1",
       "description": "campuses → buildings → classrooms with a filter by campus and capacity: 3 classrooms, from largest to smallest.",
+      "keywords": [
+        "education",
+        "joins",
+        "campuses",
+        "buildings",
+        "classrooms",
+        "join"
+      ],
       "sql": "SELECT s.name AS campus, e.name AS building, a.code, a.capacity FROM campuses AS s INNER JOIN buildings AS e ON e.id_campus = s.id_campus INNER JOIN classrooms AS a ON a.id_building = e.id_building WHERE s.id_campus = 1 AND a.capacity >= 45 ORDER BY a.capacity DESC, a.code",
       "assert": {
         "columns": [
@@ -3745,6 +4061,14 @@
     {
       "name": "B03 · Campuses with no buildings (LEFT JOIN with no pair)",
       "description": "LEFT JOIN plus IS NULL: the 4 campuses have buildings, so the result is empty.",
+      "keywords": [
+        "education",
+        "joins",
+        "campuses",
+        "buildings",
+        "join",
+        "null"
+      ],
       "sql": "SELECT s.name AS campus FROM campuses AS s LEFT JOIN buildings AS e ON e.id_campus = s.id_campus WHERE e.id_building IS NULL ORDER BY s.id_campus",
       "assert": {
         "columns": [
@@ -3759,6 +4083,14 @@
     {
       "name": "B03b · Buildings with no classrooms",
       "description": "LEFT JOIN with IS NULL: only the Sports Pavilion is left with no classrooms.",
+      "keywords": [
+        "education",
+        "joins",
+        "buildings",
+        "classrooms",
+        "join",
+        "null"
+      ],
       "sql": "SELECT e.id_building, e.name FROM buildings AS e LEFT JOIN classrooms AS a ON a.id_building = e.id_building WHERE a.id_classroom IS NULL ORDER BY e.id_building",
       "assert": {
         "columns": [
@@ -3778,6 +4110,14 @@
     {
       "name": "B04 · Teachers with no subjects",
       "description": "LEFT JOIN teachers → subjects with IS NULL: 3 associates teach no subject.",
+      "keywords": [
+        "education",
+        "joins",
+        "teachers",
+        "subjects",
+        "join",
+        "null"
+      ],
       "sql": "SELECT d.id_teacher, d.name, d.last_name FROM teachers AS d LEFT JOIN subjects AS a ON a.id_teacher = d.id_teacher WHERE a.id_subject IS NULL ORDER BY d.id_teacher",
       "assert": {
         "columns": [
@@ -3809,6 +4149,11 @@
     {
       "name": "B05 · Implicit join with commas (classrooms of campus 2)",
       "description": "FROM classrooms, buildings with the equality in the WHERE: the engine resolves it as a join.",
+      "keywords": [
+        "education",
+        "joins",
+        "classrooms"
+      ],
       "sql": "SELECT a.code, a.capacity, e.name AS building FROM classrooms AS a, buildings AS e WHERE a.id_building = e.id_building AND e.id_campus = 2 ORDER BY a.id_classroom",
       "assert": {
         "columns": [
@@ -3840,6 +4185,15 @@
     {
       "name": "B06 · Subjects and credits per degree (join by a text code)",
       "description": "Join by degrees.code = subjects.degree_code, with COUNT and SUM per degree.",
+      "keywords": [
+        "education",
+        "joins",
+        "degrees",
+        "subjects",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.code, e.name AS degree, COUNT(a.id_subject) AS subjects, SUM(a.credits) AS credits FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code GROUP BY e.code, e.name ORDER BY credits DESC, e.code",
       "assert": {
         "columns": [
@@ -3893,6 +4247,16 @@
     {
       "name": "B07 · Degrees with at least three subjects (LEFT JOIN + HAVING)",
       "description": "LEFT JOIN with HAVING COUNT >= 3: Computer Engineering, Primary Education and Medicine.",
+      "keywords": [
+        "education",
+        "joins",
+        "degrees",
+        "subjects",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT e.code, e.name AS degree, COUNT(a.id_subject) AS subjects FROM degrees AS e LEFT JOIN subjects AS a ON a.degree_code = e.code GROUP BY e.code, e.name HAVING COUNT(a.id_subject) >= 3 ORDER BY subjects DESC, e.code",
       "assert": {
         "columns": [
@@ -3924,6 +4288,15 @@
     {
       "name": "B08 · Classrooms and seats per building",
       "description": "Grouping by building with COUNT and SUM: the Pythagoras Lecture Hall heads it with 150 seats.",
+      "keywords": [
+        "education",
+        "joins",
+        "buildings",
+        "classrooms",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.id_building, e.name AS building, COUNT(a.id_classroom) AS classrooms, SUM(a.capacity) AS seats FROM buildings AS e INNER JOIN classrooms AS a ON a.id_building = e.id_building GROUP BY e.id_building, e.name ORDER BY seats DESC, e.id_building",
       "assert": {
         "columns": [
@@ -3983,6 +4356,15 @@
     {
       "name": "B09 · Classrooms per building, including those with none (LEFT JOIN)",
       "description": "LEFT JOIN with COUNT: the Sports Pavilion appears with 0 classrooms.",
+      "keywords": [
+        "education",
+        "joins",
+        "buildings",
+        "classrooms",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.id_building, e.name AS building, COUNT(a.id_classroom) AS classrooms FROM buildings AS e LEFT JOIN classrooms AS a ON a.id_building = e.id_building GROUP BY e.id_building, e.name ORDER BY classrooms ASC, e.id_building",
       "assert": {
         "columns": [
@@ -4039,6 +4421,15 @@
     {
       "name": "B10 · Teaching load: subjects and classroom hours",
       "description": "teachers → subjects with COUNT and SUM: Elena and Carmen go over 145 hours.",
+      "keywords": [
+        "education",
+        "joins",
+        "teachers",
+        "subjects",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT d.id_teacher, d.name, COUNT(a.id_subject) AS subjects, SUM(a.classroom_hours) AS hours FROM teachers AS d INNER JOIN subjects AS a ON a.id_teacher = d.id_teacher GROUP BY d.id_teacher, d.name ORDER BY hours DESC, d.id_teacher",
       "assert": {
         "columns": [
@@ -4110,6 +4501,16 @@
     {
       "name": "B11 · Teachers with two subjects and 12 credits or more (double HAVING)",
       "description": "HAVING with COUNT and SUM at once: only Carmen, Elena and Marc make the cut.",
+      "keywords": [
+        "education",
+        "joins",
+        "teachers",
+        "subjects",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT d.id_teacher, d.last_name, COUNT(*) AS subjects, SUM(a.credits) AS credits FROM teachers AS d INNER JOIN subjects AS a ON a.id_teacher = d.id_teacher GROUP BY d.id_teacher, d.last_name HAVING COUNT(*) >= 2 AND SUM(a.credits) >= 12 ORDER BY credits DESC, d.id_teacher",
       "assert": {
         "columns": [
@@ -4145,6 +4546,15 @@
     {
       "name": "B12 · Subjects with no language set, with their degree and teacher",
       "description": "Three tables (subjects + degrees + teachers) and IS NULL over the language.",
+      "keywords": [
+        "education",
+        "joins",
+        "subjects",
+        "degrees",
+        "teachers",
+        "join",
+        "null"
+      ],
       "sql": "SELECT a.id_subject, a.name AS subject, e.name AS degree, d.last_name AS teacher, a.credits FROM subjects AS a INNER JOIN degrees AS e ON e.code = a.degree_code INNER JOIN teachers AS d ON d.id_teacher = a.id_teacher WHERE a.language IS NULL ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -4191,6 +4601,15 @@
     {
       "name": "B13 · Students, addresses and phones per campus",
       "description": "LEFT JOIN campuses → students with three counts: 18 addresses and 16 phones in all.",
+      "keywords": [
+        "education",
+        "joins",
+        "campuses",
+        "students",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT s.id_campus, s.name AS campus, COUNT(e.id_student) AS students, COUNT(e.email) AS with_email, COUNT(e.phone) AS with_phone FROM campuses AS s LEFT JOIN students AS e ON e.id_campus = s.id_campus GROUP BY s.id_campus, s.name ORDER BY students DESC, s.id_campus",
       "assert": {
         "columns": [
@@ -4237,6 +4656,11 @@
     {
       "name": "B14 · Cartesian product (6 degrees × 4 campuses)",
       "description": "With no join condition you get every combination; LIMIT 6 shows the first ones.",
+      "keywords": [
+        "education",
+        "joins",
+        "degrees"
+      ],
       "sql": "SELECT e.code, s.name AS campus FROM degrees AS e, campuses AS s ORDER BY e.code, s.id_campus LIMIT 6",
       "assert": {
         "columns": [
@@ -4276,6 +4700,13 @@
     {
       "name": "B15 · The five largest classrooms (JOIN + ORDER BY alias + LIMIT)",
       "description": "It sorts by the alias of a column and by the classroom code; the tie at 55 seats is decided by the classroom.",
+      "keywords": [
+        "education",
+        "joins",
+        "classrooms",
+        "buildings",
+        "join"
+      ],
       "sql": "SELECT a.code AS classroom, a.capacity AS seats, e.name AS building FROM classrooms AS a INNER JOIN buildings AS e ON e.id_building = a.id_building ORDER BY seats DESC, classroom LIMIT 5",
       "assert": {
         "columns": [
@@ -4317,6 +4748,16 @@
     {
       "name": "B16 · Distinct teachers per degree (COUNT DISTINCT)",
       "description": "COUNT(DISTINCT id_teacher) per degree: Computer Engineering is the one that spreads its teaching over more teachers.",
+      "keywords": [
+        "education",
+        "joins",
+        "degrees",
+        "subjects",
+        "join",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT e.code, COUNT(DISTINCT a.id_teacher) AS distinct_teachers, COUNT(*) AS subjects FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code GROUP BY e.code ORDER BY distinct_teachers DESC, e.code",
       "assert": {
         "columns": [
@@ -4363,6 +4804,13 @@
     {
       "name": "B17 · Teaching hours per category (MIN and MAX)",
       "description": "GROUP BY category with a count and the extremes: senior lecturers are the most numerous.",
+      "keywords": [
+        "education",
+        "joins",
+        "teachers",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT category, COUNT(*) AS teachers, MIN(weekly_hours) AS min_hours, MAX(weekly_hours) AS max_hours FROM teachers GROUP BY category ORDER BY teachers DESC, category",
       "assert": {
         "columns": [
@@ -4404,6 +4852,14 @@
     {
       "name": "B18 · Basic subjects of years one and two with their teacher",
       "description": "Join teachers → subjects with BETWEEN, >= and a boolean in the WHERE: 8 subjects.",
+      "keywords": [
+        "education",
+        "joins",
+        "teachers",
+        "subjects",
+        "join",
+        "between"
+      ],
       "sql": "SELECT d.name, d.last_name, a.name AS subject, a.year FROM teachers AS d INNER JOIN subjects AS a ON a.id_teacher = d.id_teacher WHERE a.year BETWEEN 1 AND 2 AND a.credits >= 6 AND a.is_compulsory = true ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -4469,6 +4925,17 @@
     {
       "name": "B19 · Enrollments and average grade per level (Bachelor / Master)",
       "description": "Four tables and ROUND(AVG()): masters raise the average of the bachelor (43 enrollments against 5).",
+      "keywords": [
+        "education",
+        "joins",
+        "degrees",
+        "subjects",
+        "enrollments",
+        "join",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT e.level, COUNT(DISTINCT m.id_enrollment) AS enrollments, ROUND(AVG(m.grade), 2) AS average_grade FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code INNER JOIN enrollments AS m ON m.id_subject = a.id_subject GROUP BY e.level ORDER BY average_grade DESC",
       "assert": {
         "columns": [
@@ -4495,6 +4962,13 @@
     {
       "name": "B20 · Optional subjects and their degree",
       "description": "Boolean filter (is_compulsory = false) over the join degrees ↔ subjects: 5 optional subjects.",
+      "keywords": [
+        "education",
+        "joins",
+        "subjects",
+        "degrees",
+        "join"
+      ],
       "sql": "SELECT a.id_subject, a.name, e.name AS degree, a.language FROM subjects AS a INNER JOIN degrees AS e ON e.code = a.degree_code WHERE a.is_compulsory = false ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -4542,6 +5016,13 @@
     {
       "name": "B21 · Master students with their degree",
       "description": "Join students → degrees by the text code, filtering by level Master: 4 students.",
+      "keywords": [
+        "education",
+        "joins",
+        "students",
+        "degrees",
+        "join"
+      ],
       "sql": "SELECT st.id_student, st.name, st.last_name, e.name AS degree, e.level FROM students AS st INNER JOIN degrees AS e ON e.code = st.degree_code WHERE e.level = 'Master' ORDER BY st.id_student",
       "assert": {
         "columns": [
@@ -4588,6 +5069,11 @@
     {
       "name": "B22 · Daily schedule of the research staff",
       "description": "Boolean filter and ROUND over a division, sorted by weekly hours: 6 researchers.",
+      "keywords": [
+        "education",
+        "joins",
+        "teachers"
+      ],
       "sql": "SELECT d.name, d.weekly_hours, ROUND(d.weekly_hours / 5, 1) AS hours_per_day FROM teachers AS d WHERE d.is_researcher = true ORDER BY d.weekly_hours DESC, d.id_teacher",
       "assert": {
         "columns": [
@@ -4634,6 +5120,14 @@
     {
       "name": "C01 · Full record of one student (M:M resolved)",
       "description": "Three tables over the M:M: the 4 subjects of Ana, with grade and status.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "enrollments",
+        "students",
+        "subjects",
+        "join"
+      ],
       "sql": "SELECT m.id_enrollment, st.last_name AS student, a.name AS subject, m.grade, m.status FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.id_student = 1 ORDER BY m.id_enrollment",
       "assert": {
         "columns": [
@@ -4680,6 +5174,16 @@
     {
       "name": "C02 · Subjects with four or more students (large group)",
       "description": "It walks the M:M from subject → enrollments and groups with HAVING >= 4: 8 subjects.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "subjects",
+        "enrollments",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT a.id_subject, a.name AS subject, COUNT(DISTINCT m.id_student) AS students FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject GROUP BY a.id_subject, a.name HAVING COUNT(DISTINCT m.id_student) >= 4 ORDER BY students DESC, a.id_subject",
       "assert": {
         "columns": [
@@ -4736,6 +5240,16 @@
     {
       "name": "C03 · Load of every student (subjects and credits)",
       "description": "The other side of the M:M: 21 students with enrollments, sorted by credits and breaking ties by identifier.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "students",
+        "enrollments",
+        "subjects",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT st.id_student, st.name, st.last_name, COUNT(*) AS subjects, SUM(a.credits) AS credits FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY st.id_student, st.name, st.last_name ORDER BY credits DESC, st.id_student",
       "assert": {
         "columns": [
@@ -4901,6 +5415,13 @@
     {
       "name": "C04 · Grades of one student with COALESCE",
       "description": "COALESCE turns the null of the active subject into 0 instead of leaving it empty.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "enrollments",
+        "subjects",
+        "join"
+      ],
       "sql": "SELECT a.name AS subject, m.status, COALESCE(m.grade, 0) AS grade FROM enrollments AS m INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.id_student = 4 ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -4932,6 +5453,15 @@
     {
       "name": "C05 · Enrollments not graded yet (IS NULL)",
       "description": "The first six enrollments with no grade, with student and subject.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "enrollments",
+        "students",
+        "subjects",
+        "join",
+        "null"
+      ],
       "sql": "SELECT m.id_enrollment, st.last_name AS student, a.name AS subject, m.status FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.grade IS NULL ORDER BY m.id_enrollment LIMIT 6",
       "assert": {
         "columns": [
@@ -4985,6 +5515,14 @@
     {
       "name": "C06 · Enrollments with distinction (grade >= 9)",
       "description": "Six enrollments of 9 or more, from the highest grade down and breaking ties by student.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "enrollments",
+        "students",
+        "subjects",
+        "join"
+      ],
       "sql": "SELECT st.last_name AS student, a.name AS subject, m.grade FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.grade >= 9 ORDER BY m.grade DESC, st.id_student",
       "assert": {
         "columns": [
@@ -5031,6 +5569,16 @@
     {
       "name": "C07 · Students with no enrollment (LEFT JOIN and null average)",
       "description": "Three students have no enrollments: COUNT is 0 and ROUND(AVG()) is null.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "students",
+        "enrollments",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT st.id_student, st.name, st.last_name, COUNT(m.id_enrollment) AS enrollments, ROUND(AVG(m.grade), 2) AS average_grade FROM students AS st LEFT JOIN enrollments AS m ON m.id_student = st.id_student GROUP BY st.id_student, st.name, st.last_name HAVING COUNT(m.id_enrollment) = 0 ORDER BY st.id_student",
       "assert": {
         "columns": [
@@ -5070,6 +5618,14 @@
     {
       "name": "C08 · Subjects with no enrollment",
       "description": "LEFT JOIN with IS NULL: Testing and Quality and Business Law are left with no students.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "subjects",
+        "enrollments",
+        "join",
+        "null"
+      ],
       "sql": "SELECT a.id_subject, a.name, a.degree_code FROM subjects AS a LEFT JOIN enrollments AS m ON m.id_subject = a.id_subject WHERE m.id_enrollment IS NULL ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -5096,6 +5652,17 @@
     {
       "name": "C09 · Coverage: students with enrollments per degree",
       "description": "Four tables (degrees → subjects → enrollments → students) to count the real students of every degree.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "degrees",
+        "subjects",
+        "enrollments",
+        "join",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT e.code, COUNT(DISTINCT st.id_student) AS students FROM degrees AS e INNER JOIN subjects AS a ON a.degree_code = e.code INNER JOIN enrollments AS m ON m.id_subject = a.id_subject INNER JOIN students AS st ON st.id_student = m.id_student GROUP BY e.code ORDER BY students DESC, e.code",
       "assert": {
         "columns": [
@@ -5135,6 +5702,17 @@
     {
       "name": "C10 · Nobody takes subjects of two degrees (only rowCount)",
       "description": "An assert with no expected rows: it is enough to check that the result is empty (rowCount 0).",
+      "keywords": [
+        "education",
+        "related-queries",
+        "students",
+        "enrollments",
+        "subjects",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT st.id_student, COUNT(DISTINCT a.degree_code) AS degrees FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY st.id_student HAVING COUNT(DISTINCT a.degree_code) >= 2 ORDER BY st.id_student",
       "assert": {
         "columns": [
@@ -5149,6 +5727,14 @@
     {
       "name": "C11 · Recognised enrollments",
       "description": "Boolean is_recognised = true over the M:M: 6 enrollments, one per student.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "enrollments",
+        "students",
+        "subjects",
+        "join"
+      ],
       "sql": "SELECT m.id_enrollment, st.last_name AS student, a.name AS subject, e.code AS degree FROM enrollments AS m INNER JOIN students AS st ON st.id_student = m.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject INNER JOIN degrees AS e ON e.code = a.degree_code WHERE m.is_recognised = true ORDER BY m.id_enrollment",
       "assert": {
         "columns": [
@@ -5202,6 +5788,13 @@
     {
       "name": "C12 · Subjects of one student whatever the order (ignoreOrder)",
       "description": "The assert does not sort: it checks that the set of rows matches, with ignoreOrder true.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "subjects",
+        "enrollments",
+        "join"
+      ],
       "sql": "SELECT a.name AS subject FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject WHERE m.id_student = 4",
       "assert": {
         "columns": [
@@ -5226,6 +5819,15 @@
     {
       "name": "C13 · Subjects with more enrollments (ORDER BY of an aggregate)",
       "description": "It sorts by COUNT(*) descending and cuts the first five: three subjects tie at 5 enrollments.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "subjects",
+        "enrollments",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT a.name AS subject, COUNT(*) AS enrollments FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject GROUP BY a.name ORDER BY COUNT(*) DESC, a.name LIMIT 5",
       "assert": {
         "columns": [
@@ -5261,6 +5863,11 @@
     {
       "name": "C14 · Longest subject names (ORDER BY of a function)",
       "description": "It sorts by LENGTH(name) descending, not by the text: 5 rows.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "subjects"
+      ],
       "sql": "SELECT a.name AS subject, LENGTH(a.name) AS letters FROM subjects AS a ORDER BY LENGTH(a.name) DESC, a.name LIMIT 5",
       "assert": {
         "columns": [
@@ -5296,6 +5903,16 @@
     {
       "name": "C15 · Students with more credits enrolled (ORDER BY alias + LIMIT)",
       "description": "It sorts by the alias credits: Ana heads it with 24 credits and the rest tie at 19.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "students",
+        "enrollments",
+        "subjects",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT st.id_student, st.last_name, COUNT(*) AS subjects, SUM(a.credits) AS credits FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY st.id_student, st.last_name ORDER BY credits DESC, st.id_student LIMIT 4",
       "assert": {
         "columns": [
@@ -5337,6 +5954,15 @@
     {
       "name": "C16 · Average grade of the Computing subjects",
       "description": "Filter by degree code, aggregates and NULLS LAST: the subject with no grade goes last.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "subjects",
+        "enrollments",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT a.name AS subject, COUNT(m.id_enrollment) AS enrollments, COUNT(m.grade) AS graded, ROUND(AVG(m.grade), 2) AS average_grade FROM subjects AS a INNER JOIN enrollments AS m ON m.id_subject = a.id_subject WHERE a.degree_code = 'GINF' GROUP BY a.id_subject, a.name ORDER BY average_grade DESC NULLS LAST, a.id_subject",
       "assert": {
         "columns": [
@@ -5378,6 +6004,14 @@
     {
       "name": "C17 · Scholarship holders in Human Anatomy",
       "description": "A student boolean and a subject filter over the M:M: 2 of the 4 enrolled have a scholarship.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "students",
+        "enrollments",
+        "subjects",
+        "join"
+      ],
       "sql": "SELECT st.last_name AS student, st.has_scholarship, a.name AS subject FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE st.has_scholarship = true AND m.id_subject = 5 ORDER BY st.id_student",
       "assert": {
         "columns": [
@@ -5404,6 +6038,15 @@
     {
       "name": "C18 · Enrollments per degree and academic year",
       "description": "GROUP BY with two text keys: 12 combinations, in degree + year order.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "enrollments",
+        "subjects",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT a.degree_code, m.academic_year, COUNT(*) AS enrollments FROM enrollments AS m INNER JOIN subjects AS a ON a.id_subject = m.id_subject GROUP BY a.degree_code, m.academic_year ORDER BY a.degree_code, m.academic_year",
       "assert": {
         "columns": [
@@ -5480,6 +6123,15 @@
     {
       "name": "C19 · Subjects with distinctions",
       "description": "Grade filter and GROUP BY: Data Structures is the only one with two distinctions.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "enrollments",
+        "subjects",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT a.name AS subject, COUNT(*) AS outstanding FROM enrollments AS m INNER JOIN subjects AS a ON a.id_subject = m.id_subject WHERE m.grade >= 9 GROUP BY a.name ORDER BY outstanding DESC, a.name",
       "assert": {
         "columns": [
@@ -5515,6 +6167,17 @@
     {
       "name": "C20 · Average per Computing student with two or more grades",
       "description": "Four tables, IS NOT NULL and HAVING COUNT >= 2: Ana and Sara go over 7.",
+      "keywords": [
+        "education",
+        "related-queries",
+        "students",
+        "enrollments",
+        "subjects",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT st.id_student, st.last_name, ROUND(AVG(m.grade), 2) AS average_grade FROM students AS st INNER JOIN enrollments AS m ON m.id_student = st.id_student INNER JOIN subjects AS a ON a.id_subject = m.id_subject INNER JOIN degrees AS e ON e.code = a.degree_code WHERE e.code = 'GINF' AND m.grade IS NOT NULL GROUP BY st.id_student, st.last_name HAVING COUNT(*) >= 2 ORDER BY average_grade DESC, st.id_student",
       "assert": {
         "columns": [
@@ -5551,6 +6214,14 @@
     {
       "name": "D01 · Enrollments with no student (integrity of the 1:M)",
       "description": "Anti-join enrollments → students: no enrollment points to a student that does not exist.",
+      "keywords": [
+        "education",
+        "integrity",
+        "enrollments",
+        "students",
+        "join",
+        "null"
+      ],
       "sql": "SELECT m.id_enrollment, m.id_student FROM enrollments AS m LEFT JOIN students AS st ON st.id_student = m.id_student WHERE st.id_student IS NULL ORDER BY m.id_enrollment",
       "assert": {
         "columns": [
@@ -5565,6 +6236,14 @@
     {
       "name": "D02 · Enrollments with no subject (integrity of the other 1:M)",
       "description": "Anti-join enrollments → subjects: the M:M has no dangling references.",
+      "keywords": [
+        "education",
+        "integrity",
+        "enrollments",
+        "subjects",
+        "join",
+        "null"
+      ],
       "sql": "SELECT m.id_enrollment, m.id_subject FROM enrollments AS m LEFT JOIN subjects AS a ON a.id_subject = m.id_subject WHERE a.id_subject IS NULL ORDER BY m.id_enrollment",
       "assert": {
         "columns": [
@@ -5579,6 +6258,14 @@
     {
       "name": "D03 · Subjects with no degree (integrity of the text code)",
       "description": "Anti-join subjects → degrees by degree_code = code: the 16 subjects have a degree.",
+      "keywords": [
+        "education",
+        "integrity",
+        "subjects",
+        "degrees",
+        "join",
+        "null"
+      ],
       "sql": "SELECT a.id_subject, a.degree_code FROM subjects AS a LEFT JOIN degrees AS e ON e.code = a.degree_code WHERE e.id_degree IS NULL ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -5593,6 +6280,14 @@
     {
       "name": "D04 · Subjects with no teacher",
       "description": "Anti-join subjects → teachers: every subject has a teacher.",
+      "keywords": [
+        "education",
+        "integrity",
+        "subjects",
+        "teachers",
+        "join",
+        "null"
+      ],
       "sql": "SELECT a.id_subject, a.id_teacher FROM subjects AS a LEFT JOIN teachers AS d ON d.id_teacher = a.id_teacher WHERE d.id_teacher IS NULL ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -5607,6 +6302,14 @@
     {
       "name": "D05 · Classrooms with no building",
       "description": "Anti-join classrooms → buildings: no classroom is left outside a building.",
+      "keywords": [
+        "education",
+        "integrity",
+        "classrooms",
+        "buildings",
+        "join",
+        "null"
+      ],
       "sql": "SELECT a.id_classroom, a.id_building FROM classrooms AS a LEFT JOIN buildings AS e ON e.id_building = a.id_building WHERE e.id_building IS NULL ORDER BY a.id_classroom",
       "assert": {
         "columns": [
@@ -5621,6 +6324,14 @@
     {
       "name": "D06 · Buildings with no campus",
       "description": "Anti-join buildings → campuses: the 8 buildings hang from an existing campus.",
+      "keywords": [
+        "education",
+        "integrity",
+        "buildings",
+        "campuses",
+        "join",
+        "null"
+      ],
       "sql": "SELECT e.id_building, e.id_campus FROM buildings AS e LEFT JOIN campuses AS s ON s.id_campus = e.id_campus WHERE s.id_campus IS NULL ORDER BY e.id_building",
       "assert": {
         "columns": [
@@ -5635,6 +6346,15 @@
     {
       "name": "D07 · Students with no campus or with no degree",
       "description": "Two anti-joins at once with OR: all the students have a valid campus and degree.",
+      "keywords": [
+        "education",
+        "integrity",
+        "students",
+        "campuses",
+        "degrees",
+        "join",
+        "null"
+      ],
       "sql": "SELECT st.id_student FROM students AS st LEFT JOIN campuses AS s ON s.id_campus = st.id_campus LEFT JOIN degrees AS e ON e.code = st.degree_code WHERE s.id_campus IS NULL OR e.id_degree IS NULL ORDER BY st.id_student",
       "assert": {
         "columns": [
@@ -5648,6 +6368,14 @@
     {
       "name": "D08 · Repeated enrollments of the same student/subject pair",
       "description": "GROUP BY + HAVING over the M:M: there are no duplicated pairs, the natural key is unique.",
+      "keywords": [
+        "education",
+        "integrity",
+        "enrollments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT m.id_student, m.id_subject, COUNT(*) AS times FROM enrollments AS m GROUP BY m.id_student, m.id_subject HAVING COUNT(*) > 1",
       "assert": {
         "columns": [
@@ -5663,6 +6391,12 @@
     {
       "name": "D09 · Grades outside the 0–10 range",
       "description": "Business rule over the grade range: none outside 0–10.",
+      "keywords": [
+        "education",
+        "integrity",
+        "enrollments",
+        "null"
+      ],
       "sql": "SELECT id_enrollment, grade FROM enrollments WHERE grade IS NOT NULL AND (grade < 0 OR grade > 10)",
       "assert": {
         "columns": [
@@ -5677,6 +6411,12 @@
     {
       "name": "D10 · Invented enrollment statuses",
       "description": "NOT IN against the list of allowed statuses: only active, passed and cancelled exist.",
+      "keywords": [
+        "education",
+        "integrity",
+        "enrollments",
+        "in"
+      ],
       "sql": "SELECT id_enrollment, status FROM enrollments WHERE status NOT IN ('active', 'passed', 'cancelled') ORDER BY id_enrollment",
       "assert": {
         "columns": [
@@ -5691,6 +6431,12 @@
     {
       "name": "D11 · Passed enrollments with no grade",
       "description": "The rule «passed ⇒ grade reported»: no passed enrollment is left without a grade.",
+      "keywords": [
+        "education",
+        "integrity",
+        "enrollments",
+        "null"
+      ],
       "sql": "SELECT id_enrollment, status, grade FROM enrollments WHERE status = 'passed' AND grade IS NULL ORDER BY id_enrollment",
       "assert": {
         "columns": [
@@ -5706,6 +6452,12 @@
     {
       "name": "D12 · Graded enrollments that are not passed",
       "description": "The other way round: if there is a grade, the enrollment is passed (active and cancelled are not graded).",
+      "keywords": [
+        "education",
+        "integrity",
+        "enrollments",
+        "null"
+      ],
       "sql": "SELECT id_enrollment, status, grade FROM enrollments WHERE grade IS NOT NULL AND status <> 'passed' ORDER BY id_enrollment",
       "assert": {
         "columns": [
@@ -5721,6 +6473,11 @@
     {
       "name": "D13 · Classrooms with no seats",
       "description": "Business rule: every classroom offers at least one seat.",
+      "keywords": [
+        "education",
+        "integrity",
+        "classrooms"
+      ],
       "sql": "SELECT id_classroom, code, capacity FROM classrooms WHERE capacity <= 0 ORDER BY id_classroom",
       "assert": {
         "columns": [
@@ -5736,6 +6493,11 @@
     {
       "name": "E01 · Simple view: SELECT * of another query",
       "description": "The result of A03 is read as a table: the 5 large classrooms with their three columns (code, capacity, floor), sorted by capacity.",
+      "keywords": [
+        "education",
+        "views",
+        "select-star"
+      ],
       "sql": "SELECT * FROM [A03 · Large classrooms (>= 55 seats)] ORDER BY capacity DESC, code",
       "assert": {
         "columns": [
@@ -5777,6 +6539,10 @@
     {
       "name": "E02 · Arithmetic over the columns of a view",
       "description": "The capacity is still a number after going through view A03: it can be divided by 10 and the remainder computed.",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT code AS classroom, capacity, capacity / 10 AS tens, capacity % 10 AS remainder FROM [A03 · Large classrooms (>= 55 seats)] ORDER BY capacity DESC, code",
       "assert": {
         "columns": [
@@ -5824,6 +6590,11 @@
     {
       "name": "E03 · WHERE and DISTINCT over a view",
       "description": "It filters view A03 by capacity >= 60 and leaves the distinct floors: floors 1 and 3 are left.",
+      "keywords": [
+        "education",
+        "views",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT floor FROM [A03 · Large classrooms (>= 55 seats)] WHERE capacity >= 60 ORDER BY floor",
       "assert": {
         "columns": [
@@ -5844,6 +6615,11 @@
     {
       "name": "E04 · Aggregates over a view",
       "description": "Five aggregates in one row over the result of A03: 5 classrooms, 320 seats, from 55 to 80 and an average of 64.",
+      "keywords": [
+        "education",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS classrooms, SUM(capacity) AS seats, MIN(capacity) AS min_grade, MAX(capacity) AS max_grade, ROUND(AVG(capacity), 2) AS average_grade FROM [A03 · Large classrooms (>= 55 seats)]",
       "assert": {
         "columns": [
@@ -5869,6 +6645,13 @@
     {
       "name": "E05 · Floors with two or more large classrooms",
       "description": "It groups view A03 by floor and keeps the floors with two or more classrooms: only floor 1 (4 classrooms, 240 seats).",
+      "keywords": [
+        "education",
+        "views",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT floor, COUNT(*) AS classrooms, SUM(capacity) AS seats FROM [A03 · Large classrooms (>= 55 seats)] GROUP BY floor HAVING COUNT(*) >= 2 ORDER BY floor",
       "assert": {
         "columns": [
@@ -5890,6 +6673,12 @@
     {
       "name": "E06 · View joined to a base table (INNER JOIN)",
       "description": "View C02 joined to the subjects table by id_subject: the 8 subjects with four or more students, with their year and credits.",
+      "keywords": [
+        "education",
+        "views",
+        "subjects",
+        "join"
+      ],
       "sql": "SELECT c.subject, c.students, a.year, a.credits FROM [C02 · Subjects with four or more students (large group)] AS c INNER JOIN subjects AS a ON a.id_subject = c.id_subject ORDER BY c.students DESC, c.id_subject",
       "assert": {
         "columns": [
@@ -5955,6 +6744,12 @@
     {
       "name": "E07 · Two views joined by subject",
       "description": "Views C02 and A31 joined by id_subject: the 6 large subjects that also have an average grade.",
+      "keywords": [
+        "education",
+        "views",
+        "join",
+        "having"
+      ],
       "sql": "SELECT c.subject, c.students, n.average_grade FROM [C02 · Subjects with four or more students (large group)] AS c INNER JOIN [A31 · Average grade per subject (HAVING and ORDER BY by alias)] AS n ON n.id_subject = c.id_subject ORDER BY c.students DESC, c.id_subject",
       "assert": {
         "columns": [
@@ -6001,6 +6796,13 @@
     {
       "name": "E08 · Table LEFT JOIN view with IS NULL",
       "description": "LEFT JOIN of the buildings table against view B08 plus IS NULL: the only building with no classrooms, the Sports Pavilion.",
+      "keywords": [
+        "education",
+        "views",
+        "buildings",
+        "join",
+        "null"
+      ],
       "sql": "SELECT e.id_building, e.name AS building FROM buildings AS e LEFT JOIN [B08 · Classrooms and seats per building] AS v ON v.id_building = e.id_building WHERE v.classrooms IS NULL ORDER BY e.id_building",
       "assert": {
         "columns": [
@@ -6020,6 +6822,10 @@
     {
       "name": "E09 · View of a view (two levels of query)",
       "description": "It reads view E05, which in turn reads view A03: three chained levels and a single row (floor 1, 240 seats).",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT floor, classrooms, seats FROM [E05 · Floors with two or more large classrooms] WHERE seats >= 100 ORDER BY seats DESC",
       "assert": {
         "columns": [
@@ -6041,6 +6847,11 @@
     {
       "name": "E10 · The same view twice (self-join)",
       "description": "View A03 appears twice with different aliases and joins itself by capacity: only P-101 and P-102 tie at 55 seats.",
+      "keywords": [
+        "education",
+        "views",
+        "join"
+      ],
       "sql": "SELECT a.code AS classroom_1, b.code AS classroom_2, a.capacity FROM [A03 · Large classrooms (>= 55 seats)] AS a INNER JOIN [A03 · Large classrooms (>= 55 seats)] AS b ON b.capacity = a.capacity AND b.code > a.code ORDER BY a.capacity DESC, a.code, b.code",
       "assert": {
         "columns": [
@@ -6062,6 +6873,11 @@
     {
       "name": "E11 · Implicit join with commas including a view",
       "description": "Cartesian product of view B06 with the campuses table, filtered by campus 1: the 6 degrees with their credits, from most to least.",
+      "keywords": [
+        "education",
+        "views",
+        "join"
+      ],
       "sql": "SELECT c.code, c.degree, c.credits, s.name AS campus FROM [B06 · Subjects and credits per degree (join by a text code)] AS c, campuses AS s WHERE s.id_campus = 1 ORDER BY c.credits DESC, c.code",
       "assert": {
         "columns": [
@@ -6115,6 +6931,10 @@
     {
       "name": "E12 · ORDER BY by alias and LIMIT over a view",
       "description": "It sorts by the alias subject and cuts view C02 to 3 rows: the three subjects with 5 students.",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT subject AS materia, students FROM [C02 · Subjects with four or more students (large group)] ORDER BY students DESC, subject LIMIT 3",
       "assert": {
         "columns": [
@@ -6142,6 +6962,10 @@
     {
       "name": "E13 · Boolean going through a view",
       "description": "The boolean is_main travels untouched from the campuses table to view A01: only North Campus is the main one.",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT name AS campus, is_main FROM [A01 · All campuses] WHERE is_main = true ORDER BY id_campus",
       "assert": {
         "columns": [
@@ -6161,6 +6985,10 @@
     {
       "name": "E14 · Nulls going through a view (COALESCE)",
       "description": "The missing phone of campus 3 is still null after reading view A01, and COALESCE replaces it with «no phone».",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT name AS campus, COALESCE(phone, 'no phone') AS contact FROM [A01 · All campuses] ORDER BY id_campus",
       "assert": {
         "columns": [
@@ -6192,6 +7020,11 @@
     {
       "name": "E15 · Aggregates over a view that is already aggregated",
       "description": "It summarises the already aggregated view A32 (one row per campus): 4 campuses, 24 students and between 3 and 9 per campus.",
+      "keywords": [
+        "education",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS campuses, SUM(students) AS students, MIN(students) AS minimum, MAX(students) AS maximum FROM [A32 · Students and addresses per campus]",
       "assert": {
         "columns": [
@@ -6215,6 +7048,11 @@
     {
       "name": "E16 · A view that reads a query with LIMIT",
       "description": "View C13 carries LIMIT 5: reading it as a table brings only those 5 rows (23 enrollments in all).",
+      "keywords": [
+        "education",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS rows, SUM(enrollments) AS enrollments FROM [C13 · Subjects with more enrollments (ORDER BY of an aggregate)]",
       "assert": {
         "columns": [
@@ -6234,6 +7072,11 @@
     {
       "name": "E17 · A view of an empty result",
       "description": "View C10 returns no rows: reading it as a table gives an empty table, and COUNT(*) returns 0 instead of an error.",
+      "keywords": [
+        "education",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS rows FROM [C10 · Nobody takes subjects of two degrees (only rowCount)]",
       "assert": {
         "columns": [
@@ -6251,6 +7094,10 @@
     {
       "name": "E18 · LIMIT and OFFSET over a view",
       "description": "LIMIT 3 OFFSET 2 over the 5 rows of view A03: the third, fourth and fifth classrooms by capacity.",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT code, capacity FROM [A03 · Large classrooms (>= 55 seats)] ORDER BY capacity DESC, code LIMIT 3 OFFSET 2",
       "assert": {
         "columns": [
@@ -6278,6 +7125,11 @@
     {
       "name": "E19 · LIKE filter over a view",
       "description": "LIKE over a column of view A03: the only large classroom whose code starts with K.",
+      "keywords": [
+        "education",
+        "views",
+        "like"
+      ],
       "sql": "SELECT code, capacity FROM [A03 · Large classrooms (>= 55 seats)] WHERE code LIKE 'K%' ORDER BY code",
       "assert": {
         "columns": [
@@ -6297,6 +7149,10 @@
     {
       "name": "E20 · A view of a view that joins two views",
       "description": "It reads view E07 (which joins C02 and A31) and keeps the average grades of 7 or more: 4 subjects.",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT subject, students, average_grade FROM [E07 · Two views joined by subject] WHERE average_grade >= 7 ORDER BY average_grade DESC, subject",
       "assert": {
         "columns": [
@@ -6333,6 +7189,12 @@
     {
       "name": "E21 · LEFT JOIN between two views",
       "description": "C02 LEFT JOIN A31: the large subjects that do not reach the HAVING of A31 (Computer Networks and Public Health) come with a null average_grade, the first ones.",
+      "keywords": [
+        "education",
+        "views",
+        "join",
+        "having"
+      ],
       "sql": "SELECT c.subject, c.students, n.average_grade FROM [C02 · Subjects with four or more students (large group)] AS c LEFT JOIN [A31 · Average grade per subject (HAVING and ORDER BY by alias)] AS n ON n.id_subject = c.id_subject ORDER BY n.average_grade ASC NULLS FIRST, c.subject",
       "assert": {
         "columns": [
@@ -6389,6 +7251,10 @@
     {
       "name": "E22 · Projection with an alias and an asterisk over a view",
       "description": "The asterisk of the alias (v.*) over view A04: the 10 classrooms with a projector, with their two columns.",
+      "keywords": [
+        "education",
+        "views"
+      ],
       "sql": "SELECT v.* FROM [A04 · Classrooms with a projector] AS v ORDER BY v.capacity DESC, v.code",
       "assert": {
         "columns": [
@@ -6444,6 +7310,11 @@
     {
       "name": "E23 · A view that reads a query with three tables",
       "description": "View B02 joins three tables inside (campuses, buildings and classrooms): reading it as a table brings its 3 rows.",
+      "keywords": [
+        "education",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS rows FROM [B02 · Three tables: large classrooms of campus 1]",
       "assert": {
         "columns": [
@@ -6461,6 +7332,13 @@
     {
       "name": "E24 · Group by a boolean of a view",
       "description": "GROUP BY over a boolean that comes from view A15: how many level/officialness combinations there are of each kind.",
+      "keywords": [
+        "education",
+        "views",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT is_official, COUNT(*) AS combinations FROM [A15 · Level/officialness combinations (DISTINCT of two columns)] GROUP BY is_official ORDER BY is_official",
       "assert": {
         "columns": [
@@ -6484,6 +7362,14 @@
     {
       "name": "F01 · Students with an active enrollment (IN with a subquery)",
       "description": "IN with a subquery: the students whose identifier shows up in the inner SELECT.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "students",
+        "enrollments",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT id_student, last_name FROM students WHERE id_student IN (SELECT id_student FROM enrollments WHERE status = 'active') ORDER BY id_student",
       "assert": {
         "columns": [
@@ -6543,6 +7429,14 @@
     {
       "name": "F02 · Students with no enrollment (NOT IN with a subquery)",
       "description": "NOT IN with a subquery: only the students nobody enrolled anywhere.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "students",
+        "enrollments",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT id_student, last_name FROM students WHERE id_student NOT IN (SELECT id_student FROM enrollments) ORDER BY id_student",
       "assert": {
         "columns": [
@@ -6570,6 +7464,14 @@
     {
       "name": "F03 · Subjects with no enrollment (NOT IN with a subquery)",
       "description": "The subjects that do not appear in any enrollment.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "subjects",
+        "enrollments",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT id_subject, name FROM subjects WHERE id_subject NOT IN (SELECT id_subject FROM enrollments) ORDER BY id_subject",
       "assert": {
         "columns": [
@@ -6593,6 +7495,14 @@
     {
       "name": "F04 · Campuses with a building of more than four floors (EXISTS)",
       "description": "EXISTS with a correlated subquery: it is checked again for every campus.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "campuses",
+        "buildings",
+        "subquery",
+        "exists"
+      ],
       "sql": "SELECT c.id_campus, c.name FROM campuses AS c WHERE EXISTS (SELECT 1 FROM buildings AS b WHERE b.id_campus = c.id_campus AND b.floors > 4) ORDER BY c.id_campus",
       "assert": {
         "columns": [
@@ -6616,6 +7526,14 @@
     {
       "name": "F05 · Campuses with no building of more than four floors (NOT EXISTS)",
       "description": "The other side of the previous example: NOT EXISTS keeps the campuses with no match.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "campuses",
+        "buildings",
+        "subquery",
+        "exists"
+      ],
       "sql": "SELECT c.id_campus, c.name FROM campuses AS c WHERE NOT EXISTS (SELECT 1 FROM buildings AS b WHERE b.id_campus = c.id_campus AND b.floors > 4) ORDER BY c.id_campus",
       "assert": {
         "columns": [
@@ -6639,6 +7557,14 @@
     {
       "name": "F06 · Degrees with a scholarship student (EXISTS, correlated)",
       "description": "The subquery points at the outer degree (d.code): a correlated EXISTS.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "degrees",
+        "students",
+        "subquery",
+        "exists"
+      ],
       "sql": "SELECT d.code, d.name FROM degrees AS d WHERE EXISTS (SELECT 1 FROM students AS s WHERE s.degree_code = d.code AND s.has_scholarship = TRUE) ORDER BY d.code",
       "assert": {
         "columns": [
@@ -6670,6 +7596,12 @@
     {
       "name": "F07 · Databases enrollments better than some Data Structures grade (> ANY)",
       "description": "x > ANY (…) is true when the grade beats at least one of the inner values.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "enrollments",
+        "subquery"
+      ],
       "sql": "SELECT id_enrollment, grade FROM enrollments WHERE id_subject = 2 AND grade > ANY (SELECT grade FROM enrollments WHERE id_subject = 1) ORDER BY id_enrollment",
       "assert": {
         "columns": [
@@ -6693,6 +7625,12 @@
     {
       "name": "F08 · The highest credits of the first year (>= ALL)",
       "description": "x >= ALL (…) needs the comparison to hold for every inner value: only the top credits pass.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "subjects",
+        "subquery"
+      ],
       "sql": "SELECT id_subject, name, credits FROM subjects WHERE credits >= ALL (SELECT credits FROM subjects WHERE year = 1) ORDER BY id_subject",
       "assert": {
         "columns": [
@@ -6714,6 +7652,13 @@
     {
       "name": "F09 · Subjects with no researcher teacher (<> ALL)",
       "description": "x <> ALL (…) is the same as x NOT IN (…): it keeps the values that differ from every one of them.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "subjects",
+        "teachers",
+        "subquery"
+      ],
       "sql": "SELECT id_subject, name FROM subjects WHERE id_teacher <> ALL (SELECT id_teacher FROM teachers WHERE is_researcher = TRUE) ORDER BY id_subject",
       "assert": {
         "columns": [
@@ -6749,6 +7694,11 @@
     {
       "name": "F10 · Students with a scholarship",
       "description": "This query is not a test by itself: it is the view the next examples read inside a subquery.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "students"
+      ],
       "sql": "SELECT id_student, last_name, degree_code FROM students WHERE has_scholarship = TRUE",
       "assert": {
         "columns": [
@@ -6810,6 +7760,13 @@
     {
       "name": "F11 · Scholarship students read from the view (subquery over a view)",
       "description": "The subquery reads the view F10 as if it were a table: [F10 · …] inside the IN.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "students",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT s.id_student, s.last_name FROM students AS s WHERE s.id_student IN (SELECT id_student FROM [F10 · Students with a scholarship]) ORDER BY s.id_student",
       "assert": {
         "columns": [
@@ -6861,6 +7818,15 @@
     {
       "name": "F12 · Average grade per subject of 8 or more (derived table)",
       "description": "A subquery in the FROM with an alias (t) is a derived table: it is queried like any other table.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "enrollments",
+        "subquery",
+        "group-by",
+        "aggregate",
+        "null"
+      ],
       "sql": "SELECT t.id_subject, t.avg_grade FROM (SELECT id_subject, AVG(grade) AS avg_grade FROM enrollments WHERE grade IS NOT NULL GROUP BY id_subject) AS t WHERE t.avg_grade >= 8 ORDER BY t.id_subject",
       "assert": {
         "columns": [
@@ -6892,6 +7858,16 @@
     {
       "name": "F13 · Subjects with four or more enrollments (derived table and JOIN)",
       "description": "The derived table is joined to the subjects table and its column total is filtered.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "enrollments",
+        "subjects",
+        "subquery",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT t.id_subject, a.name, t.total FROM (SELECT id_subject, COUNT(*) AS total FROM enrollments GROUP BY id_subject) AS t INNER JOIN subjects AS a ON a.id_subject = t.id_subject WHERE t.total >= 4 ORDER BY t.total DESC, t.id_subject",
       "assert": {
         "columns": [
@@ -6948,6 +7924,14 @@
     {
       "name": "F14 · Enrollments of every student of a campus (scalar subquery in SELECT)",
       "description": "The subquery in the column list returns one value per row: the enrollments of that student.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "enrollments",
+        "students",
+        "subquery",
+        "aggregate"
+      ],
       "sql": "SELECT s.id_student, s.last_name, (SELECT COUNT(*) FROM enrollments AS m WHERE m.id_student = s.id_student) AS enrollments FROM students AS s WHERE s.id_campus = 4 ORDER BY s.id_student",
       "assert": {
         "columns": [
@@ -6979,6 +7963,13 @@
     {
       "name": "F15 · Subjects above the average credits (scalar subquery in WHERE)",
       "description": "The subquery returns a single value (the average) that the WHERE compares with.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "subjects",
+        "subquery",
+        "aggregate"
+      ],
       "sql": "SELECT id_subject, name, credits FROM subjects WHERE credits > (SELECT AVG(credits) FROM subjects) ORDER BY id_subject",
       "assert": {
         "columns": [
@@ -7050,6 +8041,16 @@
     {
       "name": "F16 · Degrees with five or more students",
       "description": "A query whose SQL carries a subquery also works as a view: this one uses a correlated EXISTS with HAVING.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "degrees",
+        "students",
+        "subquery",
+        "having",
+        "aggregate",
+        "exists"
+      ],
       "sql": "SELECT d.code, d.name FROM degrees AS d WHERE EXISTS (SELECT 1 FROM students AS s WHERE s.degree_code = d.code HAVING COUNT(*) >= 5) ORDER BY d.code",
       "assert": {
         "columns": [
@@ -7073,6 +8074,10 @@
     {
       "name": "F17 · The previous view read as a table",
       "description": "F16 is read from the FROM like a table, even though inside it there is a subquery.",
+      "keywords": [
+        "education",
+        "subqueries"
+      ],
       "sql": "SELECT code, name FROM [F16 · Degrees with five or more students] ORDER BY code",
       "assert": {
         "columns": [
@@ -7096,6 +8101,15 @@
     {
       "name": "F18 · Subjects of degrees with a scholarship student (nested subqueries)",
       "description": "One subquery inside another: the inner one picks the degrees and the outer one the subjects.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "subjects",
+        "students",
+        "subquery",
+        "distinct",
+        "in"
+      ],
       "sql": "SELECT DISTINCT a.id_subject, a.name FROM subjects AS a WHERE a.degree_code IN (SELECT s.degree_code FROM students AS s WHERE s.has_scholarship = TRUE) ORDER BY a.id_subject",
       "assert": {
         "columns": [
@@ -7159,6 +8173,12 @@
     {
       "name": "F19 · Subjects that do not reach the top credits (NOT with ALL)",
       "description": "NOT (… >= ALL (…)) is the negation of the ALL predicate: everything but the top ones.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "subjects",
+        "subquery"
+      ],
       "sql": "SELECT id_subject, name FROM subjects WHERE NOT (credits >= ALL (SELECT credits FROM subjects WHERE year = 1)) ORDER BY id_subject",
       "assert": {
         "columns": [
@@ -7234,6 +8254,14 @@
     {
       "name": "F20 · Buildings of the main campus (= ANY)",
       "description": "x = ANY (…) is the same as x IN (…): it is kept for completeness of the quantifiers.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "buildings",
+        "campuses",
+        "subquery",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT b.id_campus FROM buildings AS b WHERE b.id_campus = ANY (SELECT id_campus FROM campuses WHERE is_main = TRUE) ORDER BY b.id_campus",
       "assert": {
         "columns": [
@@ -7251,6 +8279,12 @@
     {
       "name": "F21 · Subjects with more credits than some Primary Education one (> SOME)",
       "description": "SOME is a synonym of ANY: the comparison has to hold for at least one inner value.",
+      "keywords": [
+        "education",
+        "subqueries",
+        "subjects",
+        "subquery"
+      ],
       "sql": "SELECT id_subject, name FROM subjects WHERE credits > SOME (SELECT credits FROM subjects WHERE degree_code = 'GEDU') ORDER BY id_subject",
       "assert": {
         "columns": [
@@ -7318,6 +8352,13 @@
     {
       "name": "G01 · Campus and degree names, without repeats",
       "description": "UNION of two tables with one column each: the campus names and the degree names, every one once and sorted by name.",
+      "keywords": [
+        "education",
+        "unions",
+        "campuses",
+        "degrees",
+        "union"
+      ],
       "sql": "SELECT name FROM campuses UNION SELECT name FROM degrees ORDER BY name",
       "assert": {
         "columns": [
@@ -7362,6 +8403,12 @@
     {
       "name": "G02 · The country of every campus, twice (UNION ALL)",
       "description": "The same SELECT on both sides of UNION ALL: the rows are stacked without removing repeats, so there are 8 of them.",
+      "keywords": [
+        "education",
+        "unions",
+        "campuses",
+        "union"
+      ],
       "sql": "SELECT country FROM campuses UNION ALL SELECT country FROM campuses ORDER BY country",
       "assert": {
         "columns": [
@@ -7400,6 +8447,12 @@
     {
       "name": "G03 · Every country once (UNION)",
       "description": "The same union without ALL: UNION removes the repeated rows, so each country comes out once.",
+      "keywords": [
+        "education",
+        "unions",
+        "campuses",
+        "union"
+      ],
       "sql": "SELECT country FROM campuses UNION SELECT country FROM campuses ORDER BY country",
       "assert": {
         "columns": [
@@ -7420,6 +8473,15 @@
     {
       "name": "G04 · A union read as a table",
       "description": "The union goes in the FROM with an alias (derived table): the subject identifiers of the catalogue and of the enrollments, without repeats, are counted.",
+      "keywords": [
+        "education",
+        "unions",
+        "subjects",
+        "enrollments",
+        "subquery",
+        "union",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS n FROM (SELECT id_subject FROM subjects UNION SELECT id_subject FROM enrollments) AS t",
       "assert": {
         "columns": [
@@ -7437,6 +8499,13 @@
     {
       "name": "G05 · Union with output alias, ORDER BY and LIMIT",
       "description": "Both sides name their column item: the ORDER BY of the union sorts the combined result by that name and the LIMIT keeps the first 5.",
+      "keywords": [
+        "education",
+        "unions",
+        "buildings",
+        "classrooms",
+        "union"
+      ],
       "sql": "SELECT name AS item FROM buildings UNION SELECT code AS item FROM classrooms ORDER BY item LIMIT 5",
       "assert": {
         "columns": [
@@ -7466,6 +8535,10 @@
     {
       "name": "H01 · Students per campus, read from the script",
       "description": "Reads the result of the script “Students per campus” as if it were a table.",
+      "keywords": [
+        "education",
+        "scripts-as-tables"
+      ],
       "sql": "SELECT campus, students FROM [Students per campus] ORDER BY students DESC, campus",
       "folder": "H · Scripts as tables",
       "assert": {
@@ -7496,6 +8569,11 @@
     {
       "name": "H02 · How many campuses the script returns",
       "description": "Reads the result of the script “Students per campus” as if it were a table.",
+      "keywords": [
+        "education",
+        "scripts-as-tables",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS total FROM [Students per campus]",
       "folder": "H · Scripts as tables",
       "assert": {
@@ -7512,6 +8590,10 @@
     {
       "name": "H03 · Campuses with 6 or more students",
       "description": "Reads the result of the script “Students per campus” as if it were a table.",
+      "keywords": [
+        "education",
+        "scripts-as-tables"
+      ],
       "sql": "SELECT campus, students FROM [Students per campus] WHERE students >= 6 ORDER BY students DESC, campus",
       "folder": "H · Scripts as tables",
       "assert": {
@@ -7540,6 +8622,13 @@
     {
       "name": "Scholarship students and their contact",
       "description": "Filters scholarship students and shows their full name, e-mail and campus.",
+      "keywords": [
+        "education",
+        "filters",
+        "students",
+        "filter",
+        "map"
+      ],
       "code": "const datos = tables[\"students\"];\nreturn datos\n  .filter((fila) => fila.has_scholarship)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"email\": fila.email,\n    \"campus\": fila.id_campus,\n  }));",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
@@ -7601,6 +8690,13 @@
     {
       "name": "Student ages",
       "description": "Calculates the age on 1 September 2025 from the birth date and sorts from oldest to youngest.",
+      "keywords": [
+        "education",
+        "dates",
+        "students",
+        "map",
+        "sort"
+      ],
       "code": "const datos = tables[\"students\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
       "folder": "Dates",
       "color": "#fde8cd",
@@ -7737,6 +8833,14 @@
     {
       "name": "Ten oldest students",
       "description": "Sorts by birth date and returns the first ten rows with their rank.",
+      "keywords": [
+        "education",
+        "filters",
+        "students",
+        "map",
+        "sort",
+        "slice"
+      ],
       "code": "const datos = tables[\"students\"];\nreturn datos\n  .slice()\n  .sort((a, b) => String(a.birth_date).localeCompare(String(b.birth_date)))\n  .slice(0, 10)\n  .map((fila, index) => ({\n    \"rank\": index + 1,\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"birth_date\": fila.birth_date,\n  }));",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
@@ -7803,6 +8907,16 @@
     {
       "name": "Students per campus",
       "description": "Crosses students with the campuses table to count how many there are in each one.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "students",
+        "campuses",
+        "map",
+        "reduce",
+        "sort",
+        "objects"
+      ],
       "code": "const datos = tables[\"students\"];\nconst campuses = new Map(tables[\"campuses\"].map((c) => [c.id_campus, c.name]));\nconst counts = datos.reduce((acc, fila) => {\n  const name = campuses.get(fila.id_campus) || \"—\";\n  acc[name] = (acc[name] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.entries(counts)\n  .map(([name, count]) => ({ \"campus\": name, \"students\": count }))\n  .sort((a, b) => b[\"students\"] - a[\"students\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -7834,6 +8948,13 @@
     {
       "name": "Incomplete contacts",
       "description": "Lists the students who are missing their e-mail, their phone or both.",
+      "keywords": [
+        "education",
+        "filters",
+        "students",
+        "filter",
+        "map"
+      ],
       "code": "const datos = tables[\"students\"];\nreturn datos\n  .filter((fila) => !fila.email || !fila.phone)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.phone) missing.push(\"phone\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"email\": fila.email,\n      \"phone\": fila.phone,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
@@ -7929,6 +9050,15 @@
     {
       "name": "Scholarships by degree",
       "description": "Groups by degree code and calculates the total students, scholarship holders and percentage.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "students",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"students\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.degree_code;\n  acc[key] = acc[key] || { total: 0, scholarship: 0 };\n  acc[key].total += 1;\n  if (fila.has_scholarship) acc[key].scholarship += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([degree, g]) => ({\n    \"degree\": degree,\n    \"students\": g.total,\n    \"scholarships\": g.scholarship,\n    \"percentage\": Math.round((g.scholarship / g.total) * 1000) / 10,\n  }))\n  .sort((a, b) => a[\"degree\"].localeCompare(b[\"degree\"]));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -7982,6 +9112,15 @@
     {
       "name": "Grades by status",
       "description": "Ignores null grades and calculates how many there are, their average, minimum and maximum per status.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "enrollments",
+        "filter",
+        "map",
+        "reduce",
+        "math"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst groups = datos\n  .filter((fila) => fila.grade !== null && fila.grade !== undefined)\n  .reduce((acc, fila) => {\n    const key = fila.status;\n    acc[key] = acc[key] || { count: 0, sum: 0, min: Infinity, max: -Infinity };\n    const g = acc[key];\n    g.count += 1;\n    g.sum += fila.grade;\n    g.min = Math.min(g.min, fila.grade);\n    g.max = Math.max(g.max, fila.grade);\n    return acc;\n  }, {});\nreturn Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  \"min\": g.min,\n  \"max\": g.max,\n}));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8007,6 +9146,15 @@
     {
       "name": "Pass rate by academic year",
       "description": "Counts enrollments, passed ones and the average grade of the graded ones in each academic year.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "enrollments",
+        "map",
+        "reduce",
+        "math",
+        "objects"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.academic_year;\n  acc[key] = acc[key] || { total: 0, passed: 0, graded: 0, sum: 0 };\n  const g = acc[key];\n  g.total += 1;\n  if (fila.status === \"passed\") g.passed += 1;\n  if (fila.grade !== null && fila.grade !== undefined) {\n    g.graded += 1;\n    g.sum += fila.grade;\n  }\n  return acc;\n}, {});\nreturn Object.entries(groups).map(([year, g]) => ({\n  \"year\": year,\n  \"count\": g.total,\n  \"passed\": g.passed,\n  \"percentage\": Math.round((g.passed / g.total) * 1000) / 10,\n  \"average\": g.graded ? Math.round((g.sum / g.graded) * 100) / 100 : null,\n}));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8039,6 +9187,15 @@
     {
       "name": "Statuses by year (pivot)",
       "description": "Turns the statuses into columns: active, passed and cancelled per academic year.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "enrollments",
+        "map",
+        "reduce",
+        "sort",
+        "objects"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst groups = datos.reduce((acc, fila) => {\n  const year = fila.academic_year;\n  const status = fila.status;\n  acc[year] = acc[year] || { year, active: 0, passed: 0, cancelled: 0 };\n  if (status === \"active\") acc[year].active += 1;\n  else if (status === \"passed\") acc[year].passed += 1;\n  else if (status === \"cancelled\") acc[year].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((g) => ({\n    \"year\": g.year,\n    \"active\": g.active,\n    \"passed\": g.passed,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"year\"]).localeCompare(String(b[\"year\"])));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8068,6 +9225,16 @@
     {
       "name": "Subject ranking by average grade",
       "description": "Groups graded enrollments by subject, crosses their name and sorts by average.",
+      "keywords": [
+        "education",
+        "joins",
+        "enrollments",
+        "subjects",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  if (fila.grade === null || fila.grade === undefined) return acc;\n  const key = fila.id_subject;\n  acc[key] = acc[key] || { sum: 0, count: 0 };\n  acc[key].sum += fila.grade;\n  acc[key].count += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"subject\": subjects.get(Number(id)) || `#${id}`,\n    \"count\": g.count,\n    \"average\": Math.round((g.sum / g.count) * 100) / 100,\n  }))\n  .sort((a, b) => b[\"average\"] - a[\"average\"])\n  .map((row, index) => ({ \"rank\": index + 1, ...row }));",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -8157,6 +9324,17 @@
     {
       "name": "Enrollment summary per student",
       "description": "Groups by student, lists their subjects and calculates their average grade.",
+      "keywords": [
+        "education",
+        "joins",
+        "enrollments",
+        "students",
+        "subjects",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst students = new Map(tables[\"students\"].map((s) => [s.id_student, `${s.name} ${s.last_name}`]));\nconst subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_student;\n  acc[id] = acc[id] || { subjects: new Set(), grades: [] };\n  acc[id].subjects.add(subjects.get(fila.id_subject) || `#${fila.id_subject}`);\n  if (fila.grade !== null && fila.grade !== undefined) acc[id].grades.push(fila.grade);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"student\": students.get(Number(id)) || `#${id}`,\n    \"subjects\": g.subjects.size,\n    \"average\": g.grades.length ? Math.round((g.grades.reduce((a, b) => a + b, 0) / g.grades.length) * 100) / 100 : null,\n    \"list\": Array.from(g.subjects).join(\" · \"),\n  }))\n  .sort((a, b) => b[\"subjects\"] - a[\"subjects\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -8300,6 +9478,15 @@
     {
       "name": "Grade distribution",
       "description": "Sorts the grades into four ranges and calculates how many there are and their percentage.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "enrollments",
+        "map",
+        "reduce",
+        "foreach",
+        "math"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst buckets = { \"0-4.9\": 0, \"5-6.9\": 0, \"7-8.9\": 0, \"9-10\": 0 };\ndatos.forEach((fila) => {\n  const g = fila.grade;\n  if (g === null || g === undefined) return;\n  if (g < 5) buckets[\"0-4.9\"] += 1;\n  else if (g < 7) buckets[\"5-6.9\"] += 1;\n  else if (g < 9) buckets[\"7-8.9\"] += 1;\n  else buckets[\"9-10\"] += 1;\n});\nconst total = Object.values(buckets).reduce((a, b) => a + b, 0);\nreturn Object.entries(buckets).map(([range, count]) => ({\n  \"range\": range,\n  \"count\": count,\n  \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n}));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8336,6 +9523,15 @@
     {
       "name": "Subjects by year",
       "description": "Counts subjects, credits and average classroom hours per year.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "subjects",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"subjects\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.year;\n  acc[key] = acc[key] || { count: 0, credits: 0, hours: 0 };\n  acc[key].count += 1;\n  acc[key].credits += fila.credits;\n  acc[key].hours += fila.classroom_hours;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([year, g]) => ({\n    \"year\": Number(year),\n    \"count\": g.count,\n    \"credits\": g.credits,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => a[\"year\"] - b[\"year\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8383,6 +9579,15 @@
     {
       "name": "Teachers by category",
       "description": "Groups by category and calculates how many there are, the average hours and how many research.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "teachers",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"teachers\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.category;\n  acc[key] = acc[key] || { count: 0, hours: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].hours += fila.weekly_hours;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([category, g]) => ({\n    \"category\": category,\n    \"count\": g.count,\n    \"average_hours\": Math.round((g.hours / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8424,6 +9629,13 @@
     {
       "name": "Teachers without an office or e-mail",
       "description": "Lists the teachers who are missing their office, their e-mail or both.",
+      "keywords": [
+        "education",
+        "filters",
+        "teachers",
+        "filter",
+        "map"
+      ],
       "code": "const datos = tables[\"teachers\"];\nreturn datos\n  .filter((fila) => !fila.email || !fila.office)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.office) missing.push(\"office\");\n    return {\n      \"teacher\": `${fila.name} ${fila.last_name}`,\n      \"category\": fila.category,\n      \"email\": fila.email,\n      \"office\": fila.office,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
@@ -8484,6 +9696,16 @@
     {
       "name": "Classroom capacity by building",
       "description": "Adds up the capacity of the classrooms of each building and crosses its name.",
+      "keywords": [
+        "education",
+        "joins",
+        "classrooms",
+        "buildings",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"classrooms\"];\nconst buildings = new Map(tables[\"buildings\"].map((b) => [b.id_building, b.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_building;\n  acc[key] = acc[key] || { count: 0, capacity: 0 };\n  acc[key].count += 1;\n  acc[key].capacity += fila.capacity;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"building\": buildings.get(Number(id)) || `#${id}`,\n    \"classrooms\": g.count,\n    \"capacity\": g.capacity,\n    \"average\": Math.round((g.capacity / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -8543,6 +9765,15 @@
     {
       "name": "Campus summary",
       "description": "Calculates the share of each campus capacity over the total and sorts by capacity.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "campuses",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"campuses\"];\nconst total = datos.reduce((sum, fila) => sum + fila.max_capacity, 0);\nreturn datos\n  .map((fila) => ({\n    \"campus\": fila.name,\n    \"city\": fila.city,\n    \"capacity\": fila.max_capacity,\n    \"percentage\": Math.round((fila.max_capacity / total) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"capacity\"] - a[\"capacity\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8584,6 +9815,11 @@
     {
       "name": "Use a saved query",
       "description": "Calls query A19 (students with three or more enrollments) and shows its result.",
+      "keywords": [
+        "education",
+        "reports",
+        "map"
+      ],
       "code": "const rows = queries[\"A19 · Students with three or more enrollments\"]();\nreturn rows.map((row) => ({\n  \"student\": row.id_student,\n  \"enrollments\": row.enrollments,\n}));",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
@@ -8639,6 +9875,15 @@
     {
       "name": "Report with forEach and resultado",
       "description": "Builds a report per status with forEach, adds a TOTAL row and stores it in resultado.",
+      "keywords": [
+        "education",
+        "reports",
+        "enrollments",
+        "map",
+        "foreach",
+        "math",
+        "objects"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.status;\n  groups[key] = groups[key] || { count: 0, sum: 0 };\n  groups[key].count += 1;\n  if (fila.grade !== null && fila.grade !== undefined) groups[key].sum += fila.grade;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"status\": status,\n  \"count\": g.count,\n  \"average\": g.count ? Math.round((g.sum / g.count) * 100) / 100 : null,\n}));\nrows.push({\n  \"status\": \"TOTAL\",\n  \"count\": datos.length,\n  \"average\": null,\n});\nresultado = rows;",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
@@ -8675,6 +9920,15 @@
     {
       "name": "Orphan enrollments",
       "description": "Finds enrollments whose student or subject no longer exists in the tables.",
+      "keywords": [
+        "education",
+        "joins",
+        "enrollments",
+        "students",
+        "subjects",
+        "filter",
+        "map"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst studentIds = new Set(tables[\"students\"].map((s) => s.id_student));\nconst subjectIds = new Set(tables[\"subjects\"].map((s) => s.id_subject));\nreturn datos\n  .filter((fila) => !studentIds.has(fila.id_student) || !subjectIds.has(fila.id_subject))\n  .map((fila) => ({\n    \"enrollment\": fila.id_enrollment,\n    \"student\": fila.id_student,\n    \"subject\": fila.id_subject,\n    \"missing\": !studentIds.has(fila.id_student) ? \"student\" : \"subject\",\n  }));",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -8685,6 +9939,15 @@
     {
       "name": "Credit-weighted average",
       "description": "Weights the grade of each enrollment by the credits of its subject and returns one row.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "enrollments",
+        "subjects",
+        "map",
+        "foreach",
+        "math"
+      ],
       "code": "const datos = tables[\"enrollments\"];\nconst subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s.credits]));\nlet sum = 0;\nlet credits = 0;\ndatos.forEach((fila) => {\n  if (fila.grade === null || fila.grade === undefined) return;\n  const c = subjects.get(fila.id_subject) || 0;\n  sum += fila.grade * c;\n  credits += c;\n});\nreturn [{\n  \"average\": credits ? Math.round((sum / credits) * 100) / 100 : null,\n  \"credits\": credits,\n}];",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -8704,6 +9967,16 @@
     {
       "name": "JavaScript · Student directory with Intl",
       "description": "Directory sorted with Intl.Collator, with initials, e-mail parts and campus.",
+      "keywords": [
+        "education",
+        "javascript",
+        "students",
+        "campuses",
+        "map",
+        "sort",
+        "slice",
+        "intl"
+      ],
       "folder": "JavaScript power",
       "color": "#dde5fa",
       "code": "const students = tables[\"students\"];\nconst campuses = new Map(tables[\"campuses\"].map((c) => [c.id_campus, c.name]));\nconst collator = new Intl.Collator(\"en\", { sensitivity: \"base\" });\nreturn students\n  .map((fila) => {\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    return {\n      \"student\": `${fila.last_name}, ${fila.name}`,\n      \"initials\": `${fila.name.charAt(0)}${fila.last_name.charAt(0)}`.toUpperCase(),\n      \"campus\": campuses.get(fila.id_campus) || \"—\",\n      \"email_user\": at > 0 ? email.slice(0, at) : null,\n      \"email_domain\": at > 0 ? email.slice(at + 1) : null,\n      \"scholarship\": fila.has_scholarship ? \"yes\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"student\"], b[\"student\"]));",
@@ -8915,6 +10188,14 @@
     {
       "name": "JavaScript · Campus capacity ratio",
       "description": "The students-per-campus query crossed with the campus capacity table.",
+      "keywords": [
+        "education",
+        "joins",
+        "campuses",
+        "map",
+        "reduce",
+        "math"
+      ],
       "folder": "Joins and integrity",
       "color": "#dcf1d4",
       "code": "const counts = queries[\"H01 · Students per campus, read from the script\"]();\nconst campuses = new Map(tables[\"campuses\"].map((c) => [c.name, c]));\nlet cumulative = 0;\nconst total = counts.reduce((sum, row) => sum + row.students, 0);\nreturn counts.map((row) => {\n  const campus = campuses.get(row.campus);\n  const capacity = campus ? campus.max_capacity : 0;\n  const ratio = capacity ? Math.round((row.students / capacity) * 1000) / 10 : null;\n  cumulative += row.students;\n  return {\n    \"campus\": row.campus,\n    \"students\": row.students,\n    \"capacity\": capacity,\n    \"fill_percent\": ratio,\n    \"share_percent\": total ? Math.round((row.students / total) * 1000) / 10 : 0,\n    \"cumulative\": cumulative,\n    \"status\": ratio === null ? \"no capacity\" : ratio >= 75 ? \"full\" : ratio >= 50 ? \"busy\" : \"room left\",\n  };\n});",
@@ -8971,6 +10252,16 @@
     {
       "name": "JavaScript · Degree scorecard",
       "description": "Degree totals from the tables joined to the per-subject averages of query A31.",
+      "keywords": [
+        "education",
+        "javascript",
+        "degrees",
+        "subjects",
+        "map",
+        "sort",
+        "foreach",
+        "math"
+      ],
       "folder": "JavaScript power",
       "color": "#fce4e4",
       "code": "const degrees = tables[\"degrees\"];\nconst subjectsById = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s]));\nconst averages = queries[\"A31 · Average grade per subject (HAVING and ORDER BY by alias)\"]();\nconst groups = new Map(degrees.map((d) => [d.code, { degree: d, subjects: 0, graded: 0, weighted: 0 }]));\ntables[\"subjects\"].forEach((subject) => {\n  const group = groups.get(subject.degree_code);\n  if (group) group.subjects += 1;\n});\naverages.forEach((row) => {\n  const subject = subjectsById.get(row.id_subject);\n  const group = subject ? groups.get(subject.degree_code) : null;\n  if (!group) return;\n  group.graded += row.graded;\n  group.weighted += row.average_grade * row.graded;\n});\nreturn [...groups.values()]\n  .map((group) => ({\n    \"degree\": group.degree.name,\n    \"level\": group.degree.level,\n    \"subjects\": group.subjects,\n    \"graded_enrollments\": group.graded,\n    \"average_grade\": group.graded ? Math.round((group.weighted / group.graded) * 100) / 100 : null,\n    \"official\": group.degree.is_official ? \"yes\" : \"no\",\n  }))\n  .sort((a, b) => (b[\"average_grade\"] || 0) - (a[\"average_grade\"] || 0));",
@@ -9038,6 +10329,15 @@
     {
       "name": "JavaScript · Student leaderboard",
       "description": "Query C03 ranked with competition ranking and enriched with grades and scholarships.",
+      "keywords": [
+        "education",
+        "reports",
+        "students",
+        "enrollments",
+        "map",
+        "foreach",
+        "math"
+      ],
       "folder": "Queries and reports",
       "color": "#fde8cd",
       "code": "const load = queries[\"C03 · Load of every student (subjects and credits)\"]();\nconst students = new Map(tables[\"students\"].map((s) => [s.id_student, s]));\nconst grades = new Map();\ntables[\"enrollments\"].forEach((row) => {\n  if (row.grade === null || row.grade === undefined) return;\n  const group = grades.get(row.id_student) || { sum: 0, count: 0 };\n  group.sum += row.grade;\n  group.count += 1;\n  grades.set(row.id_student, group);\n});\nlet previous = null;\nlet rank = 0;\nreturn load.map((row, index) => {\n  if (row.credits !== previous) {\n    rank = index + 1;\n    previous = row.credits;\n  }\n  const grade = grades.get(row.id_student);\n  const student = students.get(row.id_student);\n  return {\n    \"rank\": rank,\n    \"student\": `${row.last_name}, ${row.name}`,\n    \"subjects\": row.subjects,\n    \"credits\": row.credits,\n    \"average_grade\": grade ? Math.round((grade.sum / grade.count) * 100) / 100 : null,\n    \"scholarship\": student && student.has_scholarship ? \"yes\" : \"no\",\n  };\n});",
@@ -9225,6 +10525,14 @@
     {
       "name": "JavaScript · Enrollment timeline",
       "description": "Enrollments per month with Date, status columns and a running total.",
+      "keywords": [
+        "education",
+        "dates",
+        "enrollments",
+        "map",
+        "sort",
+        "foreach"
+      ],
       "folder": "Dates",
       "color": "#e8ddf7",
       "code": "const groups = new Map();\ntables[\"enrollments\"].forEach((row) => {\n  const date = new Date(row.enrollment_date);\n  const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, \"0\")}`;\n  const group = groups.get(month) || { month, total: 0, active: 0, passed: 0, cancelled: 0 };\n  group.total += 1;\n  if (group[row.status] !== undefined) group[row.status] += 1;\n  groups.set(month, group);\n});\nlet cumulative = 0;\nreturn [...groups.values()]\n  .sort((a, b) => a.month.localeCompare(b.month))\n  .map((group) => {\n    cumulative += group.total;\n    return {\n      \"month\": group.month,\n      \"enrollments\": group.total,\n      \"active\": group.active,\n      \"passed\": group.passed,\n      \"cancelled\": group.cancelled,\n      \"cumulative\": cumulative,\n    };\n  });",
@@ -9260,6 +10568,11 @@
     {
       "name": "JavaScript · Data quality checklist",
       "description": "Runs five integrity queries and turns their row counts into a checklist.",
+      "keywords": [
+        "education",
+        "joins",
+        "map"
+      ],
       "folder": "Joins and integrity",
       "color": "#dcf1d4",
       "code": "const checks = [\n  [\"Enrollments without a student\", \"D01 · Enrollments with no student (integrity of the 1:M)\"],\n  [\"Enrollments without a subject\", \"D02 · Enrollments with no subject (integrity of the other 1:M)\"],\n  [\"Subjects without a degree\", \"D03 · Subjects with no degree (integrity of the text code)\"],\n  [\"Subjects without a teacher\", \"D04 · Subjects with no teacher\"],\n  [\"Repeated student/subject pairs\", \"D08 · Repeated enrollments of the same student/subject pair\"],\n];\nreturn checks.map(([label, query]) => {\n  const rows = queries[query]();\n  return {\n    \"check\": label,\n    \"issues\": rows.length,\n    \"status\": rows.length === 0 ? \"ok\" : \"review\",\n    \"query\": query,\n  };\n});",
@@ -9307,6 +10620,16 @@
     {
       "name": "JavaScript · Subject popularity pivot",
       "description": "One row per subject with status counts, a pass rate and a top-five mark from query C13.",
+      "keywords": [
+        "education",
+        "aggregates",
+        "subjects",
+        "enrollments",
+        "map",
+        "sort",
+        "foreach",
+        "math"
+      ],
       "folder": "Aggregates",
       "color": "#fce4e4",
       "code": "const subjects = new Map(tables[\"subjects\"].map((s) => [s.id_subject, s]));\nconst top = new Set(queries[\"C13 · Subjects with more enrollments (ORDER BY of an aggregate)\"]().map((row) => row.subject));\nconst groups = new Map();\ntables[\"enrollments\"].forEach((row) => {\n  const subject = subjects.get(row.id_subject);\n  if (!subject) return;\n  const group = groups.get(row.id_subject) || { subject, total: 0, passed: 0, active: 0, cancelled: 0 };\n  group.total += 1;\n  if (group[row.status] !== undefined) group[row.status] += 1;\n  groups.set(row.id_subject, group);\n});\nreturn [...groups.values()]\n  .map((group) => ({\n    \"subject\": group.subject.name,\n    \"degree\": group.subject.degree_code,\n    \"enrollments\": group.total,\n    \"passed\": group.passed,\n    \"active\": group.active,\n    \"cancelled\": group.cancelled,\n    \"pass_percent\": group.total ? Math.round((group.passed / group.total) * 1000) / 10 : 0,\n    \"top_five\": top.has(group.subject.name) ? \"yes\" : \"no\",\n  }))\n  .sort((a, b) => b[\"enrollments\"] - a[\"enrollments\"] || a[\"subject\"].localeCompare(b[\"subject\"]));",
@@ -9468,6 +10791,16 @@
     {
       "name": "JavaScript · Teacher workload balance",
       "description": "Weekly hours against the project average, with the subjects each teacher gives.",
+      "keywords": [
+        "education",
+        "reports",
+        "teachers",
+        "subjects",
+        "map",
+        "reduce",
+        "sort",
+        "foreach"
+      ],
       "folder": "Queries and reports",
       "color": "#fde8cd",
       "code": "const teachers = tables[\"teachers\"];\nconst subjectsByTeacher = new Map();\ntables[\"subjects\"].forEach((subject) => {\n  const list = subjectsByTeacher.get(subject.id_teacher) || [];\n  list.push(subject.name);\n  subjectsByTeacher.set(subject.id_teacher, list);\n});\nconst average = teachers.length\n  ? teachers.reduce((sum, teacher) => sum + teacher.weekly_hours, 0) / teachers.length\n  : 0;\nreturn teachers\n  .map((teacher) => {\n    const subjects = subjectsByTeacher.get(teacher.id_teacher) || [];\n    const difference = Math.round((teacher.weekly_hours - average) * 10) / 10;\n    return {\n      \"teacher\": `${teacher.last_name}, ${teacher.name}`,\n      \"category\": teacher.category,\n      \"subjects\": subjects.length,\n      \"weekly_hours\": teacher.weekly_hours,\n      \"average_hours\": Math.round(average * 10) / 10,\n      \"difference\": difference,\n      \"load\": difference >= 6 ? \"overloaded\" : difference <= -6 ? \"light\" : \"balanced\",\n      \"subject_list\": subjects.join(\" · \"),\n    };\n  })\n  .sort((a, b) => b[\"difference\"] - a[\"difference\"] || a[\"teacher\"].localeCompare(b[\"teacher\"]));",

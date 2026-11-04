@@ -10244,6 +10244,12 @@
     {
       "name": "A01 · All specialties",
       "description": "SELECT * on specialties, ordered by identifier.",
+      "keywords": [
+        "health",
+        "basics",
+        "specialties",
+        "select-star"
+      ],
       "sql": "SELECT * FROM specialties ORDER BY id_specialty",
       "assert": {
         "columns": [
@@ -10339,6 +10345,11 @@
     {
       "name": "A02 · Hospitals: beds in hundreds",
       "description": "Projection with aliases and arithmetic: numeric division and order by beds.",
+      "keywords": [
+        "health",
+        "basics",
+        "hospitals"
+      ],
       "sql": "SELECT name AS hospital, city, num_beds / 100 AS beds_hundreds FROM hospitals ORDER BY num_beds DESC",
       "assert": {
         "columns": [
@@ -10390,6 +10401,11 @@
     {
       "name": "A03 · Large hospitals (>= 800 beds)",
       "description": "Numeric filter with >= and a double order.",
+      "keywords": [
+        "health",
+        "basics",
+        "hospitals"
+      ],
       "sql": "SELECT name, num_beds, level FROM hospitals WHERE num_beds >= 800 ORDER BY num_beds DESC, name",
       "assert": {
         "columns": [
@@ -10421,6 +10437,12 @@
     {
       "name": "A04 · University hospitals with a phone",
       "description": "Boolean filter combined with IS NOT NULL.",
+      "keywords": [
+        "health",
+        "basics",
+        "hospitals",
+        "null"
+      ],
       "sql": "SELECT id_hospital, name, city FROM hospitals WHERE is_university = true AND phone IS NOT NULL ORDER BY name",
       "assert": {
         "columns": [
@@ -10447,6 +10469,12 @@
     {
       "name": "A05 · Patients without a phone",
       "description": "Missing values are asked with IS NULL.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "null"
+      ],
       "sql": "SELECT id_patient, name, last_name, city FROM patients WHERE phone IS NULL ORDER BY last_name, name",
       "assert": {
         "columns": [
@@ -10524,6 +10552,12 @@
     {
       "name": "A06 · Doctor emails in upper case",
       "description": "UPPER on a field that may be missing: the rows with a null email are filtered out.",
+      "keywords": [
+        "health",
+        "basics",
+        "doctors",
+        "null"
+      ],
       "sql": "SELECT name, last_name, UPPER(email) AS email FROM doctors WHERE email IS NOT NULL ORDER BY last_name, name",
       "assert": {
         "columns": [
@@ -10670,6 +10704,12 @@
     {
       "name": "A07 · Last names that start with G",
       "description": "LIKE with a wildcard at the end.",
+      "keywords": [
+        "health",
+        "basics",
+        "doctors",
+        "like"
+      ],
       "sql": "SELECT name, last_name FROM doctors WHERE last_name LIKE 'G%' ORDER BY last_name, name",
       "assert": {
         "columns": [
@@ -10705,6 +10745,12 @@
     {
       "name": "A08 · Drugs that do not start with A",
       "description": "LIKE combined with NOT.",
+      "keywords": [
+        "health",
+        "basics",
+        "drugs",
+        "like"
+      ],
       "sql": "SELECT name, active_ingredient, price FROM drugs WHERE name NOT LIKE 'A%' ORDER BY name",
       "assert": {
         "columns": [
@@ -10816,6 +10862,12 @@
     {
       "name": "A09 · Surgeries of high or medium risk",
       "description": "Membership of a list with IN.",
+      "keywords": [
+        "health",
+        "basics",
+        "surgeries",
+        "in"
+      ],
       "sql": "SELECT name, risk, cost FROM surgeries WHERE risk IN ('high', 'medium') ORDER BY cost DESC",
       "assert": {
         "columns": [
@@ -10967,6 +11019,12 @@
     {
       "name": "A10 · Specialties that are neither Central nor Surgical",
       "description": "NOT IN on the area.",
+      "keywords": [
+        "health",
+        "basics",
+        "specialties",
+        "in"
+      ],
       "sql": "SELECT name, area, residency_years FROM specialties WHERE area NOT IN ('Central', 'Surgical') ORDER BY name",
       "assert": {
         "columns": [
@@ -11018,6 +11076,12 @@
     {
       "name": "A11 · Lab tests with glucose between 100 and 200",
       "description": "Range with BETWEEN (endpoints included).",
+      "keywords": [
+        "health",
+        "basics",
+        "labs",
+        "between"
+      ],
       "sql": "SELECT id_lab, glucose, cholesterol FROM labs WHERE glucose BETWEEN 100 AND 200 ORDER BY glucose DESC LIMIT 15",
       "assert": {
         "columns": [
@@ -11109,6 +11173,12 @@
     {
       "name": "A12 · Emergency admissions with 2 to 5 expected days",
       "description": "BETWEEN combined with a boolean filter.",
+      "keywords": [
+        "health",
+        "basics",
+        "admissions",
+        "between"
+      ],
       "sql": "SELECT id_admission, reason, expected_days, cost_per_day FROM admissions WHERE is_emergency = true AND expected_days BETWEEN 2 AND 5 ORDER BY expected_days, cost_per_day DESC LIMIT 20",
       "assert": {
         "columns": [
@@ -11186,6 +11256,12 @@
     {
       "name": "A13 · Doctor categories (DISTINCT)",
       "description": "Distinct values of a column.",
+      "keywords": [
+        "health",
+        "basics",
+        "doctors",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT category FROM doctors ORDER BY category",
       "assert": {
         "columns": [
@@ -11212,6 +11288,12 @@
     {
       "name": "A14 · Appointment types and statuses (DISTINCT of two columns)",
       "description": "Distinct combinations of type and status.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT type, status FROM appointments ORDER BY type, status",
       "assert": {
         "columns": [
@@ -11287,6 +11369,12 @@
     {
       "name": "A15 · Billing totals",
       "description": "COUNT, SUM, MIN, MAX and a rounded AVG.",
+      "keywords": [
+        "health",
+        "basics",
+        "invoices",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS invoices, SUM(amount) AS total, MIN(amount) AS min, MAX(amount) AS max, ROUND(AVG(amount), 2) AS avg FROM invoices",
       "assert": {
         "columns": [
@@ -11312,6 +11400,13 @@
     {
       "name": "A16 · Invoices by payment method",
       "description": "Grouping with COUNT, including the null group.",
+      "keywords": [
+        "health",
+        "basics",
+        "invoices",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT COALESCE(payment_method, 'no method') AS method, COUNT(*) AS invoices, SUM(amount) AS total FROM invoices GROUP BY payment_method ORDER BY total DESC",
       "assert": {
         "columns": [
@@ -11348,6 +11443,13 @@
     {
       "name": "A17 · Appointments by status",
       "description": "GROUP BY and ORDER BY descending.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT status, COUNT(*) AS appointments FROM appointments GROUP BY status ORDER BY appointments DESC, status",
       "assert": {
         "columns": [
@@ -11379,6 +11481,14 @@
     {
       "name": "A18 · Appointment statuses with more than 10 appointments",
       "description": "Filtering groups with HAVING.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT status, COUNT(*) AS appointments FROM appointments GROUP BY status HAVING COUNT(*) > 10 ORDER BY appointments DESC",
       "assert": {
         "columns": [
@@ -11402,6 +11512,16 @@
     {
       "name": "A19 · Patients with three or more admissions",
       "description": "HAVING on a patient-admission join.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "admissions",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT p.id_patient, p.name, p.last_name, COUNT(*) AS admissions FROM patients AS p INNER JOIN admissions AS i ON i.id_patient = p.id_patient GROUP BY p.id_patient, p.name, p.last_name HAVING COUNT(*) >= 3 ORDER BY admissions DESC, p.last_name",
       "assert": {
         "columns": [
@@ -11449,6 +11569,13 @@
     {
       "name": "A20 · Patients by the initial of the last name",
       "description": "GROUP BY with a text function.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT SUBSTR(last_name, 1, 1) AS initial, COUNT(*) AS patients FROM patients GROUP BY SUBSTR(last_name, 1, 1) ORDER BY initial",
       "assert": {
         "columns": [
@@ -11524,6 +11651,11 @@
     {
       "name": "A21 · Glucose of one patient, from highest to lowest",
       "description": "ORDER BY descending with an explicit NULLS LAST.",
+      "keywords": [
+        "health",
+        "basics",
+        "labs"
+      ],
       "sql": "SELECT id_lab, date, glucose FROM labs WHERE id_patient = 3 ORDER BY glucose DESC NULLS LAST, date",
       "assert": {
         "columns": [
@@ -11545,6 +11677,11 @@
     {
       "name": "A22 · Glucose of one patient, from lowest to highest",
       "description": "With ASC the nulls come first by default.",
+      "keywords": [
+        "health",
+        "basics",
+        "labs"
+      ],
       "sql": "SELECT id_lab, glucose FROM labs WHERE id_patient = 7 ORDER BY glucose, id_lab",
       "assert": {
         "columns": [
@@ -11568,6 +11705,11 @@
     {
       "name": "A23 · Oldest patients, page 2",
       "description": "LIMIT/OFFSET on an order by date of birth.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients"
+      ],
       "sql": "SELECT name, last_name, birth_date FROM patients ORDER BY birth_date LIMIT 6 OFFSET 6",
       "assert": {
         "columns": [
@@ -11614,6 +11756,11 @@
     {
       "name": "A24 · Four patients from the eighth on",
       "description": "MySQL style LIMIT skip, n.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients"
+      ],
       "sql": "SELECT id_patient, name FROM patients ORDER BY id_patient LIMIT 7, 4",
       "assert": {
         "columns": [
@@ -11645,6 +11792,12 @@
     {
       "name": "A25 · Record of three patients",
       "description": "Concatenation with || and text functions.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "in"
+      ],
       "sql": "SELECT UPPER(last_name) || ', ' || name AS record, city, blood_group FROM patients WHERE id_patient IN (1, 2, 3) ORDER BY id_patient",
       "assert": {
         "columns": [
@@ -11676,6 +11829,12 @@
     {
       "name": "A26 · Missing values: COALESCE and ROUND",
       "description": "COALESCE with a default value, plus NULLIF and ROUND.",
+      "keywords": [
+        "health",
+        "basics",
+        "labs",
+        "null"
+      ],
       "sql": "SELECT id_lab, COALESCE(glucose, -1) AS glucose, IFNULL(cholesterol, 0) AS cholesterol FROM labs WHERE glucose IS NULL OR cholesterol IS NULL ORDER BY id_lab",
       "assert": {
         "columns": [
@@ -11762,6 +11921,11 @@
     {
       "name": "A27 · Normalised insurer phone",
       "description": "IFNULL + TRIM + NULLIF to leave the empty phones as null.",
+      "keywords": [
+        "health",
+        "basics",
+        "insurers"
+      ],
       "sql": "SELECT name, NULLIF(TRIM(IFNULL(phone, '')), '') AS phone FROM insurers ORDER BY id_insurer",
       "assert": {
         "columns": [
@@ -11801,6 +11965,11 @@
     {
       "name": "A28 · Oral drugs against the rest",
       "description": "The <> operator and NOT.",
+      "keywords": [
+        "health",
+        "basics",
+        "drugs"
+      ],
       "sql": "SELECT name, route FROM drugs WHERE NOT route = 'oral' ORDER BY route, name",
       "assert": {
         "columns": [
@@ -11856,6 +12025,11 @@
     {
       "name": "A29 · No appointment lasts more than two hours",
       "description": "A query without results: rowCount 0.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments"
+      ],
       "sql": "SELECT id_appointment, duration_min FROM appointments WHERE duration_min > 120",
       "assert": {
         "columns": [
@@ -11871,6 +12045,14 @@
     {
       "name": "A30 · Average price by presentation",
       "description": "HAVING and order by an alias.",
+      "keywords": [
+        "health",
+        "basics",
+        "drugs",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT presentation, COUNT(*) AS n, ROUND(AVG(price), 2) AS avg_price FROM drugs GROUP BY presentation HAVING COUNT(*) >= 2 ORDER BY avg_price DESC",
       "assert": {
         "columns": [
@@ -11902,6 +12084,11 @@
     {
       "name": "A31 · Patients and emails by city",
       "description": "Implicit join with commas: patients and their insurer.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients"
+      ],
       "sql": "SELECT p.name AS patient, s.name AS insurance FROM patients AS p, insurers AS s WHERE p.id_insurer = s.id_insurer AND p.city = 'Madrid' ORDER BY p.last_name",
       "assert": {
         "columns": [
@@ -11929,6 +12116,13 @@
     {
       "name": "A32 · Patients by blood group",
       "description": "GROUP BY counting the unknown group as well.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT COALESCE(blood_group, 'unknown') AS blood_group, COUNT(*) AS patients FROM patients GROUP BY blood_group ORDER BY patients DESC",
       "assert": {
         "columns": [
@@ -11976,6 +12170,13 @@
     {
       "name": "A33 · Nurses by shift",
       "description": "Simple grouping with an implicit DISTINCT.",
+      "keywords": [
+        "health",
+        "basics",
+        "nurses",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT shift, COUNT(*) AS nurses, ROUND(AVG(years_experience), 1) AS avg_experience FROM nurses GROUP BY shift ORDER BY nurses DESC",
       "assert": {
         "columns": [
@@ -12007,6 +12208,11 @@
     {
       "name": "A34 · Rooms with a bathroom and more than one bed",
       "description": "Two boolean filters and a numeric one.",
+      "keywords": [
+        "health",
+        "basics",
+        "rooms"
+      ],
       "sql": "SELECT code, type, num_beds FROM rooms WHERE has_bathroom = true AND num_beds > 1 ORDER BY num_beds DESC, code",
       "assert": {
         "columns": [
@@ -12073,6 +12279,11 @@
     {
       "name": "A35 · Chronic diagnoses, moderate or severe",
       "description": "Filter combined with AND.",
+      "keywords": [
+        "health",
+        "basics",
+        "diagnoses"
+      ],
       "sql": "SELECT code, name, severity FROM diagnoses WHERE is_chronic = true AND severity <> 'mild' ORDER BY name",
       "assert": {
         "columns": [
@@ -12119,6 +12330,13 @@
     {
       "name": "A36 · Successful surgeries by operating room",
       "description": "GROUP BY with SUM and AVG.",
+      "keywords": [
+        "health",
+        "basics",
+        "surgeries",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT operating_room, COUNT(*) AS surgeries, SUM(cost) AS total_cost, ROUND(AVG(duration_min), 0) AS avg_duration FROM surgeries WHERE successful = true GROUP BY operating_room ORDER BY total_cost DESC",
       "assert": {
         "columns": [
@@ -12172,6 +12390,11 @@
     {
       "name": "A37 · Drugs with low stock",
       "description": "Numeric threshold and ascending order.",
+      "keywords": [
+        "health",
+        "basics",
+        "drugs"
+      ],
       "sql": "SELECT name, stock, price FROM drugs WHERE stock <= 150 ORDER BY stock",
       "assert": {
         "columns": [
@@ -12218,6 +12441,11 @@
     {
       "name": "A38 · Veteran doctors who do not do research",
       "description": "Two conditions with NOT.",
+      "keywords": [
+        "health",
+        "basics",
+        "doctors"
+      ],
       "sql": "SELECT name, last_name, years_experience, category FROM doctors WHERE years_experience > 20 AND NOT is_researcher ORDER BY years_experience DESC",
       "assert": {
         "columns": [
@@ -12295,6 +12523,11 @@
     {
       "name": "A39 · Insurers with high coverage",
       "description": "Numeric and boolean filter.",
+      "keywords": [
+        "health",
+        "basics",
+        "insurers"
+      ],
       "sql": "SELECT name, type, coverage_percent FROM insurers WHERE coverage_percent >= 80 ORDER BY coverage_percent DESC",
       "assert": {
         "columns": [
@@ -12321,6 +12554,11 @@
     {
       "name": "A40 · Severe allergies",
       "description": "Text and date filter.",
+      "keywords": [
+        "health",
+        "basics",
+        "allergies"
+      ],
       "sql": "SELECT id_allergy, substance, severity, detected_date FROM allergies WHERE severity = 'severe' ORDER BY detected_date DESC",
       "assert": {
         "columns": [
@@ -12440,6 +12678,11 @@
     {
       "name": "A41 · Longest diagnosis names",
       "description": "ORDER BY of a text function.",
+      "keywords": [
+        "health",
+        "basics",
+        "diagnoses"
+      ],
       "sql": "SELECT code, name, LENGTH(name) AS letters FROM diagnoses ORDER BY letters DESC, code LIMIT 8",
       "assert": {
         "columns": [
@@ -12496,6 +12739,12 @@
     {
       "name": "A42 · ICD code by prefix",
       "description": "SUBSTR to extract the first letter.",
+      "keywords": [
+        "health",
+        "basics",
+        "diagnoses",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT SUBSTR(code, 1, 1) AS letter FROM diagnoses ORDER BY letter",
       "assert": {
         "columns": [
@@ -12552,6 +12801,12 @@
     {
       "name": "A43 · Patients with specific blood groups",
       "description": "IN on text.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "in"
+      ],
       "sql": "SELECT name, last_name, blood_group FROM patients WHERE blood_group IN ('O-', 'AB+', 'A-') ORDER BY blood_group, last_name",
       "assert": {
         "columns": [
@@ -12648,6 +12903,12 @@
     {
       "name": "A44 · Appointments in the first half of 2025",
       "description": "BETWEEN on dates stored as text.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments",
+        "between"
+      ],
       "sql": "SELECT id_appointment, date, time, type FROM appointments WHERE date BETWEEN '2025-01-01' AND '2025-06-30' ORDER BY date, time LIMIT 20",
       "assert": {
         "columns": [
@@ -12737,6 +12998,12 @@
     {
       "name": "A45 · Patients without a blood group",
       "description": "IS NULL and ORDER BY.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "null"
+      ],
       "sql": "SELECT id_patient, name, last_name FROM patients WHERE blood_group IS NULL ORDER BY last_name",
       "assert": {
         "columns": [
@@ -12778,6 +13045,11 @@
     {
       "name": "A46 · Patient records with CONCAT",
       "description": "Joins name and surname with CONCAT, and the blood group with the city: the first 7 patients by identifier. The result is null when there is no blood group.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients"
+      ],
       "sql": "SELECT CONCAT(name, ' ', last_name) AS patient, CONCAT(blood_group, ' · ', city) AS blood_city FROM patients ORDER BY id_patient LIMIT 7",
       "assert": {
         "columns": [
@@ -12821,6 +13093,13 @@
     {
       "name": "A47 · Global admission totals with every aggregate (no GROUP BY)",
       "description": "Aggregates without GROUP BY over the 50 admissions: 28 patients and 9 different reasons; total 30404, minimum 192, maximum 950 and rounded average 608.08.",
+      "keywords": [
+        "health",
+        "basics",
+        "admissions",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT COUNT(*) AS admissions, COUNT(cost_per_day) AS with_cost, COUNT(DISTINCT id_patient) AS patients, COUNT(DISTINCT reason) AS reasons, SUM(cost_per_day) AS total_cost, MIN(cost_per_day) AS minimum, MAX(cost_per_day) AS maximum, ROUND(AVG(cost_per_day), 2) AS average FROM admissions",
       "assert": {
         "columns": [
@@ -12852,6 +13131,15 @@
     {
       "name": "A48 · Invoices by payment method with COUNT of a column and HAVING (column with NULL)",
       "description": "GROUP BY on a column with nulls: COALESCE labels the group without a method and COUNT(payment_method) leaves it at zero; HAVING keeps the groups adding up to 65000 or more.",
+      "keywords": [
+        "health",
+        "basics",
+        "invoices",
+        "group-by",
+        "having",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT COALESCE(payment_method, 'no method') AS method, COUNT(*) AS invoices, COUNT(payment_method) AS with_method, COUNT(DISTINCT id_patient) AS patients, SUM(amount) AS total, ROUND(AVG(amount), 2) AS average FROM invoices GROUP BY payment_method HAVING SUM(amount) >= 65000 ORDER BY total DESC",
       "assert": {
         "columns": [
@@ -12887,6 +13175,14 @@
     {
       "name": "A49 · Appointments by doctor and status (GROUP BY of two columns with HAVING)",
       "description": "Two grouping columns with COUNT(*) and MIN and MAX of the duration: only three doctor-status combinations reach 4 appointments.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_doctor, status, COUNT(*) AS appointments, MIN(duration_min) AS minimum, MAX(duration_min) AS maximum FROM appointments GROUP BY id_doctor, status HAVING COUNT(*) >= 4 ORDER BY appointments DESC, id_doctor, status",
       "assert": {
         "columns": [
@@ -12926,6 +13222,15 @@
     {
       "name": "A50 · Patients by blood group (COUNT(*) versus COUNT of a column)",
       "description": "The unknown group shows up in COUNT(*) but at zero in COUNT(blood_group); COUNT(DISTINCT city) counts different cities per group and the HAVING requires 3 patients.",
+      "keywords": [
+        "health",
+        "basics",
+        "patients",
+        "group-by",
+        "having",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT COALESCE(blood_group, 'unknown') AS blood_group, COUNT(*) AS patients, COUNT(blood_group) AS with_group, COUNT(DISTINCT city) AS cities FROM patients GROUP BY blood_group HAVING COUNT(*) >= 3 ORDER BY patients DESC, blood_group",
       "assert": {
         "columns": [
@@ -12991,6 +13296,14 @@
     {
       "name": "A51 · Admissions per doctor with every numeric aggregate (double HAVING)",
       "description": "COUNT(*), SUM, MIN, MAX and AVG of the cost per doctor; HAVING combines COUNT(*) and AVG: three admissions at least and an average of 600 or more.",
+      "keywords": [
+        "health",
+        "basics",
+        "admissions",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_doctor, COUNT(*) AS admissions, SUM(cost_per_day) AS total_cost, MIN(cost_per_day) AS minimum, MAX(cost_per_day) AS maximum, ROUND(AVG(cost_per_day), 2) AS average FROM admissions GROUP BY id_doctor HAVING COUNT(*) >= 3 AND AVG(cost_per_day) >= 600 ORDER BY total_cost DESC, id_doctor",
       "assert": {
         "columns": [
@@ -13042,6 +13355,14 @@
     {
       "name": "A52 · Rooms by hospital and occupancy (GROUP BY of two columns with SUM)",
       "description": "Grouping by hospital and occupancy with COUNT(*) and SUM(num_beds); HAVING keeps only the groups of 4 rooms or more.",
+      "keywords": [
+        "health",
+        "basics",
+        "rooms",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_hospital, occupied, COUNT(*) AS rooms, SUM(num_beds) AS beds FROM rooms GROUP BY id_hospital, occupied HAVING COUNT(*) >= 4 ORDER BY id_hospital, occupied",
       "assert": {
         "columns": [
@@ -13071,6 +13392,15 @@
     {
       "name": "A53 · Surgeries by risk with every function (HAVING SUM)",
       "description": "COUNT(*), COUNT(DISTINCT operating_room), SUM, MIN, MAX and AVG by risk; the HAVING on the sum leaves out the high risk.",
+      "keywords": [
+        "health",
+        "basics",
+        "surgeries",
+        "group-by",
+        "having",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT risk, COUNT(*) AS surgeries, COUNT(DISTINCT operating_room) AS operating_rooms, SUM(cost) AS total_cost, MIN(duration_min) AS min_duration, MAX(duration_min) AS max_duration, ROUND(AVG(cost), 0) AS average_cost FROM surgeries GROUP BY risk HAVING SUM(cost) > 65000 ORDER BY total_cost DESC",
       "assert": {
         "columns": [
@@ -13109,6 +13439,15 @@
     {
       "name": "A54 · Labs by type with COUNT(DISTINCT) and AVG (HAVING COUNT DISTINCT)",
       "description": "Per lab type: COUNT(*) of rows, COUNT(DISTINCT id_patient) of patients and two rounded AVGs; HAVING requires 15 different patients.",
+      "keywords": [
+        "health",
+        "basics",
+        "labs",
+        "group-by",
+        "having",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT type, COUNT(*) AS labs, COUNT(DISTINCT id_patient) AS patients, ROUND(AVG(glucose), 1) AS average_glucose, ROUND(AVG(cholesterol), 1) AS average_cholesterol FROM labs GROUP BY type HAVING COUNT(DISTINCT id_patient) >= 15 ORDER BY labs DESC",
       "assert": {
         "columns": [
@@ -13134,6 +13473,14 @@
     {
       "name": "A55 · Prescriptions per drug with SUM, MIN, MAX and AVG (HAVING COUNT)",
       "description": "Per drug, COUNT(*) with SUM of the amounts and MIN, MAX and AVG of the duration; HAVING requires 8 prescriptions or more.",
+      "keywords": [
+        "health",
+        "basics",
+        "prescriptions",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT id_drug, COUNT(*) AS prescriptions, SUM(amount) AS units, MIN(duration_days) AS min_days, MAX(duration_days) AS max_days, ROUND(AVG(duration_days), 1) AS average_days FROM prescriptions GROUP BY id_drug HAVING COUNT(*) >= 8 ORDER BY units DESC, id_drug",
       "assert": {
         "columns": [
@@ -13193,6 +13540,15 @@
     {
       "name": "A56 · Treatments per year with SUM and AVG (GROUP BY with an expression and HAVING)",
       "description": "GROUP BY on the year of the start date: COUNT(*), COUNT(DISTINCT id_patient), SUM and rounded AVG of the cost; HAVING keeps the years with 10 treatments or more.",
+      "keywords": [
+        "health",
+        "basics",
+        "treatments",
+        "group-by",
+        "having",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT SUBSTR(start_date, 1, 4) AS year, COUNT(*) AS treatments, COUNT(DISTINCT id_patient) AS patients, SUM(cost) AS total_cost, ROUND(AVG(cost), 0) AS average_cost FROM treatments GROUP BY SUBSTR(start_date, 1, 4) HAVING COUNT(*) >= 10 ORDER BY year",
       "assert": {
         "columns": [
@@ -13232,6 +13588,14 @@
     {
       "name": "A57 · Aggregates over the grouped column itself (COUNT of status)",
       "description": "COUNT(status) matches COUNT(*) and COUNT(DISTINCT status) is 1 in every group; MAX(id_appointment) and COUNT(duration_min) summarise the other columns.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT status, COUNT(*) AS total, COUNT(status) AS with_status, COUNT(DISTINCT status) AS statuses, MAX(id_appointment) AS last_id, COUNT(duration_min) AS with_duration FROM appointments GROUP BY status ORDER BY total DESC, status",
       "assert": {
         "columns": [
@@ -13283,6 +13647,14 @@
     {
       "name": "A58 · HAVING with aggregates that are not in the SELECT",
       "description": "HAVING with COUNT(*) and MIN(duration_min) outside the SELECT: only the pending appointments have more than 10 appointments and go below 20 minutes.",
+      "keywords": [
+        "health",
+        "basics",
+        "appointments",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT status FROM appointments GROUP BY status HAVING COUNT(*) >= 10 AND MIN(duration_min) < 20 ORDER BY status",
       "assert": {
         "columns": [
@@ -13300,6 +13672,14 @@
     {
       "name": "A59 · Emergency admissions by reason (WHERE, GROUP BY and HAVING)",
       "description": "WHERE keeps only the emergencies and then groups by reason: COUNT(*) of admissions and COUNT(cost_per_day) of those with a cost, with HAVING of 4 or more.",
+      "keywords": [
+        "health",
+        "basics",
+        "admissions",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT reason, COUNT(*) AS admissions, COUNT(cost_per_day) AS with_cost FROM admissions WHERE is_emergency = true GROUP BY reason HAVING COUNT(*) >= 4 ORDER BY admissions DESC, reason",
       "assert": {
         "columns": [
@@ -13341,6 +13721,13 @@
     {
       "name": "B01 · Hospitals with their services",
       "description": "INNER JOIN 1:M between hospital and service.",
+      "keywords": [
+        "health",
+        "joins",
+        "hospitals",
+        "services",
+        "join"
+      ],
       "sql": "SELECT h.name AS hospital, s.name AS service, s.bed_capacity FROM hospitals AS h INNER JOIN services AS s ON s.id_hospital = h.id_hospital ORDER BY h.name, s.name",
       "assert": {
         "columns": [
@@ -13417,6 +13804,14 @@
     {
       "name": "B02 · Services with their hospital and specialty",
       "description": "Three tables chained.",
+      "keywords": [
+        "health",
+        "joins",
+        "services",
+        "specialties",
+        "hospitals",
+        "join"
+      ],
       "sql": "SELECT s.name AS service, e.name AS specialty, h.name AS hospital FROM services AS s INNER JOIN specialties AS e ON e.id_specialty = s.id_specialty INNER JOIN hospitals AS h ON h.id_hospital = s.id_hospital ORDER BY h.name, s.name",
       "assert": {
         "columns": [
@@ -13493,6 +13888,14 @@
     {
       "name": "B03 · Hospitals without services",
       "description": "LEFT JOIN to find the orphans.",
+      "keywords": [
+        "health",
+        "joins",
+        "hospitals",
+        "services",
+        "join",
+        "null"
+      ],
       "sql": "SELECT h.name AS hospital FROM hospitals AS h LEFT JOIN services AS s ON s.id_hospital = h.id_hospital WHERE s.id_service IS NULL ORDER BY h.name",
       "assert": {
         "columns": [
@@ -13510,6 +13913,14 @@
     {
       "name": "B04 · Specialties without doctors",
       "description": "LEFT JOIN and filter by null.",
+      "keywords": [
+        "health",
+        "joins",
+        "specialties",
+        "doctors",
+        "join",
+        "null"
+      ],
       "sql": "SELECT e.name AS specialty FROM specialties AS e LEFT JOIN doctors AS m ON m.id_specialty = e.id_specialty WHERE m.id_doctor IS NULL ORDER BY e.name",
       "assert": {
         "columns": [
@@ -13527,6 +13938,11 @@
     {
       "name": "B05 · Implicit join: doctors and services",
       "description": "Relationship with commas in the FROM.",
+      "keywords": [
+        "health",
+        "joins",
+        "doctors"
+      ],
       "sql": "SELECT m.name, m.last_name, s.name AS service FROM doctors AS m, services AS s WHERE m.id_service = s.id_service AND s.id_hospital = 1 ORDER BY m.last_name",
       "assert": {
         "columns": [
@@ -13563,6 +13979,13 @@
     {
       "name": "B06 · Doctors with their specialty",
       "description": "INNER JOIN by the specialty key.",
+      "keywords": [
+        "health",
+        "joins",
+        "doctors",
+        "specialties",
+        "join"
+      ],
       "sql": "SELECT m.last_name, m.name, e.name AS specialty, m.category FROM doctors AS m INNER JOIN specialties AS e ON e.id_specialty = m.id_specialty ORDER BY m.last_name LIMIT 15",
       "assert": {
         "columns": [
@@ -13670,6 +14093,16 @@
     {
       "name": "B07 · Specialties with at least three doctors",
       "description": "LEFT JOIN + HAVING.",
+      "keywords": [
+        "health",
+        "joins",
+        "specialties",
+        "doctors",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT e.name AS specialty, COUNT(m.id_doctor) AS doctors FROM specialties AS e LEFT JOIN doctors AS m ON m.id_specialty = e.id_specialty GROUP BY e.name HAVING COUNT(m.id_doctor) >= 3 ORDER BY doctors DESC",
       "assert": {
         "columns": [
@@ -13705,6 +14138,15 @@
     {
       "name": "B08 · Patients by insurer",
       "description": "Grouping of a join with the coverage.",
+      "keywords": [
+        "health",
+        "joins",
+        "insurers",
+        "patients",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT s.name AS insurance, COUNT(p.id_patient) AS patients, s.coverage_percent FROM insurers AS s LEFT JOIN patients AS p ON p.id_insurer = s.id_insurer GROUP BY s.name, s.coverage_percent ORDER BY patients DESC",
       "assert": {
         "columns": [
@@ -13751,6 +14193,15 @@
     {
       "name": "B09 · Rooms by hospital",
       "description": "LEFT JOIN counting rooms, even when they are 0.",
+      "keywords": [
+        "health",
+        "joins",
+        "hospitals",
+        "rooms",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT h.name AS hospital, COUNT(rm.id_room) AS rooms, SUM(rm.num_beds) AS beds FROM hospitals AS h LEFT JOIN rooms AS rm ON rm.id_hospital = h.id_hospital GROUP BY h.name ORDER BY rooms DESC",
       "assert": {
         "columns": [
@@ -13802,6 +14253,14 @@
     {
       "name": "B10 · Admissions with patient, room and doctor",
       "description": "Four tables in the same join.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "patients",
+        "rooms",
+        "join"
+      ],
       "sql": "SELECT i.id_admission, p.last_name AS patient, rm.code AS room, m.last_name AS doctor, i.reason FROM admissions AS i INNER JOIN patients AS p ON p.id_patient = i.id_patient LEFT JOIN rooms AS rm ON rm.id_room = i.id_room INNER JOIN doctors AS m ON m.id_doctor = i.id_doctor ORDER BY i.id_admission LIMIT 25",
       "assert": {
         "columns": [
@@ -13995,6 +14454,14 @@
     {
       "name": "B11 · Appointments with patient and doctor",
       "description": "Join of the schedule.",
+      "keywords": [
+        "health",
+        "joins",
+        "appointments",
+        "patients",
+        "doctors",
+        "join"
+      ],
       "sql": "SELECT c.id_appointment, c.date, p.last_name AS patient, m.last_name AS doctor, c.status FROM appointments AS c INNER JOIN patients AS p ON p.id_patient = c.id_patient INNER JOIN doctors AS m ON m.id_doctor = c.id_doctor ORDER BY c.date DESC, c.time LIMIT 25",
       "assert": {
         "columns": [
@@ -14188,6 +14655,13 @@
     {
       "name": "B12 · Visits with their doctor",
       "description": "Direct join with order by date.",
+      "keywords": [
+        "health",
+        "joins",
+        "visits",
+        "doctors",
+        "join"
+      ],
       "sql": "SELECT v.id_visit, v.date, v.reason, m.last_name AS doctor FROM visits AS v INNER JOIN doctors AS m ON m.id_doctor = v.id_doctor ORDER BY v.date, v.id_visit LIMIT 20",
       "assert": {
         "columns": [
@@ -14325,6 +14799,14 @@
     {
       "name": "B13 · Surgeries with patient and surgeon",
       "description": "Two joins and a filter by risk.",
+      "keywords": [
+        "health",
+        "joins",
+        "surgeries",
+        "patients",
+        "doctors",
+        "join"
+      ],
       "sql": "SELECT iv.name AS surgery, p.last_name AS patient, m.last_name AS surgeon, iv.risk FROM surgeries AS iv INNER JOIN patients AS p ON p.id_patient = iv.id_patient INNER JOIN doctors AS m ON m.id_doctor = iv.id_doctor WHERE iv.risk = 'high' ORDER BY iv.cost DESC",
       "assert": {
         "columns": [
@@ -14420,6 +14902,11 @@
     {
       "name": "B14 · Cartesian product specialties × hospitals",
       "description": "Without a join condition: every combination.",
+      "keywords": [
+        "health",
+        "joins",
+        "hospitals"
+      ],
       "sql": "SELECT h.name AS hospital, e.name AS specialty FROM hospitals AS h, specialties AS e ORDER BY h.id_hospital, e.id_specialty",
       "assert": {
         "columns": [
@@ -14743,6 +15230,15 @@
     {
       "name": "B15 · The five most expensive drugs",
       "description": "Join with prescriptions and a limit.",
+      "keywords": [
+        "health",
+        "joins",
+        "drugs",
+        "prescriptions",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT med.name, med.price, COUNT(*) AS prescriptions FROM drugs AS med INNER JOIN prescriptions AS pr ON pr.id_drug = med.id_drug GROUP BY med.name, med.price ORDER BY med.price DESC LIMIT 5",
       "assert": {
         "columns": [
@@ -14784,6 +15280,17 @@
     {
       "name": "B16 · Specialties with distinct doctors",
       "description": "COUNT DISTINCT inside a join.",
+      "keywords": [
+        "health",
+        "joins",
+        "specialties",
+        "doctors",
+        "services",
+        "join",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT e.name AS specialty, COUNT(DISTINCT m.id_doctor) AS doctors, COUNT(DISTINCT s.id_service) AS services FROM specialties AS e LEFT JOIN doctors AS m ON m.id_specialty = e.id_specialty LEFT JOIN services AS s ON s.id_specialty = e.id_specialty GROUP BY e.name ORDER BY doctors DESC",
       "assert": {
         "columns": [
@@ -14855,6 +15362,13 @@
     {
       "name": "B17 · Experience by category",
       "description": "MIN and MAX per group.",
+      "keywords": [
+        "health",
+        "joins",
+        "doctors",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT category, COUNT(*) AS doctors, MIN(years_experience) AS min_experience, MAX(years_experience) AS max_experience FROM doctors GROUP BY category ORDER BY max_experience DESC",
       "assert": {
         "columns": [
@@ -14896,6 +15410,14 @@
     {
       "name": "B18 · Active treatments with patient and diagnosis",
       "description": "Join of three tables and a boolean filter.",
+      "keywords": [
+        "health",
+        "joins",
+        "treatments",
+        "patients",
+        "diagnoses",
+        "join"
+      ],
       "sql": "SELECT t.id_treatment, p.last_name AS patient, d.name AS diagnosis, t.cost FROM treatments AS t INNER JOIN patients AS p ON p.id_patient = t.id_patient INNER JOIN diagnoses AS d ON d.id_diagnosis = t.id_diagnosis WHERE t.active = true ORDER BY t.cost DESC LIMIT 20",
       "assert": {
         "columns": [
@@ -15033,6 +15555,14 @@
     {
       "name": "B19 · Abnormal lab tests with patient and doctor",
       "description": "Boolean filter on a join.",
+      "keywords": [
+        "health",
+        "joins",
+        "labs",
+        "patients",
+        "doctors",
+        "join"
+      ],
       "sql": "SELECT a.id_lab, p.last_name AS patient, m.last_name AS doctor, a.glucose, a.cholesterol FROM labs AS a INNER JOIN patients AS p ON p.id_patient = a.id_patient INNER JOIN doctors AS m ON m.id_doctor = a.id_doctor WHERE a.is_abnormal = true ORDER BY a.date DESC LIMIT 20",
       "assert": {
         "columns": [
@@ -15191,6 +15721,14 @@
     {
       "name": "B20 · Unpaid invoices with their patient",
       "description": "LEFT JOIN of the insurer and a boolean filter.",
+      "keywords": [
+        "health",
+        "joins",
+        "invoices",
+        "patients",
+        "insurers",
+        "join"
+      ],
       "sql": "SELECT f.id_invoice, p.last_name AS patient, f.amount, s.name AS insurance FROM invoices AS f INNER JOIN patients AS p ON p.id_patient = f.id_patient LEFT JOIN insurers AS s ON s.id_insurer = p.id_insurer WHERE f.paid = false ORDER BY f.amount DESC LIMIT 20",
       "assert": {
         "columns": [
@@ -15316,6 +15854,15 @@
     {
       "name": "B21 · Active admissions with their room",
       "description": "IS NULL for the ones still admitted.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "patients",
+        "rooms",
+        "join",
+        "null"
+      ],
       "sql": "SELECT i.id_admission, p.last_name AS patient, rm.code, i.admission_date FROM admissions AS i INNER JOIN patients AS p ON p.id_patient = i.id_patient LEFT JOIN rooms AS rm ON rm.id_room = i.id_room WHERE i.discharge_date IS NULL ORDER BY i.admission_date",
       "assert": {
         "columns": [
@@ -15405,6 +15952,14 @@
     {
       "name": "B22 · Nurses and their service",
       "description": "Join with data of both.",
+      "keywords": [
+        "health",
+        "joins",
+        "nurses",
+        "services",
+        "hospitals",
+        "join"
+      ],
       "sql": "SELECT nur.last_name AS nurse, nur.shift, s.name AS service, h.name AS hospital FROM nurses AS nur INNER JOIN services AS s ON s.id_service = nur.id_service INNER JOIN hospitals AS h ON h.id_hospital = s.id_hospital ORDER BY nur.last_name LIMIT 20",
       "assert": {
         "columns": [
@@ -15542,6 +16097,14 @@
     {
       "name": "B23 · Visits with their main diagnosis",
       "description": "Join visit → relationship → diagnosis.",
+      "keywords": [
+        "health",
+        "joins",
+        "visits",
+        "visit_diagnoses",
+        "diagnoses",
+        "join"
+      ],
       "sql": "SELECT v.id_visit, v.reason, d.name AS diagnosis, d.severity FROM visits AS v INNER JOIN visit_diagnoses AS vd ON vd.id_visit = v.id_visit INNER JOIN diagnoses AS d ON d.id_diagnosis = vd.id_diagnosis WHERE vd.is_main = true ORDER BY v.id_visit LIMIT 25",
       "assert": {
         "columns": [
@@ -15709,6 +16272,14 @@
     {
       "name": "B24 · Prescriptions with drug and treatment",
       "description": "Resolves the M:N showing both ends.",
+      "keywords": [
+        "health",
+        "joins",
+        "prescriptions",
+        "drugs",
+        "treatments",
+        "join"
+      ],
       "sql": "SELECT pr.id_prescription, med.name AS drug, pr.dose, t.id_treatment, p.last_name AS patient FROM prescriptions AS pr INNER JOIN drugs AS med ON med.id_drug = pr.id_drug INNER JOIN treatments AS t ON t.id_treatment = pr.id_treatment INNER JOIN patients AS p ON p.id_patient = t.id_patient ORDER BY pr.id_prescription LIMIT 25",
       "assert": {
         "columns": [
@@ -15902,6 +16473,16 @@
     {
       "name": "B25 · Treatments by diagnosis",
       "description": "GROUP BY of a join with HAVING.",
+      "keywords": [
+        "health",
+        "joins",
+        "diagnoses",
+        "treatments",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT d.name AS diagnosis, COUNT(t.id_treatment) AS treatments, ROUND(AVG(t.cost), 0) AS avg_cost FROM diagnoses AS d INNER JOIN treatments AS t ON t.id_diagnosis = d.id_diagnosis GROUP BY d.name HAVING COUNT(t.id_treatment) >= 2 ORDER BY treatments DESC",
       "assert": {
         "columns": [
@@ -15998,6 +16579,15 @@
     {
       "name": "B26 · Cost of treatments by doctor",
       "description": "SUM and COUNT grouped.",
+      "keywords": [
+        "health",
+        "joins",
+        "treatments",
+        "doctors",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT m.last_name AS doctor, COUNT(*) AS treatments, SUM(t.cost) AS total_cost FROM treatments AS t INNER JOIN doctors AS m ON m.id_doctor = t.id_doctor GROUP BY m.last_name ORDER BY total_cost DESC LIMIT 10",
       "assert": {
         "columns": [
@@ -16064,6 +16654,13 @@
     {
       "name": "B27 · Surgeries by risk level",
       "description": "Grouping with the average cost.",
+      "keywords": [
+        "health",
+        "joins",
+        "surgeries",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT risk, COUNT(*) AS surgeries, ROUND(AVG(cost), 0) AS avg_cost FROM surgeries GROUP BY risk ORDER BY avg_cost DESC",
       "assert": {
         "columns": [
@@ -16095,6 +16692,13 @@
     {
       "name": "B28 · Patients with insurer and city",
       "description": "Join with COALESCE for the missing insurer.",
+      "keywords": [
+        "health",
+        "joins",
+        "patients",
+        "insurers",
+        "join"
+      ],
       "sql": "SELECT p.last_name AS patient, COALESCE(s.name, 'no insurer') AS insurance, p.city FROM patients AS p LEFT JOIN insurers AS s ON s.id_insurer = p.id_insurer ORDER BY p.city, p.last_name LIMIT 25",
       "assert": {
         "columns": [
@@ -16236,6 +16840,14 @@
     {
       "name": "B29 · Allergies with the drug involved",
       "description": "LEFT JOIN because there are allergies without a drug.",
+      "keywords": [
+        "health",
+        "joins",
+        "allergies",
+        "drugs",
+        "patients",
+        "join"
+      ],
       "sql": "SELECT alg.substance, alg.severity, med.name AS drug, p.last_name AS patient FROM allergies AS alg LEFT JOIN drugs AS med ON med.id_drug = alg.id_drug INNER JOIN patients AS p ON p.id_patient = alg.id_patient ORDER BY alg.severity DESC, alg.substance LIMIT 25",
       "assert": {
         "columns": [
@@ -16403,6 +17015,15 @@
     {
       "name": "B30 · Beds by hospital (only those with rooms)",
       "description": "INNER JOIN and sum of beds.",
+      "keywords": [
+        "health",
+        "joins",
+        "hospitals",
+        "rooms",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT h.name AS hospital, COUNT(rm.id_room) AS rooms, SUM(rm.num_beds) AS beds FROM hospitals AS h INNER JOIN rooms AS rm ON rm.id_hospital = h.id_hospital GROUP BY h.name ORDER BY beds DESC",
       "assert": {
         "columns": [
@@ -16449,6 +17070,13 @@
     {
       "name": "B31 · Admissions by month",
       "description": "GROUP BY with SUBSTR on the date.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT SUBSTR(admission_date, 1, 7) AS month, COUNT(*) AS admissions FROM admissions GROUP BY SUBSTR(admission_date, 1, 7) ORDER BY month",
       "assert": {
         "columns": [
@@ -16560,6 +17188,13 @@
     {
       "name": "B32 · Billing by year",
       "description": "SUBSTR for the year and sum of amounts.",
+      "keywords": [
+        "health",
+        "joins",
+        "invoices",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT SUBSTR(date, 1, 4) AS year, COUNT(*) AS invoices, SUM(amount) AS total FROM invoices GROUP BY SUBSTR(date, 1, 4) ORDER BY year",
       "assert": {
         "columns": [
@@ -16591,6 +17226,15 @@
     {
       "name": "B33 · Doctors with more visits",
       "description": "Join and GROUP BY with LIMIT.",
+      "keywords": [
+        "health",
+        "joins",
+        "doctors",
+        "visits",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT m.last_name AS doctor, COUNT(v.id_visit) AS visits FROM doctors AS m INNER JOIN visits AS v ON v.id_doctor = m.id_doctor GROUP BY m.last_name ORDER BY visits DESC LIMIT 10",
       "assert": {
         "columns": [
@@ -16646,6 +17290,15 @@
     {
       "name": "B34 · Cancelled appointments by doctor",
       "description": "Status filter on a join.",
+      "keywords": [
+        "health",
+        "joins",
+        "appointments",
+        "doctors",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT m.last_name AS doctor, COUNT(*) AS cancelled FROM appointments AS c INNER JOIN doctors AS m ON m.id_doctor = c.id_doctor WHERE c.status = 'cancelled' GROUP BY m.last_name ORDER BY cancelled DESC LIMIT 10",
       "assert": {
         "columns": [
@@ -16689,6 +17342,15 @@
     {
       "name": "B35 · Diagnoses by specialty",
       "description": "COUNT on a join.",
+      "keywords": [
+        "health",
+        "joins",
+        "specialties",
+        "diagnoses",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.name AS specialty, COUNT(d.id_diagnosis) AS diagnoses FROM specialties AS e LEFT JOIN diagnoses AS d ON d.id_specialty = e.id_specialty GROUP BY e.name ORDER BY diagnoses DESC",
       "assert": {
         "columns": [
@@ -16748,6 +17410,16 @@
     {
       "name": "B36 · Drugs by treatment",
       "description": "Counts the M:N with ORDER BY of an aggregate.",
+      "keywords": [
+        "health",
+        "joins",
+        "treatments",
+        "prescriptions",
+        "patients",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT t.id_treatment, p.last_name AS patient, COUNT(pr.id_prescription) AS drugs FROM treatments AS t INNER JOIN prescriptions AS pr ON pr.id_treatment = t.id_treatment INNER JOIN patients AS p ON p.id_patient = t.id_patient GROUP BY t.id_treatment, p.last_name ORDER BY drugs DESC, t.id_treatment LIMIT 15",
       "assert": {
         "columns": [
@@ -16839,6 +17511,13 @@
     {
       "name": "B37 · Surgeries by operating room",
       "description": "Grouping with a count and extreme durations.",
+      "keywords": [
+        "health",
+        "joins",
+        "surgeries",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT operating_room, COUNT(*) AS surgeries, MIN(duration_min) AS min_duration, MAX(duration_min) AS max_duration FROM surgeries GROUP BY operating_room ORDER BY surgeries DESC",
       "assert": {
         "columns": [
@@ -16892,6 +17571,14 @@
     {
       "name": "B38 · Chronic patients with active treatments",
       "description": "Two filters and a join of three tables.",
+      "keywords": [
+        "health",
+        "joins",
+        "patients",
+        "treatments",
+        "join",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT p.last_name AS patient, p.city FROM patients AS p INNER JOIN treatments AS t ON t.id_patient = p.id_patient WHERE p.is_chronic = true AND t.active = true ORDER BY p.last_name",
       "assert": {
         "columns": [
@@ -16931,6 +17618,16 @@
     {
       "name": "B39 · Specialties with more visits",
       "description": "Chain service → specialty → visits.",
+      "keywords": [
+        "health",
+        "joins",
+        "visits",
+        "doctors",
+        "specialties",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.name AS specialty, COUNT(v.id_visit) AS visits FROM visits AS v INNER JOIN doctors AS m ON m.id_doctor = v.id_doctor INNER JOIN specialties AS e ON e.id_specialty = m.id_specialty GROUP BY e.name ORDER BY visits DESC",
       "assert": {
         "columns": [
@@ -16986,6 +17683,15 @@
     {
       "name": "B40 · Visits by appointment type",
       "description": "LEFT JOIN to include the walk-ins.",
+      "keywords": [
+        "health",
+        "joins",
+        "visits",
+        "appointments",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT COALESCE(c.type, 'walk-in') AS type, COUNT(v.id_visit) AS visits FROM visits AS v LEFT JOIN appointments AS c ON c.id_appointment = v.id_appointment GROUP BY c.type ORDER BY visits DESC",
       "assert": {
         "columns": [
@@ -17021,6 +17727,15 @@
     {
       "name": "B41 · Occupied and free rooms by hospital",
       "description": "GROUP BY of two columns, the boolean state included.",
+      "keywords": [
+        "health",
+        "joins",
+        "hospitals",
+        "rooms",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT h.name AS hospital, rm.occupied, COUNT(*) AS rooms FROM hospitals AS h INNER JOIN rooms AS rm ON rm.id_hospital = h.id_hospital GROUP BY h.name, rm.occupied ORDER BY h.name, rm.occupied",
       "assert": {
         "columns": [
@@ -17092,6 +17807,16 @@
     {
       "name": "B42 · Emergency admissions by hospital",
       "description": "Join patient, admission and hospital.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "patients",
+        "rooms",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT h.name AS hospital, COUNT(*) AS urgent FROM admissions AS i INNER JOIN patients AS p ON p.id_patient = i.id_patient INNER JOIN rooms AS rm ON rm.id_room = i.id_room INNER JOIN hospitals AS h ON h.id_hospital = rm.id_hospital WHERE i.is_emergency = true GROUP BY h.name ORDER BY urgent DESC",
       "assert": {
         "columns": [
@@ -17131,6 +17856,16 @@
     {
       "name": "B43 · Average coverage of invoices by insurer",
       "description": "Join and grouped average.",
+      "keywords": [
+        "health",
+        "joins",
+        "invoices",
+        "patients",
+        "insurers",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT s.name AS insurance, COUNT(f.id_invoice) AS invoices, ROUND(AVG(f.amount), 0) AS avg_amount FROM invoices AS f INNER JOIN patients AS p ON p.id_patient = f.id_patient INNER JOIN insurers AS s ON s.id_insurer = p.id_insurer GROUP BY s.name ORDER BY avg_amount DESC",
       "assert": {
         "columns": [
@@ -17177,6 +17912,13 @@
     {
       "name": "B44 · Lab tests by type and result",
       "description": "GROUP BY of two columns.",
+      "keywords": [
+        "health",
+        "joins",
+        "labs",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT type, is_abnormal, COUNT(*) AS labs FROM labs GROUP BY type, is_abnormal ORDER BY type, is_abnormal",
       "assert": {
         "columns": [
@@ -17213,6 +17955,15 @@
     {
       "name": "B45 · Severe diagnoses with treatments",
       "description": "Join and filter by severity.",
+      "keywords": [
+        "health",
+        "joins",
+        "diagnoses",
+        "treatments",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT d.name AS diagnosis, d.severity, COUNT(t.id_treatment) AS treatments FROM diagnoses AS d INNER JOIN treatments AS t ON t.id_diagnosis = d.id_diagnosis WHERE d.severity = 'severe' GROUP BY d.name, d.severity ORDER BY treatments DESC",
       "assert": {
         "columns": [
@@ -17264,6 +18015,17 @@
     {
       "name": "C01 · History of one patient",
       "description": "Gathers admissions, appointments and visits of one patient with distinct counts.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "patients",
+        "admissions",
+        "appointments",
+        "join",
+        "group-by",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT p.last_name AS patient, COUNT(DISTINCT i.id_admission) AS admissions, COUNT(DISTINCT c.id_appointment) AS appointments, COUNT(DISTINCT v.id_visit) AS visits FROM patients AS p LEFT JOIN admissions AS i ON i.id_patient = p.id_patient LEFT JOIN appointments AS c ON c.id_patient = p.id_patient LEFT JOIN visits AS v ON v.id_patient = p.id_patient WHERE p.id_patient = 1 GROUP BY p.last_name",
       "assert": {
         "columns": [
@@ -17287,6 +18049,16 @@
     {
       "name": "C02 · Visits with two or more diagnoses",
       "description": "GROUP BY on the M:N link with HAVING.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "visits",
+        "visit_diagnoses",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT v.id_visit, v.reason, COUNT(vd.id_diagnosis) AS diagnoses FROM visits AS v INNER JOIN visit_diagnoses AS vd ON vd.id_visit = v.id_visit GROUP BY v.id_visit, v.reason HAVING COUNT(vd.id_diagnosis) >= 2 ORDER BY diagnoses DESC, v.id_visit LIMIT 20",
       "assert": {
         "columns": [
@@ -17403,6 +18175,15 @@
     {
       "name": "C03 · Most frequent diagnoses",
       "description": "Counts appearances in the bridge table.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "visit_diagnoses",
+        "diagnoses",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT d.name AS diagnosis, COUNT(*) AS times FROM visit_diagnoses AS vd INNER JOIN diagnoses AS d ON d.id_diagnosis = vd.id_diagnosis GROUP BY d.name ORDER BY times DESC, diagnosis LIMIT 10",
       "assert": {
         "columns": [
@@ -17458,6 +18239,16 @@
     {
       "name": "C04 · Treatments with more than two drugs",
       "description": "HAVING on the M:N of prescriptions.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "treatments",
+        "prescriptions",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT t.id_treatment, COUNT(pr.id_drug) AS drugs FROM treatments AS t INNER JOIN prescriptions AS pr ON pr.id_treatment = t.id_treatment GROUP BY t.id_treatment HAVING COUNT(pr.id_drug) > 2 ORDER BY drugs DESC LIMIT 15",
       "assert": {
         "columns": [
@@ -17533,6 +18324,15 @@
     {
       "name": "C05 · Most prescribed drugs",
       "description": "Ranking from the bridge table.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "prescriptions",
+        "drugs",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT med.name AS drug, COUNT(*) AS prescriptions FROM prescriptions AS pr INNER JOIN drugs AS med ON med.id_drug = pr.id_drug GROUP BY med.name ORDER BY prescriptions DESC, drug LIMIT 10",
       "assert": {
         "columns": [
@@ -17588,6 +18388,15 @@
     {
       "name": "C06 · Patients with more invoices",
       "description": "JOIN and ORDER BY of an aggregate with LIMIT.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "patients",
+        "invoices",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT p.last_name AS patient, COUNT(f.id_invoice) AS invoices, SUM(f.amount) AS total FROM patients AS p INNER JOIN invoices AS f ON f.id_patient = p.id_patient GROUP BY p.last_name ORDER BY total DESC LIMIT 10",
       "assert": {
         "columns": [
@@ -17654,6 +18463,14 @@
     {
       "name": "C07 · Patients who never had an appointment",
       "description": "LEFT JOIN and check for null.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "patients",
+        "appointments",
+        "join",
+        "null"
+      ],
       "sql": "SELECT p.last_name AS patient FROM patients AS p LEFT JOIN appointments AS c ON c.id_patient = p.id_patient WHERE c.id_appointment IS NULL ORDER BY p.last_name",
       "assert": {
         "columns": [
@@ -17689,6 +18506,14 @@
     {
       "name": "C08 · Doctors without any appointment",
       "description": "Those on the staff who never appear in the schedule.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "doctors",
+        "appointments",
+        "join",
+        "null"
+      ],
       "sql": "SELECT m.last_name AS doctor FROM doctors AS m LEFT JOIN appointments AS c ON c.id_doctor = m.id_doctor WHERE c.id_appointment IS NULL ORDER BY m.last_name",
       "assert": {
         "columns": [
@@ -17715,6 +18540,14 @@
     {
       "name": "C09 · Rooms without admissions",
       "description": "LEFT JOIN from the rooms.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "rooms",
+        "admissions",
+        "join",
+        "null"
+      ],
       "sql": "SELECT rm.code, rm.type FROM rooms AS rm LEFT JOIN admissions AS i ON i.id_room = rm.id_room WHERE i.id_admission IS NULL ORDER BY rm.code",
       "assert": {
         "columns": [
@@ -17758,6 +18591,15 @@
     {
       "name": "C10 · Nobody has two insurers (rowCount)",
       "description": "Integrity check: the result must be empty.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "patients",
+        "group-by",
+        "having",
+        "aggregate",
+        "distinct"
+      ],
       "sql": "SELECT id_patient, COUNT(DISTINCT id_insurer) AS insurers FROM patients WHERE id_insurer IS NOT NULL GROUP BY id_patient HAVING COUNT(DISTINCT id_insurer) >= 2",
       "assert": {
         "columns": [
@@ -17772,6 +18614,14 @@
     {
       "name": "C11 · Patients without lab tests",
       "description": "LEFT JOIN on the laboratory.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "patients",
+        "labs",
+        "join",
+        "null"
+      ],
       "sql": "SELECT p.last_name AS patient FROM patients AS p LEFT JOIN labs AS a ON a.id_patient = p.id_patient WHERE a.id_lab IS NULL ORDER BY p.last_name",
       "assert": {
         "columns": [
@@ -17798,6 +18648,11 @@
     {
       "name": "C12 · Visits of one patient regardless of the order",
       "description": "Assert with ignoreOrder: the set is compared.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "visits"
+      ],
       "sql": "SELECT v.reason FROM visits AS v WHERE v.id_patient = 5",
       "assert": {
         "columns": [
@@ -17819,6 +18674,16 @@
     {
       "name": "C13 · Specialty with more admissions",
       "description": "Chain admission → doctor → specialty.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "admissions",
+        "doctors",
+        "specialties",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.name AS specialty, COUNT(*) AS admissions FROM admissions AS i INNER JOIN doctors AS m ON m.id_doctor = i.id_doctor INNER JOIN specialties AS e ON e.id_specialty = m.id_specialty GROUP BY e.name ORDER BY admissions DESC LIMIT 5",
       "assert": {
         "columns": [
@@ -17854,6 +18719,15 @@
     {
       "name": "C14 · Drugs with more allergies",
       "description": "Bridge table allergies-drug.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "allergies",
+        "drugs",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT med.name AS drug, COUNT(*) AS allergies FROM allergies AS alg INNER JOIN drugs AS med ON med.id_drug = alg.id_drug GROUP BY med.name ORDER BY allergies DESC, drug LIMIT 10",
       "assert": {
         "columns": [
@@ -17909,6 +18783,14 @@
     {
       "name": "C15 · Diagnoses without treatments",
       "description": "LEFT JOIN from the catalogue.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "diagnoses",
+        "treatments",
+        "join",
+        "null"
+      ],
       "sql": "SELECT d.name AS diagnosis FROM diagnoses AS d LEFT JOIN treatments AS t ON t.id_diagnosis = d.id_diagnosis WHERE t.id_treatment IS NULL ORDER BY d.name",
       "assert": {
         "columns": [
@@ -17926,6 +18808,15 @@
     {
       "name": "C16 · Doctors with more surgeries",
       "description": "Ranking of surgeons.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "surgeries",
+        "doctors",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT m.last_name AS doctor, COUNT(*) AS surgeries, SUM(iv.cost) AS total_cost FROM surgeries AS iv INNER JOIN doctors AS m ON m.id_doctor = iv.id_doctor GROUP BY m.last_name ORDER BY surgeries DESC, total_cost DESC LIMIT 10",
       "assert": {
         "columns": [
@@ -17992,6 +18883,14 @@
     {
       "name": "C17 · Treatments without prescriptions",
       "description": "LEFT JOIN on the M:N.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "treatments",
+        "prescriptions",
+        "join",
+        "null"
+      ],
       "sql": "SELECT t.id_treatment FROM treatments AS t LEFT JOIN prescriptions AS pr ON pr.id_treatment = t.id_treatment WHERE pr.id_prescription IS NULL ORDER BY t.id_treatment",
       "assert": {
         "columns": [
@@ -18009,6 +18908,13 @@
     {
       "name": "C18 · Prescriptions of one treatment",
       "description": "Concrete filter on the bridge table.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "prescriptions",
+        "drugs",
+        "join"
+      ],
       "sql": "SELECT med.name AS drug, pr.dose, pr.duration_days FROM prescriptions AS pr INNER JOIN drugs AS med ON med.id_drug = pr.id_drug WHERE pr.id_treatment = 4 ORDER BY med.name",
       "assert": {
         "columns": [
@@ -18035,6 +18941,15 @@
     {
       "name": "C19 · Insurers with their patients",
       "description": "LEFT JOIN to include insurers without patients.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "insurers",
+        "patients",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT s.name AS insurance, COUNT(p.id_patient) AS patients FROM insurers AS s LEFT JOIN patients AS p ON p.id_insurer = s.id_insurer GROUP BY s.name ORDER BY patients DESC",
       "assert": {
         "columns": [
@@ -18074,6 +18989,15 @@
     {
       "name": "C20 · Nursing supervisors by service",
       "description": "Boolean filter and join.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "nurses",
+        "services",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT s.name AS service, COUNT(*) AS supervisors FROM nurses AS nur INNER JOIN services AS s ON s.id_service = nur.id_service WHERE nur.is_supervisor = true GROUP BY s.name ORDER BY supervisors DESC",
       "assert": {
         "columns": [
@@ -18105,6 +19029,16 @@
     {
       "name": "C21 · Patients with more than five visits",
       "description": "Count on the visits with HAVING.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "visits",
+        "patients",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT p.last_name AS patient, COUNT(*) AS visits FROM visits AS v INNER JOIN patients AS p ON p.id_patient = v.id_patient GROUP BY p.last_name HAVING COUNT(*) >= 5 ORDER BY visits DESC",
       "assert": {
         "columns": [
@@ -18128,6 +19062,16 @@
     {
       "name": "C22 · Hospitals with more admissions",
       "description": "Chain hospital → room → admission.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "admissions",
+        "rooms",
+        "hospitals",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT h.name AS hospital, COUNT(*) AS admissions FROM admissions AS i INNER JOIN rooms AS rm ON rm.id_room = i.id_room INNER JOIN hospitals AS h ON h.id_hospital = rm.id_hospital GROUP BY h.name ORDER BY admissions DESC",
       "assert": {
         "columns": [
@@ -18167,6 +19111,15 @@
     {
       "name": "C23 · Specialties with more doctors",
       "description": "Ranking of staffing.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "doctors",
+        "specialties",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.name AS specialty, COUNT(*) AS doctors FROM doctors AS m INNER JOIN specialties AS e ON e.id_specialty = m.id_specialty GROUP BY e.name ORDER BY doctors DESC, specialty",
       "assert": {
         "columns": [
@@ -18222,6 +19175,14 @@
     {
       "name": "C24 · Invoices that go over 75% of the coverage",
       "description": "Compares the amount with a calculation on the insurer.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "invoices",
+        "patients",
+        "insurers",
+        "join"
+      ],
       "sql": "SELECT f.id_invoice, f.amount, s.coverage_percent FROM invoices AS f INNER JOIN patients AS p ON p.id_patient = f.id_patient INNER JOIN insurers AS s ON s.id_insurer = p.id_insurer WHERE f.amount * s.coverage_percent / 100 > 3000 ORDER BY f.amount DESC LIMIT 20",
       "assert": {
         "columns": [
@@ -18338,6 +19299,14 @@
     {
       "name": "C25 · Appointments of one specific day",
       "description": "Exact date filter with a join (a date that exists in the data).",
+      "keywords": [
+        "health",
+        "related-queries",
+        "appointments",
+        "patients",
+        "doctors",
+        "join"
+      ],
       "sql": "SELECT c.time, p.last_name AS patient, m.last_name AS doctor, c.status FROM appointments AS c INNER JOIN patients AS p ON p.id_patient = c.id_patient INNER JOIN doctors AS m ON m.id_doctor = c.id_doctor WHERE c.date = '2024-02-16' ORDER BY c.time",
       "assert": {
         "columns": [
@@ -18367,6 +19336,12 @@
     {
       "name": "C26 · Surgeries without a linked admission",
       "description": "IS NULL filter on the foreign key.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "surgeries",
+        "null"
+      ],
       "sql": "SELECT iv.name, iv.date, iv.cost FROM surgeries AS iv WHERE iv.id_admission IS NULL ORDER BY iv.date DESC",
       "assert": {
         "columns": [
@@ -18413,6 +19388,15 @@
     {
       "name": "C27 · Patients allergic to a drug they take",
       "description": "Crosses allergies and prescriptions of the same patient.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "allergies",
+        "patients",
+        "drugs",
+        "join",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT p.last_name AS patient, med.name AS drug FROM allergies AS alg INNER JOIN patients AS p ON p.id_patient = alg.id_patient INNER JOIN drugs AS med ON med.id_drug = alg.id_drug INNER JOIN treatments AS t ON t.id_patient = p.id_patient INNER JOIN prescriptions AS pr ON pr.id_treatment = t.id_treatment AND pr.id_drug = med.id_drug ORDER BY p.last_name, med.name",
       "assert": {
         "columns": [
@@ -18432,6 +19416,16 @@
     {
       "name": "C28 · Admissions by the specialty of the doctor",
       "description": "Groups by the specialty of the doctor in charge.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "admissions",
+        "doctors",
+        "specialties",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT e.name AS specialty, COUNT(*) AS admissions, ROUND(AVG(i.cost_per_day), 0) AS avg_cost FROM admissions AS i INNER JOIN doctors AS m ON m.id_doctor = i.id_doctor INNER JOIN specialties AS e ON e.id_specialty = m.id_specialty GROUP BY e.name ORDER BY admissions DESC",
       "assert": {
         "columns": [
@@ -18493,6 +19487,16 @@
     {
       "name": "C29 · Billing by insurer type",
       "description": "SUM and COUNT grouped by the type.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "invoices",
+        "patients",
+        "insurers",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT s.type, COUNT(f.id_invoice) AS invoices, SUM(f.amount) AS total FROM invoices AS f INNER JOIN patients AS p ON p.id_patient = f.id_patient INNER JOIN insurers AS s ON s.id_insurer = p.id_insurer GROUP BY s.type ORDER BY total DESC",
       "assert": {
         "columns": [
@@ -18524,6 +19528,15 @@
     {
       "name": "C30 · Most frequent main diagnosis by severity",
       "description": "Filter of main and GROUP BY of severity.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "visit_diagnoses",
+        "diagnoses",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT d.severity, d.name AS diagnosis, COUNT(*) AS times FROM visit_diagnoses AS vd INNER JOIN diagnoses AS d ON d.id_diagnosis = vd.id_diagnosis WHERE vd.is_main = true GROUP BY d.severity, d.name ORDER BY times DESC LIMIT 10",
       "assert": {
         "columns": [
@@ -18590,6 +19603,17 @@
     {
       "name": "C31 · Patients with more than one distinct diagnosis",
       "description": "COUNT DISTINCT on the M:N.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "patients",
+        "visits",
+        "visit_diagnoses",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT p.last_name AS patient, COUNT(DISTINCT d.id_diagnosis) AS diagnoses FROM patients AS p INNER JOIN visits AS v ON v.id_patient = p.id_patient INNER JOIN visit_diagnoses AS vd ON vd.id_visit = v.id_visit INNER JOIN diagnoses AS d ON d.id_diagnosis = vd.id_diagnosis GROUP BY p.last_name HAVING COUNT(DISTINCT d.id_diagnosis) >= 4 ORDER BY diagnoses DESC LIMIT 15",
       "assert": {
         "columns": [
@@ -18661,6 +19685,16 @@
     {
       "name": "C32 · Hospitals with abnormal lab tests",
       "description": "Chain hospital → service → doctor → lab test.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "labs",
+        "doctors",
+        "services",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT h.name AS hospital, COUNT(*) AS abnormal FROM labs AS a INNER JOIN doctors AS m ON m.id_doctor = a.id_doctor INNER JOIN services AS s ON s.id_service = m.id_service INNER JOIN hospitals AS h ON h.id_hospital = s.id_hospital WHERE a.is_abnormal = true GROUP BY h.name ORDER BY abnormal DESC",
       "assert": {
         "columns": [
@@ -18696,6 +19730,13 @@
     {
       "name": "C33 · Average cost by type of visit",
       "description": "Groups the visits with and without follow-up.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "visits",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT needs_follow_up, COUNT(*) AS visits, ROUND(AVG(cost), 2) AS avg_cost FROM visits GROUP BY needs_follow_up ORDER BY avg_cost DESC",
       "assert": {
         "columns": [
@@ -18722,6 +19763,13 @@
     {
       "name": "C34 · Total stock by route of administration",
       "description": "SUM and COUNT grouped.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "drugs",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT route, COUNT(*) AS drugs, SUM(stock) AS total_stock FROM drugs GROUP BY route ORDER BY total_stock DESC",
       "assert": {
         "columns": [
@@ -18763,6 +19811,16 @@
     {
       "name": "C35 · Ranking of patients by spending on treatments",
       "description": "SUM grouped with HAVING and LIMIT.",
+      "keywords": [
+        "health",
+        "related-queries",
+        "treatments",
+        "patients",
+        "join",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT p.last_name AS patient, SUM(t.cost) AS spending FROM treatments AS t INNER JOIN patients AS p ON p.id_patient = t.id_patient GROUP BY p.last_name HAVING SUM(t.cost) > 2000 ORDER BY spending DESC LIMIT 10",
       "assert": {
         "columns": [
@@ -18814,6 +19872,14 @@
     {
       "name": "D01 · Admissions without a patient",
       "description": "Broken foreign key: the row in patients is not found.",
+      "keywords": [
+        "health",
+        "integrity",
+        "admissions",
+        "patients",
+        "join",
+        "null"
+      ],
       "sql": "SELECT i.id_admission, i.id_patient FROM admissions AS i LEFT JOIN patients AS p ON p.id_patient = i.id_patient WHERE p.id_patient IS NULL ORDER BY i.id_admission",
       "assert": {
         "columns": [
@@ -18837,6 +19903,14 @@
     {
       "name": "D02 · Admissions without a doctor",
       "description": "The doctor key finds no row.",
+      "keywords": [
+        "health",
+        "integrity",
+        "admissions",
+        "doctors",
+        "join",
+        "null"
+      ],
       "sql": "SELECT i.id_admission, i.id_doctor FROM admissions AS i LEFT JOIN doctors AS m ON m.id_doctor = i.id_doctor WHERE m.id_doctor IS NULL ORDER BY i.id_admission",
       "assert": {
         "columns": [
@@ -18856,6 +19930,14 @@
     {
       "name": "D03 · Appointments without a patient",
       "description": "Broken reference in the schedule.",
+      "keywords": [
+        "health",
+        "integrity",
+        "appointments",
+        "patients",
+        "join",
+        "null"
+      ],
       "sql": "SELECT c.id_appointment, c.id_patient FROM appointments AS c LEFT JOIN patients AS p ON p.id_patient = c.id_patient WHERE p.id_patient IS NULL ORDER BY c.id_appointment",
       "assert": {
         "columns": [
@@ -18883,6 +19965,14 @@
     {
       "name": "D04 · Appointments without a doctor",
       "description": "Broken reference to the physician.",
+      "keywords": [
+        "health",
+        "integrity",
+        "appointments",
+        "doctors",
+        "join",
+        "null"
+      ],
       "sql": "SELECT c.id_appointment, c.id_doctor FROM appointments AS c LEFT JOIN doctors AS m ON m.id_doctor = c.id_doctor WHERE m.id_doctor IS NULL ORDER BY c.id_appointment",
       "assert": {
         "columns": [
@@ -18902,6 +19992,14 @@
     {
       "name": "D05 · Patients with an insurer that does not exist",
       "description": "The key points at an insurer that is not there.",
+      "keywords": [
+        "health",
+        "integrity",
+        "patients",
+        "insurers",
+        "join",
+        "null"
+      ],
       "sql": "SELECT p.id_patient, p.id_insurer FROM patients AS p LEFT JOIN insurers AS s ON s.id_insurer = p.id_insurer WHERE p.id_insurer IS NOT NULL AND s.id_insurer IS NULL ORDER BY p.id_patient",
       "assert": {
         "columns": [
@@ -18921,6 +20019,14 @@
     {
       "name": "D06 · Prescriptions without a drug",
       "description": "Orphan prescription line.",
+      "keywords": [
+        "health",
+        "integrity",
+        "prescriptions",
+        "drugs",
+        "join",
+        "null"
+      ],
       "sql": "SELECT pr.id_prescription, pr.id_drug FROM prescriptions AS pr LEFT JOIN drugs AS med ON med.id_drug = pr.id_drug WHERE med.id_drug IS NULL ORDER BY pr.id_prescription",
       "assert": {
         "columns": [
@@ -18940,6 +20046,14 @@
     {
       "name": "D07 · Treatments without a patient",
       "description": "Broken reference to the patient.",
+      "keywords": [
+        "health",
+        "integrity",
+        "treatments",
+        "patients",
+        "join",
+        "null"
+      ],
       "sql": "SELECT t.id_treatment, t.id_patient FROM treatments AS t LEFT JOIN patients AS p ON p.id_patient = t.id_patient WHERE p.id_patient IS NULL ORDER BY t.id_treatment",
       "assert": {
         "columns": [
@@ -18959,6 +20073,12 @@
     {
       "name": "D08 · Walk-in visits without an appointment",
       "description": "It is not an error: these visits do not come from the schedule.",
+      "keywords": [
+        "health",
+        "integrity",
+        "visits",
+        "null"
+      ],
       "sql": "SELECT v.id_visit, v.date, v.reason FROM visits AS v WHERE v.id_appointment IS NULL ORDER BY v.id_visit",
       "assert": {
         "columns": [
@@ -19035,6 +20155,12 @@
     {
       "name": "D09 · Patients without an insurer",
       "description": "Optional data that is missing.",
+      "keywords": [
+        "health",
+        "integrity",
+        "patients",
+        "null"
+      ],
       "sql": "SELECT id_patient, name, last_name FROM patients WHERE id_insurer IS NULL ORDER BY id_patient",
       "assert": {
         "columns": [
@@ -19071,6 +20197,14 @@
     {
       "name": "D10 · Diagnoses without a specialty",
       "description": "Incomplete catalogue.",
+      "keywords": [
+        "health",
+        "integrity",
+        "diagnoses",
+        "specialties",
+        "join",
+        "null"
+      ],
       "sql": "SELECT d.id_diagnosis, d.name FROM diagnoses AS d LEFT JOIN specialties AS e ON e.id_specialty = d.id_specialty WHERE e.id_specialty IS NULL ORDER BY d.id_diagnosis",
       "assert": {
         "columns": [
@@ -19090,6 +20224,12 @@
     {
       "name": "D11 · Paid invoices without a payment method",
       "description": "Inconsistency: charged but with no way of paying.",
+      "keywords": [
+        "health",
+        "integrity",
+        "invoices",
+        "null"
+      ],
       "sql": "SELECT id_invoice, amount, paid, payment_method FROM invoices WHERE paid = true AND payment_method IS NULL ORDER BY id_invoice",
       "assert": {
         "columns": [
@@ -19113,6 +20253,12 @@
     {
       "name": "D12 · Unpaid invoices with a payment method",
       "description": "The inconsistency symmetrical to the previous one.",
+      "keywords": [
+        "health",
+        "integrity",
+        "invoices",
+        "null"
+      ],
       "sql": "SELECT id_invoice, amount, paid, payment_method FROM invoices WHERE paid = false AND payment_method IS NOT NULL ORDER BY id_invoice",
       "assert": {
         "columns": [
@@ -19160,6 +20306,14 @@
     {
       "name": "D13 · Orphan visit-diagnosis relationships",
       "description": "The bridge table mentions a visit that does not exist.",
+      "keywords": [
+        "health",
+        "integrity",
+        "visit_diagnoses",
+        "visits",
+        "join",
+        "null"
+      ],
       "sql": "SELECT vd.id_vd, vd.id_visit FROM visit_diagnoses AS vd LEFT JOIN visits AS v ON v.id_visit = vd.id_visit WHERE v.id_visit IS NULL ORDER BY vd.id_vd",
       "assert": {
         "columns": [
@@ -19179,6 +20333,11 @@
     {
       "name": "D14 · Rooms without beds",
       "description": "A room registered with a capacity of zero.",
+      "keywords": [
+        "health",
+        "integrity",
+        "rooms"
+      ],
       "sql": "SELECT id_room, code, type, num_beds FROM rooms WHERE num_beds <= 0 ORDER BY code",
       "assert": {
         "columns": [
@@ -19202,6 +20361,14 @@
     {
       "name": "D15 · Attended appointments without a registered visit",
       "description": "The status says attended but there is no visit.",
+      "keywords": [
+        "health",
+        "integrity",
+        "appointments",
+        "visits",
+        "join",
+        "null"
+      ],
       "sql": "SELECT c.id_appointment, c.date FROM appointments AS c LEFT JOIN visits AS v ON v.id_appointment = c.id_appointment WHERE c.status = 'attended' AND v.id_visit IS NULL ORDER BY c.id_appointment",
       "assert": {
         "columns": [
@@ -19229,6 +20396,14 @@
     {
       "name": "D16 · Secondary diagnoses marked as main",
       "description": "There can only be one main diagnosis per visit.",
+      "keywords": [
+        "health",
+        "integrity",
+        "visit_diagnoses",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT vd.id_visit, COUNT(*) AS main FROM visit_diagnoses AS vd WHERE vd.is_main = true GROUP BY vd.id_visit HAVING COUNT(*) > 1 ORDER BY vd.id_visit",
       "assert": {
         "columns": [
@@ -19248,6 +20423,12 @@
     {
       "name": "D17 · Surgeries without a previous admission",
       "description": "Operated on without any recorded stay.",
+      "keywords": [
+        "health",
+        "integrity",
+        "surgeries",
+        "null"
+      ],
       "sql": "SELECT id_surgery, name, date FROM surgeries WHERE id_admission IS NULL ORDER BY id_surgery",
       "assert": {
         "columns": [
@@ -19294,6 +20475,12 @@
     {
       "name": "D18 · Treatment costs that are null or negative",
       "description": "Values out of range.",
+      "keywords": [
+        "health",
+        "integrity",
+        "treatments",
+        "null"
+      ],
       "sql": "SELECT id_treatment, cost FROM treatments WHERE cost IS NULL OR cost < 0 ORDER BY id_treatment",
       "assert": {
         "columns": [
@@ -19313,6 +20500,11 @@
     {
       "name": "D19 · Surgery duration out of range",
       "description": "More than five hours is suspicious.",
+      "keywords": [
+        "health",
+        "integrity",
+        "surgeries"
+      ],
       "sql": "SELECT id_surgery, name, duration_min FROM surgeries WHERE duration_min > 300 ORDER BY duration_min DESC",
       "assert": {
         "columns": [
@@ -19344,6 +20536,11 @@
     {
       "name": "D20 · Prescriptions with a suspicious dose",
       "description": "Frequency and duration outside the reasonable ranges.",
+      "keywords": [
+        "health",
+        "integrity",
+        "prescriptions"
+      ],
       "sql": "SELECT id_prescription, dose, frequency_hours, duration_days FROM prescriptions WHERE frequency_hours <= 0 OR duration_days > 90 ORDER BY id_prescription",
       "assert": {
         "columns": [
@@ -19367,6 +20564,11 @@
     {
       "name": "E01 · Simple view: SELECT * of another query",
       "description": "The result of A03 is read as a table: the 3 large hospitals with their three columns (name, num_beds, level).",
+      "keywords": [
+        "health",
+        "views",
+        "select-star"
+      ],
       "sql": "SELECT * FROM [A03 · Large hospitals (>= 800 beds)] ORDER BY num_beds DESC, name",
       "assert": {
         "columns": [
@@ -19398,6 +20600,10 @@
     {
       "name": "E02 · Arithmetic on the columns of a view",
       "description": "num_beds is still a number after going through the view A03: it can be divided by 100 and its remainder calculated.",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT name AS hospital, num_beds, num_beds / 100 AS hundreds, num_beds % 100 AS remainder FROM [A03 · Large hospitals (>= 800 beds)] ORDER BY num_beds DESC, name",
       "assert": {
         "columns": [
@@ -19433,6 +20639,11 @@
     {
       "name": "E03 · WHERE and DISTINCT on a view",
       "description": "Filters the view A03 by num_beds >= 900 and keeps the distinct levels: the three large hospitals are level 4.",
+      "keywords": [
+        "health",
+        "views",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT level FROM [A03 · Large hospitals (>= 800 beds)] WHERE num_beds >= 900 ORDER BY level",
       "assert": {
         "columns": [
@@ -19450,6 +20661,11 @@
     {
       "name": "E04 · Aggregates on a view",
       "description": "Five aggregates in a single row on the result of A03: 3 hospitals, 3450 beds, from 900 to 1350 and an average of 1150.",
+      "keywords": [
+        "health",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS hospitals, SUM(num_beds) AS beds, MIN(num_beds) AS min, MAX(num_beds) AS max, ROUND(AVG(num_beds), 2) AS avg FROM [A03 · Large hospitals (>= 800 beds)]",
       "assert": {
         "columns": [
@@ -19475,6 +20691,13 @@
     {
       "name": "E05 · Levels with two or more large hospitals",
       "description": "Groups the view A03 by level and keeps the levels with two or more hospitals: only level 4, with three of them.",
+      "keywords": [
+        "health",
+        "views",
+        "group-by",
+        "having",
+        "aggregate"
+      ],
       "sql": "SELECT level, COUNT(*) AS hospitals, SUM(num_beds) AS beds FROM [A03 · Large hospitals (>= 800 beds)] GROUP BY level HAVING COUNT(*) >= 2 ORDER BY level",
       "assert": {
         "columns": [
@@ -19496,6 +20719,12 @@
     {
       "name": "E06 · A view joined to a base table (INNER JOIN)",
       "description": "The view B07 joined to the table specialties by name: the 5 specialties with three or more doctors, with their area and whether they need an ICU.",
+      "keywords": [
+        "health",
+        "views",
+        "specialties",
+        "join"
+      ],
       "sql": "SELECT b.specialty, b.doctors, e.area, e.needs_icu FROM [B07 · Specialties with at least three doctors] AS b INNER JOIN specialties AS e ON e.name = b.specialty ORDER BY b.doctors DESC, b.specialty",
       "assert": {
         "columns": [
@@ -19543,6 +20772,11 @@
     {
       "name": "E07 · Two views joined by specialty",
       "description": "The views C13 and C23 joined by specialty: the 5 specialties of the admissions top that also appear in the ranking of doctors.",
+      "keywords": [
+        "health",
+        "views",
+        "join"
+      ],
       "sql": "SELECT c.specialty, c.admissions, m.doctors FROM [C13 · Specialty with more admissions] AS c INNER JOIN [C23 · Specialties with more doctors] AS m ON m.specialty = c.specialty ORDER BY c.admissions DESC, c.specialty",
       "assert": {
         "columns": [
@@ -19584,6 +20818,13 @@
     {
       "name": "E08 · Table LEFT JOIN view with IS NULL",
       "description": "LEFT JOIN of the table hospitals against the view B30 plus IS NULL: the only hospital without rooms, San José Hospital.",
+      "keywords": [
+        "health",
+        "views",
+        "hospitals",
+        "join",
+        "null"
+      ],
       "sql": "SELECT h.name AS hospital FROM hospitals AS h LEFT JOIN [B30 · Beds by hospital (only those with rooms)] AS b ON b.hospital = h.name WHERE b.beds IS NULL ORDER BY h.name",
       "assert": {
         "columns": [
@@ -19601,6 +20842,10 @@
     {
       "name": "E09 · View of a view (two levels of query)",
       "description": "Reads the view E05, which in turn reads the view A03: three levels of query chained and a single row (level 4, 3450 beds).",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT level, hospitals, beds FROM [E05 · Levels with two or more large hospitals] WHERE beds >= 2000 ORDER BY beds DESC",
       "assert": {
         "columns": [
@@ -19622,6 +20867,11 @@
     {
       "name": "E10 · The same view twice (self join)",
       "description": "The view C05 appears twice with different aliases and is joined with itself by the number of prescriptions: the 7 pairs of drugs that share it.",
+      "keywords": [
+        "health",
+        "views",
+        "join"
+      ],
       "sql": "SELECT a.drug AS one, b.drug AS other, a.prescriptions FROM [C05 · Most prescribed drugs] AS a INNER JOIN [C05 · Most prescribed drugs] AS b ON b.prescriptions = a.prescriptions AND b.drug > a.drug ORDER BY a.prescriptions DESC, a.drug, b.drug",
       "assert": {
         "columns": [
@@ -19673,6 +20923,10 @@
     {
       "name": "E11 · Implicit join with commas and a view",
       "description": "Cartesian product of the view C19 with the table insurers, filtered by coverage >= 80: the 2 insurers with the highest coverage.",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT s.name AS insurance, s.coverage_percent, c.patients FROM [C19 · Insurers with their patients] AS c, insurers AS s WHERE s.name = c.insurance AND s.coverage_percent >= 80 ORDER BY c.patients DESC, s.name",
       "assert": {
         "columns": [
@@ -19699,6 +20953,10 @@
     {
       "name": "E12 · ORDER BY an alias and LIMIT on a view",
       "description": "Orders by the alias coverage and cuts the view C19 to 3 rows: the three insurers with more patients.",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT insurance AS coverage, patients FROM [C19 · Insurers with their patients] ORDER BY patients DESC, insurance LIMIT 3",
       "assert": {
         "columns": [
@@ -19726,6 +20984,10 @@
     {
       "name": "E13 · A boolean through a view",
       "description": "The boolean is_abnormal travels untouched from the table labs to the view B44: only the types urine and blood switch it on.",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT type, is_abnormal, labs FROM [B44 · Lab tests by type and result] WHERE is_abnormal = true ORDER BY type",
       "assert": {
         "columns": [
@@ -19752,6 +21014,10 @@
     {
       "name": "E14 · Nulls through a view (COALESCE)",
       "description": "The missing phone of «Andes Health» is still null after reading the view A27, and COALESCE replaces it with «no phone».",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT name AS insurance, COALESCE(phone, 'no phone') AS contact FROM [A27 · Normalised insurer phone] ORDER BY name",
       "assert": {
         "columns": [
@@ -19791,6 +21057,11 @@
     {
       "name": "E15 · Aggregates on a view that is already aggregated",
       "description": "Summarises the already aggregated view B08 (one row per insurer): 6 insurers, 35 patients and between 2 and 9 per insurer.",
+      "keywords": [
+        "health",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS insurers, SUM(patients) AS patients, MIN(patients) AS min, MAX(patients) AS max FROM [B08 · Patients by insurer]",
       "assert": {
         "columns": [
@@ -19814,6 +21085,11 @@
     {
       "name": "E16 · A view that reads a query with LIMIT",
       "description": "The view C05 has LIMIT 10: reading it as a table brings only those 10 rows (72 prescriptions in total).",
+      "keywords": [
+        "health",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS drugs, SUM(prescriptions) AS prescriptions FROM [C05 · Most prescribed drugs]",
       "assert": {
         "columns": [
@@ -19833,6 +21109,11 @@
     {
       "name": "E17 · View of an empty result",
       "description": "The view C10 returns no rows: reading it as a table gives an empty table, and COUNT(*) returns 0 instead of an error.",
+      "keywords": [
+        "health",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS rows FROM [C10 · Nobody has two insurers (rowCount)]",
       "assert": {
         "columns": [
@@ -19850,6 +21131,10 @@
     {
       "name": "E18 · LIMIT and OFFSET on a view",
       "description": "LIMIT 3 OFFSET 2 on the 8 rows of the view A41: the fourth, fifth and sixth diagnoses by length of the name.",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT code, name, letters FROM [A41 · Longest diagnosis names] ORDER BY letters DESC, code LIMIT 3 OFFSET 2",
       "assert": {
         "columns": [
@@ -19881,6 +21166,11 @@
     {
       "name": "E19 · LIKE filter on a view",
       "description": "LIKE on a column of the view A37: the 2 drugs with low stock whose name starts with A.",
+      "keywords": [
+        "health",
+        "views",
+        "like"
+      ],
       "sql": "SELECT name, stock, price FROM [A37 · Drugs with low stock] WHERE name LIKE 'A%' ORDER BY name",
       "assert": {
         "columns": [
@@ -19907,6 +21197,10 @@
     {
       "name": "E20 · A view of a view that joins two views",
       "description": "Reads the view E07 (which joins C13 and C23) and keeps the specialties with three doctors or more: 4 rows.",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT specialty, admissions, doctors FROM [E07 · Two views joined by specialty] WHERE doctors >= 3 ORDER BY doctors DESC, specialty",
       "assert": {
         "columns": [
@@ -19943,6 +21237,11 @@
     {
       "name": "E21 · LEFT JOIN between two views",
       "description": "C13 LEFT JOIN C23: the 5 specialties of the admissions top with the number of doctors of each one, from the lowest to the highest.",
+      "keywords": [
+        "health",
+        "views",
+        "join"
+      ],
       "sql": "SELECT c.specialty, c.admissions, m.doctors FROM [C13 · Specialty with more admissions] AS c LEFT JOIN [C23 · Specialties with more doctors] AS m ON m.specialty = c.specialty ORDER BY m.doctors ASC NULLS FIRST, c.specialty",
       "assert": {
         "columns": [
@@ -19984,6 +21283,10 @@
     {
       "name": "E22 · Projection with an alias and a star on a view",
       "description": "The star of the alias (v.*) on the view A37: the 6 drugs with low stock, from the lowest to the highest stock.",
+      "keywords": [
+        "health",
+        "views"
+      ],
       "sql": "SELECT v.* FROM [A37 · Drugs with low stock] AS v ORDER BY v.stock",
       "assert": {
         "columns": [
@@ -20030,6 +21333,11 @@
     {
       "name": "E23 · A view that reads a query with several tables",
       "description": "The view B10 joins four tables inside (admissions, patients, rooms and doctors): reading it as a table brings its 25 rows.",
+      "keywords": [
+        "health",
+        "views",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS rows FROM [B10 · Admissions with patient, room and doctor]",
       "assert": {
         "columns": [
@@ -20047,6 +21355,12 @@
     {
       "name": "E24 · Group by a boolean of a view",
       "description": "GROUP BY on the boolean needs_follow_up that comes from the view C33: the visits with and without follow-up.",
+      "keywords": [
+        "health",
+        "views",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT needs_follow_up, COUNT(*) AS brackets, SUM(visits) AS visits FROM [C33 · Average cost by type of visit] GROUP BY needs_follow_up ORDER BY needs_follow_up",
       "assert": {
         "columns": [
@@ -20073,6 +21387,14 @@
     {
       "name": "F01 · Insurers of the patients of Madrid (IN with a subquery)",
       "description": "IN with a subquery: the insurers whose identifier is used by a patient of Madrid.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "insurers",
+        "patients",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT id_insurer, name FROM insurers WHERE id_insurer IN (SELECT id_insurer FROM patients WHERE city = 'Madrid') ORDER BY id_insurer",
       "assert": {
         "columns": [
@@ -20096,6 +21418,14 @@
     {
       "name": "F02 · Drugs with no prescription (NOT IN with a subquery)",
       "description": "NOT IN with a subquery: the drugs that no prescription uses.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "drugs",
+        "prescriptions",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT id_drug, name FROM drugs WHERE id_drug NOT IN (SELECT id_drug FROM prescriptions) ORDER BY id_drug",
       "assert": {
         "columns": [
@@ -20115,6 +21445,14 @@
     {
       "name": "F03 · Specialties with no diagnosis (NOT IN with a subquery)",
       "description": "The specialties that no diagnosis is linked to.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "specialties",
+        "diagnoses",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT id_specialty, name FROM specialties WHERE id_specialty NOT IN (SELECT id_specialty FROM diagnoses) ORDER BY id_specialty",
       "assert": {
         "columns": [
@@ -20142,6 +21480,14 @@
     {
       "name": "F04 · Hospitals with an ICU room (EXISTS)",
       "description": "EXISTS with a correlated subquery: it is checked again for every hospital.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "hospitals",
+        "rooms",
+        "subquery",
+        "exists"
+      ],
       "sql": "SELECT h.id_hospital, h.name FROM hospitals AS h WHERE EXISTS (SELECT 1 FROM rooms AS r WHERE r.id_hospital = h.id_hospital AND r.type = 'ICU') ORDER BY h.id_hospital",
       "assert": {
         "columns": [
@@ -20181,6 +21527,14 @@
     {
       "name": "F05 · Hospitals with no ICU room (NOT EXISTS)",
       "description": "The other side of the previous example: NOT EXISTS keeps the hospitals with no match.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "hospitals",
+        "rooms",
+        "subquery",
+        "exists"
+      ],
       "sql": "SELECT h.id_hospital, h.name FROM hospitals AS h WHERE NOT EXISTS (SELECT 1 FROM rooms AS r WHERE r.id_hospital = h.id_hospital AND r.type = 'ICU') ORDER BY h.id_hospital",
       "assert": {
         "columns": [
@@ -20200,6 +21554,14 @@
     {
       "name": "F06 · Patients with a high-risk surgery (EXISTS, correlated)",
       "description": "The subquery points at the outer patient (p.id_patient): a correlated EXISTS.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "patients",
+        "surgeries",
+        "subquery",
+        "exists"
+      ],
       "sql": "SELECT p.id_patient, p.last_name FROM patients AS p WHERE EXISTS (SELECT 1 FROM surgeries AS s WHERE s.id_patient = p.id_patient AND s.risk = 'high') ORDER BY p.id_patient",
       "assert": {
         "columns": [
@@ -20251,6 +21613,12 @@
     {
       "name": "F07 · Dermatology doctors with more experience than some Cardiology doctor (> ANY)",
       "description": "x > ANY (…) is true when the years beat at least one of the inner values.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "doctors",
+        "subquery"
+      ],
       "sql": "SELECT id_doctor, last_name, years_experience FROM doctors WHERE id_specialty = 6 AND years_experience > ANY (SELECT years_experience FROM doctors WHERE id_specialty = 1) ORDER BY id_doctor",
       "assert": {
         "columns": [
@@ -20272,6 +21640,12 @@
     {
       "name": "F08 · The most experienced doctor of each specialty (>= ALL, correlated)",
       "description": "x >= ALL (…) needs the comparison to hold for every inner value: only the top of each specialty passes.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "doctors",
+        "subquery"
+      ],
       "sql": "SELECT d.id_doctor, d.last_name, d.years_experience FROM doctors AS d WHERE d.years_experience >= ALL (SELECT d2.years_experience FROM doctors AS d2 WHERE d2.id_specialty = d.id_specialty) ORDER BY d.id_specialty, d.id_doctor",
       "assert": {
         "columns": [
@@ -20348,6 +21722,13 @@
     {
       "name": "F09 · Chronic patients of a city with a private insurer (<> ALL)",
       "description": "x <> ALL (…) is the same as x NOT IN (…): it keeps the values that differ from every one of them.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "patients",
+        "insurers",
+        "subquery"
+      ],
       "sql": "SELECT id_patient, last_name FROM patients WHERE is_chronic = TRUE AND id_insurer <> ALL (SELECT id_insurer FROM insurers WHERE type = 'public') ORDER BY id_patient",
       "assert": {
         "columns": [
@@ -20395,6 +21776,11 @@
     {
       "name": "F10 · University hospitals",
       "description": "This query is not a test by itself: it is the view the next examples read inside a subquery.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "hospitals"
+      ],
       "sql": "SELECT id_hospital, name, city FROM hospitals WHERE is_university = TRUE",
       "assert": {
         "columns": [
@@ -20421,6 +21807,13 @@
     {
       "name": "F11 · Rooms of the university hospitals read from the view (subquery over a view)",
       "description": "The subquery reads the view F10 as if it were a table: [F10 · …] inside the IN.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "rooms",
+        "subquery",
+        "in"
+      ],
       "sql": "SELECT r.id_room, r.code FROM rooms AS r WHERE r.id_hospital IN (SELECT id_hospital FROM [F10 · University hospitals]) ORDER BY r.id_room",
       "assert": {
         "columns": [
@@ -20484,6 +21877,16 @@
     {
       "name": "F12 · Average cost per day of admissions of 700 or more (derived table)",
       "description": "A subquery in the FROM with an alias (t) is a derived table: it is queried like any other table.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "admissions",
+        "rooms",
+        "subquery",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT t.id_hospital, t.avg_cost FROM (SELECT r.id_hospital, AVG(a.cost_per_day) AS avg_cost FROM admissions AS a INNER JOIN rooms AS r ON r.id_room = a.id_room GROUP BY r.id_hospital) AS t WHERE t.avg_cost >= 700 ORDER BY t.id_hospital",
       "assert": {
         "columns": [
@@ -20503,6 +21906,17 @@
     {
       "name": "F13 · Hospitals with ten or more admissions (derived table and JOIN)",
       "description": "The derived table is joined to the hospitals table and its column total is filtered.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "admissions",
+        "rooms",
+        "hospitals",
+        "subquery",
+        "join",
+        "group-by",
+        "aggregate"
+      ],
       "sql": "SELECT t.id_hospital, h.name, t.total FROM (SELECT r.id_hospital, COUNT(*) AS total FROM admissions AS a INNER JOIN rooms AS r ON r.id_room = a.id_room GROUP BY r.id_hospital) AS t INNER JOIN hospitals AS h ON h.id_hospital = t.id_hospital WHERE t.total >= 10 ORDER BY t.total DESC, t.id_hospital",
       "assert": {
         "columns": [
@@ -20529,6 +21943,14 @@
     {
       "name": "F14 · Visits of every patient of a city (scalar subquery in SELECT)",
       "description": "The subquery in the column list returns one value per row: the visits of that patient.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "visits",
+        "patients",
+        "subquery",
+        "aggregate"
+      ],
       "sql": "SELECT p.id_patient, p.last_name, (SELECT COUNT(*) FROM visits AS v WHERE v.id_patient = p.id_patient) AS visits FROM patients AS p WHERE p.city = 'Bilbao' ORDER BY p.id_patient",
       "assert": {
         "columns": [
@@ -20575,6 +21997,13 @@
     {
       "name": "F15 · Admissions more expensive than the average (scalar subquery in WHERE)",
       "description": "The subquery returns a single value (the average) that the WHERE compares with.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "admissions",
+        "subquery",
+        "aggregate"
+      ],
       "sql": "SELECT id_admission, cost_per_day FROM admissions WHERE cost_per_day > (SELECT AVG(cost_per_day) FROM admissions) ORDER BY id_admission",
       "assert": {
         "columns": [
@@ -20698,6 +22127,16 @@
     {
       "name": "F16 · Specialties with three or more diagnoses",
       "description": "A query whose SQL carries a subquery also works as a view: this one uses a correlated EXISTS with HAVING.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "specialties",
+        "diagnoses",
+        "subquery",
+        "having",
+        "aggregate",
+        "exists"
+      ],
       "sql": "SELECT s.id_specialty, s.name FROM specialties AS s WHERE EXISTS (SELECT 1 FROM diagnoses AS d WHERE d.id_specialty = s.id_specialty HAVING COUNT(*) >= 3) ORDER BY s.id_specialty",
       "assert": {
         "columns": [
@@ -20721,6 +22160,10 @@
     {
       "name": "F17 · The previous view read as a table",
       "description": "F16 is read from the FROM like a table, even though inside it there is a subquery.",
+      "keywords": [
+        "health",
+        "subqueries"
+      ],
       "sql": "SELECT id_specialty, name FROM [F16 · Specialties with three or more diagnoses] ORDER BY id_specialty",
       "assert": {
         "columns": [
@@ -20744,6 +22187,15 @@
     {
       "name": "F18 · Doctors of the specialties with a severe diagnosis (nested subqueries)",
       "description": "One subquery inside another: the inner one picks the specialties and the outer one the doctors.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "doctors",
+        "diagnoses",
+        "subquery",
+        "distinct",
+        "in"
+      ],
       "sql": "SELECT DISTINCT d.id_doctor, d.last_name FROM doctors AS d WHERE d.id_specialty IN (SELECT id_specialty FROM diagnoses WHERE severity = 'severe') ORDER BY d.id_doctor",
       "assert": {
         "columns": [
@@ -20823,6 +22275,12 @@
     {
       "name": "F19 · Oncology doctors but the most experienced (NOT with ALL)",
       "description": "NOT (… >= ALL (…)) is the negation of the ALL predicate: the whole specialty but its top doctor.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "doctors",
+        "subquery"
+      ],
       "sql": "SELECT d.id_doctor, d.last_name, d.years_experience FROM doctors AS d WHERE d.id_specialty = 5 AND NOT (d.years_experience >= ALL (SELECT d2.years_experience FROM doctors AS d2 WHERE d2.id_specialty = 5)) ORDER BY d.id_doctor",
       "assert": {
         "columns": [
@@ -20844,6 +22302,14 @@
     {
       "name": "F20 · Rooms of the university hospitals (= ANY)",
       "description": "x = ANY (…) is the same as x IN (…): it is kept for completeness of the quantifiers.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "rooms",
+        "hospitals",
+        "subquery",
+        "distinct"
+      ],
       "sql": "SELECT DISTINCT r.id_hospital FROM rooms AS r WHERE r.id_hospital = ANY (SELECT id_hospital FROM hospitals WHERE is_university = TRUE) ORDER BY r.id_hospital",
       "assert": {
         "columns": [
@@ -20864,6 +22330,12 @@
     {
       "name": "F21 · Doctors with more experience than some Cardiology doctor (> SOME)",
       "description": "SOME is a synonym of ANY: the comparison has to hold for at least one inner value.",
+      "keywords": [
+        "health",
+        "subqueries",
+        "doctors",
+        "subquery"
+      ],
       "sql": "SELECT id_doctor, last_name FROM doctors WHERE years_experience > SOME (SELECT years_experience FROM doctors WHERE id_specialty = 1) ORDER BY id_doctor",
       "assert": {
         "columns": [
@@ -20979,6 +22451,13 @@
     {
       "name": "G01 · Hospital and insurer names, without repeats",
       "description": "UNION of two tables with one column each: the hospital names and the insurer names, every one once and sorted by name.",
+      "keywords": [
+        "health",
+        "unions",
+        "hospitals",
+        "insurers",
+        "union"
+      ],
       "sql": "SELECT name FROM hospitals UNION SELECT name FROM insurers ORDER BY name",
       "assert": {
         "columns": [
@@ -21032,6 +22511,12 @@
     {
       "name": "G02 · The country of every hospital, twice (UNION ALL)",
       "description": "The same SELECT on both sides of UNION ALL: the rows are stacked without removing repeats, so there are 14 of them.",
+      "keywords": [
+        "health",
+        "unions",
+        "hospitals",
+        "union"
+      ],
       "sql": "SELECT country FROM hospitals UNION ALL SELECT country FROM hospitals ORDER BY country",
       "assert": {
         "columns": [
@@ -21088,6 +22573,12 @@
     {
       "name": "G03 · Every country once (UNION)",
       "description": "The same union without ALL: UNION removes the repeated rows, so each country comes out once.",
+      "keywords": [
+        "health",
+        "unions",
+        "hospitals",
+        "union"
+      ],
       "sql": "SELECT country FROM hospitals UNION SELECT country FROM hospitals ORDER BY country",
       "assert": {
         "columns": [
@@ -21111,6 +22602,15 @@
     {
       "name": "G04 · A union read as a table",
       "description": "The union goes in the FROM with an alias (derived table): the doctor identifiers of the staff and of the appointments, without repeats, are counted.",
+      "keywords": [
+        "health",
+        "unions",
+        "doctors",
+        "appointments",
+        "subquery",
+        "union",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS n FROM (SELECT id_doctor FROM doctors UNION SELECT id_doctor FROM appointments) AS t",
       "assert": {
         "columns": [
@@ -21128,6 +22628,13 @@
     {
       "name": "G05 · Union with output alias, ORDER BY and LIMIT",
       "description": "Both sides name their column item: the ORDER BY of the union sorts the combined result by that name and the LIMIT keeps the first 5.",
+      "keywords": [
+        "health",
+        "unions",
+        "hospitals",
+        "insurers",
+        "union"
+      ],
       "sql": "SELECT name AS item FROM hospitals UNION SELECT name AS item FROM insurers ORDER BY item LIMIT 5",
       "assert": {
         "columns": [
@@ -21157,6 +22664,10 @@
     {
       "name": "H01 · Patients by city, read from the script",
       "description": "Reads the result of the script “Patients by city” as if it were a table.",
+      "keywords": [
+        "health",
+        "scripts-as-tables"
+      ],
       "sql": "SELECT city, patients FROM [Patients by city] ORDER BY patients DESC, city",
       "folder": "H · Scripts as tables",
       "assert": {
@@ -21211,6 +22722,11 @@
     {
       "name": "H02 · How many cities the script returns",
       "description": "Reads the result of the script “Patients by city” as if it were a table.",
+      "keywords": [
+        "health",
+        "scripts-as-tables",
+        "aggregate"
+      ],
       "sql": "SELECT COUNT(*) AS total FROM [Patients by city]",
       "folder": "H · Scripts as tables",
       "assert": {
@@ -21227,6 +22743,10 @@
     {
       "name": "H03 · Cities with 5 or more patients",
       "description": "Reads the result of the script “Patients by city” as if it were a table.",
+      "keywords": [
+        "health",
+        "scripts-as-tables"
+      ],
       "sql": "SELECT city, patients FROM [Patients by city] WHERE patients >= 5 ORDER BY patients DESC, city",
       "folder": "H · Scripts as tables",
       "assert": {
@@ -21263,6 +22783,13 @@
     {
       "name": "Chronic patients",
       "description": "Filters chronic patients and shows their name, city, blood group and phone.",
+      "keywords": [
+        "health",
+        "filters",
+        "patients",
+        "filter",
+        "map"
+      ],
       "code": "const datos = tables[\"patients\"];\nreturn datos\n  .filter((fila) => fila.is_chronic)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"city\": fila.city,\n    \"blood_group\": fila.blood_group,\n    \"phone\": fila.phone,\n  }));",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
@@ -21370,6 +22897,13 @@
     {
       "name": "Patient ages",
       "description": "Calculates the age on 1 September 2025 and sorts from oldest to youngest.",
+      "keywords": [
+        "health",
+        "dates",
+        "patients",
+        "map",
+        "sort"
+      ],
       "code": "const datos = tables[\"patients\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
       "folder": "Dates",
       "color": "#fde8cd",
@@ -21586,6 +23120,15 @@
     {
       "name": "Patients by city",
       "description": "Counts the patients in each city and calculates their percentage over the total.",
+      "keywords": [
+        "health",
+        "aggregates",
+        "patients",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"patients\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.city || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"city\": city,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -21652,6 +23195,16 @@
     {
       "name": "Patients by insurer",
       "description": "Crosses patients with insurers, counts how many there are per insurer and shows their coverage.",
+      "keywords": [
+        "health",
+        "joins",
+        "patients",
+        "insurers",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"patients\"];\nconst insurers = new Map(tables[\"insurers\"].map((i) => [i.id_insurer, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_insurer;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.name : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.coverage_percent : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"insurer\": name,\n    \"patients\": g.count,\n    \"coverage\": g.coverage,\n    \"percentage\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -21711,6 +23264,13 @@
     {
       "name": "Incomplete contacts",
       "description": "Lists the patients who are missing their phone, their e-mail or both.",
+      "keywords": [
+        "health",
+        "filters",
+        "patients",
+        "filter",
+        "map"
+      ],
       "code": "const datos = tables[\"patients\"];\nreturn datos\n  .filter((fila) => !fila.phone || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.phone) missing.push(\"phone\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"phone\": fila.phone,\n      \"email\": fila.email,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
@@ -21824,6 +23384,15 @@
     {
       "name": "Blood groups",
       "description": "Counts the patients by blood group (without the null ones) and calculates the percentage.",
+      "keywords": [
+        "health",
+        "aggregates",
+        "patients",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"patients\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.blood_group;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"blood_group\": group,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -21875,6 +23444,17 @@
     {
       "name": "Admissions and cost per hospital",
       "description": "Crosses admissions, rooms and hospitals; counts admissions, emergencies and the estimated cost per stay.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "rooms",
+        "hospitals",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tables[\"rooms\"].map((r) => [r.id_room, r]));\nconst hospitals = new Map(tables[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_room);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"cost\": Math.round(g.cost),\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -21942,6 +23522,16 @@
     {
       "name": "Cost and days of stay",
       "description": "Calculates the days admitted and the cost of discharged admissions; sorts by cost.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "patients",
+        "filter",
+        "map",
+        "sort",
+        "slice"
+      ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nreturn datos\n  .filter((fila) => fila.discharge_date)\n  .map((fila) => {\n    const days = daysBetween(fila.admission_date, fila.discharge_date);\n    return {\n      \"patient\": patients.get(fila.id_patient) || `#${fila.id_patient}`,\n      \"reason\": fila.reason,\n      \"days\": days,\n      \"cost\": Math.round(days * (fila.cost_per_day || 0)),\n    };\n  })\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"])\n  .slice(0, 20);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -22079,6 +23669,15 @@
     {
       "name": "Admissions by reason",
       "description": "Groups admissions by reason, counts how many are emergency and calculates the average daily cost.",
+      "keywords": [
+        "health",
+        "aggregates",
+        "admissions",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"admissions\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.reason || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.cost_per_day || 0;\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"reason\": reason,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -22150,6 +23749,15 @@
     {
       "name": "Billing by payment method",
       "description": "Groups invoices by payment method (including null ones) and adds up amounts and discounts.",
+      "keywords": [
+        "health",
+        "aggregates",
+        "invoices",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"invoices\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.payment_method || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.amount || 0;\n  acc[key].discount += fila.discount || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"payment_method\": method,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n    \"average\": Math.round(g.amount / g.count),\n    \"discount\": Math.round((g.discount / g.count) * 10) / 10,\n    \"percentage\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -22201,6 +23809,16 @@
     {
       "name": "Unpaid invoices by patient",
       "description": "Filters unpaid invoices, groups them by patient and adds up what they owe.",
+      "keywords": [
+        "health",
+        "joins",
+        "invoices",
+        "patients",
+        "filter",
+        "map",
+        "reduce",
+        "sort"
+      ],
       "code": "const datos = tables[\"invoices\"];\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos\n  .filter((fila) => fila.paid === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_patient;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.amount || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -22292,6 +23910,15 @@
     {
       "name": "Appointments by status and type (pivot)",
       "description": "Turns appointment types into dynamic columns and counts how many there are per status.",
+      "keywords": [
+        "health",
+        "aggregates",
+        "appointments",
+        "map",
+        "reduce",
+        "sort",
+        "foreach"
+      ],
       "code": "const datos = tables[\"appointments\"];\nconst types = Array.from(new Set(datos.map((fila) => fila.type))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.status;\n  const type = fila.type;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"status\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"status\"]).localeCompare(String(b[\"status\"])));",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -22338,6 +23965,16 @@
     {
       "name": "Average appointment duration per doctor",
       "description": "Crosses appointments with doctors, calculates the average duration and returns the top ten.",
+      "keywords": [
+        "health",
+        "joins",
+        "appointments",
+        "doctors",
+        "map",
+        "reduce",
+        "sort",
+        "slice"
+      ],
       "code": "const datos = tables[\"appointments\"];\nconst doctors = new Map(tables[\"doctors\"].map((d) => [d.id_doctor, `${d.name} ${d.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_doctor;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duration_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"doctor\": doctors.get(Number(id)) || `#${id}`,\n    \"appointments\": g.count,\n    \"average_duration\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"average_duration\"] - a[\"average_duration\"])\n  .slice(0, 10);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -22404,6 +24041,16 @@
     {
       "name": "Doctors per specialty",
       "description": "Groups doctors by specialty and calculates how many there are, their average experience and how many research.",
+      "keywords": [
+        "health",
+        "joins",
+        "doctors",
+        "specialties",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"doctors\"];\nconst specialties = new Map(tables[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_specialty;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.years_experience || 0;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"specialty\": specialties.get(Number(id)) || `#${id}`,\n    \"doctors\": g.count,\n    \"average_experience\": Math.round((g.experience / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"doctors\"] - a[\"doctors\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -22487,6 +24134,16 @@
     {
       "name": "Patients with the most admissions",
       "description": "Groups admissions by patient, adds up their estimated cost and returns the top ten.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "patients",
+        "map",
+        "reduce",
+        "sort",
+        "slice"
+      ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_patient;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"admissions\": g.count,\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"])\n  .slice(0, 10);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -22553,6 +24210,16 @@
     {
       "name": "Room occupancy by hospital",
       "description": "Counts rooms, occupied ones and beds per hospital and calculates the occupancy rate.",
+      "keywords": [
+        "health",
+        "joins",
+        "rooms",
+        "hospitals",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"rooms\"];\nconst hospitals = new Map(tables[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.occupied) acc[id].occupied += 1;\n  acc[id].beds += fila.num_beds || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"rooms\": g.rooms,\n    \"occupied\": g.occupied,\n    \"beds\": g.beds,\n    \"occupancy\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"occupancy\"] - a[\"occupancy\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -22613,6 +24280,15 @@
     {
       "name": "Abnormal labs by type",
       "description": "Groups labs by type and calculates the percentage of abnormal ones and the average glucose and cholesterol.",
+      "keywords": [
+        "health",
+        "aggregates",
+        "labs",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"labs\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.type || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.is_abnormal) g.abnormal += 1;\n  if (fila.glucose !== null && fila.glucose !== undefined) { g.glucose += fila.glucose; g.glucoseCount += 1; }\n  if (fila.cholesterol !== null && fila.cholesterol !== undefined) { g.cholesterol += fila.cholesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"type\": type,\n    \"count\": g.count,\n    \"abnormal\": g.abnormal,\n    \"percentage\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"average_glucose\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"average_cholesterol\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
       "folder": "Aggregates",
       "color": "#d3ecf3",
@@ -22648,6 +24324,15 @@
     {
       "name": "Low-stock drugs",
       "description": "Lists the drugs with fewer than 50 units and calculates how much to reorder.",
+      "keywords": [
+        "health",
+        "filters",
+        "drugs",
+        "filter",
+        "map",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"drugs\"];\nreturn datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"drug\": fila.name,\n    \"stock\": fila.stock,\n    \"reorder\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
       "folder": "Filters and lists",
       "color": "#dcf1d4",
@@ -22669,6 +24354,11 @@
     {
       "name": "Use a saved query",
       "description": "Calls query A19 (patients with three or more admissions) and shows its result.",
+      "keywords": [
+        "health",
+        "reports",
+        "map"
+      ],
       "code": "const rows = queries[\"A19 · Patients with three or more admissions\"]();\nreturn rows.map((row) => ({\n  \"patient\": `${row.name} ${row.last_name}`,\n  \"admissions\": row.admissions,\n}));",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
@@ -22704,6 +24394,15 @@
     {
       "name": "Report with forEach and resultado",
       "description": "Builds a report of paid and unpaid invoices with forEach, adds a TOTAL row and stores it in resultado.",
+      "keywords": [
+        "health",
+        "reports",
+        "invoices",
+        "map",
+        "reduce",
+        "foreach",
+        "math"
+      ],
       "code": "const datos = tables[\"invoices\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.paid ? \"paid\" : \"unpaid\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.amount || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"payment_status\": status,\n  \"invoices\": g.count,\n  \"amount\": Math.round(g.amount),\n  \"average\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"payment_status\": \"TOTAL\",\n  \"invoices\": datos.length,\n  \"amount\": Math.round(datos.reduce((sum, fila) => sum + (fila.amount || 0), 0)),\n  \"average\": null,\n});\nresultado = rows;",
       "folder": "Queries and reports",
       "color": "#fbf6c9",
@@ -22739,6 +24438,15 @@
     {
       "name": "Orphan admissions",
       "description": "Finds admissions whose patient, doctor or room no longer exists in the tables.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "patients",
+        "doctors",
+        "filter",
+        "map"
+      ],
       "code": "const datos = tables[\"admissions\"];\nconst patientIds = new Set(tables[\"patients\"].map((p) => p.id_patient));\nconst doctorIds = new Set(tables[\"doctors\"].map((d) => d.id_doctor));\nconst roomIds = new Set(tables[\"rooms\"].map((r) => r.id_room));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_patient) || !doctorIds.has(fila.id_doctor) || !roomIds.has(fila.id_room))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_patient)) missing.push(\"patient\");\n    if (!doctorIds.has(fila.id_doctor)) missing.push(\"doctor\");\n    if (!roomIds.has(fila.id_room)) missing.push(\"room\");\n    return {\n      \"admission\": fila.id_admission,\n      \"patient\": fila.id_patient,\n      \"doctor\": fila.id_doctor,\n      \"room\": fila.id_room,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -22799,6 +24507,15 @@
     {
       "name": "Patients by age group",
       "description": "Sorts patients into minors, young people, adults and seniors, and calculates their average age.",
+      "keywords": [
+        "health",
+        "dates",
+        "patients",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"patients\"];\nconst reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.birth_date);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"age_group\": group,\n    \"patients\": g.count,\n    \"average_age\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"age_group\"]).localeCompare(String(b[\"age_group\"])));",
       "folder": "Dates",
       "color": "#fde8cd",
@@ -22835,6 +24552,15 @@
     {
       "name": "Appointments per month",
       "description": "Groups appointments by year and month, counts the cancelled ones and sorts chronologically.",
+      "keywords": [
+        "health",
+        "dates",
+        "appointments",
+        "map",
+        "reduce",
+        "sort",
+        "slice"
+      ],
       "code": "const datos = tables[\"appointments\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = String(fila.date).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.status === \"cancelled\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"month\": month,\n    \"appointments\": g.count,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"month\"]).localeCompare(String(b[\"month\"])));",
       "folder": "Dates",
       "color": "#fde8cd",
@@ -23006,6 +24732,17 @@
     {
       "name": "Cost by specialty",
       "description": "Crosses admissions with doctors and specialties and calculates the estimated and average cost per specialty.",
+      "keywords": [
+        "health",
+        "joins",
+        "admissions",
+        "doctors",
+        "specialties",
+        "map",
+        "reduce",
+        "sort",
+        "math"
+      ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tables[\"doctors\"].map((d) => [d.id_doctor, d]));\nconst specialties = new Map(tables[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_doctor);\n  const specialty = doctor ? specialties.get(doctor.id_specialty) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"specialty\": specialty,\n    \"admissions\": g.count,\n    \"average_cost\": Math.round(g.cost / g.count),\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
       "folder": "Joins and integrity",
       "color": "#e8ddf7",
@@ -23083,6 +24820,16 @@
     {
       "name": "JavaScript · Patient directory with Intl",
       "description": "Directory sorted with Intl.Collator, with age, initials, insurer and coverage.",
+      "keywords": [
+        "health",
+        "javascript",
+        "patients",
+        "insurers",
+        "map",
+        "sort",
+        "slice",
+        "intl"
+      ],
       "folder": "JavaScript power",
       "color": "#dde5fa",
       "code": "const patients = tables[\"patients\"];\nconst insurers = new Map(tables[\"insurers\"].map((i) => [i.id_insurer, i]));\nconst reference = new Date(\"2025-09-01\");\nconst collator = new Intl.Collator(\"en\", { sensitivity: \"base\" });\nreturn patients\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const month = reference.getMonth() - birth.getMonth();\n    if (month < 0 || (month === 0 && reference.getDate() < birth.getDate())) age -= 1;\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    const insurer = insurers.get(fila.id_insurer);\n    return {\n      \"patient\": `${fila.last_name}, ${fila.name}`,\n      \"initials\": `${fila.name.charAt(0)}${fila.last_name.charAt(0)}`.toUpperCase(),\n      \"age\": age,\n      \"city\": fila.city,\n      \"insurer\": insurer ? insurer.name : \"—\",\n      \"coverage\": insurer ? insurer.coverage_percent : null,\n      \"email_domain\": at > 0 ? email.slice(at + 1) : null,\n      \"chronic\": fila.is_chronic ? \"yes\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"patient\"], b[\"patient\"]));",
@@ -23504,6 +25251,17 @@
     {
       "name": "JavaScript · Clinical timeline",
       "description": "Merges admissions, appointments, labs and surgeries of the busiest patient into one sorted timeline.",
+      "keywords": [
+        "health",
+        "dates",
+        "admissions",
+        "appointments",
+        "labs",
+        "filter",
+        "map",
+        "sort",
+        "foreach"
+      ],
       "folder": "Dates",
       "color": "#e8ddf7",
       "code": "const counts = new Map();\nconst add = (id) => counts.set(id, (counts.get(id) || 0) + 1);\ntables[\"admissions\"].forEach((row) => add(row.id_patient));\ntables[\"appointments\"].forEach((row) => add(row.id_patient));\ntables[\"labs\"].forEach((row) => add(row.id_patient));\ntables[\"surgeries\"].forEach((row) => add(row.id_patient));\nconst busiest = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];\nconst patientId = busiest[0];\nconst patient = tables[\"patients\"].find((row) => row.id_patient === patientId);\nconst events = [];\ntables[\"admissions\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.admission_date,\n    \"source\": \"admission\",\n    \"detail\": row.reason,\n    \"status\": row.discharge_date ? \"discharged\" : \"active\",\n  });\n});\ntables[\"appointments\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"appointment\",\n    \"detail\": `${row.type} · ${row.duration_min} min`,\n    \"status\": row.status,\n  });\n});\ntables[\"labs\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"lab\",\n    \"detail\": `${row.type}: glucose ${row.glucose}`,\n    \"status\": row.is_abnormal ? \"abnormal\" : \"normal\",\n  });\n});\ntables[\"surgeries\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"surgery\",\n    \"detail\": row.name,\n    \"status\": row.successful ? \"successful\" : \"unsuccessful\",\n  });\n});\nreturn events\n  .sort((a, b) => String(a.date).localeCompare(String(b.date)) || a.source.localeCompare(b.source))\n  .map((event, index) => ({\n    \"order\": index + 1,\n    \"patient\": `${patient.last_name}, ${patient.name}`,\n    \"date\": event.date,\n    \"source\": event.source,\n    \"detail\": event.detail,\n    \"status\": event.status,\n  }));",
@@ -23611,6 +25369,17 @@
     {
       "name": "JavaScript · Hospital scorecard",
       "description": "Hospital capacity, services, occupancy and revenue joined with the admissions query C22.",
+      "keywords": [
+        "health",
+        "javascript",
+        "hospitals",
+        "services",
+        "rooms",
+        "map",
+        "sort",
+        "foreach",
+        "math"
+      ],
       "folder": "JavaScript power",
       "color": "#fce4e4",
       "code": "const hospitals = tables[\"hospitals\"];\nconst services = new Map();\ntables[\"services\"].forEach((row) => {\n  const list = services.get(row.id_hospital) || [];\n  list.push(row.name);\n  services.set(row.id_hospital, list);\n});\nconst rooms = new Map(tables[\"rooms\"].map((row) => [row.id_room, row]));\nconst totals = new Map(hospitals.map((h) => [h.name, { rooms: 0, beds: 0, occupied: 0, cost: 0 }]));\ntables[\"rooms\"].forEach((room) => {\n  const hospital = hospitals.find((h) => h.id_hospital === room.id_hospital);\n  if (!hospital) return;\n  const total = totals.get(hospital.name);\n  total.rooms += 1;\n  total.beds += room.num_beds || 0;\n  if (room.occupied) total.occupied += 1;\n});\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\ntables[\"admissions\"].forEach((row) => {\n  const room = rooms.get(row.id_room);\n  const hospital = room ? hospitals.find((h) => h.id_hospital === room.id_hospital) : null;\n  if (!hospital) return;\n  totals.get(hospital.name).cost += daysBetween(row.admission_date, row.discharge_date) * (row.cost_per_day || 0);\n});\nconst admissions = new Map(queries[\"C22 · Hospitals with more admissions\"]().map((row) => [row.hospital, row.admissions]));\nreturn hospitals\n  .map((hospital) => {\n    const total = totals.get(hospital.name);\n    const count = admissions.get(hospital.name) || 0;\n    return {\n      \"hospital\": hospital.name,\n      \"level\": hospital.level,\n      \"university\": hospital.is_university ? \"yes\" : \"no\",\n      \"services\": (services.get(hospital.id_hospital) || []).length,\n      \"rooms\": total.rooms,\n      \"beds\": total.beds,\n      \"occupied_rooms\": total.occupied,\n      \"occupancy_percent\": total.rooms ? Math.round((total.occupied / total.rooms) * 1000) / 10 : 0,\n      \"admissions\": count,\n      \"revenue\": Math.round(total.cost),\n      \"cost_per_admission\": count ? Math.round(total.cost / count) : null,\n    };\n  })\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"] || a[\"hospital\"].localeCompare(b[\"hospital\"]));",
@@ -23726,6 +25495,16 @@
     {
       "name": "JavaScript · Pharmacy cost forecast",
       "description": "Drug price × prescribed units, with stock and the prescriptions behind each figure.",
+      "keywords": [
+        "health",
+        "aggregates",
+        "drugs",
+        "prescriptions",
+        "map",
+        "sort",
+        "foreach",
+        "math"
+      ],
       "folder": "Aggregates",
       "color": "#fce4e4",
       "code": "const drugs = new Map(tables[\"drugs\"].map((row) => [row.id_drug, row]));\nconst groups = new Map();\ntables[\"prescriptions\"].forEach((row) => {\n  const drug = drugs.get(row.id_drug);\n  if (!drug) return;\n  const group = groups.get(row.id_drug) || { drug, prescriptions: 0, units: 0 };\n  group.prescriptions += 1;\n  group.units += (row.amount || 0) * (row.duration_days || 0);\n  groups.set(row.id_drug, group);\n});\nreturn [...groups.values()]\n  .map((group) => {\n    const cost = group.units * (group.drug.price || 0);\n    return {\n      \"drug\": group.drug.name,\n      \"route\": group.drug.route,\n      \"prescriptions\": group.prescriptions,\n      \"units\": group.units,\n      \"forecast_cost\": Math.round(cost),\n      \"stock\": group.drug.stock,\n      \"stock_alert\": (group.drug.stock || 0) < 50 ? \"low\" : \"ok\",\n      \"cost_per_unit\": group.drug.price,\n    };\n  })\n  .sort((a, b) => b[\"forecast_cost\"] - a[\"forecast_cost\"] || a[\"drug\"].localeCompare(b[\"drug\"]));",
@@ -23977,6 +25756,15 @@
     {
       "name": "JavaScript · Billing monthly report",
       "description": "Invoices per month with paid and unpaid totals, collection rate and a running total.",
+      "keywords": [
+        "health",
+        "dates",
+        "invoices",
+        "map",
+        "sort",
+        "foreach",
+        "math"
+      ],
       "folder": "Dates",
       "color": "#e8ddf7",
       "code": "const groups = new Map();\ntables[\"invoices\"].forEach((row) => {\n  const date = new Date(row.date);\n  const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, \"0\")}`;\n  const group = groups.get(month) || { month, invoices: 0, total: 0, paid: 0, unpaid: 0 };\n  group.invoices += 1;\n  group.total += row.amount || 0;\n  if (row.paid) group.paid += row.amount || 0;\n  else group.unpaid += row.amount || 0;\n  groups.set(month, group);\n});\nlet cumulative = 0;\nreturn [...groups.values()]\n  .sort((a, b) => a.month.localeCompare(b.month))\n  .map((group) => {\n    cumulative += group.total;\n    return {\n      \"month\": group.month,\n      \"invoices\": group.invoices,\n      \"amount\": Math.round(group.total),\n      \"paid\": Math.round(group.paid),\n      \"unpaid\": Math.round(group.unpaid),\n      \"collection_percent\": group.total ? Math.round((group.paid / group.total) * 1000) / 10 : 0,\n      \"cumulative\": Math.round(cumulative),\n    };\n  });",
@@ -24267,6 +26055,16 @@
     {
       "name": "JavaScript · Doctor leaderboard",
       "description": "Doctors ranked by a score built from appointments, surgeries and the surgery query C16.",
+      "keywords": [
+        "health",
+        "reports",
+        "doctors",
+        "appointments",
+        "map",
+        "sort",
+        "slice",
+        "foreach"
+      ],
       "folder": "Queries and reports",
       "color": "#fde8cd",
       "code": "const doctors = new Map(tables[\"doctors\"].map((row) => [row.id_doctor, row]));\nconst surgeries = new Map(queries[\"C16 · Doctors with more surgeries\"]().map((row) => [row.doctor, row]));\nconst appointments = new Map();\ntables[\"appointments\"].forEach((row) => {\n  const group = appointments.get(row.id_doctor) || { count: 0, duration: 0 };\n  group.count += 1;\n  group.duration += row.duration_min || 0;\n  appointments.set(row.id_doctor, group);\n});\nconst rows = [...doctors.values()].map((doctor) => {\n  const agenda = appointments.get(doctor.id_doctor) || { count: 0, duration: 0 };\n  const surgery = surgeries.get(doctor.last_name) || { surgeries: 0, total_cost: 0 };\n  return {\n    \"doctor\": `${doctor.last_name}, ${doctor.name}`,\n    \"specialty_id\": doctor.id_specialty,\n    \"experience\": doctor.years_experience,\n    \"appointments\": agenda.count,\n    \"average_duration\": agenda.count ? Math.round((agenda.duration / agenda.count) * 10) / 10 : 0,\n    \"surgeries\": surgery.surgeries || 0,\n    \"surgery_cost\": Math.round(surgery.total_cost || 0),\n    \"score\": agenda.count * 2 + (surgery.surgeries || 0) * 5 + Math.round((doctor.years_experience || 0) / 2),\n  };\n});\nlet previous = null;\nlet rank = 0;\nreturn rows\n  .sort((a, b) => b[\"score\"] - a[\"score\"] || a[\"doctor\"].localeCompare(b[\"doctor\"]))\n  .slice(0, 20)\n  .map((row, index) => {\n    if (row[\"score\"] !== previous) {\n      rank = index + 1;\n      previous = row[\"score\"];\n    }\n    return { \"rank\": rank, ...row };\n  });",
@@ -24509,6 +26307,17 @@
     {
       "name": "JavaScript · Patient risk profile",
       "description": "Risk points from chronic conditions, severe allergies, abnormal labs and query C31.",
+      "keywords": [
+        "health",
+        "joins",
+        "allergies",
+        "labs",
+        "patients",
+        "map",
+        "sort",
+        "slice",
+        "foreach"
+      ],
       "folder": "Joins and integrity",
       "color": "#dcf1d4",
       "code": "const diagnoses = new Map(queries[\"C31 · Patients with more than one distinct diagnosis\"]().map((row) => [row.patient, row.diagnoses]));\nconst allergies = new Map();\ntables[\"allergies\"].forEach((row) => {\n  const group = allergies.get(row.id_patient) || { total: 0, severe: 0 };\n  group.total += 1;\n  if (row.severity === \"severe\") group.severe += 1;\n  allergies.set(row.id_patient, group);\n});\nconst abnormal = new Map();\ntables[\"labs\"].forEach((row) => {\n  if (!row.is_abnormal) return;\n  abnormal.set(row.id_patient, (abnormal.get(row.id_patient) || 0) + 1);\n});\nreturn tables[\"patients\"]\n  .map((patient) => {\n    const allergy = allergies.get(patient.id_patient) || { total: 0, severe: 0 };\n    const abnormalLabs = abnormal.get(patient.id_patient) || 0;\n    const distinctDiagnoses = diagnoses.get(patient.last_name) || 0;\n    const points = (patient.is_chronic ? 2 : 0) + allergy.severe * 2 + allergy.total + abnormalLabs + (distinctDiagnoses >= 4 ? 2 : 0);\n    return {\n      \"patient\": `${patient.last_name}, ${patient.name}`,\n      \"age\": Math.floor((new Date(\"2025-09-01\") - new Date(patient.birth_date)) / (365.25 * 86400000)),\n      \"chronic\": patient.is_chronic ? \"yes\" : \"no\",\n      \"allergies\": allergy.total,\n      \"severe_allergies\": allergy.severe,\n      \"abnormal_labs\": abnormalLabs,\n      \"risk_points\": points,\n      \"risk\": points >= 6 ? \"high\" : points >= 3 ? \"medium\" : \"low\",\n    };\n  })\n  .sort((a, b) => b[\"risk_points\"] - a[\"risk_points\"] || a[\"patient\"].localeCompare(b[\"patient\"]))\n  .slice(0, 20);",
@@ -24730,6 +26539,17 @@
     {
       "name": "JavaScript · Insurance coverage audit",
       "description": "Billed, covered and patient share per insurer, using query B08 for the patient counts.",
+      "keywords": [
+        "health",
+        "joins",
+        "insurers",
+        "patients",
+        "invoices",
+        "map",
+        "sort",
+        "foreach",
+        "math"
+      ],
       "folder": "Joins and integrity",
       "color": "#dcf1d4",
       "code": "const insurers = new Map(tables[\"insurers\"].map((row) => [row.id_insurer, row]));\nconst patients = new Map(tables[\"patients\"].map((row) => [row.id_patient, row]));\nconst counts = new Map(queries[\"B08 · Patients by insurer\"]().map((row) => [row.insurance, row.patients]));\nconst billing = new Map();\ntables[\"invoices\"].forEach((row) => {\n  const patient = patients.get(row.id_patient);\n  if (!patient) return;\n  const key = patient.id_insurer;\n  const group = billing.get(key) || { total: 0, invoices: 0, paid: 0 };\n  group.total += row.amount || 0;\n  group.invoices += 1;\n  if (row.paid) group.paid += row.amount || 0;\n  billing.set(key, group);\n});\nreturn [...insurers.values()]\n  .map((insurer) => {\n    const bill = billing.get(insurer.id_insurer) || { total: 0, invoices: 0, paid: 0 };\n    const covered = bill.total * ((insurer.coverage_percent || 0) / 100);\n    return {\n      \"insurer\": insurer.name,\n      \"type\": insurer.type,\n      \"coverage_percent\": insurer.coverage_percent,\n      \"patients\": counts.get(insurer.name) || 0,\n      \"invoices\": bill.invoices,\n      \"billed\": Math.round(bill.total),\n      \"covered\": Math.round(covered),\n      \"patient_share\": Math.round(bill.total - covered),\n      \"paid\": Math.round(bill.paid),\n      \"unpaid\": Math.round(bill.total - bill.paid),\n    };\n  })\n  .sort((a, b) => b[\"billed\"] - a[\"billed\"] || a[\"insurer\"].localeCompare(b[\"insurer\"]));",

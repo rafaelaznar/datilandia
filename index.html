@@ -853,6 +853,11 @@
       min-width: 6em;
     }
 
+    #query-keywords {
+      flex: 1 1 20em;
+      min-width: 8em;
+    }
+
     #script-name {
       flex: 0 0 35%;
       min-width: 10em;
@@ -861,6 +866,11 @@
     #script-description {
       flex: 1 1 10em;
       min-width: 6em;
+    }
+
+    #script-keywords {
+      flex: 1 1 20em;
+      min-width: 8em;
     }
 
     .toolbar {
@@ -2245,6 +2255,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           <select data-i18n-title="ui.folderTip" id="query-folder" title="Carpeta de la consulta; elige una de la lista (el botón de añadir carpeta crea una nueva)"></select>
         </div>
         <div class="toolbar">
+          <label data-i18n="markup.label.keywords" for="query-keywords">Palabras clave:</label>
+          <input id="query-keywords" type="text" data-i18n-title="queries.keywordsTip" title="Palabras clave de la consulta (metadatos): sepáralas con comas">
+        </div>
+        <div class="toolbar">
           <button class="with-icon" data-i18n-title="queries.insertTip" id="btn-insert" type="button" title="Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="queries.insertButton">Insertar tabla, consulta, script o campo…</span></button>
           <span data-i18n="queries.insertHint" class="muted">Pulsa un nombre para escribirlo en el cursor; la flecha despliega sus campos.</span>
           <span class="sep" id="related-sep"></span>
@@ -2283,6 +2297,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           <input id="script-description" type="text" data-i18n-title="scripts.descriptionTip" title="Descripción del script (metadatos)">
           <label data-i18n="markup.label.folder" for="script-folder">Carpeta:</label>
           <select data-i18n-title="scripts.folderTip" id="script-folder" title="Carpeta del script; elige una de la lista (el botón de añadir carpeta crea una nueva)"></select>
+        </div>
+        <div class="toolbar">
+          <label data-i18n="markup.label.keywords" for="script-keywords">Palabras clave:</label>
+          <input id="script-keywords" type="text" data-i18n-title="scripts.keywordsTip" title="Palabras clave del script (metadatos): sepáralas con comas">
         </div>
         <div class="toolbar">
           <button class="with-icon" data-i18n-title="scripts.insertTip" id="btn-script-insert" type="button" title="Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space)"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="queries.insertButton">Insertar tabla, consulta, script o campo…</span></button>
@@ -2845,6 +2863,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "scripts.panelTip": "JavaScript scripts saved in the project",
         "scripts.nameTip": "Name of the script",
         "scripts.descriptionTip": "Description of the script (metadata)",
+        "scripts.keywordsTip": "Keywords of the script (metadata): separate them with commas",
         "scripts.sourceTip": "Table or query whose rows are passed to the script in «datos»",
         "markup.button.deleteTable": "Delete table",
         "markup.button.deleteTableAllItsData": "Delete the table and all its data",
@@ -2982,6 +3001,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.label.delimiter3": "Delimiter:",
         "markup.label.description": "Description:",
         "markup.label.description2": "Description:",
+        "markup.label.keywords": "Keywords:",
         "markup.label.find": "Find:",
         "markup.label.name": "Name:",
         "markup.label.projectName": "Project name:",
@@ -3207,6 +3227,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "persistence.duplicateScriptName": "The script name “{scriptName}” is duplicated.",
         "persistence.scriptCodeInvalid": "{label}: the script “{scriptName}” needs its code as text.",
         "persistence.scriptDescriptionInvalid": "{label}: the description of the script “{scriptName}” must be text.",
+        "persistence.scriptKeywordsInvalid": "{label}: the keywords of the script “{scriptName}” must be a list of texts.",
         "persistence.scriptNameMissing": "{label}: every script needs a name.",
         "persistence.scriptNotObject": "{label}: every script must be an object.",
         "persistence.scriptsNotList": "{label}: “scripts” must be a list of scripts.",
@@ -3224,6 +3245,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "persistence.notProject": "Not an datilandia project: expected \"format\": \"{format}\".",
         "persistence.queriesNotList": "\"queries\" must be a list of queries.",
         "persistence.queryDescriptionInvalid": "{label} (\"{queryName}\"): \"description\" must be text.",
+        "persistence.queryKeywordsInvalid": "{label} (\"{queryName}\"): \"keywords\" must be a list of texts.",
         "persistence.queryNameMissing": "{label}: the query name (\"name\") is missing.",
         "persistence.querySqlMissing": "{label} (\"{queryName}\"): the query SQL (\"sql\") is missing as text.",
         "persistence.rootNotObject": "The file root must be a JSON object.",
@@ -3313,6 +3335,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.defaultSql": "SELECT * FROM table",
         "queries.deleteTip": "Delete the query “{name}”",
         "queries.descriptionUpdated": "Description of “{name}” updated.",
+        "queries.keywordsTip": "Keywords of the query (metadata): separate them with commas",
+        "queries.keywordsUpdated": "Keywords of “{name}” updated.",
         "queries.duplicateTip": "Duplicate the query “{name}”",
         "queries.duplicated": "Query “{name}” duplicated as “{copy}”.",
         "queries.emptyEditor": "There is no query to run: the editor is empty.",
@@ -3330,6 +3354,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "scripts.defaultName": "script",
         "scripts.deleteConfirm": "Delete the script “{name}”?{warning}",
         "scripts.descriptionUpdated": "Description of “{name}” updated.",
+        "scripts.keywordsUpdated": "Keywords of “{name}” updated.",
         "scripts.emptyCode": "Write some JavaScript code before running.",
         "scripts.emptyCodeHint": "For example: return tables[\"name\"].filter((row) => row.age > 18);",
         "scripts.emptyCodeTitle": "Empty script",
@@ -3746,6 +3771,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.dataSourcesTip": "Jump to one of the data sources of “{name}”",
         "ui.isSourceOfTip": "Jump to one of the objects that read “{name}”",
         "ui.dataSourcesLine": "Data sources ({total}): {names}",
+        "ui.keywordsLine": "Keywords: {keywords}",
         "ui.isSourceOfLine": "Is source of ({total}): {names}",
         "ui.relatedPickTip": "Open {kind}",
         "ui.groupTables": "Tables",
@@ -3885,6 +3911,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "scripts.panelTip": "Scripts JavaScript guardados en el proyecto",
         "scripts.nameTip": "Nombre del script",
         "scripts.descriptionTip": "Descripción del script (metadatos)",
+        "scripts.keywordsTip": "Palabras clave del script (metadatos): sepáralas con comas",
         "scripts.sourceTip": "Tabla o consulta cuyas filas se pasan al script en «datos»",
         "markup.button.deleteTable": "Eliminar tabla",
         "markup.button.deleteTableAllItsData": "Eliminar la tabla y todos sus datos",
@@ -4022,6 +4049,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.label.delimiter3": "Separador:",
         "markup.label.description": "Descripción:",
         "markup.label.description2": "Descripción:",
+        "markup.label.keywords": "Palabras clave:",
         "markup.label.find": "Buscar:",
         "markup.label.name": "Nombre:",
         "markup.label.projectName": "Nombre del proyecto:",
@@ -4247,6 +4275,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "persistence.duplicateScriptName": "El nombre de script «{scriptName}» está duplicado.",
         "persistence.scriptCodeInvalid": "{label}: el script «{scriptName}» necesita su código como texto.",
         "persistence.scriptDescriptionInvalid": "{label}: la descripción del script «{scriptName}» debe ser texto.",
+        "persistence.scriptKeywordsInvalid": "{label}: las palabras clave del script «{scriptName}» deben ser una lista de textos.",
         "persistence.scriptNameMissing": "{label}: cada script necesita un nombre.",
         "persistence.scriptNotObject": "{label}: cada script debe ser un objeto.",
         "persistence.scriptsNotList": "{label}: «scripts» debe ser una lista de scripts.",
@@ -4264,6 +4293,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "persistence.notProject": "No es un proyecto de datilandia: se esperaba \"format\": \"{format}\".",
         "persistence.queriesNotList": "\"queries\" debe ser una lista de consultas.",
         "persistence.queryDescriptionInvalid": "{label} (\"{queryName}\"): \"description\" debe ser texto.",
+        "persistence.queryKeywordsInvalid": "{label} (\"{queryName}\"): \"keywords\" debe ser una lista de textos.",
         "persistence.queryNameMissing": "{label}: falta el nombre de la consulta (\"name\").",
         "persistence.querySqlMissing": "{label} (\"{queryName}\"): falta el SQL de la consulta (\"sql\") como texto.",
         "persistence.rootNotObject": "La raíz del fichero debe ser un objeto JSON.",
@@ -4353,6 +4383,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.defaultSql": "SELECT * FROM tabla",
         "queries.deleteTip": "Borrar la consulta «{name}»",
         "queries.descriptionUpdated": "Descripción de «{name}» actualizada.",
+        "queries.keywordsTip": "Palabras clave de la consulta (metadatos): sepáralas con comas",
+        "queries.keywordsUpdated": "Palabras clave de «{name}» actualizadas.",
         "queries.duplicateTip": "Duplicar la consulta «{name}»",
         "queries.duplicated": "Consulta «{name}» duplicada como «{copy}».",
         "queries.emptyEditor": "No hay ninguna consulta que ejecutar: el editor está vacío.",
@@ -4370,6 +4402,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "scripts.defaultName": "script",
         "scripts.deleteConfirm": "¿Eliminar el script «{name}»?{warning}",
         "scripts.descriptionUpdated": "Descripción de «{name}» actualizada.",
+        "scripts.keywordsUpdated": "Palabras clave de «{name}» actualizadas.",
         "scripts.emptyCode": "Escribe código JavaScript antes de ejecutar.",
         "scripts.emptyCodeHint": "Por ejemplo: return tables[\"nombre\"].filter((row) => row.age > 18);",
         "scripts.emptyCodeTitle": "Script vacío",
@@ -4786,6 +4819,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.dataSourcesTip": "Saltar a uno de los orígenes de datos de «{name}»",
         "ui.isSourceOfTip": "Saltar a uno de los objetos que leen «{name}»",
         "ui.dataSourcesLine": "Orígenes de datos ({total}): {names}",
+        "ui.keywordsLine": "Palabras clave: {keywords}",
         "ui.isSourceOfLine": "Es origen de ({total}): {names}",
         "ui.relatedPickTip": "Abrir {kind}",
         "ui.groupTables": "Tablas",
@@ -6907,14 +6941,47 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return copy;
       },
 
+      /** Keywords trimmed and without repetitions (ignoring case), keeping the
+       *  first spelling of each one. */
+      normalizeKeywords(raw) {
+        if (!Array.isArray(raw)) {
+          return [];
+        }
+        const seen = new Set();
+        const keywords = [];
+        raw.forEach((item) => {
+          if (typeof item !== "string") {
+            return;
+          }
+          const keyword = item.trim();
+          if (keyword === "") {
+            return;
+          }
+          const key = keyword.toLowerCase();
+          if (seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          keywords.push(keyword);
+        });
+        return keywords;
+      },
+
       /** Query as it is written to the file: the asserted result in its compact
-       *  form and the folder key only when the query has one. */
+       *  form, the folder key only when the query has one and its keywords only
+       *  when it has any. */
       queryToJson(query) {
         const copy = query.assert
           ? { ...query, assert: Persistence.assertToJson(query.assert) }
           : { ...query };
         if (!copy.folder) {
           delete copy.folder;
+        }
+        const keywords = Persistence.normalizeKeywords(copy.keywords);
+        if (keywords.length > 0) {
+          copy.keywords = keywords;
+        } else {
+          delete copy.keywords;
         }
         return copy;
       },
@@ -6928,6 +6995,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         delete copy.source;
         if (!copy.folder) {
           delete copy.folder;
+        }
+        const keywords = Persistence.normalizeKeywords(copy.keywords);
+        if (keywords.length > 0) {
+          copy.keywords = keywords;
+        } else {
+          delete copy.keywords;
         }
         if (copy.description === undefined) {
           copy.description = "";
@@ -7010,6 +7083,38 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return raw;
       },
 
+      /** Validates and normalises the keywords of a query or a script: a list
+       *  of non-empty texts, without repetitions (ignoring case). An absent
+       *  value is an empty list. */
+      parseKeywords(raw, errorKey, params, errors) {
+        if (raw === undefined || raw === null) {
+          return [];
+        }
+        if (!Array.isArray(raw)) {
+          errors.push(I18n.t(errorKey, params));
+          return [];
+        }
+        const seen = new Set();
+        const keywords = [];
+        raw.forEach((item) => {
+          if (typeof item !== "string") {
+            errors.push(I18n.t(errorKey, params));
+            return;
+          }
+          const keyword = item.trim();
+          if (keyword === "") {
+            return;
+          }
+          const key = keyword.toLowerCase();
+          if (seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          keywords.push(keyword);
+        });
+        return keywords;
+      },
+
       /** Validates the list of queries of the file. */
       parseQueries(rawQueries, errors) {
         if (rawQueries === undefined) {
@@ -7039,6 +7144,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             errors.push(I18n.t("persistence.queryDescriptionInvalid", { label: label, queryName: raw.name }));
             description = "";
           }
+          const keywords = Persistence.parseKeywords(
+            raw.keywords,
+            "persistence.queryKeywordsInvalid",
+            { label: label, queryName: raw.name },
+            errors,
+          );
           let folder = raw.folder === undefined || raw.folder === null ? null : raw.folder;
           if (folder !== null && (typeof folder !== "string" || folder.trim() === "")) {
             errors.push(I18n.t("persistence.queryFolderInvalid", { queryLabel: `${label} ("${raw.name}")` }));
@@ -7051,6 +7162,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           const expected = Persistence.parseAssert(raw.assert, label, raw.name, errors);
           const query = { name: raw.name, description, sql: raw.sql, assert: expected };
+          if (keywords.length > 0) {
+            query.keywords = keywords;
+          }
           if (folder !== null) {
             query.folder = folder.trim();
           }
@@ -7090,6 +7204,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             errors.push(I18n.t("persistence.scriptDescriptionInvalid", { label: label, scriptName: raw.name }));
             description = "";
           }
+          const keywords = Persistence.parseKeywords(
+            raw.keywords,
+            "persistence.scriptKeywordsInvalid",
+            { label: label, scriptName: raw.name },
+            errors,
+          );
           if (typeof raw.code !== "string") {
             errors.push(I18n.t("persistence.scriptCodeInvalid", { label: label, scriptName: raw.name }));
             return;
@@ -7106,6 +7226,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           const expected = Persistence.parseAssert(raw.assert, label, raw.name, errors);
           const script = { name: raw.name, description, code: raw.code };
+          if (keywords.length > 0) {
+            script.keywords = keywords;
+          }
           if (expected) {
             script.assert = expected;
           }
@@ -11581,6 +11704,44 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  per-tip inputs do not need to be worked out again. */
       lastTipShape: null,
 
+      /** Keywords written in the editor, comma-separated, as a normalised
+       *  list: trimmed, without empty items and without repetitions (the
+       *  comparison ignores case, the first spelling is kept). */
+      parseKeywords(text) {
+        const seen = new Set();
+        const keywords = [];
+        String(text == null ? "" : text).split(",").forEach((part) => {
+          const keyword = part.trim();
+          if (keyword === "") {
+            return;
+          }
+          const key = keyword.toLowerCase();
+          if (seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          keywords.push(keyword);
+        });
+        return keywords;
+      },
+
+      /** Keywords as they are written in the editor. */
+      keywordsText(keywords) {
+        return (keywords || []).join(", ");
+      },
+
+      /** Line of a tip with the keywords, or "" when there are none. */
+      keywordsLine(keywords) {
+        return keywords && keywords.length > 0
+          ? I18n.t("ui.keywordsLine", { keywords: keywords.join(", ") })
+          : "";
+      },
+
+      /** Part of a signature that depends on the keywords. */
+      keywordsKey(keywords) {
+        return (keywords || []).join(",");
+      },
+
       /** Signature of the table schema: the tables with their fields, types
        *  and foreign keys. It is the part of a tip that comes from the data
        *  model (not from the queries themselves). */
@@ -11595,8 +11756,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  fields and foreign keys, and the queries with their SQL. */
       projectShape(project, schema) {
         const tables = schema === undefined ? Ui.schemaShape(project) : schema;
-        const queries = project.queries.map((query) => `${query.name}#${query.sql}`).join("~");
-        const scripts = (project.scripts || []).map((script) => `${script.name}#${script.code}`).join("~");
+        const queries = project.queries
+          .map((query) => `${query.name}#${query.sql}#${Ui.keywordsKey(query.keywords)}`)
+          .join("~");
+        const scripts = (project.scripts || [])
+          .map((script) => `${script.name}#${script.code}#${Ui.keywordsKey(script.keywords)}`)
+          .join("~");
         return `${tables}@${queries}@${scripts}`;
       },
 
@@ -11612,11 +11777,19 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         });
         const queries = (project.queries || []).map((query) => `${query.name}#${query.sql}`).join("~");
         const scripts = (project.scripts || []).map((script) => `${script.name}#${script.code}`).join("~");
+        // The keywords are metadata: they change a tip, but not the graph or
+        // the use analysis, so those keep their own strings.
+        const shapeQueries = (project.queries || [])
+          .map((query) => `${query.name}#${query.sql}#${Ui.keywordsKey(query.keywords)}`)
+          .join("~");
+        const shapeScripts = (project.scripts || [])
+          .map((script) => `${script.name}#${script.code}#${Ui.keywordsKey(script.keywords)}`)
+          .join("~");
         const schema = schemaParts.join("|");
         const tables = tableNames.join("|");
         return {
           schema,
-          shape: `${schema}@${queries}@${scripts}`,
+          shape: `${schema}@${shapeQueries}@${shapeScripts}`,
           graph: `${tables}@${queries}@${scripts}`,
           usage: `${queries}@${tables}`,
         };
@@ -11679,7 +11852,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             .map((dependent) => `${dependent.kind}:${dependent.name}`)
             .join(",");
           const description = query.description || "";
-          inputs.set(query.name, `${schema}\u0001${description}\u0001${contentHash("query", query.name)}\u0001${dependents}`);
+          const keywords = Ui.keywordsKey(query.keywords);
+          inputs.set(query.name, `${schema}\u0001${description}\u0001${keywords}\u0001${contentHash("query", query.name)}\u0001${dependents}`);
         });
         return inputs;
       },
@@ -12236,6 +12410,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const lineas = [columns.ok
           ? Ui.fieldsTip(query.description, I18n.t("ui.resultFields"), columns.columns)
           : Ui.joinTip(query.description, I18n.t("ui.resultFieldsError", { message: columns.error.message }))];
+        const keywords = Ui.keywordsLine(query.keywords);
+        if (keywords) {
+          lineas.push(keywords);
+        }
         const graphNow = graph === undefined ? ProjectGraph.build(Store.project) : graph;
         const sources = ProjectGraph.sourcesIn(graphNow, "query", query.name);
         if (sources.length > 0) {
@@ -12256,6 +12434,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const lineas = [];
         if (script.description) {
           lineas.push(script.description);
+        }
+        const keywords = Ui.keywordsLine(script.keywords);
+        if (keywords) {
+          lineas.push(keywords);
         }
         const graphNow = graph === undefined ? ProjectGraph.build(Store.project) : graph;
         const sources = ProjectGraph.sourcesIn(graphNow, "script", script.name);
@@ -14706,6 +14888,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         document.getElementById("btn-delete-query").addEventListener("click", () => UiQueries.remove());
         document.getElementById("query-name").addEventListener("change", () => UiQueries.renameFromInput());
         document.getElementById("query-description").addEventListener("change", () => UiQueries.saveDescription());
+        document.getElementById("query-keywords").addEventListener("change", () => UiQueries.saveKeywords());
         document.getElementById("query-sql").addEventListener("change", () => UiQueries.saveSql());
         document.getElementById("query-sql").addEventListener("keydown", (event) => {
           if (event.ctrlKey && event.code === "Space") {
@@ -15001,6 +15184,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         Ui.showView("query");
         document.getElementById("query-name").value = query.name;
         document.getElementById("query-description").value = query.description || "";
+        document.getElementById("query-keywords").value = Ui.keywordsText(query.keywords);
         UiFolders.fillEditorOptions("queries");
         document.getElementById("query-sql").value = query.sql;
         UiQueries.clearOutput();
@@ -15083,6 +15267,31 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           UiProject.markDirty();
           setStatus(I18n.t("queries.descriptionUpdated", { name: query.name }));
         }
+      },
+
+      /** Saves the keywords written in the editor (comma-separated). They are
+       *  metadata: the query behaves the same, but they show in its tip. */
+      saveKeywords() {
+        const query = UiQueries.activeQueryOrNull();
+        if (!query) {
+          return;
+        }
+        const input = document.getElementById("query-keywords");
+        const keywords = Ui.parseKeywords(input.value);
+        const current = query.keywords || [];
+        if (keywords.join("\u0000") === current.join("\u0000")) {
+          input.value = Ui.keywordsText(current);
+          return;
+        }
+        if (keywords.length > 0) {
+          query.keywords = keywords;
+        } else {
+          delete query.keywords;
+        }
+        input.value = Ui.keywordsText(keywords);
+        UiProject.markDirty();
+        Ui.renderSidebarQueries();
+        setStatus(I18n.t("queries.keywordsUpdated", { name: query.name }));
       },
 
       /** Dumps the current SQL of the active query into the editor. It is needed
@@ -15647,6 +15856,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         document.getElementById("btn-delete-script").addEventListener("click", () => UiScripts.remove());
         document.getElementById("script-name").addEventListener("change", () => UiScripts.renameFromInput());
         document.getElementById("script-description").addEventListener("change", () => UiScripts.saveDescription());
+        document.getElementById("script-keywords").addEventListener("change", () => UiScripts.saveKeywords());
         document.getElementById("script-code").addEventListener("change", () => UiScripts.saveCode());
         document.getElementById("script-code").addEventListener("keydown", (event) => {
           if (event.ctrlKey && event.code === "Space") {
@@ -15727,6 +15937,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         Ui.showView("script");
         document.getElementById("script-name").value = script.name;
         document.getElementById("script-description").value = script.description || "";
+        document.getElementById("script-keywords").value = Ui.keywordsText(script.keywords);
         document.getElementById("script-code").value = script.code;
         UiFolders.fillEditorOptions("scripts");
         UiScripts.renderHelp();
@@ -15801,6 +16012,31 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           Ui.renderSidebarScripts();
           setStatus(I18n.t("scripts.descriptionUpdated", { name: script.name }));
         }
+      },
+
+      /** Saves the keywords written in the editor (comma-separated). They are
+       *  metadata: the script behaves the same, but they show in its tip. */
+      saveKeywords() {
+        const script = UiScripts.activeScriptOrNull();
+        if (!script) {
+          return;
+        }
+        const input = document.getElementById("script-keywords");
+        const keywords = Ui.parseKeywords(input.value);
+        const current = script.keywords || [];
+        if (keywords.join("\u0000") === current.join("\u0000")) {
+          input.value = Ui.keywordsText(current);
+          return;
+        }
+        if (keywords.length > 0) {
+          script.keywords = keywords;
+        } else {
+          delete script.keywords;
+        }
+        input.value = Ui.keywordsText(keywords);
+        UiProject.markDirty();
+        Ui.renderSidebarScripts();
+        setStatus(I18n.t("scripts.keywordsUpdated", { name: script.name }));
       },
 
       saveCode() {
@@ -21494,6 +21730,55 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assert(result.ok, "the project must be valid: " + JSON.stringify(result.errors));
       assertEqual(result.project.scripts, [script], "the script is kept value by value");
       assertEqual(Persistence.serializeProject(Persistence.parseProject(text).project), text, "the file does not change when it is written again");
+    });
+
+    SelfTests.add("When_QueryAndScriptWithKeywords_Expect_SerializedAndNormalised", () => {
+      const project = {
+        name: "keywords",
+        tables: [],
+        queries: [{ name: "q", description: "", sql: "SELECT 1", assert: null, keywords: ["uno", "Dos", "uno"] }],
+        scripts: [{ name: "s", description: "", code: "return [];", keywords: ["js", " datos ", "JS"] }],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      const text = Persistence.serializeProject(project);
+      assert(text.includes('"keywords"'), "the keywords are written");
+      const result = Persistence.parseProject(text);
+      assert(result.ok, "the project must be valid: " + JSON.stringify(result.errors));
+      assertEqual(result.project.queries[0].keywords, ["uno", "Dos"], "the query keywords are trimmed and deduplicated");
+      assertEqual(result.project.scripts[0].keywords, ["js", "datos"], "the script keywords are trimmed and deduplicated");
+      assertEqual(
+        Persistence.serializeProject(result.project),
+        text,
+        "the file does not change when it is written again",
+      );
+    });
+
+    SelfTests.add("When_KeywordsIsNotAListOfTexts_Expect_LoadError", () => {
+      const badQuery = Persistence.parseProject(JSON.stringify({
+        format: Persistence.FORMAT,
+        version: Persistence.VERSION,
+        name: "keywords",
+        tables: [],
+        queries: [{ name: "q", description: "", sql: "SELECT 1", keywords: "uno" }],
+      }));
+      assert(!badQuery.ok, "a keywords value that is not a list is rejected");
+      assert(
+        badQuery.errors.some((error) => error.includes("keywords")),
+        "the error names the keywords: " + JSON.stringify(badQuery.errors),
+      );
+      const badScript = Persistence.parseProject(JSON.stringify({
+        format: Persistence.FORMAT,
+        version: Persistence.VERSION,
+        name: "keywords",
+        tables: [],
+        queries: [],
+        scripts: [{ name: "s", description: "", code: "return [];", keywords: [1] }],
+      }));
+      assert(!badScript.ok, "a keyword that is not text is rejected");
+      assert(
+        badScript.errors.some((error) => error.includes("keywords")),
+        "the error names the keywords: " + JSON.stringify(badScript.errors),
+      );
     });
 
     SelfTests.add("When_ScriptWithLegacySource_Expect_SourceDropped", () => {
