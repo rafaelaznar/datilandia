@@ -721,22 +721,120 @@
 
     /* --- 5b. Welcome view: title, description and help ----------- */
 
-    /*  Dashboard: the figures of the open project in discrete cards, above the title. It wraps into several rows when it does not fit.  */
-    .dashboard-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+    /*  Dashboard: a compact, editorial summary of the open project. It uses
+        the same quiet palette as the rest of the program, with one blue rule
+        and the figures in a tabular monospaced face.  */
+    .dashboard {
       max-width: 1400px;
+    }
+
+    .dashboard-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #1a4f8a;
+    }
+
+    .dashboard-head-title {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .dashboard-kicker {
+      font-size: 9px;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #1a4f8a;
+    }
+
+    .dashboard-head-title strong {
+      overflow: hidden;
+      font-size: 17px;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dashboard-version {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: baseline;
+      gap: 4px;
+      padding: 3px 8px;
+      border: 1px solid #b9cde3;
+      border-radius: 999px;
+      background: #eef4fb;
+      font-size: 10px;
+      color: #1a4f8a;
+    }
+
+    .dashboard-version b {
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    /*  File metadata strip: what was loaded, when it was modified, how long it
+        took to open and which format version it carries.  */
+    .dashboard-file {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 6px;
+      margin: 7px 0 0;
+    }
+
+    .dashboard-file .file-item {
+      min-width: 0;
+      padding: 4px 9px 5px;
+      border: 1px solid #e2e2e2;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .dashboard-file dt {
+      overflow: hidden;
+      font-size: 9px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #777;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dashboard-file dd {
+      margin: 2px 0 0;
+      overflow: hidden;
+      font-size: 11px;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /*  Figures of the project: a responsive grid of small cards.  */
+    .dashboard-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(106px, 1fr));
+      gap: 6px;
       margin: 6px 0 0;
     }
 
     /* Each figure: the small name on top and the big number below. */
     .dashboard .data {
-      min-width: 86px;
+      min-width: 0;
       padding: 4px 9px 5px;
       border: 1px solid #e2e2e2;
       border-radius: 4px;
       background: #fafafa;
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .dashboard .data:hover {
+      border-color: #b9cde3;
+      box-shadow: 0 1px 3px rgb(26 79 138 / 0.12);
     }
 
     .dashboard .data-name {
@@ -754,20 +852,18 @@
       line-height: 1.15;
     }
 
-    /*  Detail panels under the figures: the largest tables, the test coverage
-       and how the fields are typed. They share the width of the cards.  */
+    /*  Detail panels under the figures: the largest tables, the test coverage,
+       the field types, the structure and the maintenance figures.  */
     .dashboard-detail {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 6px;
       max-width: 1400px;
       margin-top: 6px;
     }
 
     .dashboard-panel {
-      flex: 1 1 300px;
-      min-width: 240px;
-      max-width: 460px;
+      min-width: 0;
       padding: 5px 9px 7px;
       border: 1px solid #e2e2e2;
       border-radius: 4px;
@@ -845,6 +941,77 @@
       margin: 2px 0;
       color: #777;
       font-style: italic;
+    }
+
+    /*  Simple label/value rows for the structure and maintenance panels.  */
+    .dashboard-metrics {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .dashboard-metrics li {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 16px;
+      padding: 1px 0;
+      border-bottom: 1px dotted #e7e7e7;
+      font-size: 10px;
+    }
+
+    .dashboard-metrics li:last-child {
+      border-bottom: 0;
+    }
+
+    .dashboard-metrics .metric-name {
+      min-width: 0;
+      overflow: hidden;
+      color: #555;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dashboard-metrics .metric-value {
+      flex: 0 0 auto;
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+      font-variant-numeric: tabular-nums;
+      font-weight: bold;
+      color: #1a4f8a;
+    }
+
+    .dashboard-note {
+      max-width: 1400px;
+      margin: 4px 0 0;
+      font-size: 10px;
+    }
+
+    /*  Centred welcome block: the ASCII mark, the title and the message.  */
+    .welcome-hero {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .welcome-hero pre {
+      margin: 0 auto;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 1.2em;
+      line-height: 1.2em;
+      text-align: center;
+    }
+
+    .welcome-hero h2 {
+      margin: 4px auto 0;
+      text-align: center;
+    }
+
+    .welcome-hero p {
+      max-width: 980px;
+      margin: 8px auto 0;
+      line-height: 1.5;
+      text-align: center;
     }
 
     /*  The table view takes the whole height available: the data grid reaches the status bar.  */
@@ -2193,10 +2360,25 @@
              UiSalpicadero fills it from each [data-dato] card, whose value
              is the key Model.projectStats counts. -->
         <section data-i18n-aria-label="markup.section.projectSummary" class="dashboard" aria-label="Resumen del proyecto">
+          <header class="dashboard-head">
+            <div class="dashboard-head-title">
+              <span class="dashboard-kicker" data-i18n="dashboard.kicker">Resumen del proyecto</span>
+              <strong id="dashboard-project-name">—</strong>
+            </div>
+            <span class="dashboard-version" data-i18n-title="dashboard.versionTip" title="Versión del programa">
+              <span data-i18n="dashboard.versionLabel">Versión</span>
+              <b id="dashboard-app-version">1.0</b>
+            </span>
+          </header>
+          <dl class="dashboard-file" id="dashboard-file"></dl>
           <dl class="dashboard-list">
             <div class="data">
               <dt data-i18n-title="markup.dt.tablesProject" data-i18n="markup.dt.tables" class="data-name" title="Tablas del proyecto">Tablas</dt>
               <dd class="data-figure" data-data="tables">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.folders" class="data-name">Carpetas</dt>
+              <dd class="data-figure" data-data="folders">0</dd>
             </div>
             <div class="data">
               <dt data-i18n-title="markup.dt.rowsEveryTable" data-i18n="markup.dt.rows" class="data-name" title="Filas de todas las tablas">Filas</dt>
@@ -2205,6 +2387,10 @@
             <div class="data">
               <dt data-i18n-title="markup.dt.fieldsEveryTable" data-i18n="markup.dt.fields" class="data-name" title="Campos de todas las tablas">Campos</dt>
               <dd class="data-figure" data-data="fields">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.cells" class="data-name">Celdas</dt>
+              <dd class="data-figure" data-data="cells">0</dd>
             </div>
             <div class="data">
               <dt data-i18n-title="markup.dt.fieldsPointingFieldAnotherTable" data-i18n="markup.dt.foreignKeys" class="data-name" title="Campos que apuntan a un campo de otra tabla, o de la suya propia">Claves ajenas</dt>
@@ -2239,10 +2425,43 @@
               <dd class="data-figure" data-data="dependencies">0</dd>
             </div>
             <div class="data">
+              <dt data-i18n="dashboard.maxDepth" class="data-name">Profundidad máx.</dt>
+              <dd class="data-figure" data-data="maxDependencyDepth">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.objectsWithoutTest" class="data-name">Sin test</dt>
+              <dd class="data-figure" data-data="objectsWithoutTest">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.objectsWithoutUse" class="data-name">Sin uso</dt>
+              <dd class="data-figure" data-data="objectsWithoutUse">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.emptyTablesCard" class="data-name">Tablas vacías</dt>
+              <dd class="data-figure" data-data="emptyTables">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.isolatedTables" class="data-name">Tablas aisladas</dt>
+              <dd class="data-figure" data-data="isolatedTables">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.orphanReferences" class="data-name">Claves huérfanas</dt>
+              <dd class="data-figure" data-data="orphanReferences">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.emptyCells" class="data-name">Celdas vacías</dt>
+              <dd class="data-figure" data-data="emptyCells">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n="dashboard.emptyFields" class="data-name">Campos vacíos</dt>
+              <dd class="data-figure" data-data="emptyFields">0</dd>
+            </div>
+            <div class="data">
               <dt data-i18n-title="markup.dt.testCoverageTip" data-i18n="markup.dt.testCoverage" class="data-name" title="Porcentaje de consultas y scripts con resultado asertado">Cobertura de pruebas</dt>
               <dd class="data-figure" data-data="testCoverage" data-suffix="%">0%</dd>
             </div>
           </dl>
+          <p class="dashboard-note muted" id="dashboard-quality-note" hidden></p>
           <!-- Detail panels: the largest tables, the test coverage and the
                field types. UiDashboard.render fills them from the project. -->
           <div class="dashboard-detail">
@@ -2259,9 +2478,18 @@
               <h3 data-i18n="markup.h3.fieldTypes">Campos por tipo</h3>
               <ul class="dashboard-bars" id="dashboard-field-types"></ul>
             </section>
+            <section class="dashboard-panel" aria-labelledby="dashboard-structure-title">
+              <h3 id="dashboard-structure-title" data-i18n="dashboard.structure">Estructura</h3>
+              <ul class="dashboard-metrics" id="dashboard-structure"></ul>
+            </section>
+            <section class="dashboard-panel" aria-labelledby="dashboard-usage-title">
+              <h3 id="dashboard-usage-title" data-i18n="dashboard.usage">Uso y mantenimiento</h3>
+              <ul class="dashboard-metrics" id="dashboard-usage"></ul>
+            </section>
           </div>
         </section>
-        <pre style="font-family: monospace; font-size: 1.2em; line-height: 1.2em; text-align: center;">
+        <div class="welcome-hero">
+        <pre>
 
 
      888          888    d8b 888                        888 d8b          
@@ -2277,6 +2505,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         </pre>
         <h2 data-i18n="markup.h2.welcome">Bienvenido</h2>
         <p data-i18n-html="markup.p.datilandiaIsSingleFileData"><b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, vistas (consultas y scripts usados como tabla) y relaciones. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página.</p>
+        </div>
 
       </section>
 
@@ -3880,6 +4109,34 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "dashboard.typeBoolean": "Boolean",
         "dashboard.typeNumber": "Number",
         "dashboard.typeString": "Text",
+        "dashboard.kicker": "Project summary",
+        "dashboard.versionLabel": "Version",
+        "dashboard.versionTip": "Program version",
+        "dashboard.folders": "Folders",
+        "dashboard.cells": "Cells",
+        "dashboard.maxDepth": "Max depth",
+        "dashboard.objectsWithoutTest": "Without test",
+        "dashboard.objectsWithoutUse": "Unused",
+        "dashboard.emptyTablesCard": "Empty tables",
+        "dashboard.isolatedTables": "Isolated tables",
+        "dashboard.orphanReferences": "Orphan keys",
+        "dashboard.emptyCells": "Empty cells",
+        "dashboard.emptyFields": "Empty fields",
+        "dashboard.qualityLimited": "Quality figures are omitted above {cells} cells.",
+        "dashboard.fileName": "File",
+        "dashboard.noFile": "No file loaded",
+        "dashboard.fileSize": "Size",
+        "dashboard.fileModified": "Modified",
+        "dashboard.formatVersion": "Format",
+        "dashboard.language": "Language",
+        "dashboard.loadTime": "Load time",
+        "dashboard.structure": "Structure",
+        "dashboard.usage": "Usage and maintenance",
+        "dashboard.averageRows": "Rows per table (avg.)",
+        "dashboard.averageFields": "Fields per table (avg.)",
+        "dashboard.largestTable": "Largest table",
+        "dashboard.widestTable": "Table with most fields",
+        "dashboard.emptyFolders": "Empty folders",
         "dependencies.panelTip": "Explore the dependencies and dependents of the project",
         "dependencies.title": "Dependencies",
         "dependencies.root": "Object:",
@@ -4954,6 +5211,34 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "dashboard.typeBoolean": "Booleano",
         "dashboard.typeNumber": "Número",
         "dashboard.typeString": "Texto",
+        "dashboard.kicker": "Resumen del proyecto",
+        "dashboard.versionLabel": "Versión",
+        "dashboard.versionTip": "Versión del programa",
+        "dashboard.folders": "Carpetas",
+        "dashboard.cells": "Celdas",
+        "dashboard.maxDepth": "Profundidad máx.",
+        "dashboard.objectsWithoutTest": "Sin test",
+        "dashboard.objectsWithoutUse": "Sin uso",
+        "dashboard.emptyTablesCard": "Tablas vacías",
+        "dashboard.isolatedTables": "Tablas aisladas",
+        "dashboard.orphanReferences": "Claves huérfanas",
+        "dashboard.emptyCells": "Celdas vacías",
+        "dashboard.emptyFields": "Campos vacíos",
+        "dashboard.qualityLimited": "Las cifras de calidad se omiten por encima de {cells} celdas.",
+        "dashboard.fileName": "Fichero",
+        "dashboard.noFile": "Sin fichero cargado",
+        "dashboard.fileSize": "Tamaño",
+        "dashboard.fileModified": "Modificado",
+        "dashboard.formatVersion": "Formato",
+        "dashboard.language": "Idioma",
+        "dashboard.loadTime": "Tiempo de carga",
+        "dashboard.structure": "Estructura",
+        "dashboard.usage": "Uso y mantenimiento",
+        "dashboard.averageRows": "Filas por tabla (media)",
+        "dashboard.averageFields": "Campos por tabla (media)",
+        "dashboard.largestTable": "Tabla más grande",
+        "dashboard.widestTable": "Tabla con más campos",
+        "dashboard.emptyFolders": "Carpetas vacías",
         "dependencies.panelTip": "Explorar las dependencias y los dependientes del proyecto",
         "dependencies.title": "Dependencias",
         "dependencies.root": "Objeto:",
@@ -5285,6 +5570,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        tables, fields and rows.
        ===================================================================== */
 
+    /** Version of the program, hardcoded and shown in the dashboard. */
+    const APP_VERSION = "1.0";
+
     /** Factory default settings (each project keeps its own). */
     const DEFAULT_SETTINGS = {
       language: I18n.DEFAULT_LANGUAGE,
@@ -5359,6 +5647,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
     };
 
     window.datilandia.store = Store.project;
+    window.datilandia.version = APP_VERSION;
 
     const Model = {
       /** Is the project in test mode? Yes, when any of its queries checks an
@@ -5381,24 +5670,45 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const queries = project.queries || [];
         const scripts = project.scripts || [];
         const parejas = new Set();
+        const outgoingTables = new Set();
+        const incomingTables = new Set();
         let rows = 0;
         let fields = 0;
+        let cells = 0;
         let references = 0;
         let views = 0;
         let dependencies = 0;
+        let emptyTables = 0;
+        let largestTable = null;
+        let widestTable = null;
         tables.forEach((table) => {
-          rows += table.rows.length;
-          fields += table.fields.length;
+          const tableRows = table.rows.length;
+          const tableFields = table.fields.length;
+          rows += tableRows;
+          fields += tableFields;
+          cells += tableRows * tableFields;
+          if (tableRows === 0) {
+            emptyTables += 1;
+          }
+          if (!largestTable || tableRows > largestTable.rows) {
+            largestTable = { name: table.name, rows: tableRows };
+          }
+          if (!widestTable || tableFields > widestTable.fields) {
+            widestTable = { name: table.name, fields: tableFields };
+          }
           table.fields.forEach((field) => {
             if (!field.references) {
               return;
             }
             references += 1;
+            outgoingTables.add(table.name);
+            incomingTables.add(field.references.table);
             // A pair has no direction: A→B and B→A are the same.
             parejas.add([table.name, field.references.table].sort().join("\u0000"));
           });
         });
         const graph = ProjectGraph.build(project);
+        let objectsWithoutUse = 0;
         graph.nodes.forEach((node) => {
           if (node.kind !== "query" && node.kind !== "script") {
             return;
@@ -5406,16 +5716,34 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           dependencies += node.sources.length;
           if (node.dependents.length > 0) {
             views += 1;
+          } else {
+            objectsWithoutUse += 1;
           }
         });
         const queriesWithTest = queries.filter((query) => Boolean(query.assert)).length;
         const scriptsWithTest = scripts.filter((script) => Boolean(script.assert)).length;
         const tested = queriesWithTest + scriptsWithTest;
         const testable = queries.length + scripts.length;
+        const tableFolders = Model.foldersOf(project, "tables");
+        const objectFolders = Model.foldersOf(project, "objects");
+        const emptyTableFolders = tableFolders
+          .filter((name) => !tables.some((table) => table.folder === name)).length;
+        const emptyObjectFolders = objectFolders
+          .filter((name) => !queries.some((query) => query.folder === name)
+            && !scripts.some((script) => script.folder === name)).length;
+        const isolatedTables = tables.filter((table) => !outgoingTables.has(table.name)
+          && !incomingTables.has(table.name)
+          && ProjectGraph.dependentsIn(graph, "table", table.name).length === 0).length;
+        const quality = Model.dataQuality(project, cells);
         return {
           tables: tables.length,
           rows,
           fields,
+          cells,
+          folders: tableFolders.length + objectFolders.length,
+          emptyFolders: emptyTableFolders + emptyObjectFolders,
+          emptyTables,
+          isolatedTables,
           references,
           queries: queries.length,
           queriesWithTest,
@@ -5424,8 +5752,114 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           relatedPairs: parejas.size,
           views,
           dependencies,
+          objectsWithoutTest: testable - tested,
+          objectsWithoutUse,
+          maxDependencyDepth: Model.dependencyDepth(graph),
+          averageRows: tables.length ? Math.round((rows / tables.length) * 10) / 10 : 0,
+          averageFields: tables.length ? Math.round((fields / tables.length) * 10) / 10 : 0,
+          largestTable,
+          widestTable,
+          emptyFields: quality.emptyFields,
+          emptyCells: quality.emptyCells,
+          orphanReferences: quality.orphanReferences,
+          qualityLimited: quality.limited,
           testCoverage: testable ? Math.round((tested / testable) * 1000) / 10 : 0,
         };
+      },
+
+      /** Cell limit above which the data-quality figures are not scanned:
+       *  the dashboard must stay quick even with very large tables. */
+      QUALITY_CELL_LIMIT: 250000,
+
+      /** Empty fields and cells plus orphan foreign keys, in one pass over the
+       *  rows. Above the cell limit it answers limited:true, with no figures. */
+      dataQuality(project, cells) {
+        const total = cells === undefined
+          ? (project.tables || []).reduce((sum, table) => sum + table.rows.length * table.fields.length, 0)
+          : cells;
+        if (total > Model.QUALITY_CELL_LIMIT) {
+          return { limited: true, emptyFields: null, emptyCells: null, orphanReferences: null };
+        }
+        const tables = project.tables || [];
+        let emptyFields = 0;
+        let emptyCells = 0;
+        tables.forEach((table) => {
+          table.fields.forEach((field) => {
+            let allEmpty = table.rows.length > 0;
+            table.rows.forEach((row) => {
+              const value = row[field.name];
+              if (value === null || value === undefined || value === "") {
+                emptyCells += 1;
+              } else {
+                allEmpty = false;
+              }
+            });
+            if (allEmpty) {
+              emptyFields += 1;
+            }
+          });
+        });
+        let orphanReferences = 0;
+        tables.forEach((table) => {
+          table.fields.forEach((field) => {
+            if (!field.references) {
+              return;
+            }
+            const target = tables.find((candidate) => candidate.name === field.references.table);
+            const valid = new Set();
+            if (target) {
+              target.rows.forEach((row) => {
+                const value = row[field.references.field];
+                if (value !== null && value !== undefined && value !== "") {
+                  valid.add(value);
+                }
+              });
+            }
+            table.rows.forEach((row) => {
+              const value = row[field.name];
+              if (value !== null && value !== undefined && value !== "" && !valid.has(value)) {
+                orphanReferences += 1;
+              }
+            });
+          });
+        });
+        return { limited: false, emptyFields, emptyCells, orphanReferences };
+      },
+
+      /** Longest chain of objects that read other objects (tables are the
+       *  base). A cycle is cut so a hand-written file cannot hang the count. */
+      dependencyDepth(graph) {
+        const memo = new Map();
+        const visiting = new Set();
+        const depthOf = (key) => {
+          if (memo.has(key)) {
+            return memo.get(key);
+          }
+          if (visiting.has(key)) {
+            return 0;
+          }
+          visiting.add(key);
+          const node = graph.nodes.get(key);
+          let depth = 0;
+          if (node) {
+            node.sources.forEach((source) => {
+              const sourceKey = ProjectGraph.refKey(source);
+              if (graph.nodes.has(sourceKey)) {
+                depth = Math.max(depth, 1 + depthOf(sourceKey));
+              }
+            });
+          }
+          visiting.delete(key);
+          memo.set(key, depth);
+          return depth;
+        };
+        let max = 0;
+        graph.nodes.forEach((node, key) => {
+          if (node.kind === "query" || node.kind === "script") {
+            max = Math.max(max, depthOf(key));
+          }
+        });
+        return max;
       },
 
       /* --- Folders of the lists (tables and queries) --------------------- */
@@ -18034,6 +18468,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         Store.replaceProject({ name: I18n.t("misc.untitled"), tables: [], queries: [], settings: Utils.cloneJson(DEFAULT_SETTINGS) });
         UiProject.fileHandle = null;
+        UiProject.fileMeta = null;
         Settings.apply();
         UiProject.discardSessionState();
         UiProject.showName();
@@ -19684,6 +20119,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  file access): it allows overwriting it without asking. */
       fileHandle: null,
 
+      /** Metadata of the last file loaded (name, size, modification, load time).
+       *  It belongs to the session, not to the project: it is not written. */
+      fileMeta: null,
+
       /** Wires the project buttons (new, open, save). */
       bind() {
         document.getElementById("btn-save").addEventListener("click", () => UiProject.save(false));
@@ -19883,15 +20322,41 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Loads a project from a file, reading it in chunks: it does not matter
        *  how large it is. Falls back to the text path in old browsers. */
       async openStream(file, fileName) {
-        if (typeof file.stream !== "function") {
-          return UiProject.openText(await file.text(), fileName);
+        const started = (window.performance && typeof window.performance.now === "function")
+          ? window.performance.now()
+          : Date.now();
+        UiProject.fileMeta = {
+          name: fileName,
+          size: Number.isFinite(file.size) ? file.size : null,
+          lastModified: Number.isFinite(file.lastModified) ? file.lastModified : null,
+          loadedAt: Date.now(),
+          loadMs: null,
+        };
+        const result = typeof file.stream === "function"
+          ? await Persistence.parseProjectStream(file.stream())
+          : Persistence.parseProject(await file.text());
+        const ok = UiProject.openResult(result, fileName);
+        if (ok) {
+          const finished = (window.performance && typeof window.performance.now === "function")
+            ? window.performance.now()
+            : Date.now();
+          UiProject.fileMeta.loadMs = Math.max(0, Math.round(finished - started));
+          UiDashboard.render();
         }
-        const result = await Persistence.parseProjectStream(file.stream());
-        return UiProject.openResult(result, fileName);
+        return ok;
       },
 
       /** Loads a project from text; it reports the errors when there are any. */
       openText(text, fileName) {
+        if (!UiProject.fileMeta || UiProject.fileMeta.name !== fileName) {
+          UiProject.fileMeta = {
+            name: fileName,
+            size: null,
+            lastModified: null,
+            loadedAt: Date.now(),
+            loadMs: null,
+          };
+        }
         return UiProject.openResult(Persistence.parseProject(text), fileName);
       },
 
@@ -19942,6 +20407,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         Store.replaceProject({ name: I18n.t("misc.untitled"), tables: [], queries: [], settings: Utils.cloneJson(DEFAULT_SETTINGS) });
         UiProject.fileHandle = null;
+        UiProject.fileMeta = null;
         Settings.apply();
         UiProject.discardSessionState();
         UiProject.showName();
@@ -20169,13 +20635,144 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       render() {
         const project = Store.project;
         const figures = Model.projectStats(project);
+        const projectName = document.getElementById("dashboard-project-name");
+        if (projectName) {
+          projectName.textContent = project.name || I18n.t("misc.untitled");
+        }
+        const version = document.getElementById("dashboard-app-version");
+        if (version) {
+          version.textContent = APP_VERSION;
+        }
         document.querySelectorAll("#view-vacio .dashboard [data-data]").forEach((nodo) => {
           const value = figures[nodo.dataset.data];
-          nodo.textContent = `${value}${nodo.dataset.suffix || ""}`;
+          const text = value === null || value === undefined ? "—" : String(value);
+          nodo.textContent = `${text}${nodo.dataset.suffix || ""}`;
         });
+        UiDashboard.renderFile();
         UiDashboard.renderTopTables(project);
         UiDashboard.renderFieldTypes(project);
         UiDashboard.renderTestCoverage(project, figures);
+        UiDashboard.renderStructure(figures);
+        UiDashboard.renderUsage(figures);
+        const qualityNote = document.getElementById("dashboard-quality-note");
+        if (qualityNote) {
+          qualityNote.hidden = !figures.qualityLimited;
+          qualityNote.textContent = figures.qualityLimited
+            ? I18n.t("dashboard.qualityLimited", { cells: Model.QUALITY_CELL_LIMIT })
+            : "";
+        }
+      },
+
+      /** File strip: name, size, modification, format, language and load time. */
+      renderFile() {
+        const list = document.getElementById("dashboard-file");
+        if (!list) {
+          return;
+        }
+        list.textContent = "";
+        const meta = UiProject.fileMeta;
+        const rows = [
+          ["dashboard.fileName", meta && meta.name ? meta.name : I18n.t("dashboard.noFile")],
+          ["dashboard.fileSize", meta && Number.isFinite(meta.size) ? UiDashboard.formatBytes(meta.size) : "—"],
+          ["dashboard.fileModified", meta && Number.isFinite(meta.lastModified) ? UiDashboard.formatDate(meta.lastModified) : "—"],
+          ["dashboard.formatVersion", `JSON v${Persistence.VERSION}`],
+          ["dashboard.language", I18n.LANGUAGES[I18n.current] || I18n.current],
+          ["dashboard.loadTime", meta && Number.isFinite(meta.loadMs) ? `${meta.loadMs} ms` : "—"],
+        ];
+        rows.forEach(([key, value]) => {
+          const item = document.createElement("div");
+          item.className = "file-item";
+          const name = document.createElement("dt");
+          name.textContent = I18n.t(key);
+          const detail = document.createElement("dd");
+          detail.textContent = value;
+          detail.title = value;
+          item.appendChild(name);
+          item.appendChild(detail);
+          list.appendChild(item);
+        });
+      },
+
+      /** Structure panel: averages and the two extremes of the tables. */
+      renderStructure(figures) {
+        const list = document.getElementById("dashboard-structure");
+        if (!list) {
+          return;
+        }
+        list.textContent = "";
+        const largest = figures.largestTable
+          ? `${figures.largestTable.name} · ${figures.largestTable.rows}`
+          : "—";
+        const widest = figures.widestTable
+          ? `${figures.widestTable.name} · ${figures.widestTable.fields}`
+          : "—";
+        [
+          ["dashboard.averageRows", String(figures.averageRows)],
+          ["dashboard.averageFields", String(figures.averageFields)],
+          ["dashboard.largestTable", largest],
+          ["dashboard.widestTable", widest],
+          ["dashboard.folders", String(figures.folders)],
+          ["dashboard.maxDepth", String(figures.maxDependencyDepth)],
+        ].forEach(([key, value]) => UiDashboard.metric(list, key, value));
+      },
+
+      /** Maintenance panel: what is empty, isolated or has no test or reader. */
+      renderUsage(figures) {
+        const list = document.getElementById("dashboard-usage");
+        if (!list) {
+          return;
+        }
+        list.textContent = "";
+        [
+          ["dashboard.objectsWithoutTest", String(figures.objectsWithoutTest)],
+          ["dashboard.objectsWithoutUse", String(figures.objectsWithoutUse)],
+          ["dashboard.emptyFolders", String(figures.emptyFolders)],
+          ["dashboard.emptyTablesCard", String(figures.emptyTables)],
+          ["dashboard.isolatedTables", String(figures.isolatedTables)],
+        ].forEach(([key, value]) => UiDashboard.metric(list, key, value));
+      },
+
+      /** One label/value row of the structure and maintenance panels. */
+      metric(list, key, value) {
+        const item = document.createElement("li");
+        const name = document.createElement("span");
+        name.className = "metric-name";
+        name.textContent = I18n.t(key);
+        const detail = document.createElement("span");
+        detail.className = "metric-value";
+        detail.textContent = value;
+        detail.title = value;
+        item.appendChild(name);
+        item.appendChild(detail);
+        list.appendChild(item);
+      },
+
+      /** Human size of the loaded file. */
+      formatBytes(bytes) {
+        if (!Number.isFinite(bytes)) {
+          return "—";
+        }
+        const units = ["B", "KB", "MB", "GB", "TB"];
+        let value = bytes;
+        let index = 0;
+        while (value >= 1024 && index < units.length - 1) {
+          value /= 1024;
+          index += 1;
+        }
+        const digits = index === 0 || value >= 10 ? 0 : 1;
+        return `${value.toFixed(digits)} ${units[index]}`;
+      },
+
+      /** Date and time of the file modification, in the interface locale. */
+      formatDate(milliseconds) {
+        try {
+          return new Intl.DateTimeFormat(I18n.current, {
+            dateStyle: "medium",
+            timeStyle: "short",
+          }).format(new Date(milliseconds));
+        } catch (error) {
+          return new Date(milliseconds).toLocaleString();
+        }
       },
 
       /** Largest tables, with a bar relative to the one that has more rows. */
@@ -24399,6 +24996,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           tables: 0,
           rows: 0,
           fields: 0,
+          cells: 0,
+          folders: 0,
+          emptyFolders: 0,
+          emptyTables: 0,
+          isolatedTables: 0,
           references: 0,
           queries: 0,
           queriesWithTest: 0,
@@ -24407,6 +25009,17 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           relatedPairs: 0,
           views: 0,
           dependencies: 0,
+          objectsWithoutTest: 0,
+          objectsWithoutUse: 0,
+          maxDependencyDepth: 0,
+          averageRows: 0,
+          averageFields: 0,
+          largestTable: null,
+          widestTable: null,
+          emptyFields: 0,
+          emptyCells: 0,
+          orphanReferences: 0,
+          qualityLimited: false,
           testCoverage: 0,
         },
         "an empty project has no figure",
