@@ -19,14 +19,6 @@
     "Care",
     "Billing"
   ],
-  "scriptFolders": [
-    "Filters and lists",
-    "Aggregates",
-    "Dates",
-    "Joins and integrity",
-    "Queries and reports",
-    "JavaScript power"
-  ],
   "tables": [
     {
       "name": "hospitals",
@@ -22819,7 +22811,7 @@
         "map"
       ],
       "code": "const datos = tables[\"patients\"];\nreturn datos\n  .filter((fila) => fila.is_chronic)\n  .map((fila) => ({\n    \"full_name\": `${fila.name} ${fila.last_name}`,\n    \"city\": fila.city,\n    \"blood_group\": fila.blood_group,\n    \"phone\": fila.phone,\n  }));",
-      "folder": "Filters and lists",
+      "folder": "A · Basics and aggregation",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -22933,7 +22925,7 @@
         "sort"
       ],
       "code": "const datos = tables[\"patients\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"birth_date\": fila.birth_date,\n      \"age\": age,\n    };\n  })\n  .sort((a, b) => b[\"age\"] - a[\"age\"]);",
-      "folder": "Dates",
+      "folder": "A · Basics and aggregation",
       "color": "#fde8cd",
       "assert": {
         "columns": [
@@ -23158,7 +23150,7 @@
         "math"
       ],
       "code": "const datos = tables[\"patients\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.city || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"city\": city,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
-      "folder": "Aggregates",
+      "folder": "A · Basics and aggregation",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23234,7 +23226,7 @@
         "math"
       ],
       "code": "const datos = tables[\"patients\"];\nconst insurers = new Map(tables[\"insurers\"].map((i) => [i.id_insurer, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_insurer;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.name : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.coverage_percent : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"insurer\": name,\n    \"patients\": g.count,\n    \"coverage\": g.coverage,\n    \"percentage\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23300,7 +23292,7 @@
         "map"
       ],
       "code": "const datos = tables[\"patients\"];\nreturn datos\n  .filter((fila) => !fila.phone || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.phone) missing.push(\"phone\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"full_name\": `${fila.name} ${fila.last_name}`,\n      \"phone\": fila.phone,\n      \"email\": fila.email,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
-      "folder": "Filters and lists",
+      "folder": "A · Basics and aggregation",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -23422,7 +23414,7 @@
         "math"
       ],
       "code": "const datos = tables[\"patients\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.blood_group;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"blood_group\": group,\n    \"patients\": count,\n    \"percentage\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"patients\"] - a[\"patients\"]);",
-      "folder": "Aggregates",
+      "folder": "A · Basics and aggregation",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23484,7 +23476,7 @@
         "math"
       ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tables[\"rooms\"].map((r) => [r.id_room, r]));\nconst hospitals = new Map(tables[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_room);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"cost\": Math.round(g.cost),\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23561,7 +23553,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nreturn datos\n  .filter((fila) => fila.discharge_date)\n  .map((fila) => {\n    const days = daysBetween(fila.admission_date, fila.discharge_date);\n    return {\n      \"patient\": patients.get(fila.id_patient) || `#${fila.id_patient}`,\n      \"reason\": fila.reason,\n      \"days\": days,\n      \"cost\": Math.round(days * (fila.cost_per_day || 0)),\n    };\n  })\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"])\n  .slice(0, 20);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23707,7 +23699,7 @@
         "math"
       ],
       "code": "const datos = tables[\"admissions\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.reason || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.cost_per_day || 0;\n  if (fila.is_emergency) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"reason\": reason,\n    \"admissions\": g.count,\n    \"emergency\": g.emergency,\n    \"average_cost\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"]);",
-      "folder": "Aggregates",
+      "folder": "A · Basics and aggregation",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23787,7 +23779,7 @@
         "math"
       ],
       "code": "const datos = tables[\"invoices\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.payment_method || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.amount || 0;\n  acc[key].discount += fila.discount || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"payment_method\": method,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n    \"average\": Math.round(g.amount / g.count),\n    \"discount\": Math.round((g.discount / g.count) * 10) / 10,\n    \"percentage\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
-      "folder": "Aggregates",
+      "folder": "A · Basics and aggregation",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23848,7 +23840,7 @@
         "sort"
       ],
       "code": "const datos = tables[\"invoices\"];\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos\n  .filter((fila) => fila.paid === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_patient;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.amount || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"invoices\": g.count,\n    \"amount\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"amount\"] - a[\"amount\"]);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23948,7 +23940,7 @@
         "foreach"
       ],
       "code": "const datos = tables[\"appointments\"];\nconst types = Array.from(new Set(datos.map((fila) => fila.type))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.status;\n  const type = fila.type;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"status\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"status\"]).localeCompare(String(b[\"status\"])));",
-      "folder": "Aggregates",
+      "folder": "A · Basics and aggregation",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -24004,7 +23996,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"appointments\"];\nconst doctors = new Map(tables[\"doctors\"].map((d) => [d.id_doctor, `${d.name} ${d.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_doctor;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duration_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"doctor\": doctors.get(Number(id)) || `#${id}`,\n    \"appointments\": g.count,\n    \"average_duration\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"average_duration\"] - a[\"average_duration\"])\n  .slice(0, 10);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24080,7 +24072,7 @@
         "math"
       ],
       "code": "const datos = tables[\"doctors\"];\nconst specialties = new Map(tables[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_specialty;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.years_experience || 0;\n  if (fila.is_researcher) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"specialty\": specialties.get(Number(id)) || `#${id}`,\n    \"doctors\": g.count,\n    \"average_experience\": Math.round((g.experience / g.count) * 10) / 10,\n    \"researchers\": g.researchers,\n  }))\n  .sort((a, b) => b[\"doctors\"] - a[\"doctors\"]);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24173,7 +24165,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"patients\"].map((p) => [p.id_patient, `${p.name} ${p.last_name}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_patient;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"patient\": patients.get(Number(id)) || `#${id}`,\n    \"admissions\": g.count,\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"])\n  .slice(0, 10);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24249,7 +24241,7 @@
         "math"
       ],
       "code": "const datos = tables[\"rooms\"];\nconst hospitals = new Map(tables[\"hospitals\"].map((h) => [h.id_hospital, h.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.occupied) acc[id].occupied += 1;\n  acc[id].beds += fila.num_beds || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"rooms\": g.rooms,\n    \"occupied\": g.occupied,\n    \"beds\": g.beds,\n    \"occupancy\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"occupancy\"] - a[\"occupancy\"]);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24318,7 +24310,7 @@
         "math"
       ],
       "code": "const datos = tables[\"labs\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.type || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.is_abnormal) g.abnormal += 1;\n  if (fila.glucose !== null && fila.glucose !== undefined) { g.glucose += fila.glucose; g.glucoseCount += 1; }\n  if (fila.cholesterol !== null && fila.cholesterol !== undefined) { g.cholesterol += fila.cholesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"type\": type,\n    \"count\": g.count,\n    \"abnormal\": g.abnormal,\n    \"percentage\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"average_glucose\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"average_cholesterol\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"count\"] - a[\"count\"]);",
-      "folder": "Aggregates",
+      "folder": "A · Basics and aggregation",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -24362,7 +24354,7 @@
         "math"
       ],
       "code": "const datos = tables[\"drugs\"];\nreturn datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"drug\": fila.name,\n    \"stock\": fila.stock,\n    \"reorder\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
-      "folder": "Filters and lists",
+      "folder": "A · Basics and aggregation",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -24388,7 +24380,7 @@
         "map"
       ],
       "code": "const rows = queries[\"A19 · Patients with three or more admissions\"]();\nreturn rows.map((row) => ({\n  \"patient\": `${row.name} ${row.last_name}`,\n  \"admissions\": row.admissions,\n}));",
-      "folder": "Queries and reports",
+      "folder": "C · Related queries",
       "color": "#fbf6c9",
       "assert": {
         "columns": [
@@ -24432,7 +24424,7 @@
         "math"
       ],
       "code": "const datos = tables[\"invoices\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.paid ? \"paid\" : \"unpaid\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.amount || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"payment_status\": status,\n  \"invoices\": g.count,\n  \"amount\": Math.round(g.amount),\n  \"average\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"payment_status\": \"TOTAL\",\n  \"invoices\": datos.length,\n  \"amount\": Math.round(datos.reduce((sum, fila) => sum + (fila.amount || 0), 0)),\n  \"average\": null,\n});\nresultado = rows;",
-      "folder": "Queries and reports",
+      "folder": "C · Related queries",
       "color": "#fbf6c9",
       "assert": {
         "columns": [
@@ -24476,7 +24468,7 @@
         "map"
       ],
       "code": "const datos = tables[\"admissions\"];\nconst patientIds = new Set(tables[\"patients\"].map((p) => p.id_patient));\nconst doctorIds = new Set(tables[\"doctors\"].map((d) => d.id_doctor));\nconst roomIds = new Set(tables[\"rooms\"].map((r) => r.id_room));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_patient) || !doctorIds.has(fila.id_doctor) || !roomIds.has(fila.id_room))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_patient)) missing.push(\"patient\");\n    if (!doctorIds.has(fila.id_doctor)) missing.push(\"doctor\");\n    if (!roomIds.has(fila.id_room)) missing.push(\"room\");\n    return {\n      \"admission\": fila.id_admission,\n      \"patient\": fila.id_patient,\n      \"doctor\": fila.id_doctor,\n      \"room\": fila.id_room,\n      \"missing\": missing.join(\", \"),\n    };\n  });",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24545,7 +24537,7 @@
         "math"
       ],
       "code": "const datos = tables[\"patients\"];\nconst reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.birth_date);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"age_group\": group,\n    \"patients\": g.count,\n    \"average_age\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"age_group\"]).localeCompare(String(b[\"age_group\"])));",
-      "folder": "Dates",
+      "folder": "A · Basics and aggregation",
       "color": "#fde8cd",
       "assert": {
         "columns": [
@@ -24590,7 +24582,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"appointments\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = String(fila.date).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.status === \"cancelled\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"month\": month,\n    \"appointments\": g.count,\n    \"cancelled\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"month\"]).localeCompare(String(b[\"month\"])));",
-      "folder": "Dates",
+      "folder": "A · Basics and aggregation",
       "color": "#fde8cd",
       "assert": {
         "columns": [
@@ -24772,7 +24764,7 @@
         "math"
       ],
       "code": "const datos = tables[\"admissions\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tables[\"doctors\"].map((d) => [d.id_doctor, d]));\nconst specialties = new Map(tables[\"specialties\"].map((s) => [s.id_specialty, s.name]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_doctor);\n  const specialty = doctor ? specialties.get(doctor.id_specialty) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.admission_date, fila.discharge_date);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.cost_per_day || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"specialty\": specialty,\n    \"admissions\": g.count,\n    \"average_cost\": Math.round(g.cost / g.count),\n    \"cost\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"cost\"] - a[\"cost\"]);",
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24858,7 +24850,7 @@
         "slice",
         "intl"
       ],
-      "folder": "JavaScript power",
+      "folder": "C · Related queries",
       "color": "#dde5fa",
       "code": "const patients = tables[\"patients\"];\nconst insurers = new Map(tables[\"insurers\"].map((i) => [i.id_insurer, i]));\nconst reference = new Date(\"2025-09-01\");\nconst collator = new Intl.Collator(\"en\", { sensitivity: \"base\" });\nreturn patients\n  .map((fila) => {\n    const birth = new Date(fila.birth_date);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const month = reference.getMonth() - birth.getMonth();\n    if (month < 0 || (month === 0 && reference.getDate() < birth.getDate())) age -= 1;\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    const insurer = insurers.get(fila.id_insurer);\n    return {\n      \"patient\": `${fila.last_name}, ${fila.name}`,\n      \"initials\": `${fila.name.charAt(0)}${fila.last_name.charAt(0)}`.toUpperCase(),\n      \"age\": age,\n      \"city\": fila.city,\n      \"insurer\": insurer ? insurer.name : \"—\",\n      \"coverage\": insurer ? insurer.coverage_percent : null,\n      \"email_domain\": at > 0 ? email.slice(at + 1) : null,\n      \"chronic\": fila.is_chronic ? \"yes\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"patient\"], b[\"patient\"]));",
       "assert": {
@@ -25290,7 +25282,7 @@
         "sort",
         "foreach"
       ],
-      "folder": "Dates",
+      "folder": "A · Basics and aggregation",
       "color": "#e8ddf7",
       "code": "const counts = new Map();\nconst add = (id) => counts.set(id, (counts.get(id) || 0) + 1);\ntables[\"admissions\"].forEach((row) => add(row.id_patient));\ntables[\"appointments\"].forEach((row) => add(row.id_patient));\ntables[\"labs\"].forEach((row) => add(row.id_patient));\ntables[\"surgeries\"].forEach((row) => add(row.id_patient));\nconst busiest = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];\nconst patientId = busiest[0];\nconst patient = tables[\"patients\"].find((row) => row.id_patient === patientId);\nconst events = [];\ntables[\"admissions\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.admission_date,\n    \"source\": \"admission\",\n    \"detail\": row.reason,\n    \"status\": row.discharge_date ? \"discharged\" : \"active\",\n  });\n});\ntables[\"appointments\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"appointment\",\n    \"detail\": `${row.type} · ${row.duration_min} min`,\n    \"status\": row.status,\n  });\n});\ntables[\"labs\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"lab\",\n    \"detail\": `${row.type}: glucose ${row.glucose}`,\n    \"status\": row.is_abnormal ? \"abnormal\" : \"normal\",\n  });\n});\ntables[\"surgeries\"].filter((row) => row.id_patient === patientId).forEach((row) => {\n  events.push({\n    \"date\": row.date,\n    \"source\": \"surgery\",\n    \"detail\": row.name,\n    \"status\": row.successful ? \"successful\" : \"unsuccessful\",\n  });\n});\nreturn events\n  .sort((a, b) => String(a.date).localeCompare(String(b.date)) || a.source.localeCompare(b.source))\n  .map((event, index) => ({\n    \"order\": index + 1,\n    \"patient\": `${patient.last_name}, ${patient.name}`,\n    \"date\": event.date,\n    \"source\": event.source,\n    \"detail\": event.detail,\n    \"status\": event.status,\n  }));",
       "assert": {
@@ -25408,7 +25400,7 @@
         "foreach",
         "math"
       ],
-      "folder": "JavaScript power",
+      "folder": "C · Related queries",
       "color": "#fce4e4",
       "code": "const hospitals = tables[\"hospitals\"];\nconst services = new Map();\ntables[\"services\"].forEach((row) => {\n  const list = services.get(row.id_hospital) || [];\n  list.push(row.name);\n  services.set(row.id_hospital, list);\n});\nconst rooms = new Map(tables[\"rooms\"].map((row) => [row.id_room, row]));\nconst totals = new Map(hospitals.map((h) => [h.name, { rooms: 0, beds: 0, occupied: 0, cost: 0 }]));\ntables[\"rooms\"].forEach((room) => {\n  const hospital = hospitals.find((h) => h.id_hospital === room.id_hospital);\n  if (!hospital) return;\n  const total = totals.get(hospital.name);\n  total.rooms += 1;\n  total.beds += room.num_beds || 0;\n  if (room.occupied) total.occupied += 1;\n});\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\ntables[\"admissions\"].forEach((row) => {\n  const room = rooms.get(row.id_room);\n  const hospital = room ? hospitals.find((h) => h.id_hospital === room.id_hospital) : null;\n  if (!hospital) return;\n  totals.get(hospital.name).cost += daysBetween(row.admission_date, row.discharge_date) * (row.cost_per_day || 0);\n});\nconst admissions = new Map(queries[\"C22 · Hospitals with more admissions\"]().map((row) => [row.hospital, row.admissions]));\nreturn hospitals\n  .map((hospital) => {\n    const total = totals.get(hospital.name);\n    const count = admissions.get(hospital.name) || 0;\n    return {\n      \"hospital\": hospital.name,\n      \"level\": hospital.level,\n      \"university\": hospital.is_university ? \"yes\" : \"no\",\n      \"services\": (services.get(hospital.id_hospital) || []).length,\n      \"rooms\": total.rooms,\n      \"beds\": total.beds,\n      \"occupied_rooms\": total.occupied,\n      \"occupancy_percent\": total.rooms ? Math.round((total.occupied / total.rooms) * 1000) / 10 : 0,\n      \"admissions\": count,\n      \"revenue\": Math.round(total.cost),\n      \"cost_per_admission\": count ? Math.round(total.cost / count) : null,\n    };\n  })\n  .sort((a, b) => b[\"admissions\"] - a[\"admissions\"] || a[\"hospital\"].localeCompare(b[\"hospital\"]));",
       "assert": {
@@ -25533,7 +25525,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Aggregates",
+      "folder": "A · Basics and aggregation",
       "color": "#fce4e4",
       "code": "const drugs = new Map(tables[\"drugs\"].map((row) => [row.id_drug, row]));\nconst groups = new Map();\ntables[\"prescriptions\"].forEach((row) => {\n  const drug = drugs.get(row.id_drug);\n  if (!drug) return;\n  const group = groups.get(row.id_drug) || { drug, prescriptions: 0, units: 0 };\n  group.prescriptions += 1;\n  group.units += (row.amount || 0) * (row.duration_days || 0);\n  groups.set(row.id_drug, group);\n});\nreturn [...groups.values()]\n  .map((group) => {\n    const cost = group.units * (group.drug.price || 0);\n    return {\n      \"drug\": group.drug.name,\n      \"route\": group.drug.route,\n      \"prescriptions\": group.prescriptions,\n      \"units\": group.units,\n      \"forecast_cost\": Math.round(cost),\n      \"stock\": group.drug.stock,\n      \"stock_alert\": (group.drug.stock || 0) < 50 ? \"low\" : \"ok\",\n      \"cost_per_unit\": group.drug.price,\n    };\n  })\n  .sort((a, b) => b[\"forecast_cost\"] - a[\"forecast_cost\"] || a[\"drug\"].localeCompare(b[\"drug\"]));",
       "assert": {
@@ -25793,7 +25785,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Dates",
+      "folder": "A · Basics and aggregation",
       "color": "#e8ddf7",
       "code": "const groups = new Map();\ntables[\"invoices\"].forEach((row) => {\n  const date = new Date(row.date);\n  const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, \"0\")}`;\n  const group = groups.get(month) || { month, invoices: 0, total: 0, paid: 0, unpaid: 0 };\n  group.invoices += 1;\n  group.total += row.amount || 0;\n  if (row.paid) group.paid += row.amount || 0;\n  else group.unpaid += row.amount || 0;\n  groups.set(month, group);\n});\nlet cumulative = 0;\nreturn [...groups.values()]\n  .sort((a, b) => a.month.localeCompare(b.month))\n  .map((group) => {\n    cumulative += group.total;\n    return {\n      \"month\": group.month,\n      \"invoices\": group.invoices,\n      \"amount\": Math.round(group.total),\n      \"paid\": Math.round(group.paid),\n      \"unpaid\": Math.round(group.unpaid),\n      \"collection_percent\": group.total ? Math.round((group.paid / group.total) * 1000) / 10 : 0,\n      \"cumulative\": Math.round(cumulative),\n    };\n  });",
       "assert": {
@@ -26093,7 +26085,7 @@
         "slice",
         "foreach"
       ],
-      "folder": "Queries and reports",
+      "folder": "C · Related queries",
       "color": "#fde8cd",
       "code": "const doctors = new Map(tables[\"doctors\"].map((row) => [row.id_doctor, row]));\nconst surgeries = new Map(queries[\"C16 · Doctors with more surgeries\"]().map((row) => [row.doctor, row]));\nconst appointments = new Map();\ntables[\"appointments\"].forEach((row) => {\n  const group = appointments.get(row.id_doctor) || { count: 0, duration: 0 };\n  group.count += 1;\n  group.duration += row.duration_min || 0;\n  appointments.set(row.id_doctor, group);\n});\nconst rows = [...doctors.values()].map((doctor) => {\n  const agenda = appointments.get(doctor.id_doctor) || { count: 0, duration: 0 };\n  const surgery = surgeries.get(doctor.last_name) || { surgeries: 0, total_cost: 0 };\n  return {\n    \"doctor\": `${doctor.last_name}, ${doctor.name}`,\n    \"specialty_id\": doctor.id_specialty,\n    \"experience\": doctor.years_experience,\n    \"appointments\": agenda.count,\n    \"average_duration\": agenda.count ? Math.round((agenda.duration / agenda.count) * 10) / 10 : 0,\n    \"surgeries\": surgery.surgeries || 0,\n    \"surgery_cost\": Math.round(surgery.total_cost || 0),\n    \"score\": agenda.count * 2 + (surgery.surgeries || 0) * 5 + Math.round((doctor.years_experience || 0) / 2),\n  };\n});\nlet previous = null;\nlet rank = 0;\nreturn rows\n  .sort((a, b) => b[\"score\"] - a[\"score\"] || a[\"doctor\"].localeCompare(b[\"doctor\"]))\n  .slice(0, 20)\n  .map((row, index) => {\n    if (row[\"score\"] !== previous) {\n      rank = index + 1;\n      previous = row[\"score\"];\n    }\n    return { \"rank\": rank, ...row };\n  });",
       "assert": {
@@ -26346,7 +26338,7 @@
         "slice",
         "foreach"
       ],
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#dcf1d4",
       "code": "const diagnoses = new Map(queries[\"C31 · Patients with more than one distinct diagnosis\"]().map((row) => [row.patient, row.diagnoses]));\nconst allergies = new Map();\ntables[\"allergies\"].forEach((row) => {\n  const group = allergies.get(row.id_patient) || { total: 0, severe: 0 };\n  group.total += 1;\n  if (row.severity === \"severe\") group.severe += 1;\n  allergies.set(row.id_patient, group);\n});\nconst abnormal = new Map();\ntables[\"labs\"].forEach((row) => {\n  if (!row.is_abnormal) return;\n  abnormal.set(row.id_patient, (abnormal.get(row.id_patient) || 0) + 1);\n});\nreturn tables[\"patients\"]\n  .map((patient) => {\n    const allergy = allergies.get(patient.id_patient) || { total: 0, severe: 0 };\n    const abnormalLabs = abnormal.get(patient.id_patient) || 0;\n    const distinctDiagnoses = diagnoses.get(patient.last_name) || 0;\n    const points = (patient.is_chronic ? 2 : 0) + allergy.severe * 2 + allergy.total + abnormalLabs + (distinctDiagnoses >= 4 ? 2 : 0);\n    return {\n      \"patient\": `${patient.last_name}, ${patient.name}`,\n      \"age\": Math.floor((new Date(\"2025-09-01\") - new Date(patient.birth_date)) / (365.25 * 86400000)),\n      \"chronic\": patient.is_chronic ? \"yes\" : \"no\",\n      \"allergies\": allergy.total,\n      \"severe_allergies\": allergy.severe,\n      \"abnormal_labs\": abnormalLabs,\n      \"risk_points\": points,\n      \"risk\": points >= 6 ? \"high\" : points >= 3 ? \"medium\" : \"low\",\n    };\n  })\n  .sort((a, b) => b[\"risk_points\"] - a[\"risk_points\"] || a[\"patient\"].localeCompare(b[\"patient\"]))\n  .slice(0, 20);",
       "assert": {
@@ -26578,7 +26570,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Joins and integrity",
+      "folder": "B · Joins",
       "color": "#dcf1d4",
       "code": "const insurers = new Map(tables[\"insurers\"].map((row) => [row.id_insurer, row]));\nconst patients = new Map(tables[\"patients\"].map((row) => [row.id_patient, row]));\nconst counts = new Map(queries[\"B08 · Patients by insurer\"]().map((row) => [row.insurance, row.patients]));\nconst billing = new Map();\ntables[\"invoices\"].forEach((row) => {\n  const patient = patients.get(row.id_patient);\n  if (!patient) return;\n  const key = patient.id_insurer;\n  const group = billing.get(key) || { total: 0, invoices: 0, paid: 0 };\n  group.total += row.amount || 0;\n  group.invoices += 1;\n  if (row.paid) group.paid += row.amount || 0;\n  billing.set(key, group);\n});\nreturn [...insurers.values()]\n  .map((insurer) => {\n    const bill = billing.get(insurer.id_insurer) || { total: 0, invoices: 0, paid: 0 };\n    const covered = bill.total * ((insurer.coverage_percent || 0) / 100);\n    return {\n      \"insurer\": insurer.name,\n      \"type\": insurer.type,\n      \"coverage_percent\": insurer.coverage_percent,\n      \"patients\": counts.get(insurer.name) || 0,\n      \"invoices\": bill.invoices,\n      \"billed\": Math.round(bill.total),\n      \"covered\": Math.round(covered),\n      \"patient_share\": Math.round(bill.total - covered),\n      \"paid\": Math.round(bill.paid),\n      \"unpaid\": Math.round(bill.total - bill.paid),\n    };\n  })\n  .sort((a, b) => b[\"billed\"] - a[\"billed\"] || a[\"insurer\"].localeCompare(b[\"insurer\"]));",
       "assert": {

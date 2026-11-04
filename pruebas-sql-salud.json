@@ -19,14 +19,6 @@
     "Asistencial",
     "Facturación"
   ],
-  "scriptFolders": [
-    "Filtros y listas",
-    "Agregados",
-    "Fechas",
-    "Cruces e integridad",
-    "Consultas e informes",
-    "Potencia de JavaScript"
-  ],
   "tables": [
     {
       "name": "hospitales",
@@ -22819,7 +22811,7 @@
         "map"
       ],
       "code": "const datos = tables[\"pacientes\"];\nreturn datos\n  .filter((fila) => fila.es_cronico)\n  .map((fila) => ({\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"ciudad\": fila.ciudad,\n    \"grupo_sanguineo\": fila.grupo_sanguineo,\n    \"telefono\": fila.telefono,\n  }));",
-      "folder": "Filtros y listas",
+      "folder": "A · Básicas y agregados",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -22933,7 +22925,7 @@
         "orden"
       ],
       "code": "const datos = tables[\"pacientes\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.fecha_nacimiento);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"fecha_nacimiento\": fila.fecha_nacimiento,\n      \"edad\": age,\n    };\n  })\n  .sort((a, b) => b[\"edad\"] - a[\"edad\"]);",
-      "folder": "Fechas",
+      "folder": "A · Básicas y agregados",
       "color": "#fde8cd",
       "assert": {
         "columns": [
@@ -23158,7 +23150,7 @@
         "math"
       ],
       "code": "const datos = tables[\"pacientes\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.ciudad || \"—\";\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([city, count]) => ({\n    \"ciudad\": city,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23234,7 +23226,7 @@
         "math"
       ],
       "code": "const datos = tables[\"pacientes\"];\nconst insurers = new Map(tables[\"seguros\"].map((i) => [i.id_seguro, i]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_seguro;\n  const insurer = insurers.get(id);\n  const name = insurer ? insurer.nombre : \"—\";\n  acc[name] = acc[name] || { count: 0, coverage: insurer ? insurer.cobertura_porcentaje : null };\n  acc[name].count += 1;\n  return acc;\n}, {});\nconst total = datos.length;\nreturn Object.entries(groups)\n  .map(([name, g]) => ({\n    \"seguro\": name,\n    \"pacientes\": g.count,\n    \"cobertura\": g.coverage,\n    \"porcentaje\": total ? Math.round((g.count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23300,7 +23292,7 @@
         "map"
       ],
       "code": "const datos = tables[\"pacientes\"];\nreturn datos\n  .filter((fila) => !fila.telefono || !fila.email)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.telefono) missing.push(\"telefono\");\n    if (!fila.email) missing.push(\"email\");\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"telefono\": fila.telefono,\n      \"email\": fila.email,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
-      "folder": "Filtros y listas",
+      "folder": "A · Básicas y agregados",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -23422,7 +23414,7 @@
         "math"
       ],
       "code": "const datos = tables[\"pacientes\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.grupo_sanguineo;\n  if (!key) return acc;\n  acc[key] = (acc[key] || 0) + 1;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b, 0);\nreturn Object.entries(groups)\n  .map(([group, count]) => ({\n    \"grupo_sanguineo\": group,\n    \"pacientes\": count,\n    \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"pacientes\"] - a[\"pacientes\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23484,7 +23476,7 @@
         "math"
       ],
       "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst rooms = new Map(tables[\"habitaciones\"].map((r) => [r.id_habitacion, r]));\nconst hospitals = new Map(tables[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const room = rooms.get(fila.id_habitacion);\n  const hospital = room ? hospitals.get(room.id_hospital) : null;\n  const key = hospital || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([hospital, g]) => ({\n    \"hospital\": hospital,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste\": Math.round(g.cost),\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23561,7 +23553,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nreturn datos\n  .filter((fila) => fila.fecha_alta)\n  .map((fila) => {\n    const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n    return {\n      \"paciente\": patients.get(fila.id_paciente) || `#${fila.id_paciente}`,\n      \"motivo\": fila.motivo,\n      \"dias\": days,\n      \"coste\": Math.round(days * (fila.coste_dia || 0)),\n    };\n  })\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"])\n  .slice(0, 20);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23707,7 +23699,7 @@
         "math"
       ],
       "code": "const datos = tables[\"ingresos\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.motivo || \"—\";\n  acc[key] = acc[key] || { count: 0, cost: 0, emergency: 0 };\n  acc[key].count += 1;\n  acc[key].cost += fila.coste_dia || 0;\n  if (fila.es_urgente) acc[key].emergency += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([reason, g]) => ({\n    \"motivo\": reason,\n    \"ingresos\": g.count,\n    \"urgentes\": g.emergency,\n    \"coste_medio\": Math.round(g.cost / g.count),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23787,7 +23779,7 @@
         "math"
       ],
       "code": "const datos = tables[\"facturas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.metodo_pago || \"—\";\n  acc[key] = acc[key] || { count: 0, amount: 0, discount: 0 };\n  acc[key].count += 1;\n  acc[key].amount += fila.importe || 0;\n  acc[key].discount += fila.descuento || 0;\n  return acc;\n}, {});\nconst total = Object.values(groups).reduce((a, b) => a + b.amount, 0);\nreturn Object.entries(groups)\n  .map(([method, g]) => ({\n    \"metodo_pago\": method,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n    \"media\": Math.round(g.amount / g.count),\n    \"descuento\": Math.round((g.discount / g.count) * 10) / 10,\n    \"porcentaje\": total ? Math.round((g.amount / total) * 1000) / 10 : 0,\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -23848,7 +23840,7 @@
         "orden"
       ],
       "code": "const datos = tables[\"facturas\"];\nconst patients = new Map(tables[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos\n  .filter((fila) => fila.pagada === false)\n  .reduce((acc, fila) => {\n    const key = fila.id_paciente;\n    acc[key] = acc[key] || { count: 0, amount: 0 };\n    acc[key].count += 1;\n    acc[key].amount += fila.importe || 0;\n    return acc;\n  }, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"facturas\": g.count,\n    \"importe\": Math.round(g.amount),\n  }))\n  .sort((a, b) => b[\"importe\"] - a[\"importe\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -23948,7 +23940,7 @@
         "foreach"
       ],
       "code": "const datos = tables[\"citas\"];\nconst types = Array.from(new Set(datos.map((fila) => fila.tipo))).sort();\nconst groups = datos.reduce((acc, fila) => {\n  const status = fila.estado;\n  const type = fila.tipo;\n  acc[status] = acc[status] || { status };\n  acc[status][type] = (acc[status][type] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((row) => {\n    const out = { \"estado\": row.status };\n    types.forEach((type) => { out[type] = row[type] || 0; });\n    return out;\n  })\n  .sort((a, b) => String(a[\"estado\"]).localeCompare(String(b[\"estado\"])));",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -24004,7 +23996,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"citas\"];\nconst doctors = new Map(tables[\"medicos\"].map((d) => [d.id_medico, `${d.nombre} ${d.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_medico;\n  acc[id] = acc[id] || { count: 0, total: 0 };\n  acc[id].count += 1;\n  acc[id].total += fila.duracion_min || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"medico\": doctors.get(Number(id)) || `#${id}`,\n    \"citas\": g.count,\n    \"duracion_media\": Math.round((g.total / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"duracion_media\"] - a[\"duracion_media\"])\n  .slice(0, 10);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24080,7 +24072,7 @@
         "math"
       ],
       "code": "const datos = tables[\"medicos\"];\nconst specialties = new Map(tables[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_especialidad;\n  acc[key] = acc[key] || { count: 0, experience: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].experience += fila.anios_experiencia || 0;\n  if (fila.es_investigador) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"especialidad\": specialties.get(Number(id)) || `#${id}`,\n    \"medicos\": g.count,\n    \"experiencia_media\": Math.round((g.experience / g.count) * 10) / 10,\n    \"investigadores\": g.researchers,\n  }))\n  .sort((a, b) => b[\"medicos\"] - a[\"medicos\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24173,7 +24165,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst patients = new Map(tables[\"pacientes\"].map((p) => [p.id_paciente, `${p.nombre} ${p.apellidos}`]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_paciente;\n  acc[id] = acc[id] || { count: 0, cost: 0 };\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[id].count += 1;\n  acc[id].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"paciente\": patients.get(Number(id)) || `#${id}`,\n    \"ingresos\": g.count,\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"])\n  .slice(0, 10);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24249,7 +24241,7 @@
         "math"
       ],
       "code": "const datos = tables[\"habitaciones\"];\nconst hospitals = new Map(tables[\"hospitales\"].map((h) => [h.id_hospital, h.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_hospital;\n  acc[id] = acc[id] || { rooms: 0, occupied: 0, beds: 0 };\n  acc[id].rooms += 1;\n  if (fila.ocupada) acc[id].occupied += 1;\n  acc[id].beds += fila.num_camas || 0;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"hospital\": hospitals.get(Number(id)) || `#${id}`,\n    \"habitaciones\": g.rooms,\n    \"ocupadas\": g.occupied,\n    \"camas\": g.beds,\n    \"ocupacion\": Math.round((g.occupied / g.rooms) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"ocupacion\"] - a[\"ocupacion\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24318,7 +24310,7 @@
         "math"
       ],
       "code": "const datos = tables[\"analiticas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.tipo || \"—\";\n  acc[key] = acc[key] || { count: 0, abnormal: 0, glucose: 0, glucoseCount: 0, cholesterol: 0, cholesterolCount: 0 };\n  const g = acc[key];\n  g.count += 1;\n  if (fila.es_anormal) g.abnormal += 1;\n  if (fila.glucosa !== null && fila.glucosa !== undefined) { g.glucose += fila.glucosa; g.glucoseCount += 1; }\n  if (fila.colesterol !== null && fila.colesterol !== undefined) { g.cholesterol += fila.colesterol; g.cholesterolCount += 1; }\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([type, g]) => ({\n    \"tipo\": type,\n    \"total\": g.count,\n    \"anormales\": g.abnormal,\n    \"porcentaje\": Math.round((g.abnormal / g.count) * 1000) / 10,\n    \"glucosa_media\": g.glucoseCount ? Math.round((g.glucose / g.glucoseCount) * 10) / 10 : null,\n    \"colesterol_medio\": g.cholesterolCount ? Math.round((g.cholesterol / g.cholesterolCount) * 10) / 10 : null,\n  }))\n  .sort((a, b) => b[\"total\"] - a[\"total\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -24362,7 +24354,7 @@
         "math"
       ],
       "code": "const datos = tables[\"medicamentos\"];\nreturn datos\n  .filter((fila) => (fila.stock || 0) < 50)\n  .map((fila) => ({\n    \"medicamento\": fila.nombre,\n    \"stock\": fila.stock,\n    \"reponer\": Math.max(0, 100 - (fila.stock || 0)),\n  }))\n  .sort((a, b) => a[\"stock\"] - b[\"stock\"]);",
-      "folder": "Filtros y listas",
+      "folder": "A · Básicas y agregados",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -24388,7 +24380,7 @@
         "map"
       ],
       "code": "const rows = queries[\"A19 · Pacientes con tres o más ingresos\"]();\nreturn rows.map((row) => ({\n  \"paciente\": `${row.nombre} ${row.apellidos}`,\n  \"ingresos\": row.ingresos,\n}));",
-      "folder": "Consultas e informes",
+      "folder": "C · Consultas relacionadas",
       "color": "#fbf6c9",
       "assert": {
         "columns": [
@@ -24432,7 +24424,7 @@
         "math"
       ],
       "code": "const datos = tables[\"facturas\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.pagada ? \"pagada\" : \"impagada\";\n  groups[key] = groups[key] || { count: 0, amount: 0 };\n  groups[key].count += 1;\n  groups[key].amount += fila.importe || 0;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"estado_pago\": status,\n  \"facturas\": g.count,\n  \"importe\": Math.round(g.amount),\n  \"media\": Math.round(g.amount / g.count),\n}));\nrows.push({\n  \"estado_pago\": \"TOTAL\",\n  \"facturas\": datos.length,\n  \"importe\": Math.round(datos.reduce((sum, fila) => sum + (fila.importe || 0), 0)),\n  \"media\": null,\n});\nresultado = rows;",
-      "folder": "Consultas e informes",
+      "folder": "C · Consultas relacionadas",
       "color": "#fbf6c9",
       "assert": {
         "columns": [
@@ -24476,7 +24468,7 @@
         "map"
       ],
       "code": "const datos = tables[\"ingresos\"];\nconst patientIds = new Set(tables[\"pacientes\"].map((p) => p.id_paciente));\nconst doctorIds = new Set(tables[\"medicos\"].map((d) => d.id_medico));\nconst roomIds = new Set(tables[\"habitaciones\"].map((r) => r.id_habitacion));\nreturn datos\n  .filter((fila) => !patientIds.has(fila.id_paciente) || !doctorIds.has(fila.id_medico) || !roomIds.has(fila.id_habitacion))\n  .map((fila) => {\n    const missing = [];\n    if (!patientIds.has(fila.id_paciente)) missing.push(\"paciente\");\n    if (!doctorIds.has(fila.id_medico)) missing.push(\"medico\");\n    if (!roomIds.has(fila.id_habitacion)) missing.push(\"habitacion\");\n    return {\n      \"ingreso\": fila.id_ingreso,\n      \"paciente\": fila.id_paciente,\n      \"medico\": fila.id_medico,\n      \"habitacion\": fila.id_habitacion,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24545,7 +24537,7 @@
         "math"
       ],
       "code": "const datos = tables[\"pacientes\"];\nconst reference = new Date(\"2025-09-01\");\nconst groups = datos.reduce((acc, fila) => {\n  const birth = new Date(fila.fecha_nacimiento);\n  let age = reference.getFullYear() - birth.getFullYear();\n  const m = reference.getMonth() - birth.getMonth();\n  if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) age -= 1;\n  const key = age < 18 ? \"<18\" : age < 40 ? \"18-39\" : age < 65 ? \"40-64\" : \"65+\";\n  acc[key] = acc[key] || { count: 0, sum: 0 };\n  acc[key].count += 1;\n  acc[key].sum += age;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([group, g]) => ({\n    \"grupo_edad\": group,\n    \"pacientes\": g.count,\n    \"edad_media\": Math.round((g.sum / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => String(a[\"grupo_edad\"]).localeCompare(String(b[\"grupo_edad\"])));",
-      "folder": "Fechas",
+      "folder": "A · Básicas y agregados",
       "color": "#fde8cd",
       "assert": {
         "columns": [
@@ -24590,7 +24582,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"citas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = String(fila.fecha).slice(0, 7);\n  acc[key] = acc[key] || { count: 0, cancelled: 0 };\n  acc[key].count += 1;\n  if (fila.estado === \"Cancelada\") acc[key].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([month, g]) => ({\n    \"mes\": month,\n    \"citas\": g.count,\n    \"anuladas\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"mes\"]).localeCompare(String(b[\"mes\"])));",
-      "folder": "Fechas",
+      "folder": "A · Básicas y agregados",
       "color": "#fde8cd",
       "assert": {
         "columns": [
@@ -24772,7 +24764,7 @@
         "math"
       ],
       "code": "const datos = tables[\"ingresos\"];\nconst daysBetween = (from, to) => {\n  if (!from || !to) return 0;\n  return Math.max(0, Math.round((new Date(to) - new Date(from)) / 86400000));\n};\nconst doctors = new Map(tables[\"medicos\"].map((d) => [d.id_medico, d]));\nconst specialties = new Map(tables[\"especialidades\"].map((s) => [s.id_especialidad, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const doctor = doctors.get(fila.id_medico);\n  const specialty = doctor ? specialties.get(doctor.id_especialidad) : null;\n  const key = specialty || \"—\";\n  const days = daysBetween(fila.fecha_ingreso, fila.fecha_alta);\n  acc[key] = acc[key] || { count: 0, cost: 0 };\n  acc[key].count += 1;\n  acc[key].cost += days * (fila.coste_dia || 0);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([specialty, g]) => ({\n    \"especialidad\": specialty,\n    \"ingresos\": g.count,\n    \"coste_medio\": Math.round(g.cost / g.count),\n    \"coste\": Math.round(g.cost),\n  }))\n  .sort((a, b) => b[\"coste\"] - a[\"coste\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -24858,7 +24850,7 @@
         "slice",
         "intl"
       ],
-      "folder": "Potencia de JavaScript",
+      "folder": "C · Consultas relacionadas",
       "color": "#dde5fa",
       "code": "const pacientes = tables[\"pacientes\"];\nconst seguros = new Map(tables[\"seguros\"].map((s) => [s.id_seguro, s]));\nconst referencia = new Date(\"2025-09-01\");\nconst collator = new Intl.Collator(\"es\", { sensitivity: \"base\" });\nreturn pacientes\n  .map((fila) => {\n    const nacimiento = new Date(fila.fecha_nacimiento);\n    let edad = referencia.getFullYear() - nacimiento.getFullYear();\n    const mes = referencia.getMonth() - nacimiento.getMonth();\n    if (mes < 0 || (mes === 0 && referencia.getDate() < nacimiento.getDate())) edad -= 1;\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    const seguro = seguros.get(fila.id_seguro);\n    return {\n      \"paciente\": `${fila.apellidos}, ${fila.nombre}`,\n      \"iniciales\": `${fila.nombre.charAt(0)}${fila.apellidos.charAt(0)}`.toUpperCase(),\n      \"edad\": edad,\n      \"ciudad\": fila.ciudad,\n      \"seguro\": seguro ? seguro.nombre : \"—\",\n      \"cobertura\": seguro ? seguro.cobertura_porcentaje : null,\n      \"dominio_correo\": at > 0 ? email.slice(at + 1) : null,\n      \"cronico\": fila.es_cronico ? \"sí\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"paciente\"], b[\"paciente\"]));",
       "assert": {
@@ -25290,7 +25282,7 @@
         "orden",
         "foreach"
       ],
-      "folder": "Fechas",
+      "folder": "A · Básicas y agregados",
       "color": "#e8ddf7",
       "code": "const cuentas = new Map();\nconst sumar = (id) => cuentas.set(id, (cuentas.get(id) || 0) + 1);\ntables[\"ingresos\"].forEach((fila) => sumar(fila.id_paciente));\ntables[\"citas\"].forEach((fila) => sumar(fila.id_paciente));\ntables[\"analiticas\"].forEach((fila) => sumar(fila.id_paciente));\ntables[\"intervenciones\"].forEach((fila) => sumar(fila.id_paciente));\nconst ocupado = [...cuentas.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];\nconst idPaciente = ocupado[0];\nconst paciente = tables[\"pacientes\"].find((fila) => fila.id_paciente === idPaciente);\nconst eventos = [];\ntables[\"ingresos\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha_ingreso,\n    \"origen\": \"ingreso\",\n    \"detalle\": fila.motivo,\n    \"estado\": fila.fecha_alta ? \"alta\" : \"activo\",\n  });\n});\ntables[\"citas\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha,\n    \"origen\": \"cita\",\n    \"detalle\": `${fila.tipo} · ${fila.duracion_min} min`,\n    \"estado\": fila.estado,\n  });\n});\ntables[\"analiticas\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha,\n    \"origen\": \"analítica\",\n    \"detalle\": `${fila.tipo}: glucosa ${fila.glucosa}`,\n    \"estado\": fila.es_anormal ? \"anormal\" : \"normal\",\n  });\n});\ntables[\"intervenciones\"].filter((fila) => fila.id_paciente === idPaciente).forEach((fila) => {\n  eventos.push({\n    \"fecha\": fila.fecha,\n    \"origen\": \"intervención\",\n    \"detalle\": fila.nombre,\n    \"estado\": fila.exitosa ? \"exitosa\" : \"fallida\",\n  });\n});\nreturn eventos\n  .sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)) || a.origen.localeCompare(b.origen))\n  .map((evento, indice) => ({\n    \"orden\": indice + 1,\n    \"paciente\": `${paciente.apellidos}, ${paciente.nombre}`,\n    \"fecha\": evento.fecha,\n    \"origen\": evento.origen,\n    \"detalle\": evento.detalle,\n    \"estado\": evento.estado,\n  }));",
       "assert": {
@@ -25408,7 +25400,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Potencia de JavaScript",
+      "folder": "C · Consultas relacionadas",
       "color": "#fce4e4",
       "code": "const hospitales = tables[\"hospitales\"];\nconst servicios = new Map();\ntables[\"servicios\"].forEach((fila) => {\n  const lista = servicios.get(fila.id_hospital) || [];\n  lista.push(fila.nombre);\n  servicios.set(fila.id_hospital, lista);\n});\nconst habitaciones = new Map(tables[\"habitaciones\"].map((fila) => [fila.id_habitacion, fila]));\nconst totales = new Map(hospitales.map((h) => [h.nombre, { habitaciones: 0, camas: 0, ocupadas: 0, coste: 0 }]));\ntables[\"habitaciones\"].forEach((habitacion) => {\n  const hospital = hospitales.find((h) => h.id_hospital === habitacion.id_hospital);\n  if (!hospital) return;\n  const total = totales.get(hospital.nombre);\n  total.habitaciones += 1;\n  total.camas += habitacion.num_camas || 0;\n  if (habitacion.ocupada) total.ocupadas += 1;\n});\nconst diasEntre = (desde, hasta) => {\n  if (!desde || !hasta) return 0;\n  return Math.max(0, Math.round((new Date(hasta) - new Date(desde)) / 86400000));\n};\ntables[\"ingresos\"].forEach((fila) => {\n  const habitacion = habitaciones.get(fila.id_habitacion);\n  const hospital = habitacion ? hospitales.find((h) => h.id_hospital === habitacion.id_hospital) : null;\n  if (!hospital) return;\n  totales.get(hospital.nombre).coste += diasEntre(fila.fecha_ingreso, fila.fecha_alta) * (fila.coste_dia || 0);\n});\nconst ingresos = new Map(queries[\"C22 · Hospitales con más ingresos\"]().map((fila) => [fila.hospital, fila.ingresos]));\nreturn hospitales\n  .map((hospital) => {\n    const total = totales.get(hospital.nombre);\n    const cuenta = ingresos.get(hospital.nombre) || 0;\n    return {\n      \"hospital\": hospital.nombre,\n      \"nivel\": hospital.nivel,\n      \"universitario\": hospital.es_universitario ? \"sí\" : \"no\",\n      \"servicios\": (servicios.get(hospital.id_hospital) || []).length,\n      \"habitaciones\": total.habitaciones,\n      \"camas\": total.camas,\n      \"ocupadas\": total.ocupadas,\n      \"porcentaje_ocupacion\": total.habitaciones ? Math.round((total.ocupadas / total.habitaciones) * 1000) / 10 : 0,\n      \"ingresos\": cuenta,\n      \"facturacion\": Math.round(total.coste),\n      \"coste_por_ingreso\": cuenta ? Math.round(total.coste / cuenta) : null,\n    };\n  })\n  .sort((a, b) => b[\"ingresos\"] - a[\"ingresos\"] || a[\"hospital\"].localeCompare(b[\"hospital\"]));",
       "assert": {
@@ -25533,7 +25525,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#fce4e4",
       "code": "const medicamentos = new Map(tables[\"medicamentos\"].map((fila) => [fila.id_medicamento, fila]));\nconst grupos = new Map();\ntables[\"prescripciones\"].forEach((fila) => {\n  const medicamento = medicamentos.get(fila.id_medicamento);\n  if (!medicamento) return;\n  const grupo = grupos.get(fila.id_medicamento) || { medicamento, prescripciones: 0, unidades: 0 };\n  grupo.prescripciones += 1;\n  grupo.unidades += (fila.cantidad || 0) * (fila.duracion_dias || 0);\n  grupos.set(fila.id_medicamento, grupo);\n});\nreturn [...grupos.values()]\n  .map((grupo) => {\n    const coste = grupo.unidades * (grupo.medicamento.precio || 0);\n    return {\n      \"medicamento\": grupo.medicamento.nombre,\n      \"via\": grupo.medicamento.via,\n      \"prescripciones\": grupo.prescripciones,\n      \"unidades\": grupo.unidades,\n      \"coste_previsto\": Math.round(coste),\n      \"stock\": grupo.medicamento.stock,\n      \"alerta_stock\": (grupo.medicamento.stock || 0) < 50 ? \"bajo\" : \"correcto\",\n      \"coste_unitario\": grupo.medicamento.precio,\n    };\n  })\n  .sort((a, b) => b[\"coste_previsto\"] - a[\"coste_previsto\"] || a[\"medicamento\"].localeCompare(b[\"medicamento\"]));",
       "assert": {
@@ -25793,7 +25785,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Fechas",
+      "folder": "A · Básicas y agregados",
       "color": "#e8ddf7",
       "code": "const grupos = new Map();\ntables[\"facturas\"].forEach((fila) => {\n  const fecha = new Date(fila.fecha);\n  const mes = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, \"0\")}`;\n  const grupo = grupos.get(mes) || { mes, facturas: 0, total: 0, pagado: 0, pendiente: 0 };\n  grupo.facturas += 1;\n  grupo.total += fila.importe || 0;\n  if (fila.pagada) grupo.pagado += fila.importe || 0;\n  else grupo.pendiente += fila.importe || 0;\n  grupos.set(mes, grupo);\n});\nlet acumulado = 0;\nreturn [...grupos.values()]\n  .sort((a, b) => a.mes.localeCompare(b.mes))\n  .map((grupo) => {\n    acumulado += grupo.total;\n    return {\n      \"mes\": grupo.mes,\n      \"facturas\": grupo.facturas,\n      \"importe\": Math.round(grupo.total),\n      \"pagado\": Math.round(grupo.pagado),\n      \"pendiente\": Math.round(grupo.pendiente),\n      \"porcentaje_cobrado\": grupo.total ? Math.round((grupo.pagado / grupo.total) * 1000) / 10 : 0,\n      \"acumulado\": Math.round(acumulado),\n    };\n  });",
       "assert": {
@@ -26093,7 +26085,7 @@
         "slice",
         "foreach"
       ],
-      "folder": "Consultas e informes",
+      "folder": "C · Consultas relacionadas",
       "color": "#fde8cd",
       "code": "const medicos = new Map(tables[\"medicos\"].map((fila) => [fila.id_medico, fila]));\nconst intervenciones = new Map(queries[\"C16 · Médicos con más intervenciones\"]().map((fila) => [fila.medico, fila]));\nconst citas = new Map();\ntables[\"citas\"].forEach((fila) => {\n  const grupo = citas.get(fila.id_medico) || { cuenta: 0, duracion: 0 };\n  grupo.cuenta += 1;\n  grupo.duracion += fila.duracion_min || 0;\n  citas.set(fila.id_medico, grupo);\n});\nconst filas = [...medicos.values()].map((medico) => {\n  const agenda = citas.get(medico.id_medico) || { cuenta: 0, duracion: 0 };\n  const intervencion = intervenciones.get(medico.apellidos) || { intervenciones: 0, coste_total: 0 };\n  return {\n    \"medico\": `${medico.apellidos}, ${medico.nombre}`,\n    \"especialidad_id\": medico.id_especialidad,\n    \"experiencia\": medico.anios_experiencia,\n    \"citas\": agenda.cuenta,\n    \"duracion_media\": agenda.cuenta ? Math.round((agenda.duracion / agenda.cuenta) * 10) / 10 : 0,\n    \"intervenciones\": intervencion.intervenciones || 0,\n    \"coste_intervenciones\": Math.round(intervencion.coste_total || 0),\n    \"puntuacion\": agenda.cuenta * 2 + (intervencion.intervenciones || 0) * 5 + Math.round((medico.anios_experiencia || 0) / 2),\n  };\n});\nlet anterior = null;\nlet puesto = 0;\nreturn filas\n  .sort((a, b) => b[\"puntuacion\"] - a[\"puntuacion\"] || a[\"medico\"].localeCompare(b[\"medico\"]))\n  .slice(0, 20)\n  .map((fila, indice) => {\n    if (fila[\"puntuacion\"] !== anterior) {\n      puesto = indice + 1;\n      anterior = fila[\"puntuacion\"];\n    }\n    return { \"puesto\": puesto, ...fila };\n  });",
       "assert": {
@@ -26346,7 +26338,7 @@
         "slice",
         "foreach"
       ],
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#dcf1d4",
       "code": "const diagnosticos = new Map(queries[\"C31 · Pacientes con más de un diagnóstico distinto\"]().map((fila) => [fila.paciente, fila.diagnosticos]));\nconst alergias = new Map();\ntables[\"alergias\"].forEach((fila) => {\n  const grupo = alergias.get(fila.id_paciente) || { total: 0, graves: 0 };\n  grupo.total += 1;\n  if (fila.severidad === \"Grave\") grupo.graves += 1;\n  alergias.set(fila.id_paciente, grupo);\n});\nconst anormales = new Map();\ntables[\"analiticas\"].forEach((fila) => {\n  if (!fila.es_anormal) return;\n  anormales.set(fila.id_paciente, (anormales.get(fila.id_paciente) || 0) + 1);\n});\nreturn tables[\"pacientes\"]\n  .map((paciente) => {\n    const alergia = alergias.get(paciente.id_paciente) || { total: 0, graves: 0 };\n    const analiticas = anormales.get(paciente.id_paciente) || 0;\n    const distintos = diagnosticos.get(paciente.apellidos) || 0;\n    const puntos = (paciente.es_cronico ? 2 : 0) + alergia.graves * 2 + alergia.total + analiticas + (distintos >= 4 ? 2 : 0);\n    return {\n      \"paciente\": `${paciente.apellidos}, ${paciente.nombre}`,\n      \"edad\": Math.floor((new Date(\"2025-09-01\") - new Date(paciente.fecha_nacimiento)) / (365.25 * 86400000)),\n      \"cronico\": paciente.es_cronico ? \"sí\" : \"no\",\n      \"alergias\": alergia.total,\n      \"alergias_graves\": alergia.graves,\n      \"analiticas_anormales\": analiticas,\n      \"puntos_riesgo\": puntos,\n      \"riesgo\": puntos >= 6 ? \"alto\" : puntos >= 3 ? \"medio\" : \"bajo\",\n    };\n  })\n  .sort((a, b) => b[\"puntos_riesgo\"] - a[\"puntos_riesgo\"] || a[\"paciente\"].localeCompare(b[\"paciente\"]))\n  .slice(0, 20);",
       "assert": {
@@ -26578,7 +26570,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#dcf1d4",
       "code": "const seguros = new Map(tables[\"seguros\"].map((fila) => [fila.id_seguro, fila]));\nconst pacientes = new Map(tables[\"pacientes\"].map((fila) => [fila.id_paciente, fila]));\nconst cuentas = new Map(queries[\"B08 · Pacientes por seguro\"]().map((fila) => [fila.seguro, fila.pacientes]));\nconst facturacion = new Map();\ntables[\"facturas\"].forEach((fila) => {\n  const paciente = pacientes.get(fila.id_paciente);\n  if (!paciente) return;\n  const clave = paciente.id_seguro;\n  const grupo = facturacion.get(clave) || { total: 0, facturas: 0, pagado: 0 };\n  grupo.total += fila.importe || 0;\n  grupo.facturas += 1;\n  if (fila.pagada) grupo.pagado += fila.importe || 0;\n  facturacion.set(clave, grupo);\n});\nreturn [...seguros.values()]\n  .map((seguro) => {\n    const factura = facturacion.get(seguro.id_seguro) || { total: 0, facturas: 0, pagado: 0 };\n    const cubierto = factura.total * ((seguro.cobertura_porcentaje || 0) / 100);\n    return {\n      \"seguro\": seguro.nombre,\n      \"tipo\": seguro.tipo,\n      \"cobertura_porcentaje\": seguro.cobertura_porcentaje,\n      \"pacientes\": cuentas.get(seguro.nombre) || 0,\n      \"facturas\": factura.facturas,\n      \"facturado\": Math.round(factura.total),\n      \"cubierto\": Math.round(cubierto),\n      \"parte_paciente\": Math.round(factura.total - cubierto),\n      \"pagado\": Math.round(factura.pagado),\n      \"pendiente\": Math.round(factura.total - factura.pagado),\n    };\n  })\n  .sort((a, b) => b[\"facturado\"] - a[\"facturado\"] || a[\"seguro\"].localeCompare(b[\"seguro\"]));",
       "assert": {

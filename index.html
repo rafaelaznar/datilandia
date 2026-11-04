@@ -408,10 +408,91 @@
       color: #666;
     }
 
-    /*  The sidebar list of queries uses a slightly smaller font than the tables one (which is left as it is).  */
-    #list-queries,
-    #list-scripts {
+    /*  The sidebar list of queries and scripts uses a slightly smaller font
+        than the tables one (which is left as it is).  */
+    #list-queries {
       font-size: 9px;
+    }
+
+    /*  A circle before the name of a query or a script tells them apart in the
+        shared list: «c» for a query, «s» for a script. It is painted by CSS
+        from the kind of the row, so the name stays the only text of the span. */
+    #list-queries li[data-kind] > .name::before {
+      content: "";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.35em;
+      height: 1.35em;
+      margin-right: 3px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: 8px;
+      font-weight: bold;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    #list-queries li[data-kind="query"] > .name::before {
+      content: "c";
+    }
+
+    #list-queries li[data-kind="script"] > .name::before {
+      content: "s";
+    }
+
+    /*  Circle of the kind in other places (the keyword search results).  */
+    .kind-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 1.5em;
+      height: 1.5em;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: 9px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    /*  Results of the keyword search: one button per query or script.  */
+    .keyword-results {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-height: 3em;
+      max-height: 45vh;
+      overflow: auto;
+    }
+
+    .keyword-results button {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      width: 100%;
+      padding: 4px 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .keyword-results button:hover,
+    .keyword-results button:focus-visible {
+      background: #eef4fb;
+      border-color: #1a4f8a;
+    }
+
+    .keyword-results .result-name {
+      font-weight: bold;
+    }
+
+    .keyword-results .result-keywords {
+      margin-left: auto;
+      color: #666;
+      font-size: 10px;
     }
 
     /* Header of a group of a list (the folders of the queries and the whole
@@ -575,13 +656,11 @@
         the custom property of the row, so the selection can be painted over
         it. When that row is the open query the selection is dark grey with a
         light frame, so the colour it has is still noticed.  */
-    #list-queries li.has-color,
-    #list-scripts li.has-color {
+    #list-queries li.has-color {
       background: var(--row-color);
     }
 
-    #list-queries li.has-color.selected,
-    #list-scripts li.has-color.selected {
+    #list-queries li.has-color.selected {
       background: #333;
       outline: 1px solid #a8c3e0;
       outline-offset: -1px;
@@ -2067,11 +2146,13 @@
       </section>
       <section class="panel">
         <h2>
-          <button data-i18n-title="markup.button.seeEveryQueryItsProperties" class="titulo-panel with-icon" id="btn-summary-queries" type="button" title="Ver todas las consultas con sus propiedades"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.queries">Consultas</span></button>
+          <button data-i18n-title="markup.button.seeEveryQueryItsProperties" class="titulo-panel with-icon" id="btn-summary-queries" type="button" title="Ver todas las consultas con sus propiedades"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.queriesAndScripts">Consultas y scripts</span></button>
           <span class="panel-actions">
             <button class="panel-action" id="btn-fold-all" type="button" hidden></button>
+            <button class="panel-action with-icon" data-i18n-title="keywordSearch.openTip" data-i18n-aria-label="keywordSearch.openTip" id="btn-keyword-search" type="button" title="Buscar consultas y scripts por palabras clave"><svg class="icon" data-icon="search" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5703 17.4329L20.4299 20.567" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
             <button class="panel-action with-icon" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" id="btn-new-folder" type="button" title="Añadir una carpeta vacía (+C)"><svg class="icon" data-icon="folder-add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V13.9286V6.85714V5.8125C3 4.2592 4.2592 3 5.8125 3H7.32296C8.75679 3 9.89276 4.02835 10.6434 5.25C11.0734 5.9498 11.3046 6.42005 12 6.85714C13.0877 7.54086 15.5536 7.68013 17.6297 7.66016C19.4407 7.64274 21 9.06385 21 10.875V12V16.5C21 18.9853 18.9853 21 16.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 15.4968L17.9937 15.4968" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.4961 16.9937L16.4961 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
             <button class="panel-action with-icon" data-i18n-title="markup.button.createNewQuery" id="btn-new-query" type="button" title="Crear una consulta nueva"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="panel-action with-icon" data-i18n-title="markup.button.newScript" id="btn-new-script" type="button" title="Crear un script nuevo"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           </span>
         </h2>
         <ul id="list-queries" class="list"></ul>
@@ -2080,17 +2161,6 @@
         <h2>
           <button data-i18n-title="markup.button.relationMatrixWhichTablesRelate" class="titulo-panel with-icon" id="btn-relations" type="button" title="Matriz de relaciones: qué tablas se relacionan entre sí y qué consultas las citan"><svg class="icon" data-icon="share" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="6.43478" cy="12" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><circle cx="17.5656" cy="6.43478" r="2.43478" stroke="currentColor" stroke-width="1.3913"/><path d="M15 7.5L9 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2.43478" cy="2.43478" r="2.43478" transform="matrix(1 0 0 -1 15.1309 19.5)" stroke="currentColor" stroke-width="1.3913"/><path d="M15 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.relations">Relaciones</span></button>
         </h2>
-      </section>
-      <section class="panel">
-        <h2>
-          <button data-i18n-title="scripts.panelTip" class="titulo-panel with-icon" id="btn-scripts" type="button" title="Scripts JavaScript guardados en el proyecto"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.scripts">Scripts</span></button>
-          <span class="panel-actions">
-            <button class="panel-action" id="btn-fold-all-scripts" type="button" hidden></button>
-            <button class="panel-action with-icon" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" id="btn-new-script-folder" type="button" title="Añadir una carpeta vacía de scripts"><svg class="icon" data-icon="folder-add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V13.9286V6.85714V5.8125C3 4.2592 4.2592 3 5.8125 3H7.32296C8.75679 3 9.89276 4.02835 10.6434 5.25C11.0734 5.9498 11.3046 6.42005 12 6.85714C13.0877 7.54086 15.5536 7.68013 17.6297 7.66016C19.4407 7.64274 21 9.06385 21 10.875V12V16.5C21 18.9853 18.9853 21 16.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 15.4968L17.9937 15.4968" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.4961 16.9937L16.4961 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-            <button class="panel-action with-icon" data-i18n-title="markup.button.newScript" id="btn-new-script" type="button" title="Crear un script nuevo"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          </span>
-        </h2>
-        <ul id="list-scripts" class="list"></ul>
       </section>
       <section class="panel">
         <h2>
@@ -2474,6 +2544,21 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
     </div>
     <p data-i18n="markup.p.everyForeignKeyAppearsCell" id="dlg-relations-leyenda" class="muted">Cada clave ajena aparece en la casilla de la tabla que la define (fila, hijo) apuntando a la tabla y el campo de destino (columna, padre): campo → campo destino.</p>
     <p id="dlg-relations-leyenda-figures" class="muted"></p>
+  </dialog>
+
+  <!-- Modal window: search queries and scripts by their keywords -->
+  <dialog id="dlg-keyword-search" aria-labelledby="dlg-keyword-search-titulo">
+    <div class="dlg-header">
+      <b data-i18n="keywordSearch.title" id="dlg-keyword-search-titulo">Buscar por palabras clave</b>
+      <span id="keyword-search-count" class="muted"></span>
+      <button data-i18n-title="markup.button.closeWindowEsc" class="derecha with-icon" id="btn-close-keyword-search" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close">Cerrar</span></button>
+    </div>
+    <div class="toolbar">
+      <label data-i18n="keywordSearch.label" for="keyword-search-input">Palabras clave:</label>
+      <input id="keyword-search-input" type="search" size="32" autocomplete="off" data-i18n-placeholder="keywordSearch.placeholder" data-i18n-title="keywordSearch.inputTip" placeholder="una o varias palabras clave…" title="Escribe una o varias palabras clave; todas deben aparecer en las palabras clave de la consulta o el script">
+    </div>
+    <p data-i18n="keywordSearch.hint" class="muted">Aparecen las consultas y scripts cuyas palabras clave contienen todos los términos.</p>
+    <div id="keyword-search-results" class="keyword-results"></div>
   </dialog>
 
   <!-- Modal window: search and replace in the active table -->
@@ -2906,6 +2991,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.previousPage": "Previous page",
         "markup.button.previousPageResult": "Previous page of the result",
         "markup.button.queries": "Queries",
+        "markup.button.queriesAndScripts": "Queries and scripts",
         "markup.button.relationMatrixWhichTablesRelate": "Relation matrix: which tables relate to each other and which queries cite them",
         "markup.button.relations": "Relations",
         "markup.button.reminderOpenRelationMatrixBetween": "Reminder: open the relation matrix between the project's tables (foreign keys only)",
@@ -3430,6 +3516,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "folders.scriptUnfoldered": "“{name}” left without a folder.",
         "folders.deletedScripts": "Folder “{name}” deleted; its {count} scripts are left without a folder.",
         "folders.confirmDeleteScripts": "Delete the folder “{name}”? Its scripts are kept, without a folder.",
+        "folders.objectsCount": {"one":"{count} query or script","other":"{count} queries and scripts"},
+        "folders.objectMoved": "“{name}” moved to “{folder}”.",
+        "folders.objectUnfoldered": "“{name}” taken out of its folder.",
+        "folders.deletedObjects": "Folder “{name}” deleted; its {count} queries and scripts are left without a folder.",
+        "folders.confirmDeleteObjects": "Delete the folder “{name}”? Its queries and scripts are kept, without a folder.",
+        "folders.duplicateObjectsTip": "Duplicate the folder “{name}” with its queries and scripts",
+        "folders.duplicatedObjects": {"one":"Folder “{name}” duplicated as “{copy}” with {count} query or script.","other":"Folder “{name}” duplicated as “{copy}” with {count} queries and scripts."},
         "projectTests.casesCount": {"one":"{count} test case","other":"{count} test cases"},
         "projectTests.scriptLine": "Script: {code}",
         "projectTests.scriptError": "Script error: {message}",
@@ -3788,6 +3881,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.nameCopyManual": "It could not be copied on its own: the name is selected, press Ctrl+C.",
         "ui.tableNameCopied": "Table name “{name}” copied to the clipboard.",
         "ui.keywordsLine": "Keywords: {keywords}",
+        "keywordSearch.openTip": "Search queries and scripts by keyword",
+        "keywordSearch.title": "Search by keywords",
+        "keywordSearch.label": "Keywords:",
+        "keywordSearch.placeholder": "one or more keywords…",
+        "keywordSearch.inputTip": "Type one or more keywords; all must appear in the keywords of the query or script.",
+        "keywordSearch.hint": "It shows the queries and scripts whose keywords contain every term.",
+        "keywordSearch.resultsCount": {"one":"{count} result","other":"{count} results"},
+        "keywordSearch.empty": "No query or script has keywords yet.",
+        "keywordSearch.noResults": "No query or script has those keywords.",
         "ui.isSourceOfLine": "Is source of ({total}): {names}",
         "ui.relatedPickTip": "Open {kind}",
         "ui.groupTables": "Tables",
@@ -3963,6 +4065,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.previousPage": "Página anterior",
         "markup.button.previousPageResult": "Página anterior del resultado",
         "markup.button.queries": "Consultas",
+        "markup.button.queriesAndScripts": "Consultas y scripts",
         "markup.button.relationMatrixWhichTablesRelate": "Matriz de relaciones: qué tablas se relacionan entre sí y qué consultas las citan",
         "markup.button.relations": "Relaciones",
         "markup.button.reminderOpenRelationMatrixBetween": "Recordatorio: abrir la matriz de relaciones entre las tablas del proyecto (solo claves ajenas)",
@@ -4487,6 +4590,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "folders.scriptUnfoldered": "«{name}» se queda sin carpeta.",
         "folders.deletedScripts": "Carpeta «{name}» borrada; sus {count} scripts se quedan sin carpeta.",
         "folders.confirmDeleteScripts": "¿Borrar la carpeta «{name}»? Sus scripts se quedan sin carpeta.",
+        "folders.objectsCount": {"one":"{count} consulta o script","other":"{count} consultas y scripts"},
+        "folders.objectMoved": "«{name}» movida a «{folder}».",
+        "folders.objectUnfoldered": "«{name}» sacada de su carpeta.",
+        "folders.deletedObjects": "Carpeta «{name}» borrada; sus {count} consultas y scripts se quedan sin carpeta.",
+        "folders.confirmDeleteObjects": "¿Borrar la carpeta «{name}»? Sus consultas y scripts se quedan sin carpeta.",
+        "folders.duplicateObjectsTip": "Duplicar la carpeta «{name}» con sus consultas y scripts",
+        "folders.duplicatedObjects": {"one":"Carpeta «{name}» duplicada como «{copy}» con {count} consulta o script.","other":"Carpeta «{name}» duplicada como «{copy}» con {count} consultas y scripts."},
         "projectTests.casesCount": {"one":"{count} caso de prueba","other":"{count} casos de prueba"},
         "projectTests.scriptLine": "Script: {code}",
         "projectTests.scriptError": "Error del script: {message}",
@@ -4845,6 +4955,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.nameCopyManual": "No se pudo copiar solo: el nombre queda seleccionado, pulsa Ctrl+C.",
         "ui.tableNameCopied": "Nombre de la tabla «{name}» copiado al portapapeles.",
         "ui.keywordsLine": "Palabras clave: {keywords}",
+        "keywordSearch.openTip": "Buscar consultas y scripts por palabras clave",
+        "keywordSearch.title": "Buscar por palabras clave",
+        "keywordSearch.label": "Palabras clave:",
+        "keywordSearch.placeholder": "una o varias palabras clave…",
+        "keywordSearch.inputTip": "Escribe una o varias palabras clave; todas deben aparecer en las palabras clave de la consulta o el script.",
+        "keywordSearch.hint": "Aparecen las consultas y scripts cuyas palabras clave contienen todos los términos.",
+        "keywordSearch.resultsCount": {"one":"{count} resultado","other":"{count} resultados"},
+        "keywordSearch.empty": "Todavía no hay consultas ni scripts con palabras clave.",
+        "keywordSearch.noResults": "Ninguna consulta ni script tiene esas palabras clave.",
         "ui.isSourceOfLine": "Es origen de ({total}): {names}",
         "ui.relatedPickTip": "Abrir {kind}",
         "ui.groupTables": "Tablas",
@@ -5175,15 +5294,35 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Are there unsaved changes in the project? */
       dirty: false,
 
-      /** Replaces the project content keeping the same reference. */
+      /** Replaces the project content keeping the same reference. Queries and
+       *  scripts now share one folder list: the old lists of both are merged
+       *  here, so an old file keeps its folders without editing it. */
       replaceProject(source) {
         Store.project.name = source.name;
-        Store.project.folders = Model.foldersOf(source, "queries");
-        Store.project.foldedFolders = Model.foldedOf(source, "queries");
+        const folders = [];
+        const addFolder = (name) => {
+          if (name && !folders.includes(name)) {
+            folders.push(name);
+          }
+        };
+        Model.foldersOf(source, "queries").forEach(addFolder);
+        (source.scriptFolders || []).forEach(addFolder);
+        (source.queries || []).forEach((item) => addFolder(item.folder));
+        (source.scripts || []).forEach((item) => addFolder(item.folder));
+        Store.project.folders = folders;
+        Store.project.scriptFolders = folders;
+        const folded = [];
+        const addFolded = (name) => {
+          if ((name === "" || folders.includes(name)) && !folded.includes(name)) {
+            folded.push(name);
+          }
+        };
+        Model.foldedOf(source, "queries").forEach(addFolded);
+        (source.foldedScriptFolders || []).forEach(addFolded);
+        Store.project.foldedFolders = folded;
+        Store.project.foldedScriptFolders = folded;
         Store.project.tableFolders = Model.foldersOf(source, "tables");
         Store.project.foldedTableFolders = Model.foldedOf(source, "tables");
-        Store.project.scriptFolders = Model.foldersOf(source, "scripts");
-        Store.project.foldedScriptFolders = Model.foldedOf(source, "scripts");
         Store.project.tablesFolded = Model.tablesFolded(source);
         Store.project.tables = source.tables;
         Store.project.queries = source.queries;
@@ -5269,7 +5408,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       GROUP_KINDS: {
         tables: { folders: "tableFolders", folded: "foldedTableFolders", items: "tables" },
         queries: { folders: "folders", folded: "foldedFolders", items: "queries" },
-        scripts: { folders: "scriptFolders", folded: "foldedScriptFolders", items: "scripts" },
+        // Queries and scripts share the same folders: one list in the sidebar
+        // mixes both and a folder holds the ones of either kind that name it.
+        scripts: { folders: "folders", folded: "foldedFolders", items: "scripts" },
+        objects: { folders: "folders", folded: "foldedFolders", items: null },
       },
 
       /** Spec of a kind of list. The kind is the last argument everywhere and,
@@ -5289,6 +5431,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  «no folder». */
       itemsInFolder(project, folder, kind) {
         const wanted = folder || null;
+        if (kind === "objects") {
+          const inFolder = (item) => (item.folder || null) === wanted;
+          return (project.queries || []).filter(inFolder).concat((project.scripts || []).filter(inFolder));
+        }
         return project[Model.groupOf(kind).items].filter((item) => (item.folder || null) === wanted);
       },
 
@@ -5296,13 +5442,16 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       folderCounts(project, kind) {
         const counts = new Map(Model.foldersOf(project, kind).map((name) => [name, 0]));
         let none = 0;
-        project[Model.groupOf(kind).items].forEach((item) => {
+        const lists = kind === "objects"
+          ? [project.queries || [], project.scripts || []]
+          : [project[Model.groupOf(kind).items]];
+        lists.forEach((items) => items.forEach((item) => {
           if (item.folder && counts.has(item.folder)) {
             counts.set(item.folder, counts.get(item.folder) + 1);
           } else {
             none += 1;
           }
-        });
+        }));
         return { counts, none };
       },
 
@@ -5389,6 +5538,33 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       renameFolder(project, from, to, kind) {
         const spec = Model.groupOf(kind);
         const folders = Model.foldersOf(project, kind);
+        if (kind === "objects") {
+          if (!folders.includes(from)) {
+            return { ok: false, error: I18n.t("folders.unknown", { name: from }) };
+          }
+          const clean = String(to === undefined || to === null ? "" : to).trim();
+          if (clean === "") {
+            return { ok: false, error: I18n.t("folders.nameRequired") };
+          }
+          if (clean === from) {
+            return { ok: true, error: "" };
+          }
+          if (folders.includes(clean)) {
+            return { ok: false, error: I18n.t("folders.nameDuplicate", { name: clean }) };
+          }
+          project.folders = folders.map((name) => (name === from ? clean : name));
+          [project.queries || [], project.scripts || []].forEach((items) => {
+            items.forEach((item) => {
+              if (item.folder === from) {
+                item.folder = clean;
+              }
+            });
+          });
+          if (Array.isArray(project.foldedFolders)) {
+            project.foldedFolders = project.foldedFolders.map((name) => (name === from ? clean : name));
+          }
+          return { ok: true, error: "" };
+        }
         if (!folders.includes(from)) {
           return { ok: false, error: I18n.t("folders.unknown", { name: from }) };
         }
@@ -5420,6 +5596,20 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const folders = Model.foldersOf(project, kind);
         if (!folders.includes(name)) {
           return { ok: false, error: I18n.t("folders.unknown", { name: name }) };
+        }
+        if (kind === "objects") {
+          project.folders = folders.filter((candidate) => candidate !== name);
+          [project.queries || [], project.scripts || []].forEach((items) => {
+            items.forEach((item) => {
+              if (item.folder === name) {
+                delete item.folder;
+              }
+            });
+          });
+          if (Array.isArray(project.foldedFolders)) {
+            project.foldedFolders = project.foldedFolders.filter((item) => item !== name);
+          }
+          return { ok: true, error: "" };
         }
         project[spec.folders] = folders.filter((candidate) => candidate !== name);
         project[spec.items].forEach((item) => {
@@ -5580,6 +5770,33 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const folders = Model.foldersOf(project, kind);
         if (!folders.includes(name)) {
           return { ok: false, error: I18n.t("folders.unknown", { name: name }) };
+        }
+        if (kind === "objects") {
+          const copyName = Model.freeName(new Set(folders), name);
+          const position = folders.indexOf(name) + 1;
+          project.folders = folders.slice(0, position).concat([copyName], folders.slice(position));
+          let queries = 0;
+          let scripts = 0;
+          const duplicate = (items, count) => {
+            const taken = new Set(items.map((item) => item.name));
+            const copies = [];
+            items.forEach((item) => {
+              copies.push(item);
+              if (item.folder !== name) {
+                return;
+              }
+              const copy = Utils.cloneJson(item);
+              copy.name = Model.freeName(taken, item.name);
+              taken.add(copy.name);
+              copy.folder = copyName;
+              copies.push(copy);
+              count();
+            });
+            return copies;
+          };
+          project.queries = duplicate(project.queries || [], () => { queries += 1; });
+          project.scripts = duplicate(project.scripts || [], () => { scripts += 1; });
+          return { ok: true, folder: copyName, count: queries + scripts, queries: queries, scripts: scripts };
         }
         const copyName = Model.freeName(new Set(folders), name);
         const position = folders.indexOf(name) + 1;
@@ -6628,8 +6845,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             content.foldedTableFolders = foldedTables;
           }
         }
-        // Folders of the scripts, with which ones are folded, the same way.
-        if (scriptFolders.length > 0) {
+        // Queries and scripts share their folders now. The old «scriptFolders»
+        // key is only written when the project still carries a different list,
+        // so a file written by this version stays clean and an old one keeps
+        // opening without losing its folders.
+        const sameFolders = scriptFolders.length === folders.length
+          && scriptFolders.every((name, index) => name === folders[index]);
+        if (scriptFolders.length > 0 && !sameFolders) {
           content.scriptFolders = scriptFolders;
           const foldedScripts = Model.foldedOf(project, "scripts")
             .filter((name) => name === "" || scriptFolders.includes(name));
@@ -6784,6 +7006,18 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         scripts.forEach((script) => {
           if (script.folder && !scriptFolders.includes(script.folder)) {
             scriptFolders.push(script.folder);
+          }
+        });
+        // Queries and scripts share one folder list from now on: the folders
+        // of both are merged in order, without repetitions.
+        scriptFolders.forEach((name) => {
+          if (!folders.includes(name)) {
+            folders.push(name);
+          }
+        });
+        foldedScriptFolders.forEach((name) => {
+          if ((name === "" || folders.includes(name)) && !foldedFolders.includes(name)) {
+            foldedFolders.push(name);
           }
         });
         const name = typeof root.name === "string" && root.name.trim() !== "" ? root.name : I18n.t("misc.untitled");
@@ -11936,8 +12170,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const signatures = Ui.projectSignatures(Store.project);
         const graph = ProjectGraph.build(Store.project, signatures.graph);
         Ui.renderSidebarTables(graph);
-        Ui.renderSidebarQueries(graph, signatures);
-        Ui.renderSidebarScripts(graph);
+        Ui.renderSidebarObjects(graph, signatures);
       },
 
       /** Repaints the parts that do not belong to the open view: the header,
@@ -12123,10 +12356,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Name span of an item of a sidebar list, used as the manual fallback
        *  when the clipboard is not available. */
-      sidebarNameLabel(listId, name) {
+      sidebarNameLabel(listId, name, kind) {
         const list = document.getElementById(listId);
+        const wished = kind || null;
         const item = list
-          ? [...list.querySelectorAll("li[data-name]")].find((candidate) => candidate.dataset.name === name)
+          ? [...list.querySelectorAll("li[data-name]")].find(
+            (candidate) => candidate.dataset.name === name
+              && (wished === null || candidate.dataset.kind === wished),
+          )
           : null;
         return item ? item.querySelector("span") : null;
       },
@@ -12287,9 +12524,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         setStatus(I18n.t(Model.tablesFolded(Store.project) ? "tables.folded" : "tables.unfolded"));
       },
 
-      renderSidebarQueries(graph, signatures) {
-        // The palette hangs under a swatch of this list: repainting it leaves
-        // that swatch behind, so the palette goes with it.
+      /** Paints the unified list of queries and scripts: one header per
+       *  shared folder and the queries and scripts that name it under it. */
+      renderSidebarObjects(graph, signatures) {
         UiQueries.closeColor();
         const list = document.getElementById("list-queries");
         list.textContent = "";
@@ -12298,27 +12535,71 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiDataLinks.update(usage);
         const schema = signatures === undefined ? Ui.schemaShape(Store.project) : signatures.schema;
         const shape = signatures === undefined ? Ui.projectShape(Store.project, schema) : signatures.shape;
-        // One validation state for the whole list: a query that reads another
-        // one reuses the materialised result instead of running the chain once
-        // per tip. Without it, a project of chained views took seconds to
-        // repaint.
         const validation = SqlViews.newState();
-        // The per-tip inputs are only needed when the global shape changed:
-        // while it stays the same, every tip answers from its own cache.
         const tipInputs = Ui.lastTipShape === shape
           ? undefined
           : Ui.tipInputs(Store.project, grafo, schema);
         Ui.lastTipShape = shape;
-        UiFolders.render("queries", list, (query, folder, placement) => Ui.queryItem(query, usage, shape, folder, grafo, placement, validation, tipInputs));
+
+        const folders = Model.foldersOf(Store.project, "objects");
+        const counts = Model.folderCounts(Store.project, "objects");
+        const queryGroups = new Map(folders.map((name) => [name, []]));
+        const scriptGroups = new Map(folders.map((name) => [name, []]));
+        const queryNone = [];
+        const scriptNone = [];
+        const group = (item, groups, none) => {
+          const folder = item.folder || null;
+          if (!folder) {
+            none.push(item);
+          } else if (groups.has(folder)) {
+            groups.get(folder).push(item);
+          }
+        };
+        (Store.project.queries || []).forEach((query) => group(query, queryGroups, queryNone));
+        (Store.project.scripts || []).forEach((script) => group(script, scriptGroups, scriptNone));
+
+        const fragment = document.createDocumentFragment();
+        const paint = (folder) => {
+          const queries = queryGroups.get(folder) || [];
+          const scripts = scriptGroups.get(folder) || [];
+          queries.forEach((query, index) => {
+            fragment.appendChild(Ui.queryItem(
+              query, usage, shape, folder, grafo,
+              { position: index, total: queries.length }, validation, tipInputs,
+            ));
+          });
+          scripts.forEach((script, index) => {
+            fragment.appendChild(Ui.scriptItem(script, folder, grafo, { position: index, total: scripts.length }));
+          });
+        };
+        folders.forEach((name) => {
+          fragment.appendChild(UiFolders.header("objects", name, counts.counts.get(name) || 0));
+          paint(name);
+        });
+        if (folders.length > 0) {
+          fragment.appendChild(UiFolders.header("objects", "", counts.none));
+        }
+        queryNone.forEach((query, index) => {
+          fragment.appendChild(Ui.queryItem(
+            query, usage, shape, "", grafo,
+            { position: index, total: queryNone.length }, validation, tipInputs,
+          ));
+        });
+        scriptNone.forEach((script, index) => {
+          fragment.appendChild(Ui.scriptItem(script, "", grafo, { position: index, total: scriptNone.length }));
+        });
+        list.appendChild(fragment);
+        UiFolders.applyCollapsed("objects");
       },
 
-      /** Paints the list of scripts of the sidebar. */
+      /** Kept as the entry point of the queries: it repaints the unified list. */
+      renderSidebarQueries(graph, signatures) {
+        Ui.renderSidebarObjects(graph, signatures);
+      },
+
+      /** Kept as the entry point of the scripts: it repaints the unified list. */
       renderSidebarScripts(graph) {
-        UiQueries.closeColor();
-        const list = document.getElementById("list-scripts");
-        list.textContent = "";
-        const grafo = graph === undefined ? ProjectGraph.build(Store.project) : graph;
-        UiFolders.render("scripts", list, (script, folder, placement) => Ui.scriptItem(script, folder, grafo, placement));
+        Ui.renderSidebarObjects(graph);
       },
 
       /** Icon of the direct-SVG set with that name (its source is the
@@ -12359,6 +12640,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const item = document.createElement("li");
         item.dataset.name = query.name;
         item.dataset.folder = folder;
+        item.dataset.kind = "query";
         item.title = Ui.queryTip(query, usage, shape, graph, validation, tipInputs);
         if (folder) {
           item.classList.add("folder-open");
@@ -12367,6 +12649,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           item.classList.add("selected");
         }
         const name = document.createElement("span");
+        name.className = "name";
         name.textContent = query.name;
         item.appendChild(name);
         const marcas = document.createElement("span");
@@ -12424,6 +12707,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const item = document.createElement("li");
         item.dataset.name = script.name;
         item.dataset.folder = folder;
+        item.dataset.kind = "script";
         item.title = Ui.scriptTip(script, graph);
         if (folder) {
           item.classList.add("folder-open");
@@ -12432,6 +12716,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           item.classList.add("selected");
         }
         const name = document.createElement("span");
+        name.className = "name";
         name.textContent = script.name;
         item.appendChild(name);
         const marcas = document.createElement("span");
@@ -14967,34 +15252,59 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       bind() {
         document.getElementById("btn-new-query").addEventListener("click", () => UiQueries.create());
         document.getElementById("list-queries").addEventListener("click", (event) => {
+          const item = event.target.closest("li[data-name]");
+          const isScript = Boolean(item && item.dataset.kind === "script");
           const move = event.target.closest("button.move-query");
           if (move) {
-            UiQueries.move(move.dataset.name, Number(move.dataset.step));
+            if (isScript) {
+              UiScripts.move(move.dataset.name, Number(move.dataset.step));
+            } else {
+              UiQueries.move(move.dataset.name, Number(move.dataset.step));
+            }
             return;
           }
           const swatch = event.target.closest("button.color-query");
           if (swatch) {
-            UiQueries.openColor(swatch.dataset.name, swatch);
+            if (isScript) {
+              UiQueries.openColor(swatch.dataset.name, swatch, "scripts");
+            } else {
+              UiQueries.openColor(swatch.dataset.name, swatch);
+            }
             return;
           }
           const removeMark = event.target.closest("button.delete-query");
           if (removeMark) {
-            UiQueries.removeQuery(removeMark.dataset.name);
+            if (isScript) {
+              UiScripts.removeScript(removeMark.dataset.name);
+            } else {
+              UiQueries.removeQuery(removeMark.dataset.name);
+            }
             return;
           }
           const duplicate = event.target.closest("button.duplicate-query");
           if (duplicate) {
-            UiQueries.duplicate(duplicate.dataset.name);
+            if (isScript) {
+              UiScripts.duplicate(duplicate.dataset.name);
+            } else {
+              UiQueries.duplicate(duplicate.dataset.name);
+            }
             return;
           }
           const copy = event.target.closest("button.copy-name");
           if (copy) {
-            UiQueries.copyNamed(copy.dataset.name);
+            if (isScript) {
+              UiScripts.copyNamed(copy.dataset.name);
+            } else {
+              UiQueries.copyNamed(copy.dataset.name);
+            }
             return;
           }
-          const item = event.target.closest("li[data-name]");
           if (item) {
-            UiQueries.select(item.dataset.name);
+            if (isScript) {
+              UiScripts.select(item.dataset.name);
+            } else {
+              UiQueries.select(item.dataset.name);
+            }
           }
         });
         document.getElementById("btn-run").addEventListener("click", () => UiQueries.runWithBusy());
@@ -15404,7 +15714,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         Ui.copyToClipboard(
           query.name,
-          Ui.sidebarNameLabel("list-queries", query.name),
+          Ui.sidebarNameLabel("list-queries", query.name, "query"),
           "queries.nameCopied",
           query.name,
         );
@@ -15973,39 +16283,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Wires the sidebar list, the script editor and the result grid. */
       bind() {
-        document.getElementById("btn-scripts").addEventListener("click", () => UiScripts.show());
         document.getElementById("btn-new-script").addEventListener("click", () => UiScripts.create());
-        document.getElementById("list-scripts").addEventListener("click", (event) => {
-          const move = event.target.closest("button.move-query");
-          if (move) {
-            UiScripts.move(move.dataset.name, Number(move.dataset.step));
-            return;
-          }
-          const swatch = event.target.closest("button.color-query");
-          if (swatch) {
-            UiQueries.openColor(swatch.dataset.name, swatch, "scripts");
-            return;
-          }
-          const removeMark = event.target.closest("button.delete-query");
-          if (removeMark) {
-            UiScripts.removeScript(removeMark.dataset.name);
-            return;
-          }
-          const duplicate = event.target.closest("button.duplicate-query");
-          if (duplicate) {
-            UiScripts.duplicate(duplicate.dataset.name);
-            return;
-          }
-          const copy = event.target.closest("button.copy-name");
-          if (copy) {
-            UiScripts.copyNamed(copy.dataset.name);
-            return;
-          }
-          const item = event.target.closest("li[data-name]");
-          if (item) {
-            UiScripts.select(item.dataset.name);
-          }
-        });
         document.getElementById("btn-run-script").addEventListener("click", () => UiScripts.runWithBusy());
         document.getElementById("btn-script-save-test").addEventListener("click", () => UiScripts.saveTestWithBusy());
         document.getElementById("btn-script-quitar-test").addEventListener("click", () => UiScripts.removeTest());
@@ -16177,7 +16455,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         Ui.copyToClipboard(
           script.name,
-          Ui.sidebarNameLabel("list-scripts", script.name),
+          Ui.sidebarNameLabel("list-queries", script.name, "script"),
           "scripts.nameCopied",
           script.name,
         );
@@ -19882,9 +20160,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           confirmDelete: "folders.confirmDelete",
         },
         scripts: {
-          list: "list-scripts",
-          foldAll: "btn-fold-all-scripts",
-          newFolder: "btn-new-script-folder",
+          list: "list-queries",
+          foldAll: "btn-fold-all",
+          newFolder: "btn-new-folder",
           field: "script-folder",
           active: "activeScript",
           items: "scripts",
@@ -19894,20 +20172,37 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           deleted: "folders.deletedScripts",
           confirmDelete: "folders.confirmDeleteScripts",
         },
+        objects: {
+          list: "list-queries",
+          foldAll: "btn-fold-all",
+          newFolder: "btn-new-folder",
+          field: null,
+          active: null,
+          items: null,
+          count: "folders.objectsCount",
+          moved: "folders.objectMoved",
+          unfolder: "folders.objectUnfoldered",
+          deleted: "folders.deletedObjects",
+          confirmDelete: "folders.confirmDeleteObjects",
+        },
       },
 
-      /** The kinds of list, so the loops over them are short. */
-      KINDS: ["tables", "queries", "scripts"],
+      /** The kinds of list, so the loops over them are short. Queries and
+       *  scripts share one list, bound as «objects». */
+      KINDS: ["tables", "objects"],
 
       /** Element of the sidebar of that kind. */
       listOf(kind) {
         return document.getElementById(UiFolders.KIND[kind].list);
       },
 
-      /** Item of that list with that name, as painted, or null. */
+      /** Item of that list with that name, as painted, or null. Queries and
+       *  scripts share a list, so the kind of the row tells them apart. */
       itemOf(kind, name) {
+        const wantedKind = kind === "queries" ? "query" : (kind === "scripts" ? "script" : null);
         return [...UiFolders.listOf(kind).querySelectorAll("li[data-name]")]
-          .find((item) => item.dataset.name === name) || null;
+          .find((item) => item.dataset.name === name
+            && (wantedKind === null || item.dataset.kind === wantedKind)) || null;
       },
 
       /** Brings a jumped-to item into sight: it opens the list of tables and the
@@ -19943,11 +20238,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           Ui.renderSidebarTables();
           return;
         }
-        if (kind === "scripts") {
-          Ui.renderSidebarScripts();
-          return;
-        }
-        Ui.renderSidebarQueries();
+        Ui.renderSidebarObjects();
       },
 
       /** Repaints the list of that kind and refreshes the folder field of its
@@ -19955,6 +20246,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  (or disappears) without having to reopen the item. */
       refresh(kind) {
         UiFolders.repaint(kind);
+        if (kind === "objects") {
+          UiFolders.fillEditorOptions("queries");
+          UiFolders.fillEditorOptions("scripts");
+          return;
+        }
         UiFolders.fillEditorOptions(kind);
       },
 
@@ -19982,6 +20278,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           document.getElementById(spec.foldAll).addEventListener("click", () => UiFolders.toggleAll(kind));
           UiFolders.listOf(kind).addEventListener("click", (event) => UiFolders.headerClick(kind, event));
           UiFolders.bindDrag(kind);
+          if (spec.field) {
+            document.getElementById(spec.field)
+              .addEventListener("change", () => UiFolders.commitEditorFolder(kind));
+          }
+        });
+        // The folder drop-downs of the two editors keep their own bindings:
+        // the lists they move items in are the two halves of the shared list.
+        ["queries", "scripts"].forEach((kind) => {
+          const spec = UiFolders.KIND[kind];
           document.getElementById(spec.field)
             .addEventListener("change", () => UiFolders.commitEditorFolder(kind));
         });
@@ -20201,9 +20506,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           const target = pending.target;
           const dragging = pending.dragging;
           const itemName = pending.item.dataset.name;
+          const dataKind = pending.item.dataset.kind;
+          const itemKind = dataKind === "query" ? "queries" : (dataKind === "script" ? "scripts" : kind);
           stop();
           if (dragging && target) {
-            UiFolders.dropItemTo(kind, target.dataset.folder, itemName);
+            UiFolders.dropItemTo(kind, target.dataset.folder, itemName, itemKind);
           }
         });
         document.addEventListener("pointercancel", stop);
@@ -20230,8 +20537,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Moves an item into the folder it was dropped on; "" takes it out of
        *  every folder. */
-      dropItemTo(kind, folder, itemName) {
-        const result = Model.moveToFolder(Store.project, itemName, folder || null, kind);
+      dropItemTo(kind, folder, itemName, itemKind) {
+        const targetKind = itemKind || kind;
+        const result = Model.moveToFolder(Store.project, itemName, folder || null, targetKind);
         if (!result.ok) {
           setStatus(result.error);
           return;
@@ -20338,8 +20646,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         UiProject.markDirty();
         UiFolders.refresh(kind);
-        setStatus(I18n.t(kind === "scripts" ? "folders.duplicatedScripts" : "folders.duplicated", {
+        const message = kind === "objects"
+          ? "folders.duplicatedObjects"
+          : (kind === "scripts" ? "folders.duplicatedScripts" : "folders.duplicated");
+        setStatus(I18n.t(message, {
           name: name, copy: result.folder, count: result.count,
+          queries: result.queries || 0, scripts: result.scripts || 0,
         }));
       },
 
@@ -20410,7 +20722,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
         UiProject.markDirty();
         Ui.renderAll();
-        UiFolders.fillEditorOptions(kind);
+        if (kind === "objects") {
+          UiFolders.fillEditorOptions("queries");
+          UiFolders.fillEditorOptions("scripts");
+        } else {
+          UiFolders.fillEditorOptions(kind);
+        }
         setStatus(I18n.t(spec.deleted, { name: name, count: total }));
       },
 
@@ -20462,12 +20779,17 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           down.setAttribute("aria-label", down.title);
           down.disabled = position < 0 || position >= folders.length - 1;
           item.appendChild(down);
-          if (kind === "queries" || kind === "scripts") {
+          if (kind === "queries" || kind === "scripts" || kind === "objects") {
             const duplicate = document.createElement("button");
             duplicate.type = "button";
             duplicate.className = "panel-action duplicate-folder";
             duplicate.appendChild(Ui.icon("copy"));
-            duplicate.title = I18n.t(kind === "scripts" ? "folders.duplicateScriptsTip" : "folders.duplicateTip", { name: name });
+            duplicate.title = I18n.t(
+              kind === "objects"
+                ? "folders.duplicateObjectsTip"
+                : (kind === "scripts" ? "folders.duplicateScriptsTip" : "folders.duplicateTip"),
+              { name: name },
+            );
             duplicate.setAttribute("aria-label", duplicate.title);
             duplicate.dataset.folder = name;
             item.appendChild(duplicate);
@@ -20490,6 +20812,153 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           item.appendChild(remove);
         }
         return item;
+      },
+    };
+
+    /* =====================================================================
+       9e · KEYWORD SEARCH
+       A window with a text field and the queries and scripts whose keywords
+       contain every term written. Picking a result closes the window and opens
+       that query or script.
+       ===================================================================== */
+    const UiKeywordSearch = {
+      dialog() {
+        return document.getElementById("dlg-keyword-search");
+      },
+
+      input() {
+        return document.getElementById("keyword-search-input");
+      },
+
+      results() {
+        return document.getElementById("keyword-search-results");
+      },
+
+      /** Terms of the search: lower-case words separated by spaces or commas. */
+      terms() {
+        return String(UiKeywordSearch.input().value)
+          .toLowerCase()
+          .split(/[\s,]+/)
+          .filter((term) => term !== "");
+      },
+
+      /** Objects whose keywords contain every term (all of them when the box is
+       *  empty), ordered by name and then by kind. */
+      matches() {
+        const terms = UiKeywordSearch.terms();
+        const found = [];
+        const consider = (kind, item) => {
+          const keywords = (item.keywords || []).map((keyword) => String(keyword).toLowerCase());
+          if (keywords.length === 0) {
+            return;
+          }
+          if (!terms.every((term) => keywords.some((keyword) => keyword.includes(term)))) {
+            return;
+          }
+          found.push({ kind: kind, name: item.name, keywords: item.keywords });
+        };
+        (Store.project.queries || []).forEach((query) => consider("query", query));
+        (Store.project.scripts || []).forEach((script) => consider("script", script));
+        found.sort((left, right) => left.name.localeCompare(right.name) || left.kind.localeCompare(right.kind));
+        return found;
+      },
+
+      /** Repaints the result list for the text in the box. */
+      render() {
+        const results = UiKeywordSearch.results();
+        const count = document.getElementById("keyword-search-count");
+        results.textContent = "";
+        const matches = UiKeywordSearch.matches();
+        const terms = UiKeywordSearch.terms();
+        count.textContent = matches.length > 0
+          ? I18n.t("keywordSearch.resultsCount", { count: matches.length })
+          : "";
+        if (matches.length === 0) {
+          const empty = document.createElement("p");
+          empty.className = "muted";
+          empty.textContent = I18n.t(
+            terms.length === 0 ? "keywordSearch.empty" : "keywordSearch.noResults",
+          );
+          results.appendChild(empty);
+          return;
+        }
+        matches.forEach((match) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.kind = match.kind;
+          button.dataset.name = match.name;
+          button.title = I18n.t(match.kind === "query" ? "ui.refQuery" : "ui.refScript", { name: match.name });
+          const badge = document.createElement("span");
+          badge.className = "kind-badge";
+          badge.dataset.kind = match.kind;
+          badge.textContent = match.kind === "query" ? "c" : "s";
+          badge.setAttribute("aria-hidden", "true");
+          const name = document.createElement("span");
+          name.className = "result-name";
+          name.textContent = match.name;
+          const keywords = document.createElement("span");
+          keywords.className = "result-keywords";
+          keywords.textContent = Ui.keywordsText(match.keywords);
+          button.appendChild(badge);
+          button.appendChild(name);
+          button.appendChild(keywords);
+          results.appendChild(button);
+        });
+      },
+
+      /** Opens the window with the box empty and the keyboard on it. */
+      show() {
+        const dialog = UiKeywordSearch.dialog();
+        UiKeywordSearch.input().value = "";
+        UiKeywordSearch.render();
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        UiKeywordSearch.input().focus();
+      },
+
+      close() {
+        const dialog = UiKeywordSearch.dialog();
+        if (dialog.open) {
+          dialog.close();
+        }
+      },
+
+      /** Closes the window and opens the chosen query or script. */
+      open(kind, name) {
+        UiKeywordSearch.close();
+        if (kind === "script") {
+          UiScripts.select(name);
+        } else {
+          UiQueries.select(name);
+        }
+      },
+
+      bind() {
+        document.getElementById("btn-keyword-search").addEventListener("click", () => UiKeywordSearch.show());
+        document.getElementById("btn-close-keyword-search").addEventListener("click", () => UiKeywordSearch.close());
+        UiKeywordSearch.input().addEventListener("input", () => UiKeywordSearch.render());
+        UiKeywordSearch.input().addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            const first = UiKeywordSearch.results().querySelector("button[data-name]");
+            if (first) {
+              event.preventDefault();
+              first.click();
+            }
+          }
+        });
+        UiKeywordSearch.results().addEventListener("click", (event) => {
+          const button = event.target.closest("button[data-name]");
+          if (button) {
+            UiKeywordSearch.open(button.dataset.kind, button.dataset.name);
+          }
+        });
+        UiKeywordSearch.dialog().addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            UiKeywordSearch.close();
+          }
+        });
       },
     };
 
@@ -22142,7 +22611,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       });
       try {
         UiScripts.select("s");
-        const item = document.querySelector("#list-scripts li[data-name=\"s\"]");
+        const item = document.querySelector("#list-queries li[data-kind=\"script\"][data-name=\"s\"]");
         assertEqual(item.querySelector(".mark-view").textContent, "view", "the script carries the view mark");
         assertEqual(document.getElementById("btn-script-sources").hidden, false, "the data sources button shows");
         assertEqual(document.getElementById("btn-script-readers").hidden, false, "the dependents button shows");
@@ -22173,6 +22642,79 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         Ui.state.activeScript = before.script;
         Ui.showView(before.view);
         Ui.renderAll();
+      }
+    });
+
+    SelfTests.add("When_SearchKeywords_ExpectMatchingObjectsAndOpen", () => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        view: Ui.state.view,
+        query: Ui.state.activeQuery,
+        script: Ui.state.activeScript,
+        dirty: Store.dirty,
+      };
+      Store.replaceProject({
+        name: "keyword-search",
+        tables: [{
+          name: "t",
+          description: "",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "id", description: null, type: "number" }],
+          rows: [{ id: 1 }],
+        }],
+        queries: [
+          { name: "ventas_2026", description: "", sql: "SELECT id FROM t", keywords: ["ventas", "2026"] },
+          { name: "stock", description: "", sql: "SELECT id FROM t", keywords: ["inventario"] },
+        ],
+        scripts: [
+          { name: "informe", description: "", code: "return [];", keywords: ["ventas", "informe"] },
+        ],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        Ui.renderAll();
+        document.getElementById("btn-keyword-search").click();
+        assertEqual(document.getElementById("dlg-keyword-search").open, true, "the search window opens");
+        const input = document.getElementById("keyword-search-input");
+        input.value = "ventas";
+        input.dispatchEvent(new Event("input"));
+        const rows = [...document.querySelectorAll("#keyword-search-results button[data-name]")];
+        assertEqual(
+          rows.map((row) => `${row.dataset.kind}:${row.dataset.name}`),
+          ["script:informe", "query:ventas_2026"],
+          "the query and the script with that keyword are listed",
+        );
+        document.querySelector("#keyword-search-results button[data-kind=\"query\"][data-name=\"ventas_2026\"]").click();
+        assertEqual(document.getElementById("dlg-keyword-search").open, false, "picking a result closes the window");
+        assertEqual(Ui.state.view, "query", "the query opens");
+        assertEqual(Ui.state.activeQuery, "ventas_2026", "the chosen query is the active one");
+
+        UiKeywordSearch.show();
+        input.value = "informe";
+        input.dispatchEvent(new Event("input"));
+        const scriptRow = document.querySelector("#keyword-search-results button[data-kind=\"script\"][data-name=\"informe\"]");
+        assert(scriptRow, "the script appears for its keyword");
+        scriptRow.click();
+        assertEqual(Ui.state.view, "script", "the script opens");
+        assertEqual(Ui.state.activeScript, "informe", "the chosen script is the active one");
+
+        UiKeywordSearch.show();
+        input.value = "no-existe";
+        input.dispatchEvent(new Event("input"));
+        assert(
+          document.getElementById("keyword-search-results").textContent.includes("No query or script"),
+          "an unknown keyword says that there are no results",
+        );
+      } finally {
+        UiKeywordSearch.close();
+        Store.replaceProject(before.project);
+        Ui.state.activeQuery = before.query;
+        Ui.state.activeScript = before.script;
+        Ui.showView(before.view);
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
       }
     });
 
@@ -26679,7 +27221,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(headers.map((item) => item.dataset.folder), ["Sales", "2026", ""], "one header per folder and the «no folder» group");
       assertEqual(headers.map((item) => item.querySelector(".name").textContent), ["Sales", "2026", "No folder"], "the headers carry the names");
       assertEqual(headers.map((item) => item.querySelector(".count").textContent), ["1", "1", "1"], "and how many queries each one holds");
-      assertEqual(headers.map((item) => item.querySelector(".count").title), ["1 query", "1 query", "1 query"], "with the whole sentence in the tip");
+      assertEqual(headers.map((item) => item.querySelector(".count").title), ["1 query or script", "1 query or script", "1 query or script"], "with the whole sentence in the tip");
       const items = [...list.querySelectorAll("li[data-name]")];
       assertEqual(items.map((item) => item.dataset.name), ["q1", "q2", "q3"], "the queries come under their folder");
       assertEqual(items.map((item) => item.dataset.folder), ["Sales", "2026", ""], "and each one says which folder it is in");
@@ -26796,7 +27338,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       const headers = [...document.querySelectorAll("#list-queries li.folder")];
       assertEqual(headers.map((item) => item.dataset.folder), ["Sales", "2026", "Empty", ""], "an empty folder is listed too");
       assertEqual(headers[2].querySelector(".count").textContent, "0", "with a zero count");
-      assertEqual(headers[2].querySelector(".count").title, "0 queries", "and the tip says it in words");
+      assertEqual(headers[2].querySelector(".count").title, "0 queries and scripts", "and the tip says it in words");
       Store.replaceProject(before.project);
       UiProject.showName();
       Ui.renderAll();
@@ -27042,7 +27584,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       const duplicate = folderHeader("Sales").querySelector("button.duplicate-folder");
       assert(duplicate !== null, "every folder of queries carries its «D»");
       assertEqual(duplicate.querySelector('[data-icon="copy"]') !== null, true, "with the icon of the action");
-      assertEqual(duplicate.title, "Duplicate the folder “Sales” with its queries", "and the tip that says what it does");
+      assertEqual(duplicate.title, "Duplicate the folder “Sales” with its queries and scripts", "and the tip that says what it does");
       assertEqual(document.querySelector("#list-tables button.duplicate-folder"), null, "the folders of the tables do not carry it");
       assertEqual(folderHeader("").querySelectorAll("button.duplicate-folder").length, 0, "nor the «no folder» group");
       duplicate.click();
@@ -28017,7 +28559,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(header().querySelector("button.duplicate-folder").querySelector('[data-icon="copy"]') !== null, true, "the one that duplicates it too");
       assertEqual(header().querySelector("button.rename-folder").title, "Rename the folder “Sales”", "with their meaning in the tip, in English");
       assertEqual(header().querySelector("button.delete-folder").title, "Delete the folder “Sales”", "both of them");
-      assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicate the folder “Sales” with its queries", "and the duplicate one");
+      assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicate the folder “Sales” with its queries and scripts", "and the duplicate one");
       assertEqual(queryItem("q1").querySelector("button.duplicate-query").title, "Duplicate the query “q1”", "and the «D» of the queries");
       const select = document.getElementById("language-select");
       select.value = "es";
@@ -28025,7 +28567,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(header().querySelector("button.rename-folder").querySelector('[data-icon="edit"]') !== null, true, "the icons do not change with the language");
       assertEqual(header().querySelector("button.rename-folder").title, "Renombrar la carpeta «Sales»", "but their tips do");
       assertEqual(header().querySelector("button.delete-folder").title, "Borrar la carpeta «Sales»", "both of them");
-      assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicar la carpeta «Sales» con sus consultas", "and the duplicate one");
+      assertEqual(header().querySelector("button.duplicate-folder").title, "Duplicar la carpeta «Sales» con sus consultas y scripts", "and the duplicate one");
       assertEqual(queryItem("q1").querySelector("button.duplicate-query").title, "Duplicar la consulta «q1»", "and the «D» of the queries");
       assertEqual(document.querySelector("#list-queries li.folder[data-folder=\"\"] .name").textContent, "Sin carpeta", "and the «no folder» group too");
       assertEqual(document.querySelector("#list-queries li[data-name] .mark-test").textContent, "sin test", "the marks of the queries as well");
@@ -29276,6 +29818,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiRelations.bind();
         UiSidebar.bind();
         UiFolders.bind();
+        UiKeywordSearch.bind();
         UiQueries.bind();
         UiScripts.bind();
         UiQueryInsert.bind();

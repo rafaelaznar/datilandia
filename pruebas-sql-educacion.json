@@ -18,14 +18,6 @@
     "Académico",
     "Matrículas"
   ],
-  "scriptFolders": [
-    "Filtros y listas",
-    "Agregados",
-    "Fechas",
-    "Cruces e integridad",
-    "Consultas e informes",
-    "Potencia de JavaScript"
-  ],
   "tables": [
     {
       "name": "sedes",
@@ -8658,7 +8650,7 @@
         "map"
       ],
       "code": "const datos = tables[\"estudiantes\"];\nreturn datos\n  .filter((fila) => fila.es_becado)\n  .map((fila) => ({\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"email\": fila.email,\n    \"sede\": fila.id_sede,\n  }));",
-      "folder": "Filtros y listas",
+      "folder": "A · Básicas y agregados",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -8726,7 +8718,7 @@
         "orden"
       ],
       "code": "const datos = tables[\"estudiantes\"];\nconst reference = new Date(\"2025-09-01\");\nreturn datos\n  .map((fila) => {\n    const birth = new Date(fila.fecha_nacimiento);\n    let age = reference.getFullYear() - birth.getFullYear();\n    const m = reference.getMonth() - birth.getMonth();\n    if (m < 0 || (m === 0 && reference.getDate() < birth.getDate())) {\n      age -= 1;\n    }\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"fecha_nacimiento\": fila.fecha_nacimiento,\n      \"edad\": age,\n    };\n  })\n  .sort((a, b) => b[\"edad\"] - a[\"edad\"]);",
-      "folder": "Fechas",
+      "folder": "A · Básicas y agregados",
       "color": "#fde8cd",
       "assert": {
         "columns": [
@@ -8870,7 +8862,7 @@
         "slice"
       ],
       "code": "const datos = tables[\"estudiantes\"];\nreturn datos\n  .slice()\n  .sort((a, b) => String(a.fecha_nacimiento).localeCompare(String(b.fecha_nacimiento)))\n  .slice(0, 10)\n  .map((fila, index) => ({\n    \"puesto\": index + 1,\n    \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n    \"fecha_nacimiento\": fila.fecha_nacimiento,\n  }));",
-      "folder": "Filtros y listas",
+      "folder": "A · Básicas y agregados",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -8946,7 +8938,7 @@
         "objetos"
       ],
       "code": "const datos = tables[\"estudiantes\"];\nconst campuses = new Map(tables[\"sedes\"].map((c) => [c.id_sede, c.nombre]));\nconst counts = datos.reduce((acc, fila) => {\n  const name = campuses.get(fila.id_sede) || \"—\";\n  acc[name] = (acc[name] || 0) + 1;\n  return acc;\n}, {});\nreturn Object.entries(counts)\n  .map(([name, count]) => ({ \"sede\": name, \"estudiantes\": count }))\n  .sort((a, b) => b[\"estudiantes\"] - a[\"estudiantes\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -8984,7 +8976,7 @@
         "map"
       ],
       "code": "const datos = tables[\"estudiantes\"];\nreturn datos\n  .filter((fila) => !fila.email || !fila.telefono)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.telefono) missing.push(\"telefono\");\n    return {\n      \"nombre_completo\": `${fila.nombre} ${fila.apellidos}`,\n      \"email\": fila.email,\n      \"telefono\": fila.telefono,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
-      "folder": "Filtros y listas",
+      "folder": "A · Básicas y agregados",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -9088,7 +9080,7 @@
         "math"
       ],
       "code": "const datos = tables[\"estudiantes\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.codigo_estudio;\n  acc[key] = acc[key] || { total: 0, scholarship: 0 };\n  acc[key].total += 1;\n  if (fila.es_becado) acc[key].scholarship += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([degree, g]) => ({\n    \"estudio\": degree,\n    \"estudiantes\": g.total,\n    \"becados\": g.scholarship,\n    \"porcentaje\": Math.round((g.scholarship / g.total) * 1000) / 10,\n  }))\n  .sort((a, b) => a[\"estudio\"].localeCompare(b[\"estudio\"]));",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9150,7 +9142,7 @@
         "math"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst groups = datos\n  .filter((fila) => fila.nota !== null && fila.nota !== undefined)\n  .reduce((acc, fila) => {\n    const key = fila.estado;\n    acc[key] = acc[key] || { count: 0, sum: 0, min: Infinity, max: -Infinity };\n    const g = acc[key];\n    g.count += 1;\n    g.sum += fila.nota;\n    g.min = Math.min(g.min, fila.nota);\n    g.max = Math.max(g.max, fila.nota);\n    return acc;\n  }, {});\nreturn Object.entries(groups).map(([status, g]) => ({\n  \"estado\": status,\n  \"total\": g.count,\n  \"media\": Math.round((g.sum / g.count) * 100) / 100,\n  \"minimo\": g.min,\n  \"maximo\": g.max,\n}));",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9184,7 +9176,7 @@
         "objetos"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.curso_academico;\n  acc[key] = acc[key] || { total: 0, passed: 0, graded: 0, sum: 0 };\n  const g = acc[key];\n  g.total += 1;\n  if (fila.estado === \"superada\") g.passed += 1;\n  if (fila.nota !== null && fila.nota !== undefined) {\n    g.graded += 1;\n    g.sum += fila.nota;\n  }\n  return acc;\n}, {});\nreturn Object.entries(groups).map(([year, g]) => ({\n  \"curso\": year,\n  \"total\": g.total,\n  \"superadas\": g.passed,\n  \"porcentaje\": Math.round((g.passed / g.total) * 1000) / 10,\n  \"media\": g.graded ? Math.round((g.sum / g.graded) * 100) / 100 : null,\n}));",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9225,7 +9217,7 @@
         "objetos"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const year = fila.curso_academico;\n  const status = fila.estado;\n  acc[year] = acc[year] || { year, active: 0, passed: 0, cancelled: 0 };\n  if (status === \"activa\") acc[year].active += 1;\n  else if (status === \"superada\") acc[year].passed += 1;\n  else if (status === \"anulada\") acc[year].cancelled += 1;\n  return acc;\n}, {});\nreturn Object.values(groups)\n  .map((g) => ({\n    \"curso\": g.year,\n    \"activas\": g.active,\n    \"superadas\": g.passed,\n    \"anuladas\": g.cancelled,\n  }))\n  .sort((a, b) => String(a[\"curso\"]).localeCompare(String(b[\"curso\"])));",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9264,7 +9256,7 @@
         "math"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst subjects = new Map(tables[\"asignaturas\"].map((s) => [s.id_asignatura, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  if (fila.nota === null || fila.nota === undefined) return acc;\n  const key = fila.id_asignatura;\n  acc[key] = acc[key] || { sum: 0, count: 0 };\n  acc[key].sum += fila.nota;\n  acc[key].count += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"asignatura\": subjects.get(Number(id)) || `#${id}`,\n    \"total\": g.count,\n    \"media\": Math.round((g.sum / g.count) * 100) / 100,\n  }))\n  .sort((a, b) => b[\"media\"] - a[\"media\"])\n  .map((row, index) => ({ \"puesto\": index + 1, ...row }));",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -9364,7 +9356,7 @@
         "math"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst students = new Map(tables[\"estudiantes\"].map((s) => [s.id_estudiante, `${s.nombre} ${s.apellidos}`]));\nconst subjects = new Map(tables[\"asignaturas\"].map((s) => [s.id_asignatura, s.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const id = fila.id_estudiante;\n  acc[id] = acc[id] || { subjects: new Set(), grades: [] };\n  acc[id].subjects.add(subjects.get(fila.id_asignatura) || `#${fila.id_asignatura}`);\n  if (fila.nota !== null && fila.nota !== undefined) acc[id].grades.push(fila.nota);\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"estudiante\": students.get(Number(id)) || `#${id}`,\n    \"asignaturas\": g.subjects.size,\n    \"media\": g.grades.length ? Math.round((g.grades.reduce((a, b) => a + b, 0) / g.grades.length) * 100) / 100 : null,\n    \"lista\": Array.from(g.subjects).join(\" · \"),\n  }))\n  .sort((a, b) => b[\"asignaturas\"] - a[\"asignaturas\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -9516,7 +9508,7 @@
         "math"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst buckets = { \"0-4.9\": 0, \"5-6.9\": 0, \"7-8.9\": 0, \"9-10\": 0 };\ndatos.forEach((fila) => {\n  const g = fila.nota;\n  if (g === null || g === undefined) return;\n  if (g < 5) buckets[\"0-4.9\"] += 1;\n  else if (g < 7) buckets[\"5-6.9\"] += 1;\n  else if (g < 9) buckets[\"7-8.9\"] += 1;\n  else buckets[\"9-10\"] += 1;\n});\nconst total = Object.values(buckets).reduce((a, b) => a + b, 0);\nreturn Object.entries(buckets).map(([range, count]) => ({\n  \"rango\": range,\n  \"total\": count,\n  \"porcentaje\": total ? Math.round((count / total) * 1000) / 10 : 0,\n}));",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9561,7 +9553,7 @@
         "math"
       ],
       "code": "const datos = tables[\"asignaturas\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.curso;\n  acc[key] = acc[key] || { count: 0, credits: 0, hours: 0 };\n  acc[key].count += 1;\n  acc[key].credits += fila.creditos;\n  acc[key].hours += fila.horas_presenciales;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([year, g]) => ({\n    \"curso\": Number(year),\n    \"total\": g.count,\n    \"creditos\": g.credits,\n    \"media_horas\": Math.round((g.hours / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => a[\"curso\"] - b[\"curso\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9617,7 +9609,7 @@
         "math"
       ],
       "code": "const datos = tables[\"docentes\"];\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.categoria;\n  acc[key] = acc[key] || { count: 0, hours: 0, researchers: 0 };\n  acc[key].count += 1;\n  acc[key].hours += fila.horas_semanales;\n  if (fila.es_investigador) acc[key].researchers += 1;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([category, g]) => ({\n    \"categoria\": category,\n    \"total\": g.count,\n    \"media_horas\": Math.round((g.hours / g.count) * 10) / 10,\n    \"investigadores\": g.researchers,\n  }))\n  .sort((a, b) => b[\"total\"] - a[\"total\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9665,7 +9657,7 @@
         "map"
       ],
       "code": "const datos = tables[\"docentes\"];\nreturn datos\n  .filter((fila) => !fila.email || !fila.despacho)\n  .map((fila) => {\n    const missing = [];\n    if (!fila.email) missing.push(\"email\");\n    if (!fila.despacho) missing.push(\"despacho\");\n    return {\n      \"docente\": `${fila.nombre} ${fila.apellidos}`,\n      \"categoria\": fila.categoria,\n      \"email\": fila.email,\n      \"despacho\": fila.despacho,\n      \"faltan\": missing.join(\", \"),\n    };\n  });",
-      "folder": "Filtros y listas",
+      "folder": "A · Básicas y agregados",
       "color": "#dcf1d4",
       "assert": {
         "columns": [
@@ -9735,7 +9727,7 @@
         "math"
       ],
       "code": "const datos = tables[\"aulas\"];\nconst buildings = new Map(tables[\"edificios\"].map((b) => [b.id_edificio, b.nombre]));\nconst groups = datos.reduce((acc, fila) => {\n  const key = fila.id_edificio;\n  acc[key] = acc[key] || { count: 0, capacity: 0 };\n  acc[key].count += 1;\n  acc[key].capacity += fila.capacidad;\n  return acc;\n}, {});\nreturn Object.entries(groups)\n  .map(([id, g]) => ({\n    \"edificio\": buildings.get(Number(id)) || `#${id}`,\n    \"aulas\": g.count,\n    \"capacidad\": g.capacity,\n    \"media\": Math.round((g.capacity / g.count) * 10) / 10,\n  }))\n  .sort((a, b) => b[\"capacidad\"] - a[\"capacidad\"]);",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "columns": [
@@ -9803,7 +9795,7 @@
         "math"
       ],
       "code": "const datos = tables[\"sedes\"];\nconst total = datos.reduce((sum, fila) => sum + fila.aforo_maximo, 0);\nreturn datos\n  .map((fila) => ({\n    \"sede\": fila.nombre,\n    \"ciudad\": fila.ciudad,\n    \"capacidad\": fila.aforo_maximo,\n    \"porcentaje\": Math.round((fila.aforo_maximo / total) * 1000) / 10,\n  }))\n  .sort((a, b) => b[\"capacidad\"] - a[\"capacidad\"]);",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -9849,7 +9841,7 @@
         "map"
       ],
       "code": "const rows = queries[\"A19 · Estudiantes con tres o más matrículas\"]();\nreturn rows.map((row) => ({\n  \"estudiante\": row.id_estudiante,\n  \"matriculas\": row.matriculas,\n}));",
-      "folder": "Consultas e informes",
+      "folder": "C · Consultas relacionadas",
       "color": "#fbf6c9",
       "assert": {
         "columns": [
@@ -9913,7 +9905,7 @@
         "objetos"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst groups = {};\ndatos.forEach((fila) => {\n  const key = fila.estado;\n  groups[key] = groups[key] || { count: 0, sum: 0 };\n  groups[key].count += 1;\n  if (fila.nota !== null && fila.nota !== undefined) groups[key].sum += fila.nota;\n});\nconst rows = Object.entries(groups).map(([status, g]) => ({\n  \"estado\": status,\n  \"total\": g.count,\n  \"media\": g.count ? Math.round((g.sum / g.count) * 100) / 100 : null,\n}));\nrows.push({\n  \"estado\": \"TOTAL\",\n  \"total\": datos.length,\n  \"media\": null,\n});\nresultado = rows;",
-      "folder": "Consultas e informes",
+      "folder": "C · Consultas relacionadas",
       "color": "#fbf6c9",
       "assert": {
         "columns": [
@@ -9958,7 +9950,7 @@
         "map"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst studentIds = new Set(tables[\"estudiantes\"].map((s) => s.id_estudiante));\nconst subjectIds = new Set(tables[\"asignaturas\"].map((s) => s.id_asignatura));\nreturn datos\n  .filter((fila) => !studentIds.has(fila.id_estudiante) || !subjectIds.has(fila.id_asignatura))\n  .map((fila) => ({\n    \"matricula\": fila.id_matricula,\n    \"estudiante\": fila.id_estudiante,\n    \"asignatura\": fila.id_asignatura,\n    \"faltan\": !studentIds.has(fila.id_estudiante) ? \"estudiante\" : \"asignatura\",\n  }));",
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#e8ddf7",
       "assert": {
         "rowCount": 0
@@ -9977,7 +9969,7 @@
         "math"
       ],
       "code": "const datos = tables[\"matriculas\"];\nconst subjects = new Map(tables[\"asignaturas\"].map((s) => [s.id_asignatura, s.creditos]));\nlet sum = 0;\nlet credits = 0;\ndatos.forEach((fila) => {\n  if (fila.nota === null || fila.nota === undefined) return;\n  const c = subjects.get(fila.id_asignatura) || 0;\n  sum += fila.nota * c;\n  credits += c;\n});\nreturn [{\n  \"media\": credits ? Math.round((sum / credits) * 100) / 100 : null,\n  \"creditos\": credits,\n}];",
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#d3ecf3",
       "assert": {
         "columns": [
@@ -10005,7 +9997,7 @@
         "slice",
         "intl"
       ],
-      "folder": "Potencia de JavaScript",
+      "folder": "C · Consultas relacionadas",
       "color": "#dde5fa",
       "code": "const estudiantes = tables[\"estudiantes\"];\nconst sedes = new Map(tables[\"sedes\"].map((s) => [s.id_sede, s.nombre]));\nconst collator = new Intl.Collator(\"es\", { sensitivity: \"base\" });\nreturn estudiantes\n  .map((fila) => {\n    const email = fila.email ? String(fila.email) : \"\";\n    const at = email.indexOf(\"@\");\n    return {\n      \"estudiante\": `${fila.apellidos}, ${fila.nombre}`,\n      \"iniciales\": `${fila.nombre.charAt(0)}${fila.apellidos.charAt(0)}`.toUpperCase(),\n      \"sede\": sedes.get(fila.id_sede) || \"—\",\n      \"usuario_correo\": at > 0 ? email.slice(0, at) : null,\n      \"dominio_correo\": at > 0 ? email.slice(at + 1) : null,\n      \"becado\": fila.es_becado ? \"sí\" : \"no\",\n    };\n  })\n  .sort((a, b) => collator.compare(a[\"estudiante\"], b[\"estudiante\"]));",
       "assert": {
@@ -10224,7 +10216,7 @@
         "reduce",
         "math"
       ],
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#dcf1d4",
       "code": "const conteos = queries[\"H01 · Estudiantes por sede, leídos del script\"]();\nconst sedes = new Map(tables[\"sedes\"].map((s) => [s.nombre, s]));\nlet acumulado = 0;\nconst total = conteos.reduce((suma, fila) => suma + fila.estudiantes, 0);\nreturn conteos.map((fila) => {\n  const sede = sedes.get(fila.sede);\n  const aforo = sede ? sede.aforo_maximo : 0;\n  const proporcion = aforo ? Math.round((fila.estudiantes / aforo) * 1000) / 10 : null;\n  acumulado += fila.estudiantes;\n  return {\n    \"sede\": fila.sede,\n    \"estudiantes\": fila.estudiantes,\n    \"aforo\": aforo,\n    \"porcentaje_ocupacion\": proporcion,\n    \"porcentaje_total\": total ? Math.round((fila.estudiantes / total) * 1000) / 10 : 0,\n    \"acumulado\": acumulado,\n    \"estado\": proporcion === null ? \"sin aforo\" : proporcion >= 0.25 ? \"con presión\" : \"con holgura\",\n  };\n});",
       "assert": {
@@ -10290,7 +10282,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Potencia de JavaScript",
+      "folder": "C · Consultas relacionadas",
       "color": "#fce4e4",
       "code": "const estudios = tables[\"estudios\"];\nconst asignaturasPorId = new Map(tables[\"asignaturas\"].map((a) => [a.id_asignatura, a]));\nconst medias = queries[\"A31 · Nota media por asignatura (HAVING y ORDER BY por alias)\"]();\nconst grupos = new Map(estudios.map((e) => [e.codigo, { estudio: e, asignaturas: 0, calificadas: 0, ponderado: 0 }]));\ntables[\"asignaturas\"].forEach((asignatura) => {\n  const grupo = grupos.get(asignatura.codigo_estudio);\n  if (grupo) grupo.asignaturas += 1;\n});\nmedias.forEach((fila) => {\n  const asignatura = asignaturasPorId.get(fila.id_asignatura);\n  const grupo = asignatura ? grupos.get(asignatura.codigo_estudio) : null;\n  if (!grupo) return;\n  grupo.calificadas += fila.calificadas;\n  grupo.ponderado += fila.nota_media * fila.calificadas;\n});\nreturn [...grupos.values()]\n  .map((grupo) => ({\n    \"estudio\": grupo.estudio.nombre,\n    \"nivel\": grupo.estudio.nivel,\n    \"asignaturas\": grupo.asignaturas,\n    \"matriculas_calificadas\": grupo.calificadas,\n    \"nota_media\": grupo.calificadas ? Math.round((grupo.ponderado / grupo.calificadas) * 100) / 100 : null,\n    \"oficial\": grupo.estudio.es_oficial ? \"sí\" : \"no\",\n  }))\n  .sort((a, b) => (b[\"nota_media\"] || 0) - (a[\"nota_media\"] || 0));",
       "assert": {
@@ -10366,7 +10358,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Consultas e informes",
+      "folder": "C · Consultas relacionadas",
       "color": "#fde8cd",
       "code": "const carga = queries[\"C03 · Carga de cada estudiante (asignaturas y créditos)\"]();\nconst estudiantes = new Map(tables[\"estudiantes\"].map((e) => [e.id_estudiante, e]));\nconst notas = new Map();\ntables[\"matriculas\"].forEach((fila) => {\n  if (fila.nota === null || fila.nota === undefined) return;\n  const grupo = notas.get(fila.id_estudiante) || { suma: 0, cuenta: 0 };\n  grupo.suma += fila.nota;\n  grupo.cuenta += 1;\n  notas.set(fila.id_estudiante, grupo);\n});\nlet anterior = null;\nlet puesto = 0;\nreturn carga.map((fila, indice) => {\n  if (fila.creditos !== anterior) {\n    puesto = indice + 1;\n    anterior = fila.creditos;\n  }\n  const nota = notas.get(fila.id_estudiante);\n  const estudiante = estudiantes.get(fila.id_estudiante);\n  return {\n    \"puesto\": puesto,\n    \"estudiante\": `${fila.apellidos}, ${fila.nombre}`,\n    \"asignaturas\": fila.asignaturas,\n    \"creditos\": fila.creditos,\n    \"nota_media\": nota ? Math.round((nota.suma / nota.cuenta) * 100) / 100 : null,\n    \"becado\": estudiante && estudiante.es_becado ? \"sí\" : \"no\",\n  };\n});",
       "assert": {
@@ -10561,7 +10553,7 @@
         "orden",
         "foreach"
       ],
-      "folder": "Fechas",
+      "folder": "A · Básicas y agregados",
       "color": "#e8ddf7",
       "code": "const grupos = new Map();\ntables[\"matriculas\"].forEach((fila) => {\n  const fecha = new Date(fila.fecha_matricula);\n  const mes = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, \"0\")}`;\n  const grupo = grupos.get(mes) || { mes, total: 0, activa: 0, superada: 0, anulada: 0 };\n  grupo.total += 1;\n  if (grupo[fila.estado] !== undefined) grupo[fila.estado] += 1;\n  grupos.set(mes, grupo);\n});\nlet acumulado = 0;\nreturn [...grupos.values()]\n  .sort((a, b) => a.mes.localeCompare(b.mes))\n  .map((grupo) => {\n    acumulado += grupo.total;\n    return {\n      \"mes\": grupo.mes,\n      \"matriculas\": grupo.total,\n      \"activas\": grupo.activa,\n      \"superadas\": grupo.superada,\n      \"anuladas\": grupo.anulada,\n      \"acumulado\": acumulado,\n    };\n  });",
       "assert": {
@@ -10601,7 +10593,7 @@
         "cruces",
         "map"
       ],
-      "folder": "Cruces e integridad",
+      "folder": "B · Uniones (join)",
       "color": "#dcf1d4",
       "code": "const controles = [\n  [\"Matrículas sin estudiante\", \"D01 · Matrículas sin estudiante (integridad de la 1:M)\"],\n  [\"Matrículas sin asignatura\", \"D02 · Matrículas sin asignatura (integridad de la otra 1:M)\"],\n  [\"Asignaturas sin estudio\", \"D03 · Asignaturas sin estudio (integridad del código de texto)\"],\n  [\"Asignaturas sin docente\", \"D04 · Asignaturas sin docente\"],\n  [\"Pares estudiante/asignatura repetidos\", \"D08 · Matrículas repetidas del mismo par estudiante/asignatura\"],\n];\nreturn controles.map(([etiqueta, consulta]) => {\n  const filas = queries[consulta]();\n  return {\n    \"control\": etiqueta,\n    \"incidencias\": filas.length,\n    \"estado\": filas.length === 0 ? \"correcto\" : \"revisar\",\n    \"consulta\": consulta,\n  };\n});",
       "assert": {
@@ -10658,7 +10650,7 @@
         "foreach",
         "math"
       ],
-      "folder": "Agregados",
+      "folder": "A · Básicas y agregados",
       "color": "#fce4e4",
       "code": "const asignaturas = new Map(tables[\"asignaturas\"].map((a) => [a.id_asignatura, a]));\nconst top = new Set(queries[\"C13 · Asignaturas con más matrículas (ORDER BY de un agregado)\"]().map((fila) => fila.asignatura));\nconst grupos = new Map();\ntables[\"matriculas\"].forEach((fila) => {\n  const asignatura = asignaturas.get(fila.id_asignatura);\n  if (!asignatura) return;\n  const grupo = grupos.get(fila.id_asignatura) || { asignatura, total: 0, superada: 0, activa: 0, anulada: 0 };\n  grupo.total += 1;\n  if (grupo[fila.estado] !== undefined) grupo[fila.estado] += 1;\n  grupos.set(fila.id_asignatura, grupo);\n});\nreturn [...grupos.values()]\n  .map((grupo) => ({\n    \"asignatura\": grupo.asignatura.nombre,\n    \"estudio\": grupo.asignatura.codigo_estudio,\n    \"matriculas\": grupo.total,\n    \"superadas\": grupo.superada,\n    \"activas\": grupo.activa,\n    \"anuladas\": grupo.anulada,\n    \"porcentaje_aprobado\": grupo.total ? Math.round((grupo.superada / grupo.total) * 1000) / 10 : 0,\n    \"top_cinco\": top.has(grupo.asignatura.nombre) ? \"sí\" : \"no\",\n  }))\n  .sort((a, b) => b[\"matriculas\"] - a[\"matriculas\"] || a[\"asignatura\"].localeCompare(b[\"asignatura\"]));",
       "assert": {
@@ -10829,7 +10821,7 @@
         "orden",
         "foreach"
       ],
-      "folder": "Consultas e informes",
+      "folder": "C · Consultas relacionadas",
       "color": "#fde8cd",
       "code": "const docentes = tables[\"docentes\"];\nconst asignaturasPorDocente = new Map();\ntables[\"asignaturas\"].forEach((asignatura) => {\n  const lista = asignaturasPorDocente.get(asignatura.id_docente) || [];\n  lista.push(asignatura.nombre);\n  asignaturasPorDocente.set(asignatura.id_docente, lista);\n});\nconst media = docentes.length\n  ? docentes.reduce((suma, docente) => suma + docente.horas_semanales, 0) / docentes.length\n  : 0;\nreturn docentes\n  .map((docente) => {\n    const asignaturas = asignaturasPorDocente.get(docente.id_docente) || [];\n    const diferencia = Math.round((docente.horas_semanales - media) * 10) / 10;\n    return {\n      \"docente\": `${docente.apellidos}, ${docente.nombre}`,\n      \"categoria\": docente.categoria,\n      \"asignaturas\": asignaturas.length,\n      \"horas_semanales\": docente.horas_semanales,\n      \"media_horas\": Math.round(media * 10) / 10,\n      \"diferencia\": diferencia,\n      \"carga\": diferencia >= 6 ? \"sobrecargado\" : diferencia <= -6 ? \"ligero\" : \"equilibrado\",\n      \"lista_asignaturas\": asignaturas.join(\" · \"),\n    };\n  })\n  .sort((a, b) => b[\"diferencia\"] - a[\"diferencia\"] || a[\"docente\"].localeCompare(b[\"docente\"]));",
       "assert": {
