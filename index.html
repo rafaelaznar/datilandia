@@ -511,7 +511,8 @@
       white-space: nowrap;
     }
 
-    .row-actions .duplicate-query {
+    .row-actions .duplicate-query,
+    .row-actions .copy-name {
       padding: 0 2px;
       font-size: 9px;
       line-height: 1;
@@ -519,7 +520,9 @@
     }
 
     .row-actions .duplicate-query:hover,
-    .row-actions .duplicate-query:focus-visible {
+    .row-actions .duplicate-query:focus-visible,
+    .row-actions .copy-name:hover,
+    .row-actions .copy-name:focus-visible {
       color: #000;
     }
 
@@ -2012,6 +2015,7 @@
   <template data-icon="chevron-double-up"><svg class="icon" data-icon="chevron-double-up" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M8 16L11.2929 12.7071C11.6834 12.3166 12.3166 12.3166 12.7071 12.7071L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 12L11.2929 8.70711C11.6834 8.31658 12.3166 8.31658 12.7071 8.70711L16 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
   <template data-icon="chevron-double-down"><svg class="icon" data-icon="chevron-double-down" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 12L12.7071 15.2929C12.3166 15.6834 11.6834 15.6834 11.2929 15.2929L8 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8L12.7071 11.2929C12.3166 11.6834 11.6834 11.6834 11.2929 11.2929L8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
   <template data-icon="copy"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg></template>
+  <template data-icon="note-text"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <template data-icon="edit"><svg class="icon" data-icon="edit" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M21 18V18.5C21 19.8807 19.8807 21 18.5 21H5.5C4.11929 21 3 19.8807 3 18.5V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.4048 12.1062L13.0741 3.99909C13.4236 3.49921 13.9636 3.15449 14.5753 3.04075C15.1869 2.92701 15.82 3.05359 16.3355 3.39262L18.9697 5.12543C20.0429 5.83143 20.3229 7.24759 19.595 8.28853L13.9257 16.3956C13.5761 16.8955 13.0361 17.2402 12.4245 17.354L9.06104 17.9794C8.42423 18.0978 7.809 17.6931 7.6869 17.0755L7.04201 13.8134C6.92475 13.2202 7.05525 12.6061 7.4048 12.1062Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10.85" y1="13.5496" x2="11.15" y2="13.1496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.1092" y1="7.63042" x2="16.6813" y2="11.0967" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <template data-icon="trash"><svg class="icon" data-icon="trash" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 9V17.5C5 19.9853 7.01472 22 9.5 22H14.5C16.9853 22 19 19.9853 19 17.5V9" stroke="currentColor" stroke-width="1.5"/><path d="M20 8H13.12H9.94667H6.77333H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 6C7 4.34315 8.34315 3 10 3H14C15.6569 3 17 4.34315 17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.99998 17L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 17L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 17L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <!-- =====================================================================
@@ -2199,6 +2203,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         <div class="toolbar">
           <label data-i18n="markup.label.table" for="table-name">Tabla:</label>
           <input id="table-name" type="text" title="Nombre de la tabla (al renombrarla se actualizan las consultas que la usan)">
+          <button class="with-icon" data-i18n-title="markup.button.copyName" data-i18n-aria-label="markup.button.copyName" id="btn-copy-table-name" type="button" title="Copiar el nombre al portapapeles" aria-label="Copiar el nombre al portapapeles"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg></button>
           <button class="with-icon" data-i18n-title="markup.button.renameTable" id="btn-rename-table" type="button" title="Renombrar la tabla"><svg class="icon" data-icon="edit" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M21 18V18.5C21 19.8807 19.8807 21 18.5 21H5.5C4.11929 21 3 19.8807 3 18.5V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.4048 12.1062L13.0741 3.99909C13.4236 3.49921 13.9636 3.15449 14.5753 3.04075C15.1869 2.92701 15.82 3.05359 16.3355 3.39262L18.9697 5.12543C20.0429 5.83143 20.3229 7.24759 19.595 8.28853L13.9257 16.3956C13.5761 16.8955 13.0361 17.2402 12.4245 17.354L9.06104 17.9794C8.42423 18.0978 7.809 17.6931 7.6869 17.0755L7.04201 13.8134C6.92475 13.2202 7.05525 12.6061 7.4048 12.1062Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10.85" y1="13.5496" x2="11.15" y2="13.1496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.1092" y1="7.63042" x2="16.6813" y2="11.0967" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.rename">Renombrar</span></button>
           <button class="with-icon" data-i18n-title="markup.button.deleteTableAllItsData" id="btn-delete-table" type="button" title="Eliminar la tabla y todos sus datos"><svg class="icon" data-icon="trash" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 9V17.5C5 19.9853 7.01472 22 9.5 22H14.5C16.9853 22 19 19.9853 19 17.5V9" stroke="currentColor" stroke-width="1.5"/><path d="M20 8H13.12H9.94667H6.77333H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 6C7 4.34315 8.34315 3 10 3H14C15.6569 3 17 4.34315 17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.99998 17L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 17L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 17L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.deleteTable">Eliminar tabla</span></button>
           <span class="sep"></span>
@@ -2237,6 +2242,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         <div class="toolbar">
           <label data-i18n="markup.label.name" for="query-name">Nombre:</label>
           <input id="query-name" type="text" title="Nombre de la consulta">
+          <button class="with-icon" data-i18n-title="markup.button.copyName" data-i18n-aria-label="markup.button.copyName" id="btn-copy-query-name" type="button" title="Copiar el nombre al portapapeles" aria-label="Copiar el nombre al portapapeles"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg></button>
           <button class="with-icon" data-i18n-title="markup.button.runQueryCtrlEnter" id="btn-run" type="button" title="Ejecutar la consulta (Ctrl+Enter)"><svg class="icon" data-icon="play" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M3 12V8.24069C3 3.57324 6.5185 1.6619 10.8239 3.99563L14.2974 5.87528L17.771 7.75494C22.0763 10.0887 22.0763 13.9113 17.771 16.2451L14.2974 18.1247L10.8239 20.0044C6.5185 22.3381 3 20.4268 3 15.7593V12Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.run">▶ Ejecutar</span></button>
           <button class="with-icon" data-i18n-title="markup.button.runQuerySaveItsResult" id="btn-save-test" type="button" title="Ejecutar la consulta, guardar su resultado como resultado esperado (assert) de esa consulta y poner el proyecto en modo test"><svg class="icon" data-icon="check-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 12L10.9976 14.5L15.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.turnIntoTest">Convertir en test</span></button>
           <button class="with-icon" data-i18n-title="markup.button.removeAssertedResultThisQuery" id="btn-quitar-test" type="button" disabled title="Quitar el resultado asertado de esta consulta: seguirá ejecutándose, pero dejará de comprobarse en el informe del proyecto"><svg class="icon" data-icon="close-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.87891 9.87891L14.1215 14.1215" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.87845 14.1215L14.1211 9.87891" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.removeTest">Quitar test</span></button>
@@ -2283,6 +2289,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         <div class="toolbar">
           <label data-i18n="markup.label.name" for="script-name">Nombre:</label>
           <input id="script-name" type="text" data-i18n-title="scripts.nameTip" title="Nombre del script">
+          <button class="with-icon" data-i18n-title="markup.button.copyName" data-i18n-aria-label="markup.button.copyName" id="btn-copy-script-name" type="button" title="Copiar el nombre al portapapeles" aria-label="Copiar el nombre al portapapeles"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg></button>
           <button class="with-icon" data-i18n-title="markup.button.runScript" id="btn-run-script" type="button" title="Ejecutar el script (Ctrl+Enter)"><svg class="icon" data-icon="play" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M3 12V8.24069C3 3.57324 6.5185 1.6619 10.8239 3.99563L14.2974 5.87528L17.771 7.75494C22.0763 10.0887 22.0763 13.9113 17.771 16.2451L14.2974 18.1247L10.8239 20.0044C6.5185 22.3381 3 20.4268 3 15.7593V12Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.run">▶ Ejecutar</span></button>
           <button class="with-icon" data-i18n-title="scripts.saveTestTip" id="btn-script-save-test" type="button" title="Ejecutar el script, guardar su resultado como asertado y poner el proyecto en modo test"><svg class="icon" data-icon="check-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 12L10.9976 14.5L15.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.turnIntoTest">Convertir en test</span></button>
           <button class="with-icon" data-i18n-title="scripts.removeTestTip" id="btn-script-quitar-test" type="button" disabled title="Quitar el resultado asertado de este script: seguirá ejecutándose, pero dejará de comprobarse en el informe del proyecto"><svg class="icon" data-icon="close-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.87891 9.87891L14.1215 14.1215" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.87845 14.1215L14.1211 9.87891" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.removeTest">Quitar test</span></button>
@@ -2843,6 +2850,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.closeWindowEsc10": "Close the window (Esc)",
         "markup.button.copy": "Copy",
         "markup.button.copyCSVTextClipboard": "Copy the CSV text to the clipboard",
+        "markup.button.copyName": "Copy the name to the clipboard",
         "markup.button.copyCompleteReportAsText": "Copy the complete report as text",
         "markup.button.copyCompleteReportAsText2": "Copy the complete report as text",
         "markup.button.copyReport": "Copy report",
@@ -3321,6 +3329,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.convertedToTest": "“{name}” turned into a test: {assert}. The project is now in test mode; press “Tests” to check the battery.",
         "queries.created": "Query “{name}” created. Write the SQL and press Run (or Ctrl+Enter).",
         "queries.csvCopied": "CSV copied to the clipboard.",
+        "queries.nameCopied": "Query name “{name}” copied to the clipboard.",
         "queries.csvCopyManual": "It could not be copied on its own: the text is selected, press Ctrl+C.",
         "queries.csvDialogTitle": "Query “{name}” · {rows} row(s)",
         "queries.csvDownloaded": "Result exported as “{name}” (download, {rows} row(s)).",
@@ -3350,6 +3359,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.errorValidation": "Query error (validation)",
         "queries.executed": "Query “{name}” run: {rows} row(s) in {ms} ms.",
         "scripts.created": "Script “{name}” created. Write the code and press Run (or Ctrl+Enter).",
+        "scripts.nameCopied": "Script name “{name}” copied to the clipboard.",
         "scripts.defaultCode": "// “tables”, “queries” and “scripts” give every table, query and script.\n// For example: tables[\"name\"], queries[\"name\"]() or scripts[\"name\"]().\n// Use map, filter, reduce… and return an array (of objects or of arrays).\nreturn [];",
         "scripts.defaultName": "script",
         "scripts.deleteConfirm": "Delete the script “{name}”?{warning}",
@@ -3771,6 +3781,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.dataSourcesTip": "Jump to one of the data sources of “{name}”",
         "ui.isSourceOfTip": "Jump to one of the objects that read “{name}”",
         "ui.dataSourcesLine": "Data sources ({total}): {names}",
+        "ui.copyNameTip": "Copy the name “{name}” to the clipboard",
+        "ui.nameCopyManual": "It could not be copied on its own: the name is selected, press Ctrl+C.",
+        "ui.tableNameCopied": "Table name “{name}” copied to the clipboard.",
         "ui.keywordsLine": "Keywords: {keywords}",
         "ui.isSourceOfLine": "Is source of ({total}): {names}",
         "ui.relatedPickTip": "Open {kind}",
@@ -3891,6 +3904,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.closeWindowEsc10": "Cerrar la ventana (Esc)",
         "markup.button.copy": "Copiar",
         "markup.button.copyCSVTextClipboard": "Copiar el texto CSV al portapapeles",
+        "markup.button.copyName": "Copiar el nombre al portapapeles",
         "markup.button.copyCompleteReportAsText": "Copiar el informe completo como texto",
         "markup.button.copyCompleteReportAsText2": "Copiar el informe completo como texto",
         "markup.button.copyReport": "Copiar informe",
@@ -4369,6 +4383,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.convertedToTest": "«{name}» convertida en test: {assert}. El proyecto queda en modo test; pulsa «Pruebas» para comprobar la batería.",
         "queries.created": "Consulta «{name}» creada. Escribe el SQL y pulsa Ejecutar (o Ctrl+Enter).",
         "queries.csvCopied": "CSV copiado al portapapeles.",
+        "queries.nameCopied": "Nombre de la consulta «{name}» copiado al portapapeles.",
         "queries.csvCopyManual": "No se pudo copiar solo: el texto queda seleccionado, pulsa Ctrl+C.",
         "queries.csvDialogTitle": "Consulta «{name}» · {rows} fila(s)",
         "queries.csvDownloaded": "Resultado exportado en «{name}» (descarga, {rows} fila(s)).",
@@ -4398,6 +4413,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.errorValidation": "Error de consulta (validación)",
         "queries.executed": "Consulta «{name}» ejecutada: {rows} fila(s) en {ms} ms.",
         "scripts.created": "Script «{name}» creado. Escribe el código y pulsa Ejecutar (o Ctrl+Enter).",
+        "scripts.nameCopied": "Nombre del script «{name}» copiado al portapapeles.",
         "scripts.defaultCode": "// «tables», «queries» y «scripts» dan cada tabla, consulta y script.\n// Por ejemplo: tables[\"nombre\"], queries[\"nombre\"]() o scripts[\"nombre\"]().\n// Usa map, filter, reduce… y devuelve un array (de objetos o de arrays).\nreturn [];",
         "scripts.defaultName": "script",
         "scripts.deleteConfirm": "¿Eliminar el script «{name}»?{warning}",
@@ -4819,6 +4835,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.dataSourcesTip": "Saltar a uno de los orígenes de datos de «{name}»",
         "ui.isSourceOfTip": "Saltar a uno de los objetos que leen «{name}»",
         "ui.dataSourcesLine": "Orígenes de datos ({total}): {names}",
+        "ui.copyNameTip": "Copiar el nombre «{name}» al portapapeles",
+        "ui.nameCopyManual": "No se pudo copiar solo: el nombre queda seleccionado, pulsa Ctrl+C.",
+        "ui.tableNameCopied": "Nombre de la tabla «{name}» copiado al portapapeles.",
         "ui.keywordsLine": "Palabras clave: {keywords}",
         "ui.isSourceOfLine": "Es origen de ({total}): {names}",
         "ui.relatedPickTip": "Abrir {kind}",
@@ -11943,6 +11962,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             Ui.toggleTablesFold();
             return;
           }
+          const copy = event.target.closest("button.copy-name");
+          if (copy) {
+            Ui.copyTableName(copy.dataset.name);
+            return;
+          }
           const item = event.target.closest("li[data-name]");
           if (item) {
             Ui.selectTable(item.dataset.name);
@@ -11993,6 +12017,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
         // Tables: create, rename and delete.
         document.getElementById("btn-new-table").addEventListener("click", () => Ui.createTable());
+        document.getElementById("btn-copy-table-name").addEventListener("click", () => Ui.copyName());
         document.getElementById("btn-rename-table").addEventListener("click", () => Ui.renameTable());
         document.getElementById("btn-delete-table").addEventListener("click", () => Ui.deleteTable());
         document.getElementById("table-name").addEventListener("keydown", (event) => {
@@ -12033,6 +12058,48 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             Ui.deleteField(Number(button.dataset.fieldIndex));
           }
         });
+      },
+
+      /** Copies a name to the clipboard. When the browser does not allow it,
+       *  the name field (or the name span of the sidebar) is selected so it can
+       *  be copied with Ctrl+C. */
+      async copyToClipboard(text, fallback, successKey, name) {
+        const value = String(text == null ? "" : text);
+        if (value === "") {
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(value);
+          setStatus(I18n.t(successKey, { name: name }));
+          return;
+        } catch (err) {
+          // Without clipboard permission: the name is selected for Ctrl+C.
+        }
+        if (fallback) {
+          if (typeof fallback.select === "function") {
+            fallback.focus();
+            fallback.select();
+          } else {
+            const range = document.createRange();
+            range.selectNodeContents(fallback);
+            const selection = window.getSelection();
+            if (selection) {
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+          }
+        }
+        setStatus(I18n.t("ui.nameCopyManual"));
+      },
+
+      /** Name span of an item of a sidebar list, used as the manual fallback
+       *  when the clipboard is not available. */
+      sidebarNameLabel(listId, name) {
+        const list = document.getElementById(listId);
+        const item = list
+          ? [...list.querySelectorAll("li[data-name]")].find((candidate) => candidate.dataset.name === name)
+          : null;
+        return item ? item.querySelector("span") : null;
       },
 
       /* --- Sidebar -------------------------------------------------------- */
@@ -12126,8 +12193,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         detail.className = "detail";
         detail.textContent = `${table.rows.length}`;
         detail.title = I18n.t("ui.rows");
+        const actions = document.createElement("span");
+        actions.className = "row-actions";
+        actions.appendChild(detail);
+        actions.appendChild(Ui.rowButton("note-text", "copy-name", table.name, I18n.t("ui.copyNameTip", { name: table.name })));
         item.appendChild(name);
-        item.appendChild(detail);
+        item.appendChild(actions);
         return item;
       },
 
@@ -12303,6 +12374,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         down.dataset.step = "1";
         down.disabled = group.position < 0 || group.position >= group.total - 1;
         actions.appendChild(down);
+        actions.appendChild(Ui.rowButton("note-text", "copy-name", query.name, I18n.t("ui.copyNameTip", { name: query.name })));
         actions.appendChild(Ui.rowButton("copy", "duplicate-query", query.name, I18n.t("queries.duplicateTip", { name: query.name })));
         const color = Ui.rowButton(null, "color-query", query.name, I18n.t("queries.colorTip", { name: query.name }));
         color.style.background = query.color || "transparent";
@@ -12362,6 +12434,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         down.dataset.step = "1";
         down.disabled = group.position < 0 || group.position >= group.total - 1;
         actions.appendChild(down);
+        actions.appendChild(Ui.rowButton("note-text", "copy-name", script.name, I18n.t("ui.copyNameTip", { name: script.name })));
         actions.appendChild(Ui.rowButton("copy", "duplicate-query", script.name, I18n.t("scripts.duplicateTip", { name: script.name })));
         const color = Ui.rowButton(null, "color-query", script.name, I18n.t("scripts.colorTip", { name: script.name }));
         color.style.background = script.color || "transparent";
@@ -13012,6 +13085,29 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       activeTableOrNull() {
         return Ui.state.activeTable ? Model.findTable(Store.project, Ui.state.activeTable) : null;
+      },
+
+      /** Copies the name of the open table to the clipboard. */
+      copyName() {
+        const table = Ui.activeTableOrNull();
+        if (!table) {
+          return;
+        }
+        Ui.copyToClipboard(table.name, document.getElementById("table-name"), "ui.tableNameCopied", table.name);
+      },
+
+      /** Copies the name of a table from its row of the sidebar. */
+      copyTableName(name) {
+        const table = Model.findTable(Store.project, name);
+        if (!table) {
+          return;
+        }
+        Ui.copyToClipboard(
+          table.name,
+          Ui.sidebarNameLabel("list-tables", table.name),
+          "ui.tableNameCopied",
+          table.name,
+        );
       },
 
       createTable() {
@@ -14862,6 +14958,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             UiQueries.duplicate(duplicate.dataset.name);
             return;
           }
+          const copy = event.target.closest("button.copy-name");
+          if (copy) {
+            UiQueries.copyNamed(copy.dataset.name);
+            return;
+          }
           const item = event.target.closest("li[data-name]");
           if (item) {
             UiQueries.select(item.dataset.name);
@@ -14887,6 +14988,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         });
         document.getElementById("btn-delete-query").addEventListener("click", () => UiQueries.remove());
         document.getElementById("query-name").addEventListener("change", () => UiQueries.renameFromInput());
+        document.getElementById("btn-copy-query-name").addEventListener("click", () => UiQueries.copyName());
         document.getElementById("query-description").addEventListener("change", () => UiQueries.saveDescription());
         document.getElementById("query-keywords").addEventListener("change", () => UiQueries.saveKeywords());
         document.getElementById("query-sql").addEventListener("change", () => UiQueries.saveSql());
@@ -15254,6 +15356,29 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           scriptsChanged === 0 ? "" : I18n.t("scripts.updatedSuffix", { count: scriptsChanged }),
         ].filter(Boolean).join(" ");
         setStatus(I18n.t("queries.renamed", { old: oldName, new: name, note: seguimiento }));
+      },
+
+      /** Copies the name of the open query to the clipboard. */
+      copyName() {
+        const query = UiQueries.activeQueryOrNull();
+        if (!query) {
+          return;
+        }
+        Ui.copyToClipboard(query.name, document.getElementById("query-name"), "queries.nameCopied", query.name);
+      },
+
+      /** Copies the name of a query from its row of the sidebar. */
+      copyNamed(name) {
+        const query = Store.project.queries.find((candidate) => candidate.name === name);
+        if (!query) {
+          return;
+        }
+        Ui.copyToClipboard(
+          query.name,
+          Ui.sidebarNameLabel("list-queries", query.name),
+          "queries.nameCopied",
+          query.name,
+        );
       },
 
       saveDescription() {
@@ -15842,6 +15967,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             UiScripts.duplicate(duplicate.dataset.name);
             return;
           }
+          const copy = event.target.closest("button.copy-name");
+          if (copy) {
+            UiScripts.copyNamed(copy.dataset.name);
+            return;
+          }
           const item = event.target.closest("li[data-name]");
           if (item) {
             UiScripts.select(item.dataset.name);
@@ -15855,6 +15985,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         document.getElementById("btn-script-export-json").addEventListener("click", () => UiJsonExport.exportScript());
         document.getElementById("btn-delete-script").addEventListener("click", () => UiScripts.remove());
         document.getElementById("script-name").addEventListener("change", () => UiScripts.renameFromInput());
+        document.getElementById("btn-copy-script-name").addEventListener("click", () => UiScripts.copyName());
         document.getElementById("script-description").addEventListener("change", () => UiScripts.saveDescription());
         document.getElementById("script-keywords").addEventListener("change", () => UiScripts.saveKeywords());
         document.getElementById("script-code").addEventListener("change", () => UiScripts.saveCode());
@@ -15998,6 +16129,29 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           ? ""
           : I18n.t("scripts.renamedDependents", { queries: changed, scripts: scriptsChanged });
         setStatus(I18n.t("scripts.renamed", { name: name, note: note }));
+      },
+
+      /** Copies the name of the open script to the clipboard. */
+      copyName() {
+        const script = UiScripts.activeScriptOrNull();
+        if (!script) {
+          return;
+        }
+        Ui.copyToClipboard(script.name, document.getElementById("script-name"), "scripts.nameCopied", script.name);
+      },
+
+      /** Copies the name of a script from its row of the sidebar. */
+      copyNamed(name) {
+        const script = Model.findScript(Store.project, name);
+        if (!script) {
+          return;
+        }
+        Ui.copyToClipboard(
+          script.name,
+          Ui.sidebarNameLabel("list-scripts", script.name),
+          "scripts.nameCopied",
+          script.name,
+        );
       },
 
       saveDescription() {
