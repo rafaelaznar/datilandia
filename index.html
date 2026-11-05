@@ -489,14 +489,22 @@
       color: #7a3e00;
     }
 
+    .keyword-results button[data-kind="table"] .kind-icon {
+      color: #2f6b2f;
+    }
+
     .keyword-results .result-name {
       font-weight: bold;
     }
 
     .keyword-results .result-keywords {
+      max-width: 60%;
       margin-left: auto;
+      overflow: hidden;
       color: #666;
       font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* Header of a group of a list (the folders of the queries and the whole
@@ -654,6 +662,28 @@
     .row-actions .color-query:hover,
     .row-actions .color-query:focus-visible {
       border-color: #000;
+    }
+
+    /*  Star of a query or a script: it is dimmed while the item is not
+        highlighted and takes the gold of the marked items when it is.  */
+    .row-actions .star-query {
+      padding: 0 1px;
+      font-size: 9px;
+      line-height: 1;
+      color: #999;
+    }
+
+    .row-actions .star-query:hover,
+    .row-actions .star-query:focus-visible {
+      color: #b8860b;
+    }
+
+    .row-actions .star-query.starred {
+      color: #d4a017;
+    }
+
+    #list-queries li.is-starred > .name {
+      font-weight: bold;
     }
 
     /*  The pastel colour paints the row of the list and nothing else, through
@@ -1767,6 +1797,29 @@
       white-space: pre-wrap;
     }
 
+    /* --- 6d·2. Search by name, description or keywords ---------------- */
+
+    #dlg-keyword-search {
+      width: min(900px, 94vw);
+      padding: 8px 10px;
+      border: 1px solid #999;
+      background: #fff;
+      color: #000;
+    }
+
+    #dlg-keyword-search::backdrop {
+      background: rgb(0 0 0 / 0.25);
+    }
+
+    #dlg-keyword-search #keyword-search-input {
+      flex: 1 1 auto;
+      min-width: 16em;
+    }
+
+    #dlg-keyword-search .keyword-results {
+      max-height: 55vh;
+    }
+
     /* --- 6e. Search and replace window ----------------------------- */
 
     #dlg-search {
@@ -2273,7 +2326,10 @@
   <template data-icon="copy"><svg class="icon" data-icon="copy" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M10.0859 21.0001H17.0002C19.2094 21.0001 21.0002 19.2092 21.0002 17.0001V13.328L21 9.50012C21 7.53996 19.411 5.95093 17.4508 5.95093H13.4917H10.0859C7.8768 5.95093 6.08594 7.74178 6.08594 9.95092V17.0001C6.08594 19.2092 7.8768 21.0001 10.0859 21.0001Z" stroke="currentColor" stroke-width="1.5"/><path d="M6.87771 17.7541C4.73611 17.7541 3 16.018 3 13.8764V7C3 4.79086 4.79086 3 7 3H10.7019H12.4114C13.865 3 15.2043 3.78864 15.9094 5.05986L16.3714 5.89296" stroke="currentColor" stroke-width="1.5"/></svg></template>
   <template data-icon="note-text"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <template data-icon="query"><svg class="icon" data-icon="query" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M13.5 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 8H15M9 12H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16.5" cy="15.5" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M19 18L21 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
+  <template data-icon="table"><svg class="icon" data-icon="table" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 7.5C4 5.01472 6.01472 3 8.5 3H15.5C17.9853 3 20 5.01472 20 7.5V16.5C20 18.9853 17.9853 21 15.5 21H8.5C6.01472 21 4 18.9853 4 16.5V7.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M13.4 17.1C13.4 17.7628 12.8627 18.3 12.2 18.3C11.5373 18.3 11 17.7628 11 17.1C11 16.4373 11.5373 15.9 12.2 15.9C12.8627 15.9 13.4 16.4373 13.4 17.1Z" stroke="currentColor" stroke-width="1.5"/><path d="M10 6L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <template data-icon="script"><svg class="icon" data-icon="script" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M8 7L3 12L8 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 7L21 12L16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4L10 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
+  <template data-icon="star"><svg class="icon" data-icon="star" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 3.5L14.6 8.9L20.5 9.7L16.2 13.8L17.3 19.7L12 16.9L6.7 19.7L7.8 13.8L3.5 9.7L9.4 8.9L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></template>
+  <template data-icon="star-filled"><svg class="icon" data-icon="star-filled" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 3.5L14.6 8.9L20.5 9.7L16.2 13.8L17.3 19.7L12 16.9L6.7 19.7L7.8 13.8L3.5 9.7L9.4 8.9L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></template>
   <template data-icon="edit"><svg class="icon" data-icon="edit" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M21 18V18.5C21 19.8807 19.8807 21 18.5 21H5.5C4.11929 21 3 19.8807 3 18.5V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.4048 12.1062L13.0741 3.99909C13.4236 3.49921 13.9636 3.15449 14.5753 3.04075C15.1869 2.92701 15.82 3.05359 16.3355 3.39262L18.9697 5.12543C20.0429 5.83143 20.3229 7.24759 19.595 8.28853L13.9257 16.3956C13.5761 16.8955 13.0361 17.2402 12.4245 17.354L9.06104 17.9794C8.42423 18.0978 7.809 17.6931 7.6869 17.0755L7.04201 13.8134C6.92475 13.2202 7.05525 12.6061 7.4048 12.1062Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10.85" y1="13.5496" x2="11.15" y2="13.1496" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.1092" y1="7.63042" x2="16.6813" y2="11.0967" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <template data-icon="trash"><svg class="icon" data-icon="trash" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 9V17.5C5 19.9853 7.01472 22 9.5 22H14.5C16.9853 22 19 19.9853 19 17.5V9" stroke="currentColor" stroke-width="1.5"/><path d="M20 8H13.12H9.94667H6.77333H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 6C7 4.34315 8.34315 3 10 3H14C15.6569 3 17 4.34315 17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.99998 17L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 17L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 17L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></template>
   <!-- =====================================================================
@@ -2328,7 +2384,7 @@
           <button data-i18n-title="markup.button.seeEveryQueryItsProperties" class="titulo-panel with-icon" id="btn-summary-queries" type="button" title="Ver todas las consultas con sus propiedades"><svg class="icon" data-icon="note-text" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 4H16.2271H16.5C18.9853 4 21 6.01472 21 8.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V8.5C3 6.01472 5.01472 4 7.5 4H8M10 4H12H14" stroke="currentColor" stroke-width="1.5"/><line x1="6.75" y1="9.25" x2="13.25" y2="9.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="12.25" x2="11.25" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="6.75" y1="15.25" x2="8.25" y2="15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 5.28571V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="markup.button.queriesAndScripts">Consultas y scripts</span></button>
           <span class="panel-actions">
             <button class="panel-action" id="btn-fold-all" type="button" hidden></button>
-            <button class="panel-action with-icon" data-i18n-title="keywordSearch.openTip" data-i18n-aria-label="keywordSearch.openTip" id="btn-keyword-search" type="button" title="Buscar consultas y scripts por palabras clave"><svg class="icon" data-icon="search" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5703 17.4329L20.4299 20.567" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+            <button class="panel-action with-icon" data-i18n-title="keywordSearch.openTip" data-i18n-aria-label="keywordSearch.openTip" id="btn-keyword-search" type="button" title="Buscar tablas, consultas y scripts por nombre, descripción o palabras clave"><svg class="icon" data-icon="search" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5703 17.4329L20.4299 20.567" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
             <button class="panel-action with-icon" data-i18n-title="markup.button.newFolderTip" data-i18n-aria-label="markup.button.newFolderTip" id="btn-new-folder" type="button" title="Añadir una carpeta vacía (+C)"><svg class="icon" data-icon="folder-add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V13.9286V6.85714V5.8125C3 4.2592 4.2592 3 5.8125 3H7.32296C8.75679 3 9.89276 4.02835 10.6434 5.25C11.0734 5.9498 11.3046 6.42005 12 6.85714C13.0877 7.54086 15.5536 7.68013 17.6297 7.66016C19.4407 7.64274 21 9.06385 21 10.875V12V16.5C21 18.9853 18.9853 21 16.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 15.4968L17.9937 15.4968" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.4961 16.9937L16.4961 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
             <button class="panel-action with-icon" data-i18n-title="markup.button.createNewQuery" id="btn-new-query" type="button" title="Crear una consulta nueva"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             <button class="panel-action with-icon" data-i18n-title="markup.button.newScript" id="btn-new-script" type="button" title="Crear un script nuevo"><svg class="icon" data-icon="add" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -2797,18 +2853,18 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
     <p id="dlg-relations-leyenda-figures" class="muted"></p>
   </dialog>
 
-  <!-- Modal window: search queries and scripts by their keywords -->
+  <!-- Modal window: search tables, queries and scripts by name, description or keywords -->
   <dialog id="dlg-keyword-search" aria-labelledby="dlg-keyword-search-titulo">
     <div class="dlg-header">
-      <b data-i18n="keywordSearch.title" id="dlg-keyword-search-titulo">Buscar por palabras clave</b>
+      <b data-i18n="keywordSearch.title" id="dlg-keyword-search-titulo">Buscar por nombre, descripción o palabras clave</b>
       <span id="keyword-search-count" class="muted"></span>
       <button data-i18n-title="markup.button.closeWindowEsc" class="derecha with-icon" id="btn-close-keyword-search" type="button" title="Cerrar la ventana (Esc)"><svg class="icon" data-icon="close" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.00195 7.00195L16.9991 16.9991" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.00286 16.9991L17 7.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.close">Cerrar</span></button>
     </div>
     <div class="toolbar">
-      <label data-i18n="keywordSearch.label" for="keyword-search-input">Palabras clave:</label>
-      <input id="keyword-search-input" type="search" size="32" autocomplete="off" data-i18n-placeholder="keywordSearch.placeholder" data-i18n-title="keywordSearch.inputTip" placeholder="una o varias palabras clave…" title="Escribe una o varias palabras clave; todas deben aparecer en las palabras clave de la consulta o el script">
+      <label data-i18n="keywordSearch.label" for="keyword-search-input">Buscar:</label>
+      <input id="keyword-search-input" type="search" size="32" autocomplete="off" data-i18n-placeholder="keywordSearch.placeholder" data-i18n-title="keywordSearch.inputTip" placeholder="nombre, descripción o palabra clave…" title="Escribe uno o varios términos; todos deben aparecer en el nombre, la descripción o las palabras clave de una tabla, consulta o script">
     </div>
-    <p data-i18n="keywordSearch.hint" class="muted">Aparecen las consultas y scripts cuyas palabras clave contienen todos los términos.</p>
+    <p data-i18n="keywordSearch.hint" class="muted">Aparecen las tablas, consultas y scripts cuyo nombre, descripción o palabras clave contienen todos los términos.</p>
     <div id="keyword-search-results" class="keyword-results"></div>
   </dialog>
 
@@ -3666,6 +3722,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.confirmReplaceAssert": "“{name}” already checks an asserted result ({assert}).\n\nReplace it with the current result ({rows})?",
         "queries.convertedToTest": "“{name}” turned into a test: {assert}. The project is now in test mode; press “Tests” to check the battery.",
         "queries.created": "Query “{name}” created. Write the SQL and press Run (or Ctrl+Enter).",
+        "queries.starCleared": "The star was removed from “{name}”.",
+        "queries.starSet": "“{name}” highlighted with a star.",
+        "queries.starTip": "Highlight the query “{name}” with a star",
+        "queries.unstarTip": "Remove the star from the query “{name}”",
         "queries.csvCopied": "CSV copied to the clipboard.",
         "queries.nameCopied": "Query name “{name}” copied to the clipboard.",
         "queries.csvCopyManual": "It could not be copied on its own: the text is selected, press Ctrl+C.",
@@ -3697,6 +3757,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.errorValidation": "Query error (validation)",
         "queries.executed": "Query “{name}” run: {rows} row(s) in {ms} ms.",
         "scripts.created": "Script “{name}” created. Write the code and press Run (or Ctrl+Enter).",
+        "scripts.starCleared": "The star was removed from “{name}”.",
+        "scripts.starSet": "“{name}” highlighted with a star.",
+        "scripts.starTip": "Highlight the script “{name}” with a star",
+        "scripts.unstarTip": "Remove the star from the script “{name}”",
         "scripts.nameCopied": "Script name “{name}” copied to the clipboard.",
         "scripts.defaultCode": "// “tables”, “queries” and “scripts” give every table, query and script.\n// For example: tables[\"name\"], queries[\"name\"]() or scripts[\"name\"]().\n// Use map, filter, reduce… and return an array (of objects or of arrays).\nreturn [];",
         "scripts.defaultName": "script",
@@ -4160,15 +4224,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.nameCopyManual": "It could not be copied on its own: the name is selected, press Ctrl+C.",
         "ui.tableNameCopied": "Table name “{name}” copied to the clipboard.",
         "ui.keywordsLine": "Keywords: {keywords}",
-        "keywordSearch.openTip": "Search queries and scripts by keyword",
-        "keywordSearch.title": "Search by keywords",
-        "keywordSearch.label": "Keywords:",
-        "keywordSearch.placeholder": "one or more keywords…",
-        "keywordSearch.inputTip": "Type one or more keywords; all must appear in the keywords of the query or script.",
-        "keywordSearch.hint": "It shows the queries and scripts whose keywords contain every term.",
+        "keywordSearch.openTip": "Search tables, queries and scripts by name, description or keywords",
+        "keywordSearch.title": "Search by name, description or keywords",
+        "keywordSearch.label": "Search:",
+        "keywordSearch.placeholder": "name, description or keyword…",
+        "keywordSearch.inputTip": "Type one or more terms; all must appear in the name, description or keywords of a table, query or script.",
+        "keywordSearch.hint": "It shows the tables, queries and scripts whose name, description or keywords contain every term.",
         "keywordSearch.resultsCount": {"one":"{count} result","other":"{count} results"},
-        "keywordSearch.empty": "No query or script has keywords yet.",
-        "keywordSearch.noResults": "No query or script has those keywords.",
+        "keywordSearch.empty": "There is nothing to search yet: the project has no tables, queries or scripts.",
+        "keywordSearch.noResults": "No table, query or script matches those terms.",
         "ui.isSourceOfLine": "Is source of ({total}): {names}",
         "ui.relatedPickTip": "Open {kind}",
         "ui.groupTables": "Tables",
@@ -4768,6 +4832,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.confirmReplaceAssert": "«{name}» ya comprueba un resultado asertado ({assert}).\n\n¿Sustituirlo por el resultado actual ({rows})?",
         "queries.convertedToTest": "«{name}» convertida en test: {assert}. El proyecto queda en modo test; pulsa «Pruebas» para comprobar la batería.",
         "queries.created": "Consulta «{name}» creada. Escribe el SQL y pulsa Ejecutar (o Ctrl+Enter).",
+        "queries.starCleared": "«{name}» ya no tiene estrella.",
+        "queries.starSet": "«{name}» destacada con una estrella.",
+        "queries.starTip": "Destacar la consulta «{name}» con una estrella",
+        "queries.unstarTip": "Quitar la estrella de la consulta «{name}»",
         "queries.csvCopied": "CSV copiado al portapapeles.",
         "queries.nameCopied": "Nombre de la consulta «{name}» copiado al portapapeles.",
         "queries.csvCopyManual": "No se pudo copiar solo: el texto queda seleccionado, pulsa Ctrl+C.",
@@ -4799,6 +4867,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.errorValidation": "Error de consulta (validación)",
         "queries.executed": "Consulta «{name}» ejecutada: {rows} fila(s) en {ms} ms.",
         "scripts.created": "Script «{name}» creado. Escribe el código y pulsa Ejecutar (o Ctrl+Enter).",
+        "scripts.starCleared": "Se ha quitado la estrella de «{name}».",
+        "scripts.starSet": "«{name}» destacado con una estrella.",
+        "scripts.starTip": "Destacar el script «{name}» con una estrella",
+        "scripts.unstarTip": "Quitar la estrella del script «{name}»",
         "scripts.nameCopied": "Nombre del script «{name}» copiado al portapapeles.",
         "scripts.defaultCode": "// «tables», «queries» y «scripts» dan cada tabla, consulta y script.\n// Por ejemplo: tables[\"nombre\"], queries[\"nombre\"]() o scripts[\"nombre\"]().\n// Usa map, filter, reduce… y devuelve un array (de objetos o de arrays).\nreturn [];",
         "scripts.defaultName": "script",
@@ -5262,15 +5334,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.nameCopyManual": "No se pudo copiar solo: el nombre queda seleccionado, pulsa Ctrl+C.",
         "ui.tableNameCopied": "Nombre de la tabla «{name}» copiado al portapapeles.",
         "ui.keywordsLine": "Palabras clave: {keywords}",
-        "keywordSearch.openTip": "Buscar consultas y scripts por palabras clave",
-        "keywordSearch.title": "Buscar por palabras clave",
-        "keywordSearch.label": "Palabras clave:",
-        "keywordSearch.placeholder": "una o varias palabras clave…",
-        "keywordSearch.inputTip": "Escribe una o varias palabras clave; todas deben aparecer en las palabras clave de la consulta o el script.",
-        "keywordSearch.hint": "Aparecen las consultas y scripts cuyas palabras clave contienen todos los términos.",
+        "keywordSearch.openTip": "Buscar tablas, consultas y scripts por nombre, descripción o palabras clave",
+        "keywordSearch.title": "Buscar por nombre, descripción o palabras clave",
+        "keywordSearch.label": "Buscar:",
+        "keywordSearch.placeholder": "nombre, descripción o palabra clave…",
+        "keywordSearch.inputTip": "Escribe uno o varios términos; todos deben aparecer en el nombre, la descripción o las palabras clave de una tabla, consulta o script.",
+        "keywordSearch.hint": "Aparecen las tablas, consultas y scripts cuyo nombre, descripción o palabras clave contienen todos los términos.",
         "keywordSearch.resultsCount": {"one":"{count} resultado","other":"{count} resultados"},
-        "keywordSearch.empty": "Todavía no hay consultas ni scripts con palabras clave.",
-        "keywordSearch.noResults": "Ninguna consulta ni script tiene esas palabras clave.",
+        "keywordSearch.empty": "Todavía no hay nada que buscar: el proyecto no tiene tablas, consultas ni scripts.",
+        "keywordSearch.noResults": "Ninguna tabla, consulta ni script coincide con esos términos.",
         "ui.isSourceOfLine": "Es origen de ({total}): {names}",
         "ui.relatedPickTip": "Abrir {kind}",
         "ui.groupTables": "Tablas",
@@ -7807,6 +7879,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         if (!copy.folder) {
           delete copy.folder;
         }
+        if (!copy.starred) {
+          delete copy.starred;
+        }
         const keywords = Persistence.normalizeKeywords(copy.keywords);
         if (keywords.length > 0) {
           copy.keywords = keywords;
@@ -7825,6 +7900,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         delete copy.source;
         if (!copy.folder) {
           delete copy.folder;
+        }
+        if (!copy.starred) {
+          delete copy.starred;
         }
         const keywords = Persistence.normalizeKeywords(copy.keywords);
         if (keywords.length > 0) {
@@ -7990,6 +8068,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             errors.push(I18n.t("persistence.queryColorInvalid", { queryLabel: `${label} ("${raw.name}")` }));
             color = null;
           }
+          let starred = raw.starred === undefined || raw.starred === null ? false : raw.starred;
+          if (typeof starred !== "boolean") {
+            errors.push(I18n.t("persistence.flagInvalid", { label: `${label} ("${raw.name}").starred` }));
+            starred = false;
+          }
           const expected = Persistence.parseAssert(raw.assert, label, raw.name, errors);
           const query = { name: raw.name, description, sql: raw.sql, assert: expected };
           if (keywords.length > 0) {
@@ -8000,6 +8083,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           if (color !== null) {
             query.color = String(color).toLowerCase();
+          }
+          if (starred) {
+            query.starred = true;
           }
           queries.push(query);
         });
@@ -8054,6 +8140,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             errors.push(I18n.t("persistence.queryColorInvalid", { queryLabel: `${label} ("${raw.name}")` }));
             color = null;
           }
+          let starred = raw.starred === undefined || raw.starred === null ? false : raw.starred;
+          if (typeof starred !== "boolean") {
+            errors.push(I18n.t("persistence.flagInvalid", { label: `${label} ("${raw.name}").starred` }));
+            starred = false;
+          }
           const expected = Persistence.parseAssert(raw.assert, label, raw.name, errors);
           const script = { name: raw.name, description, code: raw.code };
           if (keywords.length > 0) {
@@ -8067,6 +8158,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           if (color !== null) {
             script.color = String(color).toLowerCase();
+          }
+          if (starred) {
+            script.starred = true;
           }
           scripts.push(script);
         });
@@ -13241,6 +13335,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const actions = document.createElement("span");
         actions.className = "row-actions";
         actions.appendChild(marcas);
+        const starred = Boolean(query.starred);
+        const star = Ui.rowButton(starred ? "star-filled" : "star", "star-query", query.name, I18n.t(starred ? "queries.unstarTip" : "queries.starTip", { name: query.name }));
+        star.classList.toggle("starred", starred);
+        star.setAttribute("aria-pressed", starred ? "true" : "false");
+        actions.appendChild(star);
+        if (starred) {
+          item.classList.add("is-starred");
+        }
         // The order inside the folder is the order of the project: an arrow is
         // left out when the query is already at the end it leads to. The
         // position arrives with the item, worked out in the same pass that
@@ -13313,6 +13415,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const actions = document.createElement("span");
         actions.className = "row-actions";
         actions.appendChild(marcas);
+        const starred = Boolean(script.starred);
+        const star = Ui.rowButton(starred ? "star-filled" : "star", "star-query", script.name, I18n.t(starred ? "scripts.unstarTip" : "scripts.starTip", { name: script.name }));
+        star.classList.toggle("starred", starred);
+        star.setAttribute("aria-pressed", starred ? "true" : "false");
+        actions.appendChild(star);
+        if (starred) {
+          item.classList.add("is-starred");
+        }
         const group = placement || Ui.groupOfItem(script, folder, "objects");
         const up = Ui.rowButton("chevron-up", "move-query", script.name, I18n.t("scripts.moveUpTip", { name: script.name }));
         up.dataset.step = "-1";
@@ -15828,6 +15938,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         document.getElementById("list-queries").addEventListener("click", (event) => {
           const item = event.target.closest("li[data-name]");
           const isScript = Boolean(item && item.dataset.kind === "script");
+          const star = event.target.closest("button.star-query");
+          if (star) {
+            UiQueries.toggleStarred(star.dataset.name, isScript ? "scripts" : "queries");
+            return;
+          }
           const move = event.target.closest("button.move-query");
           if (move) {
             if (isScript) {
@@ -16120,6 +16235,25 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiFolders.repaint(UiQueries.colorKind);
         const prefix = UiQueries.colorKind === "scripts" ? "scripts." : "queries.";
         setStatus(I18n.t(hex === "" ? `${prefix}colorCleared` : `${prefix}colorSet`, { name: name }));
+      },
+
+      /** Marks a query or a script with a star, or takes the star away. The
+       *  mark travels in the project, so the file remembers it. */
+      toggleStarred(name, kind) {
+        const spec = Model.groupOf(kind);
+        const item = (Store.project[spec.items] || []).find((candidate) => candidate.name === name);
+        if (!item) {
+          return;
+        }
+        if (item.starred) {
+          delete item.starred;
+        } else {
+          item.starred = true;
+        }
+        UiProject.markDirty();
+        UiFolders.repaint(kind);
+        const prefix = kind === "scripts" ? "scripts." : "queries.";
+        setStatus(I18n.t(item.starred ? `${prefix}starSet` : `${prefix}starCleared`, { name: name }));
       },
 
       /** Opens a query generated by the program (the figures of the
@@ -21572,9 +21706,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
     /* =====================================================================
        9e · KEYWORD SEARCH
-       A window with a text field and the queries and scripts whose keywords
-       contain every term written. Picking a result closes the window and opens
-       that query or script.
+       A window with a text field and the tables, queries and scripts whose
+       name, description or keywords contain every term written. Picking a
+       result closes the window and opens that table, query or script.
        ===================================================================== */
     const UiKeywordSearch = {
       dialog() {
@@ -21597,21 +21731,26 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           .filter((term) => term !== "");
       },
 
-      /** Objects whose keywords contain every term (all of them when the box is
-       *  empty), ordered by name and then by kind. */
+      /** Tables, queries and scripts whose name, description or keywords
+       *  contain every term (all of them when the box is empty), ordered by
+       *  name and then by kind. */
       matches() {
         const terms = UiKeywordSearch.terms();
         const found = [];
         const consider = (kind, item) => {
           const keywords = (item.keywords || []).map((keyword) => String(keyword).toLowerCase());
-          if (keywords.length === 0) {
+          const haystack = [item.name, item.description || "", ...keywords].join("\n").toLowerCase();
+          if (!terms.every((term) => haystack.includes(term))) {
             return;
           }
-          if (!terms.every((term) => keywords.some((keyword) => keyword.includes(term)))) {
-            return;
-          }
-          found.push({ kind: kind, name: item.name, keywords: item.keywords });
+          found.push({
+            kind: kind,
+            name: item.name,
+            description: item.description || "",
+            keywords: item.keywords || [],
+          });
         };
+        (Store.project.tables || []).forEach((table) => consider("table", table));
         (Store.project.queries || []).forEach((query) => consider("query", query));
         (Store.project.scripts || []).forEach((script) => consider("script", script));
         found.sort((left, right) => left.name.localeCompare(right.name) || left.kind.localeCompare(right.kind));
@@ -21642,21 +21781,25 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           button.type = "button";
           button.dataset.kind = match.kind;
           button.dataset.name = match.name;
-          button.title = I18n.t(match.kind === "query" ? "ui.refQuery" : "ui.refScript", { name: match.name });
+          const refKey = match.kind === "table"
+            ? "ui.refTable"
+            : (match.kind === "query" ? "ui.refQuery" : "ui.refScript");
+          button.title = I18n.t(refKey, { name: match.name });
           const badge = document.createElement("span");
           badge.className = "kind-icon";
           badge.dataset.kind = match.kind;
-          badge.appendChild(Ui.icon(match.kind === "query" ? "query" : "script"));
+          badge.appendChild(Ui.icon(match.kind === "table" ? "table" : (match.kind === "query" ? "query" : "script")));
           badge.setAttribute("aria-hidden", "true");
           const name = document.createElement("span");
           name.className = "result-name";
           name.textContent = match.name;
-          const keywords = document.createElement("span");
-          keywords.className = "result-keywords";
-          keywords.textContent = Ui.keywordsText(match.keywords);
+          const detail = document.createElement("span");
+          detail.className = "result-keywords";
+          const description = String(match.description || "").trim();
+          detail.textContent = description !== "" ? description : Ui.keywordsText(match.keywords);
           button.appendChild(badge);
           button.appendChild(name);
-          button.appendChild(keywords);
+          button.appendChild(detail);
           results.appendChild(button);
         });
       },
@@ -21679,11 +21822,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
       },
 
-      /** Closes the window and opens the chosen query or script. */
+      /** Closes the window and opens the chosen table, query or script. */
       open(kind, name) {
         UiKeywordSearch.close();
         if (kind === "script") {
           UiScripts.select(name);
+        } else if (kind === "table") {
+          Ui.selectTable(name);
         } else {
           UiQueries.select(name);
         }
@@ -23417,10 +23562,17 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           nextId: 1,
           fields: [{ name: "id", description: null, type: "number" }],
           rows: [{ id: 1 }],
+        }, {
+          name: "personas",
+          description: "Datos de clientes",
+          idField: null,
+          nextId: 1,
+          fields: [{ name: "id", description: null, type: "number" }],
+          rows: [{ id: 1 }],
         }],
         queries: [
           { name: "ventas_2026", description: "", sql: "SELECT id FROM t", keywords: ["ventas", "2026"] },
-          { name: "stock", description: "", sql: "SELECT id FROM t", keywords: ["inventario"] },
+          { name: "stock", description: "Existencias del almacén", sql: "SELECT id FROM t", keywords: ["inventario"] },
         ],
         scripts: [
           { name: "informe", description: "", code: "return [];", keywords: ["ventas", "informe"] },
@@ -23455,10 +23607,33 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         assertEqual(Ui.state.activeScript, "informe", "the chosen script is the active one");
 
         UiKeywordSearch.show();
+        input.value = "existencias";
+        input.dispatchEvent(new Event("input"));
+        const descriptionRow = document.querySelector("#keyword-search-results button[data-kind=\"query\"][data-name=\"stock\"]");
+        assert(descriptionRow, "a query appears for a word of its description");
+
+        UiKeywordSearch.show();
+        input.value = "stock";
+        input.dispatchEvent(new Event("input"));
+        assert(
+          document.querySelector("#keyword-search-results button[data-kind=\"query\"][data-name=\"stock\"]"),
+          "a query appears for its name",
+        );
+
+        UiKeywordSearch.show();
+        input.value = "clientes";
+        input.dispatchEvent(new Event("input"));
+        const tableRow = document.querySelector("#keyword-search-results button[data-kind=\"table\"][data-name=\"personas\"]");
+        assert(tableRow, "a table appears for a word of its description");
+        tableRow.click();
+        assertEqual(Ui.state.view, "table", "the table opens");
+        assertEqual(Ui.state.activeTable, "personas", "the chosen table is the active one");
+
+        UiKeywordSearch.show();
         input.value = "no-existe";
         input.dispatchEvent(new Event("input"));
         assert(
-          document.getElementById("keyword-search-results").textContent.includes("No query or script"),
+          document.getElementById("keyword-search-results").textContent.includes("No table, query or script"),
           "an unknown keyword says that there are no results",
         );
       } finally {
