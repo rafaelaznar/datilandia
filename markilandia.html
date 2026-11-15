@@ -654,6 +654,49 @@
       text-transform: none;
     }
 
+    .data-folder {
+      margin: 2px 0 4px;
+      border: 1px solid #e2e2e2;
+      border-radius: 3px;
+      background: #fff;
+    }
+
+    .data-folder > summary {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      padding: 2px 4px;
+      background: #fafafa;
+      color: #333;
+      font-size: 9px;
+      cursor: pointer;
+      list-style-position: inside;
+    }
+
+    .data-folder[open] > summary {
+      border-bottom: 1px solid #eee;
+      background: #f3f3f3;
+      font-weight: bold;
+    }
+
+    .data-folder > summary .folder-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .data-folder > summary .folder-count {
+      margin-left: auto;
+      color: #666;
+      font-weight: normal;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .data-folder > .data-list {
+      margin: 2px 0 2px 8px;
+    }
+
     .data-list {
       margin: 0;
       padding: 0;
@@ -10746,6 +10789,7 @@
       'data.helpTotalsLead': 'Totales al pie:',
       'data.helpTotalsNote': 'Se calculan sobre las filas mostradas.',
       'data.noResults': 'Ningún elemento coincide con la búsqueda.',
+      'data.noFolder': 'Sin carpeta',
       'toast.noSelection': 'Selecciona primero algo de texto',
       'toast.exported': 'Archivo exportado',
       'toast.word': 'Documento de Word exportado',
@@ -10874,6 +10918,7 @@
       'data.helpTotalsLead': 'Totals at the foot:',
       'data.helpTotalsNote': 'They are calculated over the rows shown.',
       'data.noResults': 'No item matches the search.',
+      'data.noFolder': 'Unfiled',
       'toast.noSelection': 'Select some text first',
       'toast.exported': 'File exported',
       'toast.word': 'Word document exported',
@@ -12499,6 +12544,21 @@ markilandia.
     renderDataGroups();
   };
 
+  const dataItemHtml = (item, kind, badge) => {
+    const keywords = Array.isArray(item.keywords) ? item.keywords.join(', ') : '';
+    const hint = keywords || item.description || '';
+    const parts = [];
+    parts.push('<li>');
+    parts.push(`<button type="button" data-insert-kind="${kind}" data-insert-name="${escapeAttr(item.name)}">`);
+    parts.push(`<span class="kind-badge kind-${kind}">${badge}</span>`);
+    parts.push(`<span class="data-name">${escapeHtml(item.name)}</span>`);
+    if (hint) {
+      parts.push(`<span class="data-hint" title="${escapeAttr(hint)}">${escapeHtml(hint)}</span>`);
+    }
+    parts.push('</button></li>');
+    return parts.join('');
+  };
+
   const renderDataGroups = () => {
     if (!state.project) {
       return;
@@ -12512,10 +12572,11 @@ markilandia.
       const haystack = `${item.name || ''} ${item.description || ''} ${keywords}`.toLowerCase();
       return haystack.includes(filter);
     };
+    const folderOrder = Array.isArray(state.project.folders) ? state.project.folders : [];
     const groups = [
-      { kind: 'table', label: t('data.tables'), badge: 'T', items: state.project.tables || [] },
-      { kind: 'query', label: t('data.queries'), badge: 'Q', items: state.project.queries || [] },
-      { kind: 'script', label: t('data.scripts'), badge: 'S', items: state.project.scripts || [] },
+      { kind: 'table', label: t('data.tables'), badge: 'T', items: state.project.tables || [], folders: false },
+      { kind: 'query', label: t('data.queries'), badge: 'Q', items: state.project.queries || [], folders: true },
+      { kind: 'script', label: t('data.scripts'), badge: 'S', items: state.project.scripts || [], folders: true },
     ];
     const parts = [];
     let total = 0;
@@ -12525,20 +12586,47 @@ markilandia.
         return;
       }
       total += items.length;
-      parts.push(`<section class="data-group"><h3>${escapeHtml(group.label)} <span>${items.length} / ${group.items.length}</span></h3><ul class="data-list">`);
-      items.forEach((item) => {
-        const keywords = Array.isArray(item.keywords) ? item.keywords.join(', ') : '';
-        const hint = keywords || item.description || '';
-        parts.push('<li>');
-        parts.push(`<button type="button" data-insert-kind="${group.kind}" data-insert-name="${escapeAttr(item.name)}">`);
-        parts.push(`<span class="kind-badge kind-${group.kind}">${group.badge}</span>`);
-        parts.push(`<span class="data-name">${escapeHtml(item.name)}</span>`);
-        if (hint) {
-          parts.push(`<span class="data-hint" title="${escapeAttr(hint)}">${escapeHtml(hint)}</span>`);
+      parts.push(`<section class="data-group"><h3>${escapeHtml(group.label)} <span>${items.length} / ${group.items.length}</span></h3>`);
+      if (!group.folders) {
+        parts.push(`<ul class="data-list">${items.map((item) => dataItemHtml(item, group.kind, group.badge)).join('')}</ul>`);
+      } else {
+        const byFolder = new Map();
+        folderOrder.forEach((name) => byFolder.set(name, []));
+        const unfiled = [];
+        items.forEach((item) => {
+          const folder = item.folder && String(item.folder).trim();
+          if (folder) {
+            if (!byFolder.has(folder)) {
+              byFolder.set(folder, []);
+            }
+            byFolder.get(folder).push(item);
+          } else {
+            unfiled.push(item);
+          }
+        });
+        const folderGroups = [];
+        byFolder.forEach((list, name) => {
+          if (list.length > 0) {
+            folderGroups.push({ name, items: list });
+          }
+        });
+        if (unfiled.length > 0) {
+          folderGroups.push({ name: '', items: unfiled });
         }
-        parts.push('</button></li>');
-      });
-      parts.push('</ul></section>');
+        const hasFolders = folderGroups.some((folderGroup) => folderGroup.name !== '');
+        if (!hasFolders) {
+          parts.push(`<ul class="data-list">${items.map((item) => dataItemHtml(item, group.kind, group.badge)).join('')}</ul>`);
+        } else {
+          folderGroups.forEach((folderGroup) => {
+            const name = folderGroup.name || t('data.noFolder');
+            parts.push('<details class="data-folder" open>');
+            parts.push(`<summary><span class="folder-name">${escapeHtml(name)}</span><span class="folder-count">${folderGroup.items.length}</span></summary>`);
+            parts.push(`<ul class="data-list">${folderGroup.items.map((item) => dataItemHtml(item, group.kind, group.badge)).join('')}</ul>`);
+            parts.push('</details>');
+          });
+        }
+      }
+      parts.push('</section>');
     });
     if (total === 0) {
       parts.push(`<p class="data-empty">${escapeHtml(t('data.noResults'))}</p>`);
