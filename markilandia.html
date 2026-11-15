@@ -10780,6 +10780,7 @@
       'data.tables': 'Tablas',
       'data.queries': 'Consultas',
       'data.scripts': 'Scripts',
+      'data.queriesAndScripts': 'Consultas y scripts',
       'data.searchPlaceholder': 'Buscar por nombre, descripción o palabras clave…',
       'data.helpIntro': 'Haz clic en un elemento para insertar su grid en el cursor:',
       'data.helpOptionsLead': 'Opciones:',
@@ -10909,6 +10910,7 @@
       'data.tables': 'Tables',
       'data.queries': 'Queries',
       'data.scripts': 'Scripts',
+      'data.queriesAndScripts': 'Queries and scripts',
       'data.searchPlaceholder': 'Search by name, description or keywords…',
       'data.helpIntro': 'Click an item to insert its grid at the cursor:',
       'data.helpOptionsLead': 'Options:',
@@ -12544,6 +12546,31 @@ markilandia.
     renderDataGroups();
   };
 
+  const objectsInOrder = (project) => {
+    const entries = [];
+    const byKey = new Map();
+    (project.queries || []).forEach((item) => {
+      byKey.set(`query:${item.name}`, { kind: 'query', item });
+    });
+    (project.scripts || []).forEach((item) => {
+      byKey.set(`script:${item.name}`, { kind: 'script', item });
+    });
+    const seen = new Set();
+    const order = Array.isArray(project.objectOrder) ? project.objectOrder : [];
+    order.forEach((key) => {
+      if (typeof key === 'string' && byKey.has(key) && !seen.has(key)) {
+        seen.add(key);
+        entries.push(byKey.get(key));
+      }
+    });
+    byKey.forEach((entry, key) => {
+      if (!seen.has(key)) {
+        entries.push(entry);
+      }
+    });
+    return entries;
+  };
+
   const dataItemHtml = (item, kind, badge) => {
     const keywords = Array.isArray(item.keywords) ? item.keywords.join(', ') : '';
     const hint = keywords || item.description || '';
@@ -12572,62 +12599,79 @@ markilandia.
       const haystack = `${item.name || ''} ${item.description || ''} ${keywords}`.toLowerCase();
       return haystack.includes(filter);
     };
-    const folderOrder = Array.isArray(state.project.folders) ? state.project.folders : [];
-    const groups = [
-      { kind: 'table', label: t('data.tables'), badge: 'T', items: state.project.tables || [], folders: false },
-      { kind: 'query', label: t('data.queries'), badge: 'Q', items: state.project.queries || [], folders: true },
-      { kind: 'script', label: t('data.scripts'), badge: 'S', items: state.project.scripts || [], folders: true },
-    ];
     const parts = [];
     let total = 0;
-    groups.forEach((group) => {
-      const items = group.items.filter(matches);
-      if (items.length === 0) {
-        return;
-      }
-      total += items.length;
-      parts.push(`<section class="data-group"><h3>${escapeHtml(group.label)} <span>${items.length} / ${group.items.length}</span></h3>`);
-      if (!group.folders) {
-        parts.push(`<ul class="data-list">${items.map((item) => dataItemHtml(item, group.kind, group.badge)).join('')}</ul>`);
+
+    const tables = (state.project.tables || []).filter(matches);
+    if (tables.length > 0) {
+      total += tables.length;
+      parts.push(`<section class="data-group"><h3>${escapeHtml(t('data.tables'))} <span>${tables.length} / ${(state.project.tables || []).length}</span></h3>`);
+      parts.push(`<ul class="data-list">${tables.map((item) => dataItemHtml(item, 'table', 'T')).join('')}</ul>`);
+      parts.push('</section>');
+    }
+
+    const allEntries = objectsInOrder(state.project);
+    const entries = allEntries.filter((entry) => matches(entry.item));
+    if (entries.length > 0) {
+      total += entries.length;
+      parts.push(`<section class="data-group"><h3>${escapeHtml(t('data.queriesAndScripts'))} <span>${entries.length} / ${allEntries.length}</span></h3>`);
+      const folders = Array.isArray(state.project.folders) ? state.project.folders.slice() : [];
+      const totalByFolder = new Map(folders.map((name) => [name, 0]));
+      let totalUnfiled = 0;
+      allEntries.forEach((entry) => {
+        const folder = entry.item.folder && String(entry.item.folder).trim();
+        if (folder) {
+          if (!totalByFolder.has(folder)) {
+            totalByFolder.set(folder, 0);
+          }
+          totalByFolder.set(folder, totalByFolder.get(folder) + 1);
+        } else {
+          totalUnfiled += 1;
+        }
+      });
+      const byFolder = new Map(folders.map((name) => [name, []]));
+      const unfiled = [];
+      entries.forEach((entry) => {
+        const folder = entry.item.folder && String(entry.item.folder).trim();
+        if (folder) {
+          if (!byFolder.has(folder)) {
+            byFolder.set(folder, []);
+            folders.push(folder);
+          }
+          byFolder.get(folder).push(entry);
+        } else {
+          unfiled.push(entry);
+        }
+      });
+      const itemsHtml = (list) => list
+        .map((entry) => dataItemHtml(entry.item, entry.kind, entry.kind === 'query' ? 'Q' : 'S'))
+        .join('');
+      if (folders.length === 0) {
+        parts.push(`<ul class="data-list">${itemsHtml(entries)}</ul>`);
       } else {
-        const byFolder = new Map();
-        folderOrder.forEach((name) => byFolder.set(name, []));
-        const unfiled = [];
-        items.forEach((item) => {
-          const folder = item.folder && String(item.folder).trim();
-          if (folder) {
-            if (!byFolder.has(folder)) {
-              byFolder.set(folder, []);
-            }
-            byFolder.get(folder).push(item);
-          } else {
-            unfiled.push(item);
+        folders.forEach((name) => {
+          const list = byFolder.get(name) || [];
+          if (filter && list.length === 0) {
+            return;
           }
-        });
-        const folderGroups = [];
-        byFolder.forEach((list, name) => {
-          if (list.length > 0) {
-            folderGroups.push({ name, items: list });
-          }
+          const folderTotal = totalByFolder.get(name) || 0;
+          const countText = filter ? `${list.length} / ${folderTotal}` : String(list.length);
+          parts.push('<details class="data-folder" open>');
+          parts.push(`<summary><span class="folder-name">${escapeHtml(name)}</span><span class="folder-count">${countText}</span></summary>`);
+          parts.push(`<ul class="data-list">${itemsHtml(list)}</ul>`);
+          parts.push('</details>');
         });
         if (unfiled.length > 0) {
-          folderGroups.push({ name: '', items: unfiled });
-        }
-        const hasFolders = folderGroups.some((folderGroup) => folderGroup.name !== '');
-        if (!hasFolders) {
-          parts.push(`<ul class="data-list">${items.map((item) => dataItemHtml(item, group.kind, group.badge)).join('')}</ul>`);
-        } else {
-          folderGroups.forEach((folderGroup) => {
-            const name = folderGroup.name || t('data.noFolder');
-            parts.push('<details class="data-folder" open>');
-            parts.push(`<summary><span class="folder-name">${escapeHtml(name)}</span><span class="folder-count">${folderGroup.items.length}</span></summary>`);
-            parts.push(`<ul class="data-list">${folderGroup.items.map((item) => dataItemHtml(item, group.kind, group.badge)).join('')}</ul>`);
-            parts.push('</details>');
-          });
+          const countText = filter ? `${unfiled.length} / ${totalUnfiled}` : String(unfiled.length);
+          parts.push('<details class="data-folder" open>');
+          parts.push(`<summary><span class="folder-name">${escapeHtml(t('data.noFolder'))}</span><span class="folder-count">${countText}</span></summary>`);
+          parts.push(`<ul class="data-list">${itemsHtml(unfiled)}</ul>`);
+          parts.push('</details>');
         }
       }
       parts.push('</section>');
-    });
+    }
+
     if (total === 0) {
       parts.push(`<p class="data-empty">${escapeHtml(t('data.noResults'))}</p>`);
     }
