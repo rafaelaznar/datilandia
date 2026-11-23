@@ -22887,7 +22887,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT codigo, tipo, num_camas, planta FROM habitaciones WHERE planta = {{ 0..5 }} ORDER BY codigo",
+      "sql": "SELECT codigo, tipo, num_camas, planta FROM habitaciones WHERE planta = {{ 0..5 | Planta }} ORDER BY codigo",
       "assert": {
         "columns": [
           "codigo",
@@ -22923,7 +22923,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT estado, COUNT(*) AS citas FROM citas WHERE id_medico IN {{ SELECT id_medico FROM medicos WHERE es_investigador = true ORDER BY id_medico }} GROUP BY estado ORDER BY estado",
+      "sql": "SELECT estado, COUNT(*) AS citas FROM citas WHERE id_medico IN {{ SELECT id_medico FROM medicos WHERE es_investigador = true ORDER BY id_medico | Médico investigador }} GROUP BY estado ORDER BY estado",
       "assert": {
         "columns": [
           "estado",
@@ -22961,7 +22961,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT nombre, apellidos, ciudad FROM pacientes WHERE ciudad IN {{ P01 · Ciudades de los hospitales (origen del parámetro) }} ORDER BY apellidos, nombre",
+      "sql": "SELECT nombre, apellidos, ciudad FROM pacientes WHERE ciudad IN {{ P01 · Ciudades de los hospitales (origen del parámetro) | Ciudad }} ORDER BY apellidos, nombre",
       "assert": {
         "columns": [
           "nombre",
@@ -23129,7 +23129,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT id_factura, importe, metodo_pago FROM facturas WHERE id_factura NOT IN {{ P02 · Factura más cara (origen del parámetro) }} ORDER BY importe DESC, id_factura LIMIT 10",
+      "sql": "SELECT id_factura, importe, metodo_pago FROM facturas WHERE id_factura NOT IN {{ P02 · Factura más cara (origen del parámetro) | Factura más cara }} ORDER BY importe DESC, id_factura LIMIT 10",
       "assert": {
         "columns": [
           "id_factura",
@@ -23202,7 +23202,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT h.nombre, COUNT(*) AS ingresos FROM hospitales AS h INNER JOIN habitaciones AS r ON r.id_hospital = h.id_hospital INNER JOIN ingresos AS i ON i.id_habitacion = r.id_habitacion GROUP BY h.nombre HAVING COUNT(*) >= {{ 1..20 }} ORDER BY ingresos DESC, h.nombre",
+      "sql": "SELECT h.nombre, COUNT(*) AS ingresos FROM hospitales AS h INNER JOIN habitaciones AS r ON r.id_hospital = h.id_hospital INNER JOIN ingresos AS i ON i.id_habitacion = r.id_habitacion GROUP BY h.nombre HAVING COUNT(*) >= {{ 1..20 | Ingresos mínimos }} ORDER BY ingresos DESC, h.nombre",
       "assert": {
         "columns": [
           "nombre",
@@ -23248,7 +23248,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT nombre, ciudad, num_camas FROM hospitales WHERE id_hospital IN {{ P10 · Hospitales para el parámetro }} ORDER BY nombre",
+      "sql": "SELECT nombre, ciudad, num_camas FROM hospitales WHERE id_hospital IN {{ P10 · Hospitales para el parámetro | Hospital }} ORDER BY nombre",
       "assert": {
         "columns": [
           "nombre",
@@ -27220,7 +27220,7 @@
       "folder": "I · Parámetros",
       "color": "#dcf1d4",
       "starred": true,
-      "code": "const costeMinimo = {{ 200..900 }};\nreturn tables[\"ingresos\"]\n  .filter((ingreso) => ingreso.coste_dia >= costeMinimo)\n  .map((ingreso) => ({\n    id_ingreso: ingreso.id_ingreso,\n    coste_dia: ingreso.coste_dia,\n    es_urgente: ingreso.es_urgente,\n  }));",
+      "code": "const costeMinimo = {{ 200..900 | Coste mínimo }};\nreturn tables[\"ingresos\"]\n  .filter((ingreso) => ingreso.coste_dia >= costeMinimo)\n  .map((ingreso) => ({\n    id_ingreso: ingreso.id_ingreso,\n    coste_dia: ingreso.coste_dia,\n    es_urgente: ingreso.es_urgente,\n  }));",
       "assert": {
         "columns": [
           "id_ingreso",

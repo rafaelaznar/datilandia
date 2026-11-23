@@ -8714,7 +8714,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT codigo, capacidad FROM aulas WHERE capacidad >= {{ 50..120 }} ORDER BY capacidad DESC, codigo",
+      "sql": "SELECT codigo, capacidad FROM aulas WHERE capacidad >= {{ 50..120 | Capacidad mínima }} ORDER BY capacidad DESC, codigo",
       "assert": {
         "columns": [
           "codigo",
@@ -8760,7 +8760,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT curso_academico, COUNT(*) AS total FROM matriculas WHERE curso_academico IN {{ SELECT curso_academico FROM matriculas GROUP BY curso_academico ORDER BY curso_academico }} GROUP BY curso_academico ORDER BY curso_academico",
+      "sql": "SELECT curso_academico, COUNT(*) AS total FROM matriculas WHERE curso_academico IN {{ SELECT curso_academico FROM matriculas GROUP BY curso_academico ORDER BY curso_academico | Curso académico }} GROUP BY curso_academico ORDER BY curso_academico",
       "assert": {
         "columns": [
           "curso_academico",
@@ -8790,7 +8790,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT nombre, apellidos, id_sede FROM estudiantes WHERE id_sede IN {{ P01 · Sedes que dan valores al parámetro }} ORDER BY apellidos, nombre",
+      "sql": "SELECT nombre, apellidos, id_sede FROM estudiantes WHERE id_sede IN {{ P01 · Sedes que dan valores al parámetro | Sede }} ORDER BY apellidos, nombre",
       "assert": {
         "columns": [
           "nombre",
@@ -8933,7 +8933,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT nombre, ciudad, pais FROM sedes WHERE id_sede NOT IN {{ P02 · Sede principal (origen del parámetro) }} ORDER BY nombre",
+      "sql": "SELECT nombre, ciudad, pais FROM sedes WHERE id_sede NOT IN {{ P02 · Sede principal (origen del parámetro) | Sede principal }} ORDER BY nombre",
       "assert": {
         "columns": [
           "nombre",
@@ -8971,7 +8971,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT curso, COUNT(*) AS total, ROUND(AVG(creditos), 1) AS creditos_medios FROM asignaturas GROUP BY curso HAVING COUNT(*) >= {{ 1..10 }} ORDER BY curso",
+      "sql": "SELECT curso, COUNT(*) AS total, ROUND(AVG(creditos), 1) AS creditos_medios FROM asignaturas GROUP BY curso HAVING COUNT(*) >= {{ 1..10 | Asignaturas mínimas }} ORDER BY curso",
       "assert": {
         "columns": [
           "curso",
@@ -9019,7 +9019,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT codigo, capacidad FROM aulas WHERE capacidad = {{ SELECT MAX(capacidad) FROM aulas }} ORDER BY codigo",
+      "sql": "SELECT codigo, capacidad FROM aulas WHERE capacidad = {{ SELECT MAX(capacidad) FROM aulas | Capacidad máxima }} ORDER BY codigo",
       "assert": {
         "columns": [
           "codigo",
@@ -9045,7 +9045,7 @@
       "folder": "I · Parámetros",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT nombre, apellidos FROM estudiantes WHERE es_becado = true AND id_sede IN {{ P10 · Sedes para el parámetro }} ORDER BY apellidos, nombre",
+      "sql": "SELECT nombre, apellidos FROM estudiantes WHERE es_becado = true AND id_sede IN {{ P10 · Sedes para el parámetro | Sede }} ORDER BY apellidos, nombre",
       "assert": {
         "columns": [
           "nombre",
@@ -11463,7 +11463,7 @@
       "folder": "I · Parámetros",
       "color": "#dcf1d4",
       "starred": true,
-      "code": "const notaMinima = {{ 5..10 }};\nreturn tables[\"matriculas\"]\n  .filter((matricula) => matricula.nota !== null && matricula.nota >= notaMinima)\n  .map((matricula) => ({\n    id_matricula: matricula.id_matricula,\n    nota: matricula.nota,\n    estado: matricula.estado,\n  }));",
+      "code": "const notaMinima = {{ 5..10 | Nota mínima }};\nreturn tables[\"matriculas\"]\n  .filter((matricula) => matricula.nota !== null && matricula.nota >= notaMinima)\n  .map((matricula) => ({\n    id_matricula: matricula.id_matricula,\n    nota: matricula.nota,\n    estado: matricula.estado,\n  }));",
       "assert": {
         "columns": [
           "id_matricula",

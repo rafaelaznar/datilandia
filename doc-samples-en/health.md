@@ -119,7 +119,8 @@ Queries and scripts can be **parameterised** with the `{{ … }}` notation: it i
 written in the SQL (in the `WHERE`, the `HAVING` or any other expression) or in
 the code of a script. When they run, **datilandia** and **planilandia** show a
 bar of drop-downs **above the results**, right after the pagination bar; each
-drop-down carries a **header with the name of the field** it filters (and the
+drop-down carries a **header with the name of the field** it filters or with the
+**label** written after a vertical bar (and the
 **«All»** option when the source has several rows) and, when the value changes,
 they recalculate the result. The bar is not shown until the query or the script
 runs. The first value is the default one: it is the value used
@@ -135,6 +136,17 @@ The content of `{{ … }}` may be:
   once;
 - the **name of a table, a query or a script** of the project, for example
   `{{ P01 · Ciudades de los hospitales (origen del parámetro) }}`.
+
+A **label** may be added to the source after a vertical bar; it is shown as the
+header of the drop-down and replaces the name of the field:
+
+```markdown
+{{ 0..5 | Floor }}
+{{ SELECT id_medico FROM medicos WHERE es_investigador = true | Doctor }}
+{{ hospitales | Hospital }}
+```
+
+The `||` concatenation operator of SQL is not confused with the separator.
 
 ### Integer range in the WHERE
 

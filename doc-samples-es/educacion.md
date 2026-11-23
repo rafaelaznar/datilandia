@@ -120,8 +120,8 @@ Las consultas y los scripts pueden ser **parametrizados** con la notación
 expresión) o en el código de un script. Al ejecutarlos, **datilandia** y
 **planilandia** muestran una **barra de desplegables encima de los resultados**,
 justo después de la barra de paginación; cada desplegable lleva una **cabecera
-con el nombre del campo** que filtra (y la opción **«Todos»** cuando el origen
-tiene varias filas) y, al cambiar el valor, recalculan el resultado. La barra no
+con el nombre del campo** que filtra o con la **etiqueta** escrita tras una barra
+vertical (y la opción **«Todos»** cuando el origen tiene varias filas) y, al cambiar el valor, recalculan el resultado. La barra no
 aparece hasta que la consulta o el script se ejecuta. El primer valor es el
 valor por defecto: es el que usan las pruebas del proyecto, las vistas, los
 scripts que leen la consulta y los informes de markilandia (por eso las tablas
@@ -136,6 +136,17 @@ El contenido de `{{ … }}` puede ser:
   todos los valores;
 - el **nombre de una tabla, una consulta o un script** del proyecto, por
   ejemplo `{{ P01 · Sedes que dan valores al parámetro }}`.
+
+El origen se puede acompañar de una **etiqueta** tras una barra vertical; se
+muestra como cabecera del desplegable y sustituye al nombre del campo:
+
+```markdown
+{{ 50..120 | Capacidad mínima }}
+{{ SELECT id_sede, nombre FROM sedes | Elige una sede }}
+{{ sedes | Sede }}
+```
+
+El operador `||` de concatenación del SQL no se confunde con el separador.
 
 ### Rango de enteros en el WHERE
 

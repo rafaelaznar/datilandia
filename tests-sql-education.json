@@ -8714,7 +8714,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT code, capacity FROM classrooms WHERE capacity >= {{ 50..120 }} ORDER BY capacity DESC, code",
+      "sql": "SELECT code, capacity FROM classrooms WHERE capacity >= {{ 50..120 | Minimum capacity }} ORDER BY capacity DESC, code",
       "assert": {
         "columns": [
           "code",
@@ -8760,7 +8760,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT academic_year, COUNT(*) AS total FROM enrollments WHERE academic_year IN {{ SELECT academic_year FROM enrollments GROUP BY academic_year ORDER BY academic_year }} GROUP BY academic_year ORDER BY academic_year",
+      "sql": "SELECT academic_year, COUNT(*) AS total FROM enrollments WHERE academic_year IN {{ SELECT academic_year FROM enrollments GROUP BY academic_year ORDER BY academic_year | Academic year }} GROUP BY academic_year ORDER BY academic_year",
       "assert": {
         "columns": [
           "academic_year",
@@ -8790,7 +8790,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT name, last_name, id_campus FROM students WHERE id_campus IN {{ P01 · Campuses that give the parameter its values }} ORDER BY last_name, name",
+      "sql": "SELECT name, last_name, id_campus FROM students WHERE id_campus IN {{ P01 · Campuses that give the parameter its values | Campus }} ORDER BY last_name, name",
       "assert": {
         "columns": [
           "name",
@@ -8933,7 +8933,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT name, city, country FROM campuses WHERE id_campus NOT IN {{ P02 · Main campus (parameter source) }} ORDER BY name",
+      "sql": "SELECT name, city, country FROM campuses WHERE id_campus NOT IN {{ P02 · Main campus (parameter source) | Main campus }} ORDER BY name",
       "assert": {
         "columns": [
           "name",
@@ -8971,7 +8971,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT year, COUNT(*) AS total, ROUND(AVG(credits), 1) AS average_credits FROM subjects GROUP BY year HAVING COUNT(*) >= {{ 1..10 }} ORDER BY year",
+      "sql": "SELECT year, COUNT(*) AS total, ROUND(AVG(credits), 1) AS average_credits FROM subjects GROUP BY year HAVING COUNT(*) >= {{ 1..10 | Minimum subjects }} ORDER BY year",
       "assert": {
         "columns": [
           "year",
@@ -9019,7 +9019,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT code, capacity FROM classrooms WHERE capacity = {{ SELECT MAX(capacity) FROM classrooms }} ORDER BY code",
+      "sql": "SELECT code, capacity FROM classrooms WHERE capacity = {{ SELECT MAX(capacity) FROM classrooms | Maximum capacity }} ORDER BY code",
       "assert": {
         "columns": [
           "code",
@@ -9045,7 +9045,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT name, last_name FROM students WHERE has_scholarship = true AND id_campus IN {{ P10 · Campuses for the parameter }} ORDER BY last_name, name",
+      "sql": "SELECT name, last_name FROM students WHERE has_scholarship = true AND id_campus IN {{ P10 · Campuses for the parameter | Campus }} ORDER BY last_name, name",
       "assert": {
         "columns": [
           "name",
@@ -11463,7 +11463,7 @@
       "folder": "I · Parameters",
       "color": "#dcf1d4",
       "starred": true,
-      "code": "const minimumGrade = {{ 5..10 }};\nreturn tables[\"enrollments\"]\n  .filter((enrolment) => enrolment.grade !== null && enrolment.grade >= minimumGrade)\n  .map((enrolment) => ({\n    id_enrollment: enrolment.id_enrollment,\n    grade: enrolment.grade,\n    status: enrolment.status,\n  }));",
+      "code": "const minimumGrade = {{ 5..10 | Minimum grade }};\nreturn tables[\"enrollments\"]\n  .filter((enrolment) => enrolment.grade !== null && enrolment.grade >= minimumGrade)\n  .map((enrolment) => ({\n    id_enrollment: enrolment.id_enrollment,\n    grade: enrolment.grade,\n    status: enrolment.status,\n  }));",
       "assert": {
         "columns": [
           "id_enrollment",

@@ -22887,7 +22887,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT code, type, num_beds, floor FROM rooms WHERE floor = {{ 0..5 }} ORDER BY code",
+      "sql": "SELECT code, type, num_beds, floor FROM rooms WHERE floor = {{ 0..5 | Floor }} ORDER BY code",
       "assert": {
         "columns": [
           "code",
@@ -22923,7 +22923,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT status, COUNT(*) AS appointments FROM appointments WHERE id_doctor IN {{ SELECT id_doctor FROM doctors WHERE is_researcher = true ORDER BY id_doctor }} GROUP BY status ORDER BY status",
+      "sql": "SELECT status, COUNT(*) AS appointments FROM appointments WHERE id_doctor IN {{ SELECT id_doctor FROM doctors WHERE is_researcher = true ORDER BY id_doctor | Researcher doctor }} GROUP BY status ORDER BY status",
       "assert": {
         "columns": [
           "status",
@@ -22961,7 +22961,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT name, last_name, city FROM patients WHERE city IN {{ P01 · Cities of the hospitals (parameter source) }} ORDER BY last_name, name",
+      "sql": "SELECT name, last_name, city FROM patients WHERE city IN {{ P01 · Cities of the hospitals (parameter source) | City }} ORDER BY last_name, name",
       "assert": {
         "columns": [
           "name",
@@ -23129,7 +23129,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT id_invoice, amount, payment_method FROM invoices WHERE id_invoice NOT IN {{ P02 · Most expensive invoice (parameter source) }} ORDER BY amount DESC, id_invoice LIMIT 10",
+      "sql": "SELECT id_invoice, amount, payment_method FROM invoices WHERE id_invoice NOT IN {{ P02 · Most expensive invoice (parameter source) | Most expensive invoice }} ORDER BY amount DESC, id_invoice LIMIT 10",
       "assert": {
         "columns": [
           "id_invoice",
@@ -23202,7 +23202,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT h.name, COUNT(*) AS admissions FROM hospitals AS h INNER JOIN rooms AS r ON r.id_hospital = h.id_hospital INNER JOIN admissions AS i ON i.id_room = r.id_room GROUP BY h.name HAVING COUNT(*) >= {{ 1..20 }} ORDER BY admissions DESC, h.name",
+      "sql": "SELECT h.name, COUNT(*) AS admissions FROM hospitals AS h INNER JOIN rooms AS r ON r.id_hospital = h.id_hospital INNER JOIN admissions AS i ON i.id_room = r.id_room GROUP BY h.name HAVING COUNT(*) >= {{ 1..20 | Minimum admissions }} ORDER BY admissions DESC, h.name",
       "assert": {
         "columns": [
           "name",
@@ -23248,7 +23248,7 @@
       "folder": "I · Parameters",
       "color": "#dde5fa",
       "starred": true,
-      "sql": "SELECT name, city, num_beds FROM hospitals WHERE id_hospital IN {{ P10 · Hospitals for the parameter }} ORDER BY name",
+      "sql": "SELECT name, city, num_beds FROM hospitals WHERE id_hospital IN {{ P10 · Hospitals for the parameter | Hospital }} ORDER BY name",
       "assert": {
         "columns": [
           "name",
@@ -27220,7 +27220,7 @@
       "folder": "I · Parameters",
       "color": "#dcf1d4",
       "starred": true,
-      "code": "const minimumCost = {{ 200..900 }};\nreturn tables[\"admissions\"]\n  .filter((admission) => admission.cost_per_day >= minimumCost)\n  .map((admission) => ({\n    id_admission: admission.id_admission,\n    cost_per_day: admission.cost_per_day,\n    is_emergency: admission.is_emergency,\n  }));",
+      "code": "const minimumCost = {{ 200..900 | Minimum cost }};\nreturn tables[\"admissions\"]\n  .filter((admission) => admission.cost_per_day >= minimumCost)\n  .map((admission) => ({\n    id_admission: admission.id_admission,\n    cost_per_day: admission.cost_per_day,\n    is_emergency: admission.is_emergency,\n  }));",
       "assert": {
         "columns": [
           "id_admission",
