@@ -1971,17 +1971,56 @@
       z-index: 30;
       display: flex;
       flex-direction: column;
-      width: 320px;
-      max-height: 340px;
+      width: min(560px, calc(100vw - 8px));
+      max-height: 420px;
       border: 1px solid #888;
       background: #fff;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    /*  El botón que abre la lista ocupa más ancho para que su desplegable
+        pueda enseñar los nombres y los títulos largos sin apretarlos.  */
+    #btn-insert,
+    #btn-script-insert {
+      justify-content: flex-start;
+      min-width: min(340px, 100%);
+      max-width: 100%;
     }
 
     #insert-search {
       margin: 4px;
       padding: 2px 4px;
       font: inherit;
+    }
+
+    /*  Las solapas cambian la jerarquía de la lista: carpetas, dependencias o
+        tipos. La elegida se marca con una línea inferior.  */
+    .insert-tabs {
+      display: flex;
+      gap: 2px;
+      margin: 0 4px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .insert-tab {
+      padding: 3px 8px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: none;
+      color: #555;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .insert-tab:hover,
+    .insert-tab:focus-visible {
+      background: #eef3fa;
+    }
+
+    .insert-tab[aria-selected="true"] {
+      border-bottom-color: #333;
+      color: #000;
+      font-weight: 600;
     }
 
     #insert-list {
@@ -1992,7 +2031,7 @@
     }
 
     .insert-group {
-      padding: 5px 6px 2px;
+      padding: 6px 6px 2px;
       color: #666;
       font-size: 10px;
       letter-spacing: 0.04em;
@@ -2003,6 +2042,7 @@
       display: flex;
       gap: 2px;
       align-items: center;
+      min-width: 0;
     }
 
     .insert-toggle,
@@ -2026,7 +2066,9 @@
 
     .insert-pick {
       flex: 1 1 auto;
+      min-width: 0;
       padding: 2px 4px;
+      overflow-wrap: anywhere;
       font-family: ui-monospace, Consolas, "Courier New", monospace;
     }
 
@@ -2048,6 +2090,37 @@
     .insert-note {
       padding: 3px 8px;
       color: #666;
+    }
+
+    /*  Una carpeta de la solapa de carpetas: encabeza el bloque de nombres
+        que se anidan debajo.  */
+    .insert-folder {
+      margin: 5px 6px 1px;
+      padding: 2px 4px;
+      border-bottom: 1px solid #e4e4e4;
+      color: #555;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .insert-folder-block {
+      padding-left: 12px;
+    }
+
+    /*  Un rótulo dentro de una rama de dependencias y el bloque de objetos que
+        cuelgan de ella.  */
+    .insert-subgroup {
+      padding: 3px 6px 1px;
+      color: #666;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .insert-children {
+      margin-left: 10px;
+      padding-left: 8px;
+      border-left: 1px solid #ddd;
     }
 
     /* Desplegables de consultas relacionadas: las que leen la consulta abierta
@@ -2787,8 +2860,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
         <div id="related-popup" role="dialog" aria-label="Objetos relacionados" hidden></div>
         <div id="insert-popup" role="dialog" data-i18n-aria-label="queries.insertTitle" aria-label="Insertar en el cursor" hidden>
-          <input data-i18n-aria-label="queries.insertSearchAria" data-i18n-placeholder="queries.insertSearchPlaceholder" id="insert-search" type="text" autocomplete="off" spellcheck="false" aria-label="Buscar una tabla, una consulta o un campo" placeholder="Buscar una tabla, una consulta o un campo…">
-          <div id="insert-list" data-i18n-aria-label="queries.insertListAria" aria-label="Tablas, consultas, scripts y campos"></div>
+          <input data-i18n-aria-label="queries.insertSearchAria" data-i18n-placeholder="queries.insertSearchPlaceholder" id="insert-search" type="text" autocomplete="off" spellcheck="false" aria-label="Buscar una carpeta, una tabla, una consulta o un script" placeholder="Buscar una carpeta, una tabla, una consulta o un script…">
+          <div data-i18n-aria-label="queries.insertTabsAria" id="insert-tabs" class="insert-tabs" role="tablist" aria-label="Forma de agrupar la lista">
+            <button aria-controls="insert-list" aria-selected="true" class="insert-tab" data-i18n="queries.insertTabFolders" data-tab="folders" id="insert-tab-folders" role="tab" type="button">Carpetas</button>
+            <button aria-controls="insert-list" aria-selected="false" class="insert-tab" data-i18n="queries.insertTabDependencies" data-tab="dependencies" id="insert-tab-dependencies" role="tab" tabindex="-1" type="button">Dependencias</button>
+            <button aria-controls="insert-list" aria-selected="false" class="insert-tab" data-i18n="queries.insertTabTypes" data-tab="types" id="insert-tab-types" role="tab" tabindex="-1" type="button">Por tipos</button>
+          </div>
+          <div id="insert-list" data-i18n-aria-label="queries.insertListAria" aria-label="Tablas, consultas, scripts y campos" role="tabpanel" aria-labelledby="insert-tab-folders"></div>
         </div>
 
   <!-- Modal window: fields and metadata of the table -->
@@ -3843,6 +3921,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "projectTests.scriptError": "Script error: {message}",
         "testsReport.openScript": "See script “{name}” in the editor",
         "queries.insertButton": "Insert table, query, script or field…",
+        "queries.insertDependents": "Dependents",
         "queries.insertFieldTip": "Write the field “{name}” at the cursor",
         "queries.insertFieldsError": "The fields of “{name}” could not be read: {message}",
         "queries.insertFoldTip": "Hide the fields of “{name}”",
@@ -3850,15 +3929,23 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.insertListAria": "Tables, queries, scripts and fields",
         "queries.insertNameTip": "Write “{name}” at the cursor",
         "queries.insertNeedsQuery": "Open or create a query to insert names in it.",
-        "queries.insertNoFieldResults": "No field matches “{text}”.",
+
         "queries.insertNoFields": "“{name}” has no fields.",
         "queries.insertNoResults": "Nothing matches “{text}”.",
+        "queries.insertObjects": "Queries and scripts",
+        "queries.insertOtherObjects": "Other queries and scripts",
         "queries.insertQueries": "Queries",
+        "queries.insertScriptChildrenFoldTip": "Hide what uses “{name}”",
+        "queries.insertScriptChildrenTip": "Show what uses “{name}”",
         "queries.insertScripts": "Scripts",
-        "queries.insertSearchAria": "Search a table, a query or a field",
-        "queries.insertSearchPlaceholder": "Search a table, a query or a field…",
+        "queries.insertSearchAria": "Search a folder, a table, a query or a script",
+        "queries.insertSearchPlaceholder": "Search a folder, a table, a query or a script…",
+        "queries.insertTabDependencies": "Dependencies",
+        "queries.insertTabFolders": "Folders",
+        "queries.insertTabsAria": "How to group the list",
+        "queries.insertTabTypes": "By type",
         "queries.insertTables": "Tables",
-        "queries.insertTip": "Insert a table, a query, a script or one of its fields at the cursor (Ctrl+Space). The arrow beside the name shows the fields.",
+        "queries.insertTip": "Insert a table, a query, a script or one of its fields at the cursor (Ctrl+Space). The arrow beside the name shows the fields and the tabs change the grouping.",
         "queries.insertTitle": "Insert at the cursor",
         "queries.insertUnfoldTip": "Show the fields of “{name}”",
         "queries.inserted": "“{name}” written at the cursor.",
@@ -4953,6 +5040,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "projectTests.scriptError": "Error del script: {message}",
         "testsReport.openScript": "Ver el script «{name}» en el editor",
         "queries.insertButton": "Insertar tabla, consulta, script o campo…",
+        "queries.insertDependents": "Dependientes",
         "queries.insertFieldTip": "Escribir el campo «{name}» en el cursor",
         "queries.insertFieldsError": "No se han podido leer los campos de «{name}»: {message}",
         "queries.insertFoldTip": "Ocultar los campos de «{name}»",
@@ -4960,15 +5048,23 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "queries.insertListAria": "Tablas, consultas, scripts y campos",
         "queries.insertNameTip": "Escribir «{name}» en el cursor",
         "queries.insertNeedsQuery": "Abre o crea una consulta para insertar nombres en ella.",
-        "queries.insertNoFieldResults": "Ningún campo coincide con «{text}».",
+
         "queries.insertNoFields": "«{name}» no tiene campos.",
         "queries.insertNoResults": "Nada coincide con «{text}».",
+        "queries.insertObjects": "Consultas y scripts",
+        "queries.insertOtherObjects": "Otras consultas y scripts",
         "queries.insertQueries": "Consultas",
+        "queries.insertScriptChildrenFoldTip": "Ocultar lo que usa «{name}»",
+        "queries.insertScriptChildrenTip": "Mostrar lo que usa «{name}»",
         "queries.insertScripts": "Scripts",
-        "queries.insertSearchAria": "Buscar una tabla, una consulta o un campo",
-        "queries.insertSearchPlaceholder": "Buscar una tabla, una consulta o un campo…",
+        "queries.insertSearchAria": "Buscar una carpeta, una tabla, una consulta o un script",
+        "queries.insertSearchPlaceholder": "Buscar una carpeta, una tabla, una consulta o un script…",
+        "queries.insertTabDependencies": "Dependencias",
+        "queries.insertTabFolders": "Carpetas",
+        "queries.insertTabsAria": "Forma de agrupar la lista",
+        "queries.insertTabTypes": "Por tipos",
         "queries.insertTables": "Tablas",
-        "queries.insertTip": "Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space). La flecha que hay junto al nombre muestra los campos.",
+        "queries.insertTip": "Insertar una tabla, una consulta, un script o uno de sus campos en el cursor (Ctrl+Space). La flecha que hay junto al nombre muestra los campos y las solapas cambian la agrupación.",
         "queries.insertTitle": "Insertar en el cursor",
         "queries.insertUnfoldTip": "Mostrar los campos de «{name}»",
         "queries.inserted": "«{name}» escrito en el cursor.",
@@ -19569,6 +19665,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       /** Editor that receives the picked name: "query" or "script". */
       target: "query",
 
+      /** Grouping of the list: "folders", "dependencies" or "types". */
+      tab: "folders",
+
       /** Names whose fields the user opened or closed by hand: "table\u0000name"
        *  → true (opened) or false (closed). That choice wins over the one the
        *  search makes when it matches a field. */
@@ -19589,6 +19688,23 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return document.getElementById(UiQueryInsert.target === "script" ? "btn-script-insert" : "btn-insert");
       },
 
+      /** Tabs that change the hierarchy of the list. */
+      tabs() {
+        return [...document.querySelectorAll("#insert-tabs .insert-tab")];
+      },
+
+      /** Marks one tab as the chosen one and repaints the list. */
+      selectTab(tab) {
+        UiQueryInsert.tab = ["folders", "dependencies", "types"].includes(tab) ? tab : "folders";
+        UiQueryInsert.tabs().forEach((button) => {
+          const chosen = button.dataset.tab === UiQueryInsert.tab;
+          button.setAttribute("aria-selected", chosen ? "true" : "false");
+          button.tabIndex = chosen ? 0 : -1;
+        });
+        document.getElementById("insert-list").setAttribute("aria-labelledby", `insert-tab-${UiQueryInsert.tab}`);
+        UiQueryInsert.render();
+      },
+
       /** Opens the list under its button and puts the caret in the search box. */
       show() {
         const active = UiQueryInsert.target === "script"
@@ -19603,7 +19719,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiQueryInsert.columns.clear();
         document.getElementById("insert-search").value = "";
         UiQueryInsert.popup().hidden = false;
-        UiQueryInsert.render();
+        // The list always opens on the tab of folders.
+        UiQueryInsert.selectTab("folders");
         document.getElementById("insert-search").focus();
       },
 
@@ -19674,19 +19791,16 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
       },
 
-      /** Shows or hides the fields of a table or a query. */
+      /** Shows or hides the fields of a table or a query (and, in the tab of
+       *  dependencies, also the objects that hang from the name). */
       unfold(kind, name) {
-        if (kind === "script") {
-          return;
-        }
         const item = UiQueryInsert.sourceOf(kind, name);
         if (!item) {
           return;
         }
-        const filter = document.getElementById("insert-search").value.trim().toLowerCase();
         UiQueryInsert.unfolded.set(
           `${kind}\u0000${name}`,
-          !UiQueryInsert.isUnfolded(kind, item, filter),
+          !UiQueryInsert.isUnfolded(kind, item),
         );
         UiQueryInsert.render();
       },
@@ -19699,16 +19813,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return (list || []).find((item) => item.name === name) || null;
       },
 
-      /** Are the fields of that name on screen? A table opens on its own while
-       *  the search matches one of its fields, unless the user closed it. */
-      isUnfolded(kind, item, filter) {
+      /** Are the fields of that name on screen? The choice of the user wins;
+       *  with `auto` (a search that matches something below the name) it opens
+       *  too. The search never opens a name by itself. */
+      isUnfolded(kind, item, auto) {
         const key = `${kind}\u0000${item.name}`;
         if (UiQueryInsert.unfolded.has(key)) {
           return UiQueryInsert.unfolded.get(key);
         }
-        return kind === "table"
-          && filter !== ""
-          && item.fields.some((field) => field.name.toLowerCase().includes(filter));
+        return Boolean(auto);
       },
 
       /** Fields of a table or a query. The columns of a query are read from its
@@ -19755,8 +19868,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return pick;
       },
 
-      /** The fields of a table or a query, under its name. */
-      fieldRows(kind, item, container, filter) {
+      /** The fields of a table or a query, under its name. The search filters
+       *  names, not fields: once a name is unfolded, all its fields show. */
+      fieldRows(kind, item, container) {
         const { fields, error } = UiQueryInsert.fieldsOf(kind, item);
         if (error) {
           container.appendChild(UiQueryInsert.note(
@@ -19768,12 +19882,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           container.appendChild(UiQueryInsert.note(I18n.t("queries.insertNoFields", { name: item.name })));
           return;
         }
-        const visible = fields.filter((field) => field.name.toLowerCase().includes(filter));
-        if (visible.length === 0) {
-          container.appendChild(UiQueryInsert.note(I18n.t("queries.insertNoFieldResults", { text: filter })));
-          return;
-        }
-        visible.forEach((field) => {
+        fields.forEach((field) => {
           const row = document.createElement("div");
           row.className = "insert-row insert-field";
           row.appendChild(UiQueryInsert.pick(
@@ -19791,14 +19900,82 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         });
       },
 
-      /** The name of a table or a query, with its unfold arrow. */
-      itemRow(kind, item, filter) {
-        const unfolded = UiQueryInsert.isUnfolded(kind, item, filter);
+      /** Does the name of the table, query or script match the search? */
+      matches(item, filter) {
+        return filter === "" || item.name.toLowerCase().includes(filter);
+      },
+
+      /** Does the name or something that hangs from it match the search? */
+      subtreeMatches(kind, item, filter, graph, path) {
+        if (UiQueryInsert.matches(item, filter)) {
+          return true;
+        }
+        if (filter === "") {
+          return true;
+        }
+        return UiQueryInsert.descendantMatches(kind, item, filter, graph, path);
+      },
+
+      /** Does something that hangs from the name match the search? */
+      descendantMatches(kind, item, filter, graph, path) {
+        if (filter === "") {
+          return false;
+        }
+        const key = ProjectGraph.nodeKey(kind, item.name);
+        if (path.has(key)) {
+          return false;
+        }
+        const next = new Set(path);
+        next.add(key);
+        return ProjectGraph.dependentsIn(graph, kind, item.name).some((ref) => {
+          const child = UiQueryInsert.sourceOf(ref.kind, ref.name);
+          return child !== null && (UiQueryInsert.matches(child, filter)
+            || UiQueryInsert.descendantMatches(ref.kind, child, filter, graph, next));
+        });
+      },
+
+      /** Title of a group of the list. */
+      groupTitle(text) {
+        const title = document.createElement("div");
+        title.className = "insert-group";
+        title.textContent = text;
+        return title;
+      },
+
+      /** Header of a folder of the tab of folders. */
+      folderRow(name) {
+        const heading = document.createElement("div");
+        heading.className = "insert-folder";
+        heading.textContent = name;
+        return heading;
+      },
+
+      /** A folder with its names nested under it. */
+      folderBlock(name, entries, filter) {
+        const block = document.createElement("div");
+        block.className = "insert-folder-block";
+        block.appendChild(UiQueryInsert.folderRow(name));
+        entries.forEach((entry) => block.appendChild(
+          UiQueryInsert.itemRow(entry.kind, entry.item, filter),
+        ));
+        return block;
+      },
+
+      /** The name of a table, a query or a script, with its unfold arrow. With
+       *  a graph (the tab of dependencies), unfolding also shows the objects
+       *  that read it, nested below. */
+      itemRow(kind, item, filter, options) {
+        const extra = options || {};
+        const children = extra.graph
+          ? ProjectGraph.dependentsIn(extra.graph, kind, item.name)
+          : [];
+        const expandable = kind !== "script" || children.length > 0;
+        const unfolded = expandable && UiQueryInsert.isUnfolded(kind, item, extra.autoOpen);
         const block = document.createElement("div");
 
         const row = document.createElement("div");
         row.className = "insert-row";
-        if (kind === "script") {
+        if (!expandable) {
           const blank = document.createElement("span");
           blank.className = "insert-toggle";
           row.appendChild(blank);
@@ -19811,7 +19988,17 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           arrow.dataset.name = item.name;
           arrow.setAttribute("aria-expanded", unfolded ? "true" : "false");
           arrow.replaceChildren(Ui.icon(unfolded ? "chevron-down" : "chevron-right"));
-          arrow.title = I18n.t(unfolded ? "queries.insertFoldTip" : "queries.insertUnfoldTip", { name: item.name });
+          if (kind === "script") {
+            arrow.title = I18n.t(
+              unfolded ? "queries.insertScriptChildrenFoldTip" : "queries.insertScriptChildrenTip",
+              { name: item.name },
+            );
+          } else {
+            arrow.title = I18n.t(
+              unfolded ? "queries.insertFoldTip" : "queries.insertUnfoldTip",
+              { name: item.name },
+            );
+          }
           arrow.setAttribute("aria-label", arrow.title);
           row.appendChild(arrow);
         }
@@ -19822,40 +20009,198 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         ));
         block.appendChild(row);
         if (unfolded) {
-          UiQueryInsert.fieldRows(kind, item, block, filter);
+          if (kind !== "script") {
+            UiQueryInsert.fieldRows(kind, item, block);
+          }
+          UiQueryInsert.dependentRows(kind, item, block, filter, extra);
         }
         return block;
       },
 
-      /** Paints the whole list with the names that match the search box. */
-      render() {
-        const list = document.getElementById("insert-list");
-        const filter = document.getElementById("insert-search").value.trim().toLowerCase();
-        list.textContent = "";
+      /** Objects that read a name, nested under it in the tab of dependencies. */
+      dependentRows(kind, item, container, filter, options) {
+        if (!options.graph) {
+          return;
+        }
+        const path = new Set(options.path || []);
+        const key = ProjectGraph.nodeKey(kind, item.name);
+        path.add(key);
+        const children = document.createElement("div");
+        children.className = "insert-children";
+        ProjectGraph.dependentsIn(options.graph, kind, item.name).forEach((ref) => {
+          if (path.has(ProjectGraph.refKey(ref))) {
+            return;
+          }
+          const child = UiQueryInsert.sourceOf(ref.kind, ref.name);
+          if (!child) {
+            return;
+          }
+          if (filter !== "" && !UiQueryInsert.subtreeMatches(ref.kind, child, filter, options.graph, path)) {
+            return;
+          }
+          children.appendChild(UiQueryInsert.itemRow(ref.kind, child, filter, {
+            graph: options.graph,
+            path: new Set(path),
+            autoOpen: UiQueryInsert.descendantMatches(ref.kind, child, filter, options.graph, path),
+          }));
+        });
+        if (children.childElementCount === 0) {
+          return;
+        }
+        const label = document.createElement("div");
+        label.className = "insert-subgroup";
+        label.textContent = I18n.t("queries.insertDependents");
+        container.appendChild(label);
+        container.appendChild(children);
+      },
+
+      /** The tab of types: one group per kind of name. */
+      renderTypes(list, filter) {
         const groups = [
-          { title: I18n.t("queries.insertTables"), kind: "table", items: Store.project.tables },
-          { title: I18n.t("queries.insertQueries"), kind: "query", items: Store.project.queries },
+          { title: I18n.t("queries.insertTables"), kind: "table", items: Store.project.tables || [] },
+          { title: I18n.t("queries.insertQueries"), kind: "query", items: Store.project.queries || [] },
           { title: I18n.t("queries.insertScripts"), kind: "script", items: Store.project.scripts || [] },
         ];
         let found = 0;
         groups.forEach((group) => {
-          const visible = group.items.filter((item) => {
-            if (filter === "" || item.name.toLowerCase().includes(filter)) {
-              return true;
-            }
-            return group.kind === "table"
-              && item.fields.some((field) => field.name.toLowerCase().includes(filter));
-          });
+          const visible = group.items.filter((item) => UiQueryInsert.matches(item, filter));
           if (visible.length === 0) {
             return;
           }
           found += visible.length;
-          const title = document.createElement("div");
-          title.className = "insert-group";
-          title.textContent = group.title;
-          list.appendChild(title);
+          list.appendChild(UiQueryInsert.groupTitle(group.title));
           visible.forEach((item) => list.appendChild(UiQueryInsert.itemRow(group.kind, item, filter)));
         });
+        return found;
+      },
+
+      /** The tab of folders: the tables and the queries and scripts under the
+       *  folders they have in the project. */
+      renderFolders(list, filter) {
+        const sections = [
+          {
+            title: I18n.t("queries.insertTables"),
+            folders: Model.foldersOf(Store.project, "tables"),
+            entries: (Store.project.tables || []).map((item) => ({ kind: "table", item })),
+          },
+          {
+            title: I18n.t("queries.insertObjects"),
+            folders: Model.foldersOf(Store.project, "objects"),
+            entries: Model.objectsInOrder(Store.project),
+          },
+        ];
+        let found = 0;
+        sections.forEach((section) => {
+          const inFolder = (name) => section.entries.filter(
+            (entry) => (entry.item.folder || "") === name,
+          );
+          if (section.folders.length === 0) {
+            const visible = section.entries.filter((entry) => UiQueryInsert.matches(entry.item, filter));
+            if (visible.length === 0) {
+              return;
+            }
+            found += visible.length;
+            list.appendChild(UiQueryInsert.groupTitle(section.title));
+            visible.forEach((entry) => list.appendChild(
+              UiQueryInsert.itemRow(entry.kind, entry.item, filter),
+            ));
+            return;
+          }
+          // A folder shows its names when the folder itself matches the search
+          // (all of them) or when one of its names matches. The search never
+          // looks at the fields.
+          const blocks = [];
+          section.folders.forEach((name) => {
+            const folderMatches = filter !== "" && name.toLowerCase().includes(filter);
+            const entries = inFolder(name).filter(
+              (entry) => folderMatches || UiQueryInsert.matches(entry.item, filter),
+            );
+            if (filter === "" || entries.length > 0) {
+              blocks.push({ name, entries });
+            }
+          });
+          const none = inFolder("").filter((entry) => UiQueryInsert.matches(entry.item, filter));
+          if (none.length > 0) {
+            blocks.push({ name: I18n.t("folders.noFolder"), entries: none });
+          }
+          const total = blocks.reduce((count, block) => count + block.entries.length, 0);
+          if (total === 0) {
+            return;
+          }
+          found += total;
+          list.appendChild(UiQueryInsert.groupTitle(section.title));
+          blocks.forEach((block) => list.appendChild(
+            UiQueryInsert.folderBlock(block.name, block.entries, filter),
+          ));
+        });
+        return found;
+      },
+
+      /** The tab of dependencies: the tables and, nested under each one, the
+       *  queries and scripts that read it (and the ones that read those). The
+       *  queries and scripts that hang from no table come in a last group. */
+      renderDependencies(list, filter) {
+        const graph = ProjectGraph.build(Store.project);
+        const tables = Store.project.tables || [];
+        const reachable = new Set();
+        const pending = tables.map((table) => ({ kind: "table", name: table.name }));
+        while (pending.length > 0) {
+          const ref = pending.shift();
+          const key = ProjectGraph.refKey(ref);
+          if (reachable.has(key)) {
+            continue;
+          }
+          reachable.add(key);
+          ProjectGraph.dependentsIn(graph, ref.kind, ref.name).forEach((child) => pending.push(child));
+        }
+        const roots = Model.objectsInOrder(Store.project).filter(
+          (entry) => !reachable.has(ProjectGraph.nodeKey(entry.kind, entry.item.name)),
+        );
+        const sections = [
+          { title: I18n.t("queries.insertTables"), entries: tables.map((item) => ({ kind: "table", item })) },
+          {
+            title: I18n.t(tables.length > 0 ? "queries.insertOtherObjects" : "queries.insertObjects"),
+            entries: roots,
+          },
+        ];
+        let found = 0;
+        sections.forEach((section) => {
+          const visible = section.entries.filter(
+            (entry) => UiQueryInsert.subtreeMatches(entry.kind, entry.item, filter, graph, new Set()),
+          );
+          if (visible.length === 0) {
+            return;
+          }
+          found += visible.length;
+          list.appendChild(UiQueryInsert.groupTitle(section.title));
+          visible.forEach((entry) => list.appendChild(UiQueryInsert.itemRow(
+            entry.kind,
+            entry.item,
+            filter,
+            {
+              graph,
+              path: new Set(),
+              autoOpen: UiQueryInsert.descendantMatches(entry.kind, entry.item, filter, graph, new Set()),
+            },
+          )));
+        });
+        return found;
+      },
+
+      /** Paints the whole list with the names that match the search box, in
+       *  the hierarchy of the chosen tab. */
+      render() {
+        const list = document.getElementById("insert-list");
+        const filter = document.getElementById("insert-search").value.trim().toLowerCase();
+        list.textContent = "";
+        let found = 0;
+        if (UiQueryInsert.tab === "dependencies") {
+          found = UiQueryInsert.renderDependencies(list, filter);
+        } else if (UiQueryInsert.tab === "types") {
+          found = UiQueryInsert.renderTypes(list, filter);
+        } else {
+          found = UiQueryInsert.renderFolders(list, filter);
+        }
         if (found === 0) {
           list.appendChild(UiQueryInsert.note(I18n.t("queries.insertNoResults", { text: filter })));
         }
@@ -19927,7 +20272,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
       },
 
-      /** Wires the button, the search box, the list and the ways out. */
+      /** Wires the button, the tabs, the search box, the list and the ways out. */
       bind() {
         document.getElementById("btn-insert").addEventListener("click", () => {
           UiQueryInsert.target = "query";
@@ -19936,6 +20281,27 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         document.getElementById("btn-script-insert").addEventListener("click", () => {
           UiQueryInsert.target = "script";
           UiQueryInsert.toggleOpen();
+        });
+        document.getElementById("insert-tabs").addEventListener("click", (event) => {
+          const tab = event.target.closest(".insert-tab");
+          if (tab) {
+            UiQueryInsert.selectTab(tab.dataset.tab);
+          }
+        });
+        document.getElementById("insert-tabs").addEventListener("keydown", (event) => {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+            return;
+          }
+          const tabs = UiQueryInsert.tabs();
+          const current = tabs.findIndex((tab) => tab.dataset.tab === UiQueryInsert.tab);
+          if (current < 0) {
+            return;
+          }
+          event.preventDefault();
+          const step = event.key === "ArrowRight" ? 1 : -1;
+          const next = (current + step + tabs.length) % tabs.length;
+          UiQueryInsert.selectTab(tabs[next].dataset.tab);
+          tabs[next].focus();
         });
         document.getElementById("insert-search").addEventListener("input", () => UiQueryInsert.render());
         document.getElementById("insert-search").addEventListener("keydown", (event) => UiQueryInsert.onSearchKey(event));
@@ -30374,6 +30740,62 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       }
     };
 
+    /** Loads a project with folders, a table read by a query and a script that
+     *  reads the query, in the query view; restores everything afterwards. */
+    const conProyectoDeSolapas = (body) => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        query: Ui.state.activeQuery,
+        view: Ui.state.view,
+      };
+      Store.replaceProject({
+        name: "solapas",
+        tables: [
+          {
+            name: "salas",
+            description: "",
+            idField: null,
+            nextId: 1,
+            folder: "Centro",
+            fields: [{ name: "code", description: null, type: "string" }],
+            rows: [{ code: "K-101" }],
+          },
+          {
+            name: "personas",
+            description: "",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "nombre", description: null, type: "string" }],
+            rows: [{ nombre: "Ana" }],
+          },
+        ],
+        tableFolders: ["Centro"],
+        queries: [
+          { name: "salas_k", description: "", folder: "Análisis", sql: "SELECT code FROM salas", assert: null },
+          { name: "suelta", description: "", folder: "", sql: "SELECT 1 AS x", assert: null },
+        ],
+        scripts: [
+          { name: "resumen", description: "", folder: "Análisis", code: "return queries[\"salas_k\"]();", assert: null },
+        ],
+        folders: ["Análisis"],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      });
+      try {
+        UiQueries.select("salas_k");
+        Store.dirty = false;
+        body();
+      } finally {
+        UiQueryInsert.hide();
+        Store.replaceProject(before.project);
+        Ui.state.activeQuery = before.query;
+        Ui.showView(before.view);
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
+      }
+    };
+
     /** Puts a text in the editor with the caret at the end. */
     const escribeEnElEditor = (text) => {
       const editor = document.getElementById("query-sql");
@@ -30382,16 +30804,36 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       return editor;
     };
 
-    SelfTests.add("When_OpenInsertPicker_Expect_TablesAndQueriesListed", () => {
+    SelfTests.add("When_OpenInsertPicker_Expect_ThreeTabsAndFoldersFirst", () => {
       conProyectoDeInsertar(() => {
         document.getElementById("btn-insert").click();
         assertEqual(document.getElementById("insert-popup").hidden, false, "the list opens");
-        const groups = [...document.querySelectorAll("#insert-list .insert-group")]
+        const tabs = [...document.querySelectorAll("#insert-tabs .insert-tab")];
+        assertEqual(tabs.length, 3, "the list has three tabs");
+        assertEqual(
+          tabs.map((tab) => tab.dataset.tab).join(","),
+          "folders,dependencies,types",
+          "one tab for folders, one for dependencies and one for types",
+        );
+        assertEqual(
+          document.querySelector('#insert-tabs .insert-tab[data-tab="folders"]').getAttribute("aria-selected"),
+          "true",
+          "the tab of folders opens first",
+        );
+        let groups = [...document.querySelectorAll("#insert-list .insert-group")]
+          .map((item) => item.textContent);
+        assertEqual(
+          groups.join("|"),
+          `${I18n.t("queries.insertTables")}|${I18n.t("queries.insertObjects")}`,
+          "the tab of folders groups the tables and the queries and scripts",
+        );
+        document.querySelector('#insert-tabs .insert-tab[data-tab="types"]').click();
+        groups = [...document.querySelectorAll("#insert-list .insert-group")]
           .map((item) => item.textContent);
         assertEqual(
           groups.join("|"),
           `${I18n.t("queries.insertTables")}|${I18n.t("queries.insertQueries")}`,
-          "one group for the tables and one for the queries",
+          "the tab of types keeps one group for the tables and one for the queries",
         );
         const names = [...document.querySelectorAll("#insert-list .insert-pick")]
           .map((item) => item.textContent);
@@ -30450,7 +30892,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       });
     });
 
-    SelfTests.add("When_SearchInInsertPicker_Expect_OnlyMatches", () => {
+    SelfTests.add("When_SearchInInsertPicker_Expect_OnlyNamesMatch", () => {
       conProyectoDeInsertar(() => {
         document.getElementById("btn-insert").click();
         const search = document.getElementById("insert-search");
@@ -30458,13 +30900,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         search.dispatchEvent(new Event("input"));
         const names = [...document.querySelectorAll("#insert-list .insert-pick")]
           .map((item) => item.textContent);
-        assert(names.includes("salas") && names.includes("salas_k"), "the matches are kept: " + names.join(", "));
+        assert(names.includes("salas") && names.includes("salas_k"), "the matching names are kept: " + names.join(", "));
         assert(!names.includes("campus"), "what does not match is left out");
         search.value = "puestos";
         search.dispatchEvent(new Event("input"));
-        const fields = [...document.querySelectorAll("#insert-list .insert-field .insert-pick")]
-          .map((item) => item.textContent);
-        assertEqual(fields.join(","), "puestos", "searching a field unfolds its table and leaves that field");
+        assertEqual(
+          document.querySelectorAll("#insert-list .insert-pick").length,
+          0,
+          "the fields are not searched: a field name matches no name",
+        );
         search.value = "zzz";
         search.dispatchEvent(new Event("input"));
         assertEqual(document.querySelectorAll("#insert-list .insert-pick").length, 0, "with no match no name is left");
@@ -30500,20 +30944,139 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       });
     });
 
-    SelfTests.add("When_FoldTableWhileSearchingItsField_Expect_FieldsHidden", () => {
+    SelfTests.add("When_SearchWithTableOpen_Expect_AllFieldsKept", () => {
       conProyectoDeInsertar(() => {
         document.getElementById("btn-insert").click();
         const search = document.getElementById("insert-search");
         const arrow = () => document.querySelector("#insert-list .insert-toggle[data-name='salas']");
+        arrow().click();
+        const fields = () => [...document.querySelectorAll("#insert-list .insert-field .insert-pick")]
+          .map((item) => item.textContent);
+        assertEqual(fields().join(","), "code,puestos", "the table opens with all its fields");
+        search.value = "sal";
+        search.dispatchEvent(new Event("input"));
+        assertEqual(arrow().getAttribute("aria-expanded"), "true", "the search keeps the table open");
+        assertEqual(fields().join(","), "code,puestos", "and does not filter its fields");
         search.value = "puestos";
         search.dispatchEvent(new Event("input"));
-        assertEqual(arrow().getAttribute("aria-expanded"), "true", "the table opens to show the field that matches");
-        arrow().click();
-        assertEqual(arrow().getAttribute("aria-expanded"), "false", "the arrow closes it by hand");
-        assertEqual(document.querySelectorAll("#insert-list .insert-field").length, 0, "its fields are hidden");
+        assertEqual(
+          document.querySelectorAll("#insert-list .insert-pick").length,
+          0,
+          "the search does not look at the fields",
+        );
         search.value = "";
         search.dispatchEvent(new Event("input"));
-        assertEqual(arrow().getAttribute("aria-expanded"), "false", "and it stays closed when the search is cleared");
+        assertEqual(arrow().getAttribute("aria-expanded"), "true", "the choice of the user stays when the search is cleared");
+      });
+    });
+
+    SelfTests.add("When_FoldersInsertTab_Expect_NamesNestedUnderTheirFolders", () => {
+      conProyectoDeSolapas(() => {
+        document.getElementById("btn-insert").click();
+        const folders = [...document.querySelectorAll("#insert-list .insert-folder")]
+          .map((item) => item.textContent);
+        assertEqual(
+          folders.join("|"),
+          `Centro|${I18n.t("folders.noFolder")}|Análisis|${I18n.t("folders.noFolder")}`,
+          "the folders of the tables and of the queries and scripts are nested headers",
+        );
+        const blockOf = (name) => [...document.querySelectorAll("#insert-list .insert-folder-block")]
+          .find((block) => block.querySelector(".insert-folder").textContent === name);
+        assert(
+          blockOf("Centro").querySelector(".insert-pick[data-name='salas']") !== null,
+          "the table salas is nested under its folder",
+        );
+        assert(
+          blockOf("Análisis").querySelector(".insert-pick[data-name='salas_k']") !== null,
+          "the query salas_k is nested under its folder",
+        );
+        assert(
+          blockOf("Análisis").querySelector(".insert-pick[data-name='resumen']") !== null,
+          "the script resumen shares the folder of the queries",
+        );
+        const tabs = [...document.querySelectorAll("#insert-tabs .insert-tab")];
+        tabs[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+        assertEqual(
+          document.querySelector('#insert-tabs .insert-tab[data-tab="dependencies"]').getAttribute("aria-selected"),
+          "true",
+          "the arrow keys change the tab",
+        );
+      });
+    });
+
+    SelfTests.add("When_SearchFolderName_Expect_ItsNamesShown", () => {
+      conProyectoDeSolapas(() => {
+        document.getElementById("btn-insert").click();
+        const search = document.getElementById("insert-search");
+        search.value = "análisis";
+        search.dispatchEvent(new Event("input"));
+        let names = [...document.querySelectorAll("#insert-list .insert-pick")]
+          .map((item) => item.textContent);
+        assertEqual(names.join(","), "salas_k,resumen", "the names of the matching folder are shown");
+        search.value = "centro";
+        search.dispatchEvent(new Event("input"));
+        names = [...document.querySelectorAll("#insert-list .insert-pick")]
+          .map((item) => item.textContent);
+        assertEqual(names.join(","), "salas", "a table folder matches by its name too");
+      });
+    });
+
+    SelfTests.add("When_DependenciesInsertTab_Expect_ReadersNestedUnderTheirSource", () => {
+      conProyectoDeSolapas(() => {
+        document.getElementById("btn-insert").click();
+        document.querySelector('#insert-tabs .insert-tab[data-tab="dependencies"]').click();
+        const toggle = (name) => document.querySelector(`#insert-list .insert-toggle[data-name="${name}"]`);
+        assert(toggle("salas") !== null, "the table is a root of the tree");
+        assert(toggle("personas") !== null, "and so is the other table");
+        toggle("salas").click();
+        assert(
+          document.querySelector("#insert-list .insert-children .insert-pick[data-name='salas_k']") !== null,
+          "the query that reads the table is nested under it",
+        );
+        assert(
+          document.querySelector("#insert-list .insert-field .insert-pick[data-name='code']") !== null,
+          "and the fields of the table come with it",
+        );
+        toggle("salas_k").click();
+        assert(
+          document.querySelector("#insert-list .insert-children .insert-children .insert-pick[data-name='resumen']") !== null,
+          "the script that reads the query is nested under the query",
+        );
+        assert(
+          [...document.querySelectorAll("#insert-list .insert-pick[data-name='suelta']")].length === 1,
+          "the query that hangs from no table is still listed once",
+        );
+        assert(
+          [...document.querySelectorAll("#insert-list .insert-subgroup")]
+            .every((label) => label.textContent === I18n.t("queries.insertDependents")),
+          "each branch labels the objects that hang from it",
+        );
+      });
+    });
+
+    SelfTests.add("When_SearchInDependenciesInsertTab_Expect_MatchingBranchOpen", () => {
+      conProyectoDeSolapas(() => {
+        document.getElementById("btn-insert").click();
+        document.querySelector('#insert-tabs .insert-tab[data-tab="dependencies"]').click();
+        const search = document.getElementById("insert-search");
+        search.value = "resumen";
+        search.dispatchEvent(new Event("input"));
+        assert(
+          document.querySelector("#insert-list .insert-pick[data-name='resumen']") !== null,
+          "the match is on screen",
+        );
+        assert(
+          document.querySelector("#insert-list .insert-pick[data-name='salas_k']") !== null,
+          "the query it reads is kept as its branch",
+        );
+        assert(
+          document.querySelector("#insert-list .insert-pick[data-name='salas']") !== null,
+          "and the table of the branch too",
+        );
+        assert(
+          document.querySelector("#insert-list .insert-pick[data-name='suelta']") === null,
+          "what does not match is left out",
+        );
       });
     });
 
