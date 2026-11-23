@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Health and hospitals (20 tables, 213 queries, 32 scripts)",
+  "name": "SQL tests · Health and hospitals (20 tables, 221 queries, 34 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -10,7 +10,8 @@
     "E · Views",
     "F · Subqueries",
     "G · Unions",
-    "H · Scripts as tables"
+    "H · Scripts as tables",
+    "I · Parameters"
   ],
   "tableFolders": [
     "Hospital",
@@ -22797,6 +22798,501 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P01 · Cities of the hospitals (parameter source)",
+      "description": "Source of a parameter: every row offers a city and how many hospitals it has.",
+      "keywords": [
+        "health",
+        "parameters",
+        "source",
+        "reference"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT city, COUNT(*) AS hospitals FROM hospitals GROUP BY city ORDER BY city",
+      "assert": {
+        "columns": [
+          "city",
+          "hospitals"
+        ],
+        "rows": [
+          [
+            "Barcelona",
+            1
+          ],
+          [
+            "Bilbao",
+            1
+          ],
+          [
+            "Bogotá",
+            1
+          ],
+          [
+            "Madrid",
+            1
+          ],
+          [
+            "Quito",
+            1
+          ],
+          [
+            "Sevilla",
+            1
+          ],
+          [
+            "Valencia",
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P02 · Most expensive invoice (parameter source)",
+      "description": "Source of a parameter that returns one row only: the invoice with the highest amount.",
+      "keywords": [
+        "health",
+        "parameters",
+        "source",
+        "reference"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_invoice, amount FROM invoices ORDER BY amount DESC, id_invoice LIMIT 1",
+      "assert": {
+        "columns": [
+          "id_invoice",
+          "amount"
+        ],
+        "rows": [
+          [
+            2,
+            8789
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P03 · Rooms of a floor (range)",
+      "description": "Range parameter: the floor is chosen in a drop-down from 0 to 5.",
+      "keywords": [
+        "health",
+        "parameters",
+        "range",
+        "rooms"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT code, type, num_beds, floor FROM rooms WHERE floor = {{ 0..5 }} ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "type",
+          "num_beds",
+          "floor"
+        ],
+        "rows": [
+          [
+            "H2-101",
+            "single",
+            1,
+            0
+          ],
+          [
+            "H3-100",
+            "ICU",
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P04 · Appointments by status of the researcher doctors (subquery)",
+      "description": "Parameter with a subquery: the researcher doctors come from the doctors table.",
+      "keywords": [
+        "health",
+        "parameters",
+        "subquery",
+        "appointments"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT status, COUNT(*) AS appointments FROM appointments WHERE id_doctor IN {{ SELECT id_doctor FROM doctors WHERE is_researcher = true ORDER BY id_doctor }} GROUP BY status ORDER BY status",
+      "assert": {
+        "columns": [
+          "status",
+          "appointments"
+        ],
+        "rows": [
+          [
+            "attended",
+            2
+          ],
+          [
+            "cancelled",
+            1
+          ],
+          [
+            "no-show",
+            1
+          ],
+          [
+            "pending",
+            11
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P05 · Patients of the cities of the hospitals (query reference)",
+      "description": "Parameter that references a saved query: its city/count pairs fill the drop-down.",
+      "keywords": [
+        "health",
+        "parameters",
+        "reference",
+        "patients"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, last_name, city FROM patients WHERE city IN {{ P01 · Cities of the hospitals (parameter source) }} ORDER BY last_name, name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "city"
+        ],
+        "rows": [
+          [
+            "Adrián",
+            "Alonso González",
+            "Barcelona"
+          ],
+          [
+            "Eva",
+            "Castro Moreno",
+            "Bogotá"
+          ],
+          [
+            "Manuel",
+            "Delgado Gómez",
+            "Valencia"
+          ],
+          [
+            "Sergio",
+            "Delgado Ruiz",
+            "Bogotá"
+          ],
+          [
+            "Beatriz",
+            "Domínguez Jiménez",
+            "Quito"
+          ],
+          [
+            "Julia",
+            "Díaz Domínguez",
+            "Bilbao"
+          ],
+          [
+            "Diego",
+            "Díaz Martínez",
+            "Madrid"
+          ],
+          [
+            "Beatriz",
+            "Díaz Ruiz",
+            "Bilbao"
+          ],
+          [
+            "Marina",
+            "Gil Gutiérrez",
+            "Bogotá"
+          ],
+          [
+            "Elena",
+            "Gil Martínez",
+            "Quito"
+          ],
+          [
+            "Jorge",
+            "Iglesias Gutiérrez",
+            "Valencia"
+          ],
+          [
+            "Pilar",
+            "Iglesias Navarro",
+            "Valencia"
+          ],
+          [
+            "Elena",
+            "Jiménez Hernández",
+            "Quito"
+          ],
+          [
+            "Adrián",
+            "Jiménez Romero",
+            "Sevilla"
+          ],
+          [
+            "Pablo",
+            "López González",
+            "Sevilla"
+          ],
+          [
+            "Luis",
+            "Marín Iglesias",
+            "Bogotá"
+          ],
+          [
+            "Irene",
+            "Marín Serrano",
+            "Valencia"
+          ],
+          [
+            "Sergio",
+            "Molina Morales",
+            "Bogotá"
+          ],
+          [
+            "Francisco",
+            "Muñoz García",
+            "Madrid"
+          ],
+          [
+            "Lucía",
+            "Muñoz Gómez",
+            "Sevilla"
+          ],
+          [
+            "Laura",
+            "Muñoz Ortega",
+            "Madrid"
+          ],
+          [
+            "Pablo",
+            "Ortega Martín",
+            "Valencia"
+          ],
+          [
+            "Pedro",
+            "Ortiz Gómez",
+            "Bilbao"
+          ],
+          [
+            "Alejandro",
+            "Romero Molina",
+            "Bilbao"
+          ],
+          [
+            "Miguel",
+            "Rubio González",
+            "Quito"
+          ],
+          [
+            "Patricia",
+            "Sanz Alonso",
+            "Bilbao"
+          ],
+          [
+            "Raúl",
+            "Suárez Rodríguez",
+            "Barcelona"
+          ],
+          [
+            "Marta",
+            "Sánchez Romero",
+            "Bilbao"
+          ],
+          [
+            "Isabel",
+            "Torres Torres",
+            "Quito"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P06 · Invoices except the most expensive one (NOT IN with a reference)",
+      "description": "Parameter in a NOT IN that references the query of the most expensive invoice.",
+      "keywords": [
+        "health",
+        "parameters",
+        "reference",
+        "not-in"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_invoice, amount, payment_method FROM invoices WHERE id_invoice NOT IN {{ P02 · Most expensive invoice (parameter source) }} ORDER BY amount DESC, id_invoice LIMIT 10",
+      "assert": {
+        "columns": [
+          "id_invoice",
+          "amount",
+          "payment_method"
+        ],
+        "rows": [
+          [
+            4,
+            8640,
+            "transfer"
+          ],
+          [
+            3,
+            8334,
+            "cash"
+          ],
+          [
+            1,
+            8304,
+            null
+          ],
+          [
+            18,
+            8283,
+            "transfer"
+          ],
+          [
+            49,
+            7952,
+            "card"
+          ],
+          [
+            11,
+            7215,
+            "transfer"
+          ],
+          [
+            48,
+            7213,
+            "transfer"
+          ],
+          [
+            33,
+            7048,
+            null
+          ],
+          [
+            5,
+            6976,
+            "transfer"
+          ],
+          [
+            21,
+            6961,
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P07 · Admissions by hospital (HAVING with a range)",
+      "description": "Range parameter inside a HAVING: it filters the hospitals by their number of admissions.",
+      "keywords": [
+        "health",
+        "parameters",
+        "range",
+        "having"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT h.name, COUNT(*) AS admissions FROM hospitals AS h INNER JOIN rooms AS r ON r.id_hospital = h.id_hospital INNER JOIN admissions AS i ON i.id_room = r.id_room GROUP BY h.name HAVING COUNT(*) >= {{ 1..20 }} ORDER BY admissions DESC, h.name",
+      "assert": {
+        "columns": [
+          "name",
+          "admissions"
+        ],
+        "rows": [
+          [
+            "La Paz University Hospital",
+            10
+          ],
+          [
+            "Virgen del Rocío Hospital",
+            10
+          ],
+          [
+            "Barcelona Clínic Hospital",
+            8
+          ],
+          [
+            "Quito Metropolitan Hospital",
+            8
+          ],
+          [
+            "Valencia General Hospital",
+            6
+          ],
+          [
+            "Santa Elena Clinic",
+            5
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P08 · Hospitals of the script (script reference)",
+      "description": "Parameter that references a script: its rows give the values and labels of the drop-down.",
+      "keywords": [
+        "health",
+        "parameters",
+        "reference",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, city, num_beds FROM hospitals WHERE id_hospital IN {{ P10 · Hospitals for the parameter }} ORDER BY name",
+      "assert": {
+        "columns": [
+          "name",
+          "city",
+          "num_beds"
+        ],
+        "rows": [
+          [
+            "Barcelona Clínic Hospital",
+            "Barcelona",
+            900
+          ],
+          [
+            "La Paz University Hospital",
+            "Madrid",
+            1200
+          ],
+          [
+            "Quito Metropolitan Hospital",
+            "Quito",
+            480
+          ],
+          [
+            "San José Hospital",
+            "Bilbao",
+            210
+          ],
+          [
+            "Santa Elena Clinic",
+            "Bogotá",
+            340
+          ],
+          [
+            "Valencia General Hospital",
+            "Valencia",
+            720
+          ],
+          [
+            "Virgen del Rocío Hospital",
+            "Sevilla",
+            1350
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
@@ -26658,6 +27154,324 @@
             2867,
             7167,
             0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P10 · Hospitals for the parameter",
+      "description": "Script used as the source of a parameter: it returns the id and the name of every hospital.",
+      "keywords": [
+        "health",
+        "parameters",
+        "source",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "return tables[\"hospitals\"].map((hospital) => ({\n  id_hospital: hospital.id_hospital,\n  name: hospital.name,\n}));",
+      "assert": {
+        "columns": [
+          "id_hospital",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "La Paz University Hospital"
+          ],
+          [
+            2,
+            "Barcelona Clínic Hospital"
+          ],
+          [
+            3,
+            "Virgen del Rocío Hospital"
+          ],
+          [
+            4,
+            "Valencia General Hospital"
+          ],
+          [
+            5,
+            "Santa Elena Clinic"
+          ],
+          [
+            6,
+            "Quito Metropolitan Hospital"
+          ],
+          [
+            7,
+            "San José Hospital"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P09 · Admissions with a minimum cost (script with a parameter)",
+      "description": "Parameterised script: the minimum daily cost is chosen in a drop-down from 200 to 900.",
+      "keywords": [
+        "health",
+        "parameters",
+        "range",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "const minimumCost = {{ 200..900 }};\nreturn tables[\"admissions\"]\n  .filter((admission) => admission.cost_per_day >= minimumCost)\n  .map((admission) => ({\n    id_admission: admission.id_admission,\n    cost_per_day: admission.cost_per_day,\n    is_emergency: admission.is_emergency,\n  }));",
+      "assert": {
+        "columns": [
+          "id_admission",
+          "cost_per_day",
+          "is_emergency"
+        ],
+        "rows": [
+          [
+            1,
+            532,
+            true
+          ],
+          [
+            2,
+            831,
+            true
+          ],
+          [
+            3,
+            674,
+            true
+          ],
+          [
+            4,
+            528,
+            true
+          ],
+          [
+            5,
+            639,
+            true
+          ],
+          [
+            6,
+            749,
+            false
+          ],
+          [
+            7,
+            373,
+            false
+          ],
+          [
+            8,
+            879,
+            true
+          ],
+          [
+            9,
+            556,
+            true
+          ],
+          [
+            10,
+            631,
+            false
+          ],
+          [
+            11,
+            663,
+            true
+          ],
+          [
+            12,
+            783,
+            true
+          ],
+          [
+            13,
+            337,
+            false
+          ],
+          [
+            14,
+            775,
+            false
+          ],
+          [
+            15,
+            822,
+            true
+          ],
+          [
+            16,
+            736,
+            true
+          ],
+          [
+            17,
+            596,
+            true
+          ],
+          [
+            18,
+            531,
+            false
+          ],
+          [
+            19,
+            225,
+            true
+          ],
+          [
+            20,
+            790,
+            true
+          ],
+          [
+            21,
+            844,
+            true
+          ],
+          [
+            22,
+            864,
+            false
+          ],
+          [
+            23,
+            431,
+            false
+          ],
+          [
+            24,
+            671,
+            false
+          ],
+          [
+            25,
+            884,
+            true
+          ],
+          [
+            26,
+            575,
+            true
+          ],
+          [
+            27,
+            483,
+            false
+          ],
+          [
+            28,
+            259,
+            true
+          ],
+          [
+            29,
+            571,
+            true
+          ],
+          [
+            30,
+            490,
+            true
+          ],
+          [
+            31,
+            316,
+            false
+          ],
+          [
+            32,
+            681,
+            true
+          ],
+          [
+            33,
+            818,
+            false
+          ],
+          [
+            34,
+            423,
+            false
+          ],
+          [
+            35,
+            813,
+            false
+          ],
+          [
+            36,
+            472,
+            true
+          ],
+          [
+            38,
+            717,
+            true
+          ],
+          [
+            39,
+            262,
+            true
+          ],
+          [
+            40,
+            427,
+            true
+          ],
+          [
+            41,
+            339,
+            true
+          ],
+          [
+            42,
+            834,
+            true
+          ],
+          [
+            43,
+            634,
+            false
+          ],
+          [
+            44,
+            511,
+            true
+          ],
+          [
+            45,
+            950,
+            false
+          ],
+          [
+            46,
+            926,
+            false
+          ],
+          [
+            47,
+            294,
+            true
+          ],
+          [
+            48,
+            830,
+            true
+          ],
+          [
+            49,
+            611,
+            true
+          ],
+          [
+            50,
+            632,
+            true
           ]
         ]
       }

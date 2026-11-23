@@ -112,3 +112,63 @@ Options are added after the name, separated by vertical bars:
 
 Totals are calculated over the rows shown. Use `rows:0` if you want them to
 cover every row in the result.
+
+## 5. Parameters
+
+Queries and scripts can be **parameterised** with the `{{ … }}` notation: it is
+written in the SQL (in the `WHERE`, the `HAVING` or any other expression) or in
+the code of a script. When they run, **datilandia** and **planilandia** show a
+drop-down with the possible values at the top and, when the value changes, they
+recalculate the result. The first value is the default one: it is the value used
+by the project tests, the views, the scripts that read the query and the
+markilandia reports (that is why the tables of this page show it).
+
+The content of `{{ … }}` may be:
+
+- a **range of whole numbers**: `{{ 0..5 }}` offers 0, 1, … 5;
+- a **subquery**: `{{ SELECT id_medico FROM medicos WHERE es_investigador = true }}`
+  offers one row of the result per option (the first field is the value and the
+  rest, its label). With `IN {{ … }}` an extra «All» option uses every value at
+  once;
+- the **name of a table, a query or a script** of the project, for example
+  `{{ P01 · Ciudades de los hospitales (origen del parámetro) }}`.
+
+### Integer range in the WHERE
+
+The floor is chosen between 0 and 5; the report shows the default floor (0):
+
+{{query:P03 · Habitaciones de una planta (rango)|format:num_camas=0;planta=0|title:Floor 0|totals:count(*)=Rooms}}
+
+### Subquery in the WHERE
+
+The researcher doctors come from the doctors table; the default value, «All»,
+uses their identifiers at once:
+
+{{query:P04 · Citas por estado de los médicos investigadores (subconsulta)|format:citas=#,##0|title:Appointments by status (all researchers)|totals:sum(citas)=Appointments}}
+
+### Query reference in the IN
+
+The drop-down offers the seven cities of query `P01` with the number of
+hospitals of each one:
+
+{{query:P05 · Pacientes de las ciudades de los hospitales (referencia a consulta)|rows:6|title:Patients of the cities with a hospital (6 of 29)|totals:count(*)=Rows}}
+
+### Reference in a NOT IN
+
+The query of the most expensive invoice returns one row only, so it is chosen
+with no further options:
+
+{{query:P06 · Facturas salvo la más cara (NOT IN con referencia)|format:id_factura=#,##0;importe=#,##0.00 €|title:Invoices except the most expensive one|totals:sum(importe)=Amount}}
+
+### Range in the HAVING
+
+The minimum number of admissions of every hospital is chosen in a drop-down:
+
+{{query:P07 · Ingresos por hospital (HAVING con rango)|format:ingresos=#,##0|title:Admissions by hospital|totals:sum(ingresos)=Admissions}}
+
+### A script with a parameter
+
+The code of a script accepts the notation too; the minimum daily cost is chosen
+between 200 and 900:
+
+{{script:P09 · Ingresos con coste mínimo (script con parámetro)|rows:8|format:id_ingreso=#,##0;coste_dia=#,##0|title:Admissions with cost 200 or more (8 of 49)|totals:avg(coste_dia)=Average cost}}

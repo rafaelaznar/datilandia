@@ -1604,6 +1604,7 @@
         "params.circularHint": "Remove the reference that closes the circle.",
         "params.unterminated": "The parameter {{ {raw} }} is not closed: a «}}» is missing.",
         "params.unterminatedHint": "Close the parameter with «}}».",
+        "params.notBound": "The parameter could not be resolved before running the query.",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
         "folders.duplicateTip": "Duplicate the folder “{name}” with its queries",
@@ -2224,7 +2225,7 @@
         "scripts.emptyCodeTitle": "Empty script",
         "scripts.errorTitle": "JavaScript error",
         "scripts.executed": "Script “{name}”: {rows} row(s) in {ms} ms.",
-        "scripts.help": "“tables” gives every table by name, “queries” runs a saved query and “scripts” runs a saved script (for example queries[\"name\"]()). Return an array of objects or arrays to see it in the grid.",
+        "scripts.help": "“tables” gives every table by name, “queries” runs a saved query and “scripts” runs a saved script (for example queries[\"name\"]()). Return an array of objects or arrays to see it in the grid. A script may also carry parameters {{ … }} in its code: they show as drop-downs when it runs.",
         "scripts.nameEmpty": "The script needs a name.",
         "scripts.nameExists": "There is already a script called “{name}”.",
         "scripts.noResult": "The script did not return anything. Use return or assign the result to “resultado”.",
@@ -2737,6 +2738,7 @@
         "params.circularHint": "Quita la referencia que cierra el círculo.",
         "params.unterminated": "El parámetro {{ {raw} }} no está cerrado: falta un «}}».",
         "params.unterminatedHint": "Cierra el parámetro con «}}».",
+        "params.notBound": "No se pudo resolver el parámetro antes de ejecutar la consulta.",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
         "folders.duplicateTip": "Duplicar la carpeta «{name}» con sus consultas",
@@ -3357,7 +3359,7 @@
         "scripts.emptyCodeTitle": "Script vacío",
         "scripts.errorTitle": "Error de JavaScript",
         "scripts.executed": "Script «{name}»: {rows} fila(s) en {ms} ms.",
-        "scripts.help": "«tables» da cada tabla por su nombre, «queries» ejecuta una consulta guardada y «scripts» ejecuta un script guardado (por ejemplo queries[\"nombre\"]()). Devuelve un array de objetos o de arrays para verlo en el grid.",
+        "scripts.help": "«tables» da cada tabla por su nombre, «queries» ejecuta una consulta guardada y «scripts» ejecuta un script guardado (por ejemplo queries[\"nombre\"]()). Devuelve un array de objetos o de arrays para verlo en el grid. Un script también puede llevar parámetros {{ … }} en su código: aparecen como desplegables al ejecutarlo.",
         "scripts.nameEmpty": "El script necesita un nombre.",
         "scripts.nameExists": "Ya existe un script llamado «{name}».",
         "scripts.noResult": "El script no ha devuelto nada. Usa return o asigna el resultado a «resultado».",
@@ -11005,7 +11007,11 @@
         let cursor = 0;
         analysis.params.forEach((param, index) => {
           if (param.options.length === 0) {
-            throw SqlParams.error("params.noValues", { raw: param.raw });
+            // Keep the reason the analysis found (a missing source, a circle…)
+            // instead of a generic «no values».
+            const error = new Error(param.error || I18n.t("params.noValues", { raw: param.raw }));
+            error.hint = param.hint || "";
+            throw error;
           }
           let selected = selections && Number.isInteger(selections[index])
             ? selections[index]

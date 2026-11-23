@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 156 consultas, 29 scripts)",
+  "name": "Pruebas SQL · Educación (8 tablas, 165 consultas, 31 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -10,7 +10,8 @@
     "E · Vistas",
     "F · Subconsultas",
     "G · Uniones",
-    "H · Scripts como tablas"
+    "H · Scripts como tablas",
+    "I · Parámetros"
   ],
   "tableFolders": [
     "Estructura",
@@ -8636,6 +8637,459 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P01 · Sedes que dan valores al parámetro",
+      "description": "Origen de un parámetro: cada fila ofrece un valor (id_sede) y su etiqueta (nombre).",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "origen",
+        "referencia"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_sede, nombre FROM sedes ORDER BY nombre",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "nombre"
+        ],
+        "rows": [
+          [
+            4,
+            "Campus Andino"
+          ],
+          [
+            1,
+            "Campus Norte"
+          ],
+          [
+            2,
+            "Campus Sur"
+          ],
+          [
+            3,
+            "Campus del Mar"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P02 · Sede principal (origen del parámetro)",
+      "description": "Origen de un parámetro que devuelve una sola fila: la sede principal.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "origen",
+        "referencia"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_sede, nombre FROM sedes WHERE es_principal = true ORDER BY nombre",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Campus Norte"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P03 · Aulas por capacidad mínima (rango)",
+      "description": "Parámetro de rango: la capacidad mínima se elige en un desplegable de 50 a 120.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "rango",
+        "aulas"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT codigo, capacidad FROM aulas WHERE capacidad >= {{ 50..120 }} ORDER BY capacidad DESC, codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ],
+          [
+            "R-101",
+            70
+          ],
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "P-102",
+            55
+          ],
+          [
+            "L-301",
+            50
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P04 · Matrículas del curso elegido (subconsulta)",
+      "description": "Parámetro con una subconsulta: los cursos salen de la propia tabla de matrículas.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "subconsulta",
+        "matriculas"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT curso_academico, COUNT(*) AS total FROM matriculas WHERE curso_academico IN {{ SELECT curso_academico FROM matriculas GROUP BY curso_academico ORDER BY curso_academico }} GROUP BY curso_academico ORDER BY curso_academico",
+      "assert": {
+        "columns": [
+          "curso_academico",
+          "total"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            27
+          ],
+          [
+            "2025-2026",
+            21
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P05 · Estudiantes de las sedes elegidas (referencia a consulta)",
+      "description": "Parámetro que referencia una consulta guardada: sus pares id/nombre llenan el desplegable.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "referencia",
+        "estudiantes"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT nombre, apellidos, id_sede FROM estudiantes WHERE id_sede IN {{ P01 · Sedes que dan valores al parámetro }} ORDER BY apellidos, nombre",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "id_sede"
+        ],
+        "rows": [
+          [
+            "Julia",
+            "Bermúdez Soler",
+            3
+          ],
+          [
+            "Adrián",
+            "Cabrera Luna",
+            2
+          ],
+          [
+            "Nerea",
+            "Castro Peña",
+            2
+          ],
+          [
+            "Marcos",
+            "Delgado Cano",
+            4
+          ],
+          [
+            "Álvaro",
+            "Domínguez Rey",
+            4
+          ],
+          [
+            "Marc",
+            "Esteban Quiles",
+            3
+          ],
+          [
+            "Diego",
+            "Fernández Blanco",
+            2
+          ],
+          [
+            "Ana",
+            "García López",
+            1
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal",
+            1
+          ],
+          [
+            "Pablo",
+            "Gómez Frías",
+            1
+          ],
+          [
+            "Sofía",
+            "Hernández Ruiz",
+            1
+          ],
+          [
+            "Óscar",
+            "Lozano Prieto",
+            4
+          ],
+          [
+            "Luis",
+            "Martín Soto",
+            1
+          ],
+          [
+            "Elena",
+            "Molina Ríos",
+            1
+          ],
+          [
+            "Lucía",
+            "Moreno Pascual",
+            2
+          ],
+          [
+            "Javier",
+            "Ortega Díaz",
+            3
+          ],
+          [
+            "Rubén",
+            "Parra Aguilar",
+            2
+          ],
+          [
+            "Iván",
+            "Ramírez Cortés",
+            1
+          ],
+          [
+            "Claudia",
+            "Reyes Baena",
+            1
+          ],
+          [
+            "Marta",
+            "Ruiz Navarro",
+            1
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias",
+            3
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo",
+            2
+          ],
+          [
+            "Irene",
+            "Suárez Nieto",
+            3
+          ],
+          [
+            "Paula",
+            "Vega Salas",
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P06 · Sedes salvo la principal (NOT IN con referencia)",
+      "description": "Parámetro en un NOT IN que referencia la consulta de la sede principal.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "referencia",
+        "not-in"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT nombre, ciudad, pais FROM sedes WHERE id_sede NOT IN {{ P02 · Sede principal (origen del parámetro) }} ORDER BY nombre",
+      "assert": {
+        "columns": [
+          "nombre",
+          "ciudad",
+          "pais"
+        ],
+        "rows": [
+          [
+            "Campus Andino",
+            "Bogotá",
+            "Colombia"
+          ],
+          [
+            "Campus Sur",
+            "Sevilla",
+            "España"
+          ],
+          [
+            "Campus del Mar",
+            "Valencia",
+            "España"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P07 · Asignaturas por curso (HAVING con rango)",
+      "description": "Parámetro de rango dentro de un HAVING: filtra los grupos por su número de filas.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "rango",
+        "having"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT curso, COUNT(*) AS total, ROUND(AVG(creditos), 1) AS creditos_medios FROM asignaturas GROUP BY curso HAVING COUNT(*) >= {{ 1..10 }} ORDER BY curso",
+      "assert": {
+        "columns": [
+          "curso",
+          "total",
+          "creditos_medios"
+        ],
+        "rows": [
+          [
+            1,
+            6,
+            6.2
+          ],
+          [
+            2,
+            5,
+            5.8
+          ],
+          [
+            3,
+            3,
+            5.7
+          ],
+          [
+            4,
+            1,
+            4
+          ],
+          [
+            5,
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P08 · Aulas de mayor capacidad (subconsulta escalar)",
+      "description": "Parámetro con una subconsulta escalar: MAX devuelve el único valor que se elige.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "subconsulta",
+        "aulas"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT codigo, capacidad FROM aulas WHERE capacidad = {{ SELECT MAX(capacidad) FROM aulas }} ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P09 · Becados de las sedes del script (referencia a script)",
+      "description": "Parámetro que referencia un script: sus filas dan los valores y las etiquetas del desplegable.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "referencia",
+        "script"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT nombre, apellidos FROM estudiantes WHERE es_becado = true AND id_sede IN {{ P10 · Sedes para el parámetro }} ORDER BY apellidos, nombre",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos"
+        ],
+        "rows": [
+          [
+            "Nerea",
+            "Castro Peña"
+          ],
+          [
+            "Ana",
+            "García López"
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal"
+          ],
+          [
+            "Sofía",
+            "Hernández Ruiz"
+          ],
+          [
+            "Lucía",
+            "Moreno Pascual"
+          ],
+          [
+            "Rubén",
+            "Parra Aguilar"
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias"
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo"
+          ],
+          [
+            "Irene",
+            "Suárez Nieto"
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
@@ -10955,6 +11409,227 @@
             -7.4,
             "ligero",
             ""
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P10 · Sedes para el parámetro",
+      "description": "Script que sirve de origen de un parámetro: devuelve el id y el nombre de cada sede.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "origen",
+        "script"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "return tables[\"sedes\"].map((sede) => ({\n  id_sede: sede.id_sede,\n  nombre: sede.nombre,\n}));",
+      "assert": {
+        "columns": [
+          "id_sede",
+          "nombre"
+        ],
+        "rows": [
+          [
+            1,
+            "Campus Norte"
+          ],
+          [
+            2,
+            "Campus Sur"
+          ],
+          [
+            3,
+            "Campus del Mar"
+          ],
+          [
+            4,
+            "Campus Andino"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P11 · Matrículas con nota mínima (script con parámetro)",
+      "description": "Script parametrizado: la nota mínima se elige en un desplegable de 5 a 10.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "rango",
+        "script"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "const notaMinima = {{ 5..10 }};\nreturn tables[\"matriculas\"]\n  .filter((matricula) => matricula.nota !== null && matricula.nota >= notaMinima)\n  .map((matricula) => ({\n    id_matricula: matricula.id_matricula,\n    nota: matricula.nota,\n    estado: matricula.estado,\n  }));",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota",
+          "estado"
+        ],
+        "rows": [
+          [
+            1,
+            8.5,
+            "superada"
+          ],
+          [
+            2,
+            7.5,
+            "superada"
+          ],
+          [
+            5,
+            6,
+            "superada"
+          ],
+          [
+            6,
+            5,
+            "superada"
+          ],
+          [
+            8,
+            9,
+            "superada"
+          ],
+          [
+            10,
+            7,
+            "superada"
+          ],
+          [
+            11,
+            6.5,
+            "superada"
+          ],
+          [
+            13,
+            8,
+            "superada"
+          ],
+          [
+            16,
+            9.5,
+            "superada"
+          ],
+          [
+            17,
+            6,
+            "superada"
+          ],
+          [
+            18,
+            5.5,
+            "superada"
+          ],
+          [
+            19,
+            7,
+            "superada"
+          ],
+          [
+            20,
+            6.5,
+            "superada"
+          ],
+          [
+            22,
+            8,
+            "superada"
+          ],
+          [
+            23,
+            7.5,
+            "superada"
+          ],
+          [
+            25,
+            5,
+            "superada"
+          ],
+          [
+            27,
+            9,
+            "superada"
+          ],
+          [
+            28,
+            8.5,
+            "superada"
+          ],
+          [
+            32,
+            5,
+            "superada"
+          ],
+          [
+            33,
+            6,
+            "superada"
+          ],
+          [
+            34,
+            7,
+            "superada"
+          ],
+          [
+            35,
+            6,
+            "superada"
+          ],
+          [
+            37,
+            10,
+            "superada"
+          ],
+          [
+            38,
+            8,
+            "superada"
+          ],
+          [
+            39,
+            9,
+            "superada"
+          ],
+          [
+            40,
+            7,
+            "superada"
+          ],
+          [
+            42,
+            8,
+            "superada"
+          ],
+          [
+            43,
+            9,
+            "superada"
+          ],
+          [
+            44,
+            7,
+            "superada"
+          ],
+          [
+            45,
+            8,
+            "superada"
+          ],
+          [
+            46,
+            8,
+            "superada"
+          ],
+          [
+            47,
+            6,
+            "superada"
           ]
         ]
       }

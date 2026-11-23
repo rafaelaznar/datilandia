@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 156 queries, 29 scripts)",
+  "name": "SQL tests · Education (8 tables, 165 queries, 31 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -10,7 +10,8 @@
     "E · Views",
     "F · Subqueries",
     "G · Unions",
-    "H · Scripts as tables"
+    "H · Scripts as tables",
+    "I · Parameters"
   ],
   "tableFolders": [
     "Structure",
@@ -8636,6 +8637,459 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P01 · Campuses that give the parameter its values",
+      "description": "Source of a parameter: every row offers a value (id_campus) and its label (name).",
+      "keywords": [
+        "education",
+        "parameters",
+        "source",
+        "reference"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_campus, name FROM campuses ORDER BY name",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "name"
+        ],
+        "rows": [
+          [
+            4,
+            "Andean Campus"
+          ],
+          [
+            1,
+            "North Campus"
+          ],
+          [
+            3,
+            "Seaside Campus"
+          ],
+          [
+            2,
+            "South Campus"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P02 · Main campus (parameter source)",
+      "description": "Source of a parameter that returns one row only: the main campus.",
+      "keywords": [
+        "education",
+        "parameters",
+        "source",
+        "reference"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_campus, name FROM campuses WHERE is_main = true ORDER BY name",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "North Campus"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P03 · Classrooms by minimum capacity (range)",
+      "description": "Range parameter: the minimum capacity is chosen in a drop-down from 50 to 120.",
+      "keywords": [
+        "education",
+        "parameters",
+        "range",
+        "classrooms"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT code, capacity FROM classrooms WHERE capacity >= {{ 50..120 }} ORDER BY capacity DESC, code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ],
+          [
+            "R-101",
+            70
+          ],
+          [
+            "K-101",
+            60
+          ],
+          [
+            "P-101",
+            55
+          ],
+          [
+            "P-102",
+            55
+          ],
+          [
+            "L-301",
+            50
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P04 · Enrolments of the chosen year (subquery)",
+      "description": "Parameter with a subquery: the years come from the enrolments themselves.",
+      "keywords": [
+        "education",
+        "parameters",
+        "subquery",
+        "enrolments"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT academic_year, COUNT(*) AS total FROM enrollments WHERE academic_year IN {{ SELECT academic_year FROM enrollments GROUP BY academic_year ORDER BY academic_year }} GROUP BY academic_year ORDER BY academic_year",
+      "assert": {
+        "columns": [
+          "academic_year",
+          "total"
+        ],
+        "rows": [
+          [
+            "2024-2025",
+            27
+          ],
+          [
+            "2025-2026",
+            21
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P05 · Students of the chosen campuses (query reference)",
+      "description": "Parameter that references a saved query: its id/name pairs fill the drop-down.",
+      "keywords": [
+        "education",
+        "parameters",
+        "reference",
+        "students"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, last_name, id_campus FROM students WHERE id_campus IN {{ P01 · Campuses that give the parameter its values }} ORDER BY last_name, name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "id_campus"
+        ],
+        "rows": [
+          [
+            "Julia",
+            "Bermúdez Soler",
+            3
+          ],
+          [
+            "Adrián",
+            "Cabrera Luna",
+            2
+          ],
+          [
+            "Nerea",
+            "Castro Peña",
+            2
+          ],
+          [
+            "Marcos",
+            "Delgado Cano",
+            4
+          ],
+          [
+            "Álvaro",
+            "Domínguez Rey",
+            4
+          ],
+          [
+            "Marc",
+            "Esteban Quiles",
+            3
+          ],
+          [
+            "Diego",
+            "Fernández Blanco",
+            2
+          ],
+          [
+            "Ana",
+            "García López",
+            1
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal",
+            1
+          ],
+          [
+            "Pablo",
+            "Gómez Frías",
+            1
+          ],
+          [
+            "Sofía",
+            "Hernández Ruiz",
+            1
+          ],
+          [
+            "Óscar",
+            "Lozano Prieto",
+            4
+          ],
+          [
+            "Luis",
+            "Martín Soto",
+            1
+          ],
+          [
+            "Elena",
+            "Molina Ríos",
+            1
+          ],
+          [
+            "Lucía",
+            "Moreno Pascual",
+            2
+          ],
+          [
+            "Javier",
+            "Ortega Díaz",
+            3
+          ],
+          [
+            "Rubén",
+            "Parra Aguilar",
+            2
+          ],
+          [
+            "Iván",
+            "Ramírez Cortés",
+            1
+          ],
+          [
+            "Claudia",
+            "Reyes Baena",
+            1
+          ],
+          [
+            "Marta",
+            "Ruiz Navarro",
+            1
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias",
+            3
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo",
+            2
+          ],
+          [
+            "Irene",
+            "Suárez Nieto",
+            3
+          ],
+          [
+            "Paula",
+            "Vega Salas",
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P06 · Campuses except the main one (NOT IN with a reference)",
+      "description": "Parameter in a NOT IN that references the query of the main campus.",
+      "keywords": [
+        "education",
+        "parameters",
+        "reference",
+        "not-in"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, city, country FROM campuses WHERE id_campus NOT IN {{ P02 · Main campus (parameter source) }} ORDER BY name",
+      "assert": {
+        "columns": [
+          "name",
+          "city",
+          "country"
+        ],
+        "rows": [
+          [
+            "Andean Campus",
+            "Bogota",
+            "Colombia"
+          ],
+          [
+            "Seaside Campus",
+            "Valencia",
+            "Spain"
+          ],
+          [
+            "South Campus",
+            "Seville",
+            "Spain"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P07 · Subjects by year (HAVING with a range)",
+      "description": "Range parameter inside a HAVING: it filters the groups by their number of rows.",
+      "keywords": [
+        "education",
+        "parameters",
+        "range",
+        "having"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT year, COUNT(*) AS total, ROUND(AVG(credits), 1) AS average_credits FROM subjects GROUP BY year HAVING COUNT(*) >= {{ 1..10 }} ORDER BY year",
+      "assert": {
+        "columns": [
+          "year",
+          "total",
+          "average_credits"
+        ],
+        "rows": [
+          [
+            1,
+            6,
+            6.2
+          ],
+          [
+            2,
+            5,
+            5.8
+          ],
+          [
+            3,
+            3,
+            5.7
+          ],
+          [
+            4,
+            1,
+            4
+          ],
+          [
+            5,
+            1,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P08 · Classrooms with the largest capacity (scalar subquery)",
+      "description": "Parameter with a scalar subquery: MAX returns the single value that is chosen.",
+      "keywords": [
+        "education",
+        "parameters",
+        "subquery",
+        "classrooms"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT code, capacity FROM classrooms WHERE capacity = {{ SELECT MAX(capacity) FROM classrooms }} ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P09 · Scholarship students of the script campuses (script reference)",
+      "description": "Parameter that references a script: its rows give the values and labels of the drop-down.",
+      "keywords": [
+        "education",
+        "parameters",
+        "reference",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, last_name FROM students WHERE has_scholarship = true AND id_campus IN {{ P10 · Campuses for the parameter }} ORDER BY last_name, name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name"
+        ],
+        "rows": [
+          [
+            "Nerea",
+            "Castro Peña"
+          ],
+          [
+            "Ana",
+            "García López"
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal"
+          ],
+          [
+            "Sofía",
+            "Hernández Ruiz"
+          ],
+          [
+            "Lucía",
+            "Moreno Pascual"
+          ],
+          [
+            "Rubén",
+            "Parra Aguilar"
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias"
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo"
+          ],
+          [
+            "Irene",
+            "Suárez Nieto"
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
@@ -10955,6 +11409,227 @@
             -7.4,
             "light",
             ""
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P10 · Campuses for the parameter",
+      "description": "Script used as the source of a parameter: it returns the id and the name of every campus.",
+      "keywords": [
+        "education",
+        "parameters",
+        "source",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "return tables[\"campuses\"].map((campus) => ({\n  id_campus: campus.id_campus,\n  name: campus.name,\n}));",
+      "assert": {
+        "columns": [
+          "id_campus",
+          "name"
+        ],
+        "rows": [
+          [
+            1,
+            "North Campus"
+          ],
+          [
+            2,
+            "South Campus"
+          ],
+          [
+            3,
+            "Seaside Campus"
+          ],
+          [
+            4,
+            "Andean Campus"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P11 · Enrolments with a minimum grade (script with a parameter)",
+      "description": "Parameterised script: the minimum grade is chosen in a drop-down from 5 to 10.",
+      "keywords": [
+        "education",
+        "parameters",
+        "range",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "const minimumGrade = {{ 5..10 }};\nreturn tables[\"enrollments\"]\n  .filter((enrolment) => enrolment.grade !== null && enrolment.grade >= minimumGrade)\n  .map((enrolment) => ({\n    id_enrollment: enrolment.id_enrollment,\n    grade: enrolment.grade,\n    status: enrolment.status,\n  }));",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade",
+          "status"
+        ],
+        "rows": [
+          [
+            1,
+            8.5,
+            "passed"
+          ],
+          [
+            2,
+            7.5,
+            "passed"
+          ],
+          [
+            5,
+            6,
+            "passed"
+          ],
+          [
+            6,
+            5,
+            "passed"
+          ],
+          [
+            8,
+            9,
+            "passed"
+          ],
+          [
+            10,
+            7,
+            "passed"
+          ],
+          [
+            11,
+            6.5,
+            "passed"
+          ],
+          [
+            13,
+            8,
+            "passed"
+          ],
+          [
+            16,
+            9.5,
+            "passed"
+          ],
+          [
+            17,
+            6,
+            "passed"
+          ],
+          [
+            18,
+            5.5,
+            "passed"
+          ],
+          [
+            19,
+            7,
+            "passed"
+          ],
+          [
+            20,
+            6.5,
+            "passed"
+          ],
+          [
+            22,
+            8,
+            "passed"
+          ],
+          [
+            23,
+            7.5,
+            "passed"
+          ],
+          [
+            25,
+            5,
+            "passed"
+          ],
+          [
+            27,
+            9,
+            "passed"
+          ],
+          [
+            28,
+            8.5,
+            "passed"
+          ],
+          [
+            32,
+            5,
+            "passed"
+          ],
+          [
+            33,
+            6,
+            "passed"
+          ],
+          [
+            34,
+            7,
+            "passed"
+          ],
+          [
+            35,
+            6,
+            "passed"
+          ],
+          [
+            37,
+            10,
+            "passed"
+          ],
+          [
+            38,
+            8,
+            "passed"
+          ],
+          [
+            39,
+            9,
+            "passed"
+          ],
+          [
+            40,
+            7,
+            "passed"
+          ],
+          [
+            42,
+            8,
+            "passed"
+          ],
+          [
+            43,
+            9,
+            "passed"
+          ],
+          [
+            44,
+            7,
+            "passed"
+          ],
+          [
+            45,
+            8,
+            "passed"
+          ],
+          [
+            46,
+            8,
+            "passed"
+          ],
+          [
+            47,
+            6,
+            "passed"
           ]
         ]
       }

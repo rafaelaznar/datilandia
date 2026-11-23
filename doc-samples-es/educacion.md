@@ -112,3 +112,65 @@ Las opciones se añaden después del nombre, separadas por barras verticales:
 
 Los totales se calculan sobre las filas mostradas. Usa `rows:0` si quieres que
 abarquen todas las filas del resultado.
+
+## 5. Parámetros
+
+Las consultas y los scripts pueden ser **parametrizados** con la notación
+`{{ … }}`: se escribe en el SQL (en el `WHERE`, el `HAVING` o cualquier otra
+expresión) o en el código de un script. Al ejecutarlos, **datilandia** y
+**planilandia** muestran en la parte superior un desplegable con los valores
+posibles y, al cambiar el valor, recalculan el resultado. El primer valor es el
+valor por defecto: es el que usan las pruebas del proyecto, las vistas, los
+scripts que leen la consulta y los informes de markilandia (por eso las tablas
+de esta página muestran ese valor).
+
+El contenido de `{{ … }}` puede ser:
+
+- un **rango de enteros**: `{{ 50..120 }}` ofrece 50, 51, … 120;
+- una **subconsulta**: `{{ SELECT curso_academico FROM matriculas GROUP BY curso_academico }}`
+  ofrece cada fila del resultado (el primer campo es el valor y el resto, su
+  etiqueta). Con `IN {{ … }}` se añade la opción «Todos» para usar de una vez
+  todos los valores;
+- el **nombre de una tabla, una consulta o un script** del proyecto, por
+  ejemplo `{{ P01 · Sedes que dan valores al parámetro }}`.
+
+### Rango de enteros en el WHERE
+
+La capacidad mínima se elige entre 50 y 120 plazas; el informe muestra el valor
+por defecto (50):
+
+{{query:P03 · Aulas por capacidad mínima (rango)|format:capacidad=#,##0|title:Capacidad mínima 50|totals:count(*)=Aulas}}
+
+### Subconsulta en el WHERE
+
+Los cursos salen de la propia tabla de matrículas; el valor por defecto,
+«Todos», usa los dos cursos a la vez:
+
+{{query:P04 · Matrículas del curso elegido (subconsulta)|format:total=#,##0|title:Un curso por opción (por defecto, todos)|totals:sum(total)=Matrículas}}
+
+### Referencia a una consulta en el IN
+
+El desplegable ofrece las cuatro sedes de la consulta `P01` con sus pares
+identificador/nombre:
+
+{{query:P05 · Estudiantes de las sedes elegidas (referencia a consulta)|rows:6|title:Estudiantes de cada sede (6 de 24)|totals:count(*)=Filas}}
+
+### Referencia en un NOT IN
+
+La consulta de la sede principal devuelve una sola fila, así que se elige sin
+más opciones:
+
+{{query:P06 · Sedes salvo la principal (NOT IN con referencia)|title:Las sedes que no son la principal}}
+
+### Rango en el HAVING
+
+El número mínimo de asignaturas de cada curso se elige en un desplegable:
+
+{{query:P07 · Asignaturas por curso (HAVING con rango)|format:total=#,##0;creditos_medios=0.0|title:Asignaturas por curso|totals:sum(total)=Asignaturas}}
+
+### Un script con parámetro
+
+El código del script también acepta la notación; la nota mínima se elige entre 5
+y 10:
+
+{{script:P11 · Matrículas con nota mínima (script con parámetro)|rows:8|format:id_matricula=#,##0;nota=0.0|title:Matrículas con nota 5 o más (8 de 32)|totals:avg(nota)=Nota media}}

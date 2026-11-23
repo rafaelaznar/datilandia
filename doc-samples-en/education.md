@@ -112,3 +112,63 @@ Options are added after the name, separated by vertical bars:
 
 Totals are calculated over the rows shown. Use `rows:0` if you want them to
 cover every row in the result.
+
+## 5. Parameters
+
+Queries and scripts can be **parameterised** with the `{{ … }}` notation: it is
+written in the SQL (in the `WHERE`, the `HAVING` or any other expression) or in
+the code of a script. When they run, **datilandia** and **planilandia** show a
+drop-down with the possible values at the top and, when the value changes, they
+recalculate the result. The first value is the default one: it is the value used
+by the project tests, the views, the scripts that read the query and the
+markilandia reports (that is why the tables of this page show it).
+
+The content of `{{ … }}` may be:
+
+- a **range of whole numbers**: `{{ 50..120 }}` offers 50, 51, … 120;
+- a **subquery**: `{{ SELECT curso_academico FROM matriculas GROUP BY curso_academico }}`
+  offers one row of the result per option (the first field is the value and the
+  rest, its label). With `IN {{ … }}` an extra «All» option uses every value at
+  once;
+- the **name of a table, a query or a script** of the project, for example
+  `{{ P01 · Sedes que dan valores al parámetro }}`.
+
+### Integer range in the WHERE
+
+The minimum capacity is chosen between 50 and 120 seats; the report shows the
+default value (50):
+
+{{query:P03 · Aulas por capacidad mínima (rango)|format:capacidad=#,##0|title:Minimum capacity 50|totals:count(*)=Classrooms}}
+
+### Subquery in the WHERE
+
+The academic years come from the enrolments themselves; the default value,
+«All», uses both years at once:
+
+{{query:P04 · Matrículas del curso elegido (subconsulta)|format:total=#,##0|title:One year per option (all by default)|totals:sum(total)=Enrolments}}
+
+### Query reference in the IN
+
+The drop-down offers the four campuses of query `P01` with their id/name pairs:
+
+{{query:P05 · Estudiantes de las sedes elegidas (referencia a consulta)|rows:6|title:Students of every campus (6 of 24)|totals:count(*)=Rows}}
+
+### Reference in a NOT IN
+
+The query of the main campus returns one row only, so it is chosen with no
+further options:
+
+{{query:P06 · Sedes salvo la principal (NOT IN con referencia)|title:The campuses that are not the main one}}
+
+### Range in the HAVING
+
+The minimum number of subjects of every year is chosen in a drop-down:
+
+{{query:P07 · Asignaturas por curso (HAVING con rango)|format:total=#,##0;creditos_medios=0.0|title:Subjects by year|totals:sum(total)=Subjects}}
+
+### A script with a parameter
+
+The code of a script accepts the notation too; the minimum grade is chosen
+between 5 and 10:
+
+{{script:P11 · Matrículas con nota mínima (script con parámetro)|rows:8|format:id_matricula=#,##0;nota=0.0|title:Enrolments with grade 5 or more (8 of 32)|totals:avg(nota)=Average grade}}

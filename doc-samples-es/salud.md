@@ -112,3 +112,64 @@ Las opciones se añaden después del nombre, separadas por barras verticales:
 
 Los totales se calculan sobre las filas mostradas. Usa `rows:0` si quieres que
 abarquen todas las filas del resultado.
+
+## 5. Parámetros
+
+Las consultas y los scripts pueden ser **parametrizados** con la notación
+`{{ … }}`: se escribe en el SQL (en el `WHERE`, el `HAVING` o cualquier otra
+expresión) o en el código de un script. Al ejecutarlos, **datilandia** y
+**planilandia** muestran en la parte superior un desplegable con los valores
+posibles y, al cambiar el valor, recalculan el resultado. El primer valor es el
+valor por defecto: es el que usan las pruebas del proyecto, las vistas, los
+scripts que leen la consulta y los informes de markilandia (por eso las tablas
+de esta página muestran ese valor).
+
+El contenido de `{{ … }}` puede ser:
+
+- un **rango de enteros**: `{{ 0..5 }}` ofrece 0, 1, … 5;
+- una **subconsulta**: `{{ SELECT id_medico FROM medicos WHERE es_investigador = true }}`
+  ofrece cada fila del resultado (el primer campo es el valor y el resto, su
+  etiqueta). Con `IN {{ … }}` se añade la opción «Todos» para usar de una vez
+  todos los valores;
+- el **nombre de una tabla, una consulta o un script** del proyecto, por
+  ejemplo `{{ P01 · Ciudades de los hospitales (origen del parámetro) }}`.
+
+### Rango de enteros en el WHERE
+
+La planta se elige entre 0 y 5; el informe muestra la planta por defecto (0):
+
+{{query:P03 · Habitaciones de una planta (rango)|format:num_camas=0;planta=0|title:Planta 0|totals:count(*)=Habitaciones}}
+
+### Subconsulta en el WHERE
+
+Los médicos investigadores salen de la tabla de médicos; el valor por defecto,
+«Todos», usa sus identificadores a la vez:
+
+{{query:P04 · Citas por estado de los médicos investigadores (subconsulta)|format:citas=#,##0|title:Citas por estado (todos los investigadores)|totals:sum(citas)=Citas}}
+
+### Referencia a una consulta en el IN
+
+El desplegable ofrece las siete ciudades de la consulta `P01` con el número de
+hospitales de cada una:
+
+{{query:P05 · Pacientes de las ciudades de los hospitales (referencia a consulta)|rows:6|title:Pacientes de las ciudades con hospital (6 de 29)|totals:count(*)=Filas}}
+
+### Referencia en un NOT IN
+
+La consulta de la factura más cara devuelve una sola fila, así que se elige sin
+más opciones:
+
+{{query:P06 · Facturas salvo la más cara (NOT IN con referencia)|format:id_factura=#,##0;importe=#,##0.00 €|title:Facturas salvo la más cara|totals:sum(importe)=Importe}}
+
+### Rango en el HAVING
+
+El número mínimo de ingresos de cada hospital se elige en un desplegable:
+
+{{query:P07 · Ingresos por hospital (HAVING con rango)|format:ingresos=#,##0|title:Ingresos por hospital|totals:sum(ingresos)=Ingresos}}
+
+### Un script con parámetro
+
+El código del script también acepta la notación; el coste diario mínimo se elige
+entre 200 y 900:
+
+{{script:P09 · Ingresos con coste mínimo (script con parámetro)|rows:8|format:id_ingreso=#,##0;coste_dia=#,##0|title:Ingresos con coste 200 o más (8 de 49)|totals:avg(coste_dia)=Coste medio}}
