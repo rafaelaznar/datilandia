@@ -118,8 +118,11 @@ abarquen todas las filas del resultado.
 Las consultas y los scripts pueden ser **parametrizados** con la notación
 `{{ … }}`: se escribe en el SQL (en el `WHERE`, el `HAVING` o cualquier otra
 expresión) o en el código de un script. Al ejecutarlos, **datilandia** y
-**planilandia** muestran en la parte superior un desplegable con los valores
-posibles y, al cambiar el valor, recalculan el resultado. El primer valor es el
+**planilandia** muestran una **barra de desplegables encima de los resultados**,
+justo después de la barra de paginación; cada desplegable lleva una **cabecera
+con el nombre del campo** que filtra (y la opción **«Todos»** cuando el origen
+tiene varias filas) y, al cambiar el valor, recalculan el resultado. La barra no
+aparece hasta que la consulta o el script se ejecuta. El primer valor es el
 valor por defecto: es el que usan las pruebas del proyecto, las vistas, los
 scripts que leen la consulta y los informes de markilandia (por eso las tablas
 de esta página muestran ese valor).

@@ -361,7 +361,7 @@ return summary.map((row, index) =&gt; {
 <section class="help-bloque" id="es-parametros">
 <h3>Parámetros de consultas y scripts</h3>
 <ul>
-<li>Una consulta o un script pueden llevar <b>parámetros</b> escritos <code>{{ … }}</code> en el SQL (en el <code>WHERE</code>, el <code>HAVING</code> o cualquier otra expresión) o en el código JavaScript. Al ejecutarlos aparece una <b>barra de desplegables</b> en la parte superior de la consulta (también en el visor planilandia) con los valores posibles: al cambiar uno se <b>recalcula</b> el resultado.</li>
+<li>Una consulta o un script pueden llevar <b>parámetros</b> escritos <code>{{ … }}</code> en el SQL (en el <code>WHERE</code>, el <code>HAVING</code> o cualquier otra expresión) o en el código JavaScript. Al ejecutarlos aparece una <b>barra de desplegables encima de los resultados</b>, justo después de la barra de paginación (también en el visor planilandia); cada desplegable lleva una <b>cabecera con el nombre del campo</b> que filtra y, al cambiar un valor, se <b>recalcula</b> el resultado. La barra no se muestra hasta que la consulta o el script se ejecuta.</li>
 <li>El <b>valor por defecto</b> es el primero de la lista. Ese es el valor que usan las pruebas del proyecto (<b>Convertir en test</b> guarda el resultado con ese valor), las consultas que la leen como tabla, los scripts que la llaman y los informes de markilandia.</li>
 <li>El contenido de <code>{{ … }}</code> puede ser:
 <ul>
@@ -1212,7 +1212,7 @@ return summary.map((row, index) =&gt; {
 <section class="help-bloque" id="en-parameters">
 <h3>Parameters of queries and scripts</h3>
 <ul>
-<li>A query or a script can carry <b>parameters</b> written <code>{{ … }}</code> in the SQL (in the <code>WHERE</code>, the <code>HAVING</code> or any other expression) or in the JavaScript code. When they run, a <b>bar of drop-downs</b> appears at the top of the query (also in the planilandia viewer) with the possible values: changing one <b>recalculates</b> the result.</li>
+<li>A query or a script can carry <b>parameters</b> written <code>{{ … }}</code> in the SQL (in the <code>WHERE</code>, the <code>HAVING</code> or any other expression) or in the JavaScript code. When they run, a <b>bar of drop-downs appears above the results</b>, right after the pagination bar (also in the planilandia viewer); each drop-down carries a <b>header with the name of the field</b> it filters and changing a value <b>recalculates</b> the result. The bar is not shown until the query or the script runs.</li>
 <li>The <b>default value</b> is the first one of the list. That is the value used by the project tests (<b>Turn into a test</b> stores the result with that value), the queries that read it as a table, the scripts that call it and the markilandia reports.</li>
 <li>The content of <code>{{ … }}</code> may be:
 <ul>

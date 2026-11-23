@@ -118,8 +118,11 @@ cover every row in the result.
 Queries and scripts can be **parameterised** with the `{{ … }}` notation: it is
 written in the SQL (in the `WHERE`, the `HAVING` or any other expression) or in
 the code of a script. When they run, **datilandia** and **planilandia** show a
-drop-down with the possible values at the top and, when the value changes, they
-recalculate the result. The first value is the default one: it is the value used
+bar of drop-downs **above the results**, right after the pagination bar; each
+drop-down carries a **header with the name of the field** it filters (and the
+**«All»** option when the source has several rows) and, when the value changes,
+they recalculate the result. The bar is not shown until the query or the script
+runs. The first value is the default one: it is the value used
 by the project tests, the views, the scripts that read the query and the
 markilandia reports (that is why the tables of this page show it).
 

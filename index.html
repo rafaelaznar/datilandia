@@ -2381,13 +2381,15 @@
     }
     /* --- 7b·2. Parameters of queries and scripts ----------------------- */
 
-    /*  Bar of drop-downs at the top of a query or a script: one control per
-        {{ … }} parameter, with the value that replaces it. Changing a value
-        runs the query or the script again.  */
+    /*  Bar of drop-down filters above the results (below the pagination bar):
+        one control per {{ … }} parameter of the query or script. Each control
+        carries a header with the name of the field it filters; changing a
+        value runs the query or the script again. The bar is painted when the
+        query or the script runs, never before.  */
     .params-bar {
       flex-wrap: wrap;
-      align-items: center;
-      gap: 4px 14px;
+      align-items: flex-end;
+      gap: 6px 14px;
       padding: 2px 0;
     }
 
@@ -2397,19 +2399,21 @@
 
     .params-bar .param {
       display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
       min-width: 0;
       max-width: 100%;
     }
 
-    .params-bar .param-label {
+    .params-bar .param-head {
       overflow: hidden;
       max-width: 36ch;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-family: ui-monospace, Consolas, "Courier New", monospace;
-      font-size: 11px;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       color: #555;
     }
 
@@ -2420,6 +2424,11 @@
     .params-bar .param-error {
       color: #b00020;
       font-size: 11px;
+    }
+
+    #view-query #query-params,
+    #view-script #script-params {
+      flex: none;
     }
 
   </style>
@@ -2760,7 +2769,6 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-readers" type="button" hidden><svg class="icon" data-icon="arrow-back" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5L6.37143 6.97143C5.68571 7.48571 5.68571 8.51429 6.37143 9.02857L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 8H14C17.3137 8 20 10.6863 20 14C20 17.3137 17.3137 20 14 20H9.76923" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-sources" type="button" hidden><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
         </div>
-        <div id="query-params" class="toolbar params-bar" hidden></div>
         <textarea data-i18n-aria-label="markup.textarea.sqlQuery" data-i18n-title="markup.textarea.sqlQuerySELECTOnly" id="query-sql" rows="8" spellcheck="false" aria-label="Consulta SQL" title="Consulta SQL (solo SELECT)"></textarea>
         <div id="query-plan" class="muted"></div>
         <div id="query-error" hidden></div>
@@ -2771,6 +2779,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           <button class="with-icon" data-i18n-title="markup.button.nextPageResult" id="btn-res-pag-next" type="button" title="Página siguiente del resultado"><svg class="icon" data-icon="chevron-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9.24323 6L14.0929 9.99038C15.3024 10.9856 15.3024 12.8143 14.0929 13.8095L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
           <button class="with-icon" data-i18n-title="markup.button.lastPageResult" id="btn-res-pag-last" type="button" title="Última página del resultado"><svg class="icon" data-icon="chevron-double-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 8L15.2929 11.2929C15.6834 11.6834 15.6834 12.3166 15.2929 12.7071L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8L11.2929 11.2929C11.6834 11.6834 11.6834 12.3166 11.2929 12.7071L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
+        <div id="query-params" class="toolbar params-bar" hidden></div>
         <div id="query-result"></div>
       </section>
 
@@ -2811,7 +2820,6 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-script-sources" type="button" hidden><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
         </div>
         <p id="script-help" class="muted"></p>
-        <div id="script-params" class="toolbar params-bar" hidden></div>
         <textarea data-i18n-aria-label="markup.textarea.javaScriptCode" data-i18n-title="markup.textarea.javaScriptCode" id="script-code" rows="10" spellcheck="false" aria-label="Código JavaScript" title="Código JavaScript"></textarea>
         <div id="script-plan" class="muted"></div>
         <div id="script-error" hidden></div>
@@ -2822,6 +2830,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           <button class="with-icon" data-i18n-title="markup.button.nextPageResult" id="btn-script-res-pag-next" type="button" title="Página siguiente del resultado"><svg class="icon" data-icon="chevron-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9.24323 6L14.0929 9.99038C15.3024 10.9856 15.3024 12.8143 14.0929 13.8095L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
           <button class="with-icon" data-i18n-title="markup.button.lastPageResult" id="btn-script-res-pag-last" type="button" title="Última página del resultado"><svg class="icon" data-icon="chevron-double-right" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 8L15.2929 11.2929C15.6834 11.6834 15.6834 12.3166 15.2929 12.7071L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8L11.2929 11.2929C11.6834 11.6834 11.6834 12.3166 11.2929 12.7071L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
+        <div id="script-params" class="toolbar params-bar" hidden></div>
         <div id="script-result"></div>
       </section>
 
@@ -13277,6 +13286,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           if (value.type === "param") {
             found.push({
               node: value,
+              parent: parent || null,
               listContext: Boolean(parent && parent.type === "in" && parent.param === value),
             });
             return;
@@ -13290,6 +13300,49 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         visit(ast, null);
         found.sort((left, right) => (left.node.start || 0) - (right.node.start || 0));
         return found;
+      },
+
+      /** Readable name of the field a parameter filters, taken from the
+       *  expression around it: `edad >= {{ … }}` gives «edad», `IN {{ … }}`
+       *  the column of the IN, `HAVING COUNT(*) >= {{ … }}` the aggregate.
+       *  Empty when the parameter is not tied to a field. */
+      headerOf(entry) {
+        const node = entry.node;
+        const parent = entry.parent;
+        const nameOf = (expr) => {
+          if (!expr || typeof expr !== "object") {
+            return "";
+          }
+          if (expr.type === "column") {
+            return expr.name ? String(expr.name) : "";
+          }
+          if (expr.type === "call") {
+            return SqlPlanner.expressionLabel(expr);
+          }
+          return "";
+        };
+        if (!parent) {
+          return "";
+        }
+        if (parent.type === "in") {
+          return nameOf(parent.expr);
+        }
+        if (parent.type === "binary") {
+          if (parent.op === "and" || parent.op === "or") {
+            return "";
+          }
+          return nameOf(parent.left === node ? parent.right : parent.left);
+        }
+        if (parent.type === "between" && (parent.low === node || parent.high === node)) {
+          return nameOf(parent.expr);
+        }
+        if (parent.type === "like" && parent.pattern === node) {
+          return nameOf(parent.expr);
+        }
+        if (parent.type === "isnull") {
+          return nameOf(parent.expr);
+        }
+        return "";
       },
 
       /** Binds the parameters of an AST: the chosen option (or the default)
@@ -13381,6 +13434,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             line: entry.node.line,
             col: entry.node.col,
             listContext: entry.listContext,
+            header: SqlParams.headerOf(entry),
           };
           try {
             const options = SqlParams.optionsOf(entry.node.raw, project, ejecucion, entry.listContext);
@@ -13475,6 +13529,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             start: span.start,
             end: span.end,
             listContext: false,
+            header: "",
           };
           try {
             if (span.unterminated) {
@@ -17280,8 +17335,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       },
 
       /** Paints the bar of parameters: one drop-down per placeholder of the
-       *  SQL, or the reason why it cannot be offered. It is hidden when the
-       *  query has no parameters. */
+       *  SQL, with the name of the field it filters as its header, or the
+       *  reason why it cannot be offered. It is hidden when the query has no
+       *  parameters. It is called after running the query. */
       renderParams() {
         const bar = document.getElementById("query-params");
         if (!bar) {
@@ -17305,11 +17361,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         analysis.params.forEach((param, index) => {
           const item = document.createElement("span");
           item.className = "param";
-          const label = document.createElement("span");
-          label.className = "param-label";
-          label.textContent = `{{ ${param.raw} }}`;
-          label.title = I18n.t("params.chooseTip", { raw: param.raw });
-          item.appendChild(label);
+          const header = document.createElement("span");
+          header.className = "param-head";
+          header.textContent = param.header || I18n.t("params.parameter", { n: index + 1 });
+          header.title = I18n.t("params.chooseTip", { raw: param.raw });
+          item.appendChild(header);
           if (param.error) {
             const error = document.createElement("span");
             error.className = "param-error";
@@ -17335,6 +17391,27 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           bar.appendChild(item);
         });
+      },
+
+      /** Empties and hides the bar: it is only shown after running the query. */
+      hideParams() {
+        const bar = document.getElementById("query-params");
+        if (!bar) {
+          return;
+        }
+        bar.textContent = "";
+        bar.hidden = true;
+        UiQueries.lastParams = [];
+        UiQueries.lastSelections = [];
+      },
+
+      /** Repaints the bar only when it is on screen (a language change). */
+      refreshParams() {
+        const bar = document.getElementById("query-params");
+        if (!bar || bar.hidden) {
+          return;
+        }
+        UiQueries.renderParams();
       },
 
       /** Remembers the value chosen in one drop-down of the bar and runs the
@@ -17380,7 +17457,6 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         document.getElementById("query-sql").value = query.sql;
         UiQueries.clearOutput();
         UiQueries.updateTestControls();
-        UiQueries.renderParams();
         setStatus(I18n.t("queries.selected", { name: name }));
       },
 
@@ -17401,6 +17477,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiQueries.page = 0;
         UiQueries.selectedRow = null;
         UiQueries.updateCreateTableButton();
+        UiQueries.hideParams();
       },
 
       renameFromInput() {
@@ -17522,8 +17599,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const editor = document.getElementById("query-sql");
         if (editor.value !== query.sql) {
           editor.value = query.sql;
+          UiQueries.hideParams();
         }
-        UiQueries.renderParams();
       },
 
       saveSql() {
@@ -17536,8 +17613,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           query.sql = value;
           UiProject.markDirty();
           UiDataLinks.update();
+          UiQueries.hideParams();
         }
-        UiQueries.renderParams();
       },
 
       /** Runs the SQL of the editor and shows results, plan or error. Returns
@@ -17574,10 +17651,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const outcome = SqlEngine.runSafe(sql, Store.project, null, selections);
         if (!outcome.ok) {
           UiQueries.showError(UiQueries.describeError(outcome.error));
+          UiQueries.renderParams();
           setStatus(I18n.t("queries.errorStatus", { name: query.name, message: outcome.error.message }));
           return null;
         }
         UiQueries.showResult(outcome.result);
+        UiQueries.renderParams();
         const msText = outcome.result.ms < 0.05 ? "<0.05" : outcome.result.ms.toFixed(1);
         setStatus(I18n.t("queries.executed", { name: query.name, rows: outcome.result.rows.length, ms: msText }));
         return outcome;
@@ -17612,6 +17691,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           setStatus(I18n.t("queries.openToConvert"));
           return false;
         }
+        UiQueries.paramValues.delete(query);
         const outcome = UiQueries.execute(true);
         if (!outcome) {
           return false;
@@ -18156,7 +18236,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       },
 
       /** Paints the bar of parameters of the open script: one drop-down per
-       *  placeholder of its code, or the reason why it cannot be offered. */
+       *  placeholder of its code, or the reason why it cannot be offered. A
+       *  script has no fields, so its controls are headed «Parameter n». */
       renderParams() {
         const bar = document.getElementById("script-params");
         if (!bar) {
@@ -18180,11 +18261,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         analysis.params.forEach((param, index) => {
           const item = document.createElement("span");
           item.className = "param";
-          const label = document.createElement("span");
-          label.className = "param-label";
-          label.textContent = `{{ ${param.raw} }}`;
-          label.title = I18n.t("params.chooseTip", { raw: param.raw });
-          item.appendChild(label);
+          const header = document.createElement("span");
+          header.className = "param-head";
+          header.textContent = I18n.t("params.parameter", { n: index + 1 });
+          header.title = I18n.t("params.chooseTip", { raw: param.raw });
+          item.appendChild(header);
           if (param.error) {
             const error = document.createElement("span");
             error.className = "param-error";
@@ -18210,6 +18291,27 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
           bar.appendChild(item);
         });
+      },
+
+      /** Empties and hides the bar: it is only shown after running the script. */
+      hideParams() {
+        const bar = document.getElementById("script-params");
+        if (!bar) {
+          return;
+        }
+        bar.textContent = "";
+        bar.hidden = true;
+        UiScripts.lastParams = [];
+        UiScripts.lastSelections = [];
+      },
+
+      /** Repaints the bar only when it is on screen (a language change). */
+      refreshParams() {
+        const bar = document.getElementById("script-params");
+        if (!bar || bar.hidden) {
+          return;
+        }
+        UiScripts.renderParams();
       },
 
       /** Remembers the value chosen in one drop-down of the bar and runs the
@@ -18253,7 +18355,6 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiScripts.renderHelp();
         UiScripts.clearOutput();
         UiScripts.updateTestControls();
-        UiScripts.renderParams();
         setStatus(I18n.t("scripts.selected", { name: name }));
       },
 
@@ -18386,8 +18487,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           UiProject.markDirty();
           Ui.renderSidebarScripts();
           UiDataLinks.update();
+          UiScripts.hideParams();
         }
-        UiScripts.renderParams();
       },
 
       /** Deletes the open script after asking for confirmation. */
@@ -18472,6 +18573,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           setStatus(I18n.t("scripts.noScript"));
           return false;
         }
+        UiScripts.paramValues.delete(script);
         const result = await UiScripts.run(true);
         if (!result) {
           return false;
@@ -18587,10 +18689,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiScripts.clearOutput();
         if (!outcome.ok) {
           UiScripts.showError(outcome.error);
+          UiScripts.renderParams();
           setStatus(outcome.error.message);
           return null;
         }
         UiScripts.showResult(outcome.result, outcome.ms);
+        UiScripts.renderParams();
         const msText = outcome.ms < 0.05 ? "<0.05" : outcome.ms.toFixed(1);
         setStatus(I18n.t("scripts.executed", {
           name: script.name,
@@ -18636,6 +18740,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiScripts.page = 0;
         UiScripts.selectedRow = null;
         UiScripts.updateCreateTableButton();
+        UiScripts.hideParams();
       },
 
       /** Shows the result and its summary line. */
@@ -22211,8 +22316,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         // The static markup is re-translated by applyDom, but the sidebar, the
         // summaries and the dashboard are built by the JS: they need a repaint.
         Ui.renderAll();
-        UiQueries.renderParams();
-        UiScripts.renderParams();
+        UiQueries.refreshParams();
+        UiScripts.refreshParams();
         setStatus(I18n.t("language.changed", { language: I18n.LANGUAGES[I18n.current] }));
       },
     };
@@ -27548,7 +27653,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(item.status, "ok", "the assert of the default value fits");
     });
 
-    SelfTests.add("When_QueryWithParameters_Expect_DropdownBar", () => {
+    SelfTests.add("When_QueryWithParameters_Expect_DropdownBarAfterRun", () => {
       const antes = {
         project: Utils.cloneJson(Store.project),
         dirty: Store.dirty,
@@ -27560,13 +27665,21 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       Store.replaceProject(buildParamProject());
       UiQueries.select("con_parametro");
       const bar = document.getElementById("query-params");
-      assert(!bar.hidden, "the bar of parameters is on screen");
+      const paginacion = document.getElementById("query-paginacion");
+      const resultados = document.getElementById("query-result");
+      assert(bar.hidden, "the bar is not shown before running the query");
+      assert(paginacion.nextElementSibling === bar, "it goes after the bar of pagination");
+      assert(bar.nextElementSibling === resultados, "and right above the results");
+      const byDefault = UiQueries.execute();
+      assertEqual(byDefault.result.rows.map((row) => row[0]), [1], "the default value is used");
+      assert(!bar.hidden, "the bar is shown when the query runs");
+      const head = bar.querySelector(".param-head");
+      assert(head !== null, "the drop-down carries a header");
+      assertEqual(head.textContent, "n", "the header names the field of the predicate");
       const select = bar.querySelector("select[data-param]");
       assert(select !== null, "with a drop-down for the parameter");
       assertEqual([...select.options].map((option) => option.textContent), ["1", "2", "3"], "the values of the range");
       assertEqual(select.value, "0", "the first value is the default one");
-      const byDefault = UiQueries.execute();
-      assertEqual(byDefault.result.rows.map((row) => row[0]), [1], "the default value is used");
       select.value = "2";
       select.dispatchEvent(new Event("change", { bubbles: true }));
       assertEqual(UiQueries.lastResult.rows.map((row) => row[0]), [3], "changing the value runs the query again");
@@ -27576,7 +27689,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       Ui.state.activeScript = antes.script || null;
     });
 
-    SelfTests.add("When_ScriptWithParameters_Expect_DropdownBar", () => {
+    SelfTests.add("When_ScriptWithParameters_Expect_DropdownBarAfterRun", () => {
       const antes = {
         project: Utils.cloneJson(Store.project),
         dirty: Store.dirty,
@@ -27588,7 +27701,16 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       Store.replaceProject(buildParamProject());
       UiScripts.select("script_parametro");
       const bar = document.getElementById("script-params");
-      assert(!bar.hidden, "the bar of parameters is on screen");
+      const paginacion = document.getElementById("script-paginacion");
+      const resultados = document.getElementById("script-result");
+      assert(bar.hidden, "the bar is not shown before running the script");
+      assert(paginacion.nextElementSibling === bar, "it goes after the bar of pagination");
+      assert(bar.nextElementSibling === resultados, "and right above the results");
+      UiScripts.renderParams();
+      assert(!bar.hidden, "the bar is painted for the open script");
+      const head = bar.querySelector(".param-head");
+      assert(head !== null, "the drop-down carries a header");
+      assertEqual(head.textContent, I18n.t("params.parameter", { n: 1 }), "a script numbers its parameters in the header");
       const select = bar.querySelector("select[data-param]");
       assert(select !== null, "with a drop-down for the parameter");
       assertEqual([...select.options].map((option) => option.textContent), ["1", "2", "3"], "the values of the range");

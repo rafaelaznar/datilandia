@@ -10758,6 +10758,7 @@
           if (value.type === "param") {
             found.push({
               node: value,
+              parent: parent || null,
               listContext: Boolean(parent && parent.type === "in" && parent.param === value),
             });
             return;
@@ -10771,6 +10772,49 @@
         visit(ast, null);
         found.sort((left, right) => (left.node.start || 0) - (right.node.start || 0));
         return found;
+      },
+
+      /** Readable name of the field a parameter filters, taken from the
+       *  expression around it: `edad >= {{ … }}` gives «edad», `IN {{ … }}`
+       *  the column of the IN, `HAVING COUNT(*) >= {{ … }}` the aggregate.
+       *  Empty when the parameter is not tied to a field. */
+      headerOf(entry) {
+        const node = entry.node;
+        const parent = entry.parent;
+        const nameOf = (expr) => {
+          if (!expr || typeof expr !== "object") {
+            return "";
+          }
+          if (expr.type === "column") {
+            return expr.name ? String(expr.name) : "";
+          }
+          if (expr.type === "call") {
+            return SqlPlanner.expressionLabel(expr);
+          }
+          return "";
+        };
+        if (!parent) {
+          return "";
+        }
+        if (parent.type === "in") {
+          return nameOf(parent.expr);
+        }
+        if (parent.type === "binary") {
+          if (parent.op === "and" || parent.op === "or") {
+            return "";
+          }
+          return nameOf(parent.left === node ? parent.right : parent.left);
+        }
+        if (parent.type === "between" && (parent.low === node || parent.high === node)) {
+          return nameOf(parent.expr);
+        }
+        if (parent.type === "like" && parent.pattern === node) {
+          return nameOf(parent.expr);
+        }
+        if (parent.type === "isnull") {
+          return nameOf(parent.expr);
+        }
+        return "";
       },
 
       /** Binds the parameters of an AST: the chosen option (or the default)
@@ -10862,6 +10906,7 @@
             line: entry.node.line,
             col: entry.node.col,
             listContext: entry.listContext,
+            header: SqlParams.headerOf(entry),
           };
           try {
             const options = SqlParams.optionsOf(entry.node.raw, project, ejecucion, entry.listContext);
@@ -10956,6 +11001,7 @@
             start: span.start,
             end: span.end,
             listContext: false,
+            header: "",
           };
           try {
             if (span.unterminated) {
