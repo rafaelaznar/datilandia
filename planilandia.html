@@ -2526,6 +2526,49 @@
     #script-keywords[readonly] {
       background: #fafafa;
     }
+    /* --- 7b·2. Parameters of queries and scripts ----------------------- */
+
+    /*  Bar of drop-downs at the top of a query or a script: one control per
+        {{ … }} parameter, with the value that replaces it. Changing a value
+        runs the query or the script again.  */
+    .params-bar {
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 14px;
+      padding: 2px 0;
+    }
+
+    .params-bar[hidden] {
+      display: none;
+    }
+
+    .params-bar .param {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .params-bar .param-label {
+      overflow: hidden;
+      max-width: 36ch;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+      font-size: 11px;
+      color: #555;
+    }
+
+    .params-bar select {
+      max-width: 42ch;
+    }
+
+    .params-bar .param-error {
+      color: #b00020;
+      font-size: 11px;
+    }
+
   </style>
 </head>
 <body>
@@ -2862,6 +2905,7 @@
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-readers" type="button" hidden><svg class="icon" data-icon="arrow-back" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5L6.37143 6.97143C5.68571 7.48571 5.68571 8.51429 6.37143 9.02857L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 8H14C17.3137 8 20 10.6863 20 14C20 17.3137 17.3137 20 14 20H9.76923" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-query-sources" type="button" hidden><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
         </div>
+        <div id="query-params" class="toolbar params-bar" hidden></div>
         <textarea data-i18n-aria-label="markup.textarea.sqlQuery" data-i18n-title="markup.textarea.sqlQuerySELECTOnly" id="query-sql" rows="8" spellcheck="false" aria-label="Consulta SQL" title="Consulta SQL (solo SELECT)"></textarea>
         <div id="query-plan" class="muted"></div>
         <div id="query-error" hidden></div>
@@ -2914,6 +2958,7 @@
           <button class="with-icon" aria-expanded="false" aria-haspopup="dialog" id="btn-script-sources" type="button" hidden><svg class="icon" data-icon="arrow-next" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M16 5L18.6286 6.97143C19.3143 7.48571 19.3143 8.51429 18.6286 9.02857L16 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8H11C7.68629 8 5 10.6863 5 14C5 17.3137 7.68629 20 11 20H15.2308" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="label"></span></button>
         </div>
         <p id="script-help" class="muted"></p>
+        <div id="script-params" class="toolbar params-bar" hidden></div>
         <textarea data-i18n-aria-label="markup.textarea.javaScriptCode" data-i18n-title="markup.textarea.javaScriptCode" id="script-code" rows="10" spellcheck="false" aria-label="Código JavaScript" title="Código JavaScript"></textarea>
         <div id="script-plan" class="muted"></div>
         <div id="script-error" hidden></div>
@@ -3393,6 +3438,29 @@
     window.datilandia = window.datilandia || {};
     window.datilandia.messages = {
       en: {
+        "params.title": "Parameters",
+        "params.parameter": "Parameter {n}",
+        "params.chooseTip": "Value of {{ {raw} }}; changing it recalculates the result",
+        "params.hint": "Choose a value to recalculate the result.",
+        "params.changed": "«{name}»: parameter changed, result recalculated.",
+        "params.allOption": {"one":"All ({count} value)","other":"All ({count} values)"},
+        "params.emptyOption": "(no values)",
+        "params.invalid": "The parameter {{ {raw} }} is empty or cannot be read.",
+        "params.invalidHint": "Write a range like 1..100, a SELECT, or the name of a table, a query or a script.",
+        "params.rangeTooBig": "The range {{ {raw} }} has {count} values; the drop-down allows at most {max}.",
+        "params.rangeTooBigHint": "Use a narrower range or a query as the source of the parameter.",
+        "params.tooManyValues": "The parameter {{ {raw} }} returns {count} rows; the drop-down allows at most {max}.",
+        "params.tooManyValuesHint": "Narrow the source with WHERE, or use it with IN so all its values are used at once.",
+        "params.noValues": "The parameter {{ {raw} }} has no values to choose from.",
+        "params.noValuesHint": "Check that its source returns at least one row.",
+        "params.unknownSource": "The parameter {{ {raw} }} names «{name}», which is not a table, a query or a script of the project.",
+        "params.unknownSourceHint": "Check the name or create the object it refers to.",
+        "params.sourceError": "The parameter {{ {raw} }} could not be read: {message}",
+        "params.sourceErrorHint": "Check the SQL of the source of the parameter.",
+        "params.circular": "The parameter {{ {raw} }} refers to «{name}», which ends up reading the parameter itself in a circle.",
+        "params.circularHint": "Remove the reference that closes the circle.",
+        "params.unterminated": "The parameter {{ {raw} }} is not closed: a «}}» is missing.",
+        "params.unterminatedHint": "Close the parameter with «}}».",
         "folders.renameTip": "Rename the folder “{name}”",
         "folders.deleteTip": "Delete the folder “{name}”",
         "folders.duplicateTip": "Duplicate the folder “{name}” with its queries",
@@ -4495,6 +4563,29 @@
         "utils.zeroRowsPerPage": "0 rows · {perPage} per page",
       },
       es: {
+        "params.title": "Parámetros",
+        "params.parameter": "Parámetro {n}",
+        "params.chooseTip": "Valor de {{ {raw} }}; al cambiarlo se recalcula el resultado",
+        "params.hint": "Elige un valor para recalcular el resultado.",
+        "params.changed": "«{name}»: parámetro cambiado, resultado recalculado.",
+        "params.allOption": {"one":"Todos ({count} valor)","other":"Todos ({count} valores)"},
+        "params.emptyOption": "(sin valores)",
+        "params.invalid": "El parámetro {{ {raw} }} está vacío o no se puede leer.",
+        "params.invalidHint": "Escribe un rango como 1..100, un SELECT o el nombre de una tabla, una consulta o un script.",
+        "params.rangeTooBig": "El rango {{ {raw} }} tiene {count} valores; el desplegable admite como máximo {max}.",
+        "params.rangeTooBigHint": "Usa un rango más estrecho o una consulta como origen del parámetro.",
+        "params.tooManyValues": "El parámetro {{ {raw} }} devuelve {count} filas; el desplegable admite como máximo {max}.",
+        "params.tooManyValuesHint": "Acota el origen con WHERE o úsalo con IN para aprovechar todos sus valores a la vez.",
+        "params.noValues": "El parámetro {{ {raw} }} no tiene valores entre los que elegir.",
+        "params.noValuesHint": "Comprueba que su origen devuelve al menos una fila.",
+        "params.unknownSource": "El parámetro {{ {raw} }} nombra «{name}», que no es una tabla, una consulta ni un script del proyecto.",
+        "params.unknownSourceHint": "Revisa el nombre o crea el objeto al que se refiere.",
+        "params.sourceError": "No se pudo leer el parámetro {{ {raw} }}: {message}",
+        "params.sourceErrorHint": "Revisa el SQL del origen del parámetro.",
+        "params.circular": "El parámetro {{ {raw} }} se refiere a «{name}», que acaba leyendo el propio parámetro en un círculo.",
+        "params.circularHint": "Quita la referencia que cierra el círculo.",
+        "params.unterminated": "El parámetro {{ {raw} }} no está cerrado: falta un «}}».",
+        "params.unterminatedHint": "Cierra el parámetro con «}}».",
         "folders.renameTip": "Renombrar la carpeta «{name}»",
         "folders.deleteTip": "Borrar la carpeta «{name}»",
         "folders.duplicateTip": "Duplicar la carpeta «{name}» con sus consultas",
@@ -9479,6 +9570,10 @@
             this.readBracketIdentifier();
             continue;
           }
+          if (char === "{" && this.sql[this.pos + 1] === "{") {
+            this.readParameter();
+            continue;
+          }
           if (/[0-9]/.test(char) || (char === "." && /[0-9]/.test(this.sql[this.pos + 1] || ""))) {
             this.readNumber();
             continue;
@@ -9592,6 +9687,31 @@
           col: start.col,
           snippet: sqlSnippet(this.sql, start.line, start.col),
           hint: I18n.t("sqlLexer.closeNameHint"),
+        });
+      }
+
+      /** Parameter between double braces: {{ … }}. Its content is one of
+       *  the forms accepted by SqlParams (a range, a SELECT or a name). */
+      readParameter() {
+        const start = this.mark();
+        this.advance();
+        this.advance();
+        let value = "";
+        while (this.pos < this.sql.length) {
+          if (this.sql[this.pos] === "}" && this.sql[this.pos + 1] === "}") {
+            this.advance();
+            this.advance();
+            this.pushToken("param", value.trim(), value, start);
+            return;
+          }
+          value += this.sql[this.pos];
+          this.advance();
+        }
+        throw new SqlParseError(I18n.t("params.unterminated", { raw: value.trim() }), {
+          line: start.line,
+          col: start.col,
+          snippet: sqlSnippet(this.sql, start.line, start.col),
+          hint: I18n.t("params.unterminatedHint"),
         });
       }
 
@@ -9844,14 +9964,57 @@
         return String(sql).toLowerCase().includes(String(name).toLowerCase());
       },
 
+      /** The text with the trimmed part `from` replaced by `to`. */
+      replaceTrimmed(text, from, to) {
+        const index = String(text).indexOf(from);
+        return index < 0 ? text : String(text).slice(0, index) + to + String(text).slice(index + from.length);
+      },
+
+      /** Does the SQL use the column, either outside or inside a {{ … }}? */
+      usesColumn(sql, name) {
+        const parsed = SqlRename.parse(sql);
+        if (parsed && SqlRename.columnRefs(parsed.tokens, parsed.info, name).length > 0) {
+          return true;
+        }
+        return SqlParams.paramSpans(sql).some((span) => {
+          const info = SqlParams.describe(span.raw);
+          return info.kind === "subquery" && SqlRename.usesColumn(info.sql, name);
+        });
+      },
+
+      /** Does the SQL use the table, either outside or inside a {{ … }}? */
+      usesTable(sql, name) {
+        const buscado = String(name).toLowerCase();
+        const parsed = SqlRename.parse(sql);
+        if (parsed && SqlRename.tableRefs(parsed.tokens, parsed.info, name).length > 0) {
+          return true;
+        }
+        return SqlParams.paramSpans(sql).some((span) => {
+          const info = SqlParams.describe(span.raw);
+          if (info.kind === "reference" && info.name.toLowerCase() === buscado) {
+            return true;
+          }
+          return info.kind === "subquery" && SqlRename.usesTable(info.sql, name);
+        });
+      },
+
       /** Replaces the references to the column `oldName` with `newName`.
        *  It only touches identifiers — never texts or comments —, it leaves the
        *  table names and their FROM/JOIN aliases alone, it respects output
        *  aliases (AS name) and it does not confuse with the column an ORDER BY
        *  pointing at an alias. When the name was between brackets, they are
-       *  kept. A SQL that cannot be read comes back unchanged. */
+       *  kept. A SQL that cannot be read comes back unchanged. The parameters
+       *  of the SQL are rewritten too: their SELECTs read columns. */
       renameColumn(sql, oldName, newName) {
-        const parsed = SqlRename.parse(sql);
+        const conParametros = SqlParams.rewriteText(sql, (content) => {
+          const info = SqlParams.describe(content);
+          if (info.kind !== "subquery") {
+            return content;
+          }
+          const renamed = SqlRename.renameColumn(info.sql, oldName, newName);
+          return renamed === info.sql ? content : SqlRename.replaceTrimmed(content, info.sql, renamed);
+        }, false);
+        const parsed = SqlRename.parse(conParametros);
         if (!parsed) {
           return String(sql);
         }
@@ -9872,13 +10035,13 @@
           if (!SqlRename.mentions(query.sql, oldName)) {
             return;
           }
-          const parsed = SqlRename.parse(query.sql);
-          const refs = parsed ? SqlRename.columnRefs(parsed.tokens, parsed.info, oldName) : [];
-          if (refs.length === 0) {
+          const actualizado = SqlRename.renameColumn(query.sql, oldName, newName);
+          if (actualizado === query.sql) {
             return;
           }
-          query.sql = SqlRename.rewriteRefs(parsed.source, parsed.tokens, refs, newName);
-          if (query.assert && query.assert.columns && !parsed.info.aliasOutput.has(buscado)) {
+          const parsed = SqlRename.parse(query.sql);
+          query.sql = actualizado;
+          if (query.assert && query.assert.columns && parsed && !parsed.info.aliasOutput.has(buscado)) {
             query.assert.columns = query.assert.columns.map((name) => (name.toLowerCase() === buscado ? newName : name));
           }
           changed += 1;
@@ -9892,10 +10055,7 @@
       queriesUsingField(project, fieldName) {
         return project.queries
           .filter((query) => SqlRename.mentions(query.sql, fieldName))
-          .filter((query) => {
-            const parsed = SqlRename.parse(query.sql);
-            return parsed !== null && SqlRename.columnRefs(parsed.tokens, parsed.info, fieldName).length > 0;
-          })
+          .filter((query) => SqlRename.usesColumn(query.sql, fieldName))
           .map((query) => query.name);
       },
 
@@ -9904,10 +10064,7 @@
       queriesUsingTable(project, tableName) {
         return project.queries
           .filter((query) => SqlRename.mentions(query.sql, tableName))
-          .filter((query) => {
-            const parsed = SqlRename.parse(query.sql);
-            return parsed !== null && SqlRename.tableRefs(parsed.tokens, parsed.info, tableName).length > 0;
-          })
+          .filter((query) => SqlRename.usesTable(query.sql, tableName))
           .map((query) => query.name);
       },
 
@@ -9923,7 +10080,20 @@
        *  not touch the aliases of the query, nor texts, nor comments. A SQL
        *  that cannot be read comes back unchanged. */
       renameTable(sql, oldName, newName) {
-        const parsed = SqlRename.parse(sql);
+        // A SELECT written in a {{ … }} reads tables too, and a bare name in
+        // the braces may point at the renamed object.
+        const conParametros = SqlParams.rewriteText(sql, (content) => {
+          const info = SqlParams.describe(content);
+          if (info.kind === "reference" && info.name.toLowerCase() === String(oldName).toLowerCase()) {
+            return SqlRename.replaceTrimmed(content, info.name, newName);
+          }
+          if (info.kind !== "subquery") {
+            return content;
+          }
+          const renamed = SqlRename.renameTable(info.sql, oldName, newName);
+          return renamed === info.sql ? content : SqlRename.replaceTrimmed(content, info.sql, renamed);
+        }, false);
+        const parsed = SqlRename.parse(conParametros);
         if (!parsed) {
           return String(sql);
         }
@@ -10248,6 +10418,17 @@
               this.next();
             }
             this.next();
+            if (this.peek().type === "param") {
+              left = {
+                type: "in",
+                expr: left,
+                query: null,
+                values: null,
+                param: SqlParams.node(this.next()),
+                not: negated,
+              };
+              continue;
+            }
             this.expectPunct("(");
             if (this.peek().type === "keyword" && this.peek().value === "SELECT") {
               const query = this.parseQuery();
@@ -10312,6 +10493,9 @@
 
       parsePrimary() {
         const token = this.peek();
+        if (token.type === "param") {
+          return SqlParams.node(this.next());
+        }
         if (token.type === "number" || token.type === "string") {
           this.next();
           return { type: "literal", value: token.value };
@@ -10554,6 +10738,9 @@
         let result;
         try {
           const ast = new SqlParser(query.sql).parse();
+          if (String(query.sql).includes("{{")) {
+            SqlParams.bind(ast, project, ejecucion, null, String(query.sql));
+          }
           const resolved = SqlValidator.validate(ast, project, ejecucion);
           result = SqlExecutor.execute(SqlPlanner.build(ast, resolved));
         } catch (err) {
@@ -10635,14 +10822,29 @@
         const { tokens, info } = parsed;
         const names = [];
         const vistos = new Set();
-        info.tables.forEach((tokenIndex) => {
-          const name = tokens[tokenIndex].value;
-          const key = name.toLowerCase();
+        const add = (name) => {
+          const key = String(name).toLowerCase();
           if (vistos.has(key) || !SqlViews.isQuery(project, name, index)) {
             return;
           }
           vistos.add(key);
           names.push(name);
+        };
+        info.tables.forEach((tokenIndex) => add(tokens[tokenIndex].value));
+        // A parameter may read a query as a table too.
+        SqlParams.paramSpans(sql).forEach((span) => {
+          const parameter = SqlParams.describe(span.raw);
+          if (parameter.kind === "reference") {
+            add(parameter.name);
+            return;
+          }
+          if (parameter.kind !== "subquery") {
+            return;
+          }
+          const inner = SqlRename.parse(parameter.sql);
+          if (inner) {
+            inner.info.tables.forEach((tableIndex) => add(inner.tokens[tableIndex].value));
+          }
         });
         return names;
       },
@@ -10854,13 +11056,9 @@
        *  FROM/JOIN, in the order it appears. */
       querySources(project, query, names) {
         const parsed = SqlRename.parse(query.sql);
-        if (!parsed) {
-          return [];
-        }
         const sources = [];
         const seen = new Set();
-        parsed.info.tables.forEach((index) => {
-          const resolved = ProjectGraph.resolveSqlSource(project, parsed.tokens[index].value, names);
+        const add = (resolved) => {
           if (!resolved) {
             return;
           }
@@ -10870,6 +11068,29 @@
           }
           seen.add(key);
           sources.push(resolved);
+        };
+        if (parsed) {
+          parsed.info.tables.forEach((index) => {
+            add(ProjectGraph.resolveSqlSource(project, parsed.tokens[index].value, names));
+          });
+        }
+        // A parameter of the query may read a source too: its SELECTs and the
+        // names written in the braces are dependencies as well.
+        SqlParams.paramSpans(query.sql).forEach((span) => {
+          const info = SqlParams.describe(span.raw);
+          if (info.kind === "reference") {
+            add(ProjectGraph.resolveSqlSource(project, info.name, names));
+            return;
+          }
+          if (info.kind !== "subquery") {
+            return;
+          }
+          const inner = SqlRename.parse(info.sql);
+          if (inner) {
+            inner.info.tables.forEach((tableIndex) => {
+              add(ProjectGraph.resolveSqlSource(project, inner.tokens[tableIndex].value, names));
+            });
+          }
         });
         return sources;
       },
@@ -10880,20 +11101,43 @@
         const sources = [];
         const seen = new Set();
         const index = names || ProjectGraph.nameIndex(project);
-        ProjectGraph.scriptRefs(script.code).forEach((ref) => {
-          const list = ref.kind === "table"
+        const add = (kind, name) => {
+          const list = kind === "table"
             ? index.exact.tables
-            : (ref.kind === "query" ? index.exact.queries : index.exact.scripts);
-          const exists = list.has(ref.name);
-          if (!exists) {
+            : (kind === "query" ? index.exact.queries : index.exact.scripts);
+          if (!list.has(name)) {
             return;
           }
-          const key = ProjectGraph.nodeKey(ref.kind, ref.name);
+          const key = ProjectGraph.nodeKey(kind, name);
           if (seen.has(key)) {
             return;
           }
           seen.add(key);
-          sources.push({ kind: ref.kind, name: ref.name });
+          sources.push({ kind: kind, name: name });
+        };
+        ProjectGraph.scriptRefs(script.code).forEach((ref) => add(ref.kind, ref.name));
+        // The {{ … }} of the code read sources too.
+        SqlParams.scanCode(script.code).forEach((span) => {
+          const info = SqlParams.describe(span.raw);
+          if (info.kind === "reference") {
+            const resolved = ProjectGraph.resolveSqlSource(project, info.name, index);
+            if (resolved) {
+              add(resolved.kind, resolved.name);
+            }
+            return;
+          }
+          if (info.kind !== "subquery") {
+            return;
+          }
+          const parsed = SqlRename.parse(info.sql);
+          if (parsed) {
+            parsed.info.tables.forEach((tableIndex) => {
+              const resolved = ProjectGraph.resolveSqlSource(project, parsed.tokens[tableIndex].value, index);
+              if (resolved) {
+                add(resolved.kind, resolved.name);
+              }
+            });
+          }
         });
         return sources;
       },
@@ -11031,7 +11275,7 @@
         (project.scripts || []).forEach((script) => {
           const code = String(script.code || "");
           const pattern = new RegExp(ProjectGraph.SCRIPT_REF_SOURCE, "g");
-          const updated = code.replace(pattern, (all, used, doubleQuoted, singleQuoted) => {
+          let updated = code.replace(pattern, (all, used, doubleQuoted, singleQuoted) => {
             if (used !== container) {
               return all;
             }
@@ -11043,6 +11287,20 @@
             }
             return `${used}[${ProjectGraph.scriptString(newName, quote)}]`;
           });
+          // Parameters that name the object (or read it in a SELECT).
+          updated = SqlParams.rewriteText(updated, (content) => {
+            const info = SqlParams.describe(content);
+            const resolved = info.kind === "reference"
+              ? ProjectGraph.resolveSqlSource(project, info.name)
+              : null;
+            if (resolved && resolved.kind === kind && resolved.name.toLowerCase() === String(oldName).toLowerCase()) {
+              return SqlRename.replaceTrimmed(content, info.name, newName);
+            }
+            if (info.kind !== "subquery") {
+              return content;
+            }
+            return SqlRename.replaceTrimmed(content, info.sql, SqlRename.renameTable(info.sql, oldName, newName));
+          }, true);
           if (updated !== code) {
             script.code = updated;
             changed += 1;
@@ -11347,6 +11605,8 @@
         switch (expr.type) {
           case "literal":
             return;
+          case "param":
+            return;
           case "star":
             throw new SqlValidationError(
               I18n.t("sqlValidator.asteriskMisplaced"),
@@ -11376,6 +11636,9 @@
             return;
           case "in":
             SqlValidator.walk(expr.expr, contextName, context, insideAggregate);
+            if (expr.param) {
+              return;
+            }
             if (expr.query) {
               SqlValidator.validateSubquery(expr, context, true);
             } else {
@@ -11961,6 +12224,8 @@
       /** Readable label of an expression, for the result header. */
       expressionLabel(expr) {
         switch (expr.type) {
+          case "param":
+            return "{{ " + expr.raw + " }}";
           case "column":
             return expr.name;
           case "literal":
@@ -12377,6 +12642,11 @@
         switch (expr.type) {
           case "literal":
             return expr.value;
+          case "param":
+            if (!Object.hasOwn(expr, "value")) {
+              throw new SqlRuntimeError(I18n.t("params.notBound"), {});
+            }
+            return expr.value;
           case "column": {
             let scope = context;
             let row = null;
@@ -12624,9 +12894,11 @@
         if (value === null) {
           return null;
         }
-        const candidates = expr.query
-          ? SqlExecutor.subqueryColumn(expr, context)
-          : expr.values.map((item) => SqlExecutor.evalExpr(item, context));
+        const candidates = expr.param
+          ? (expr.param.values || [])
+          : (expr.query
+            ? SqlExecutor.subqueryColumn(expr, context)
+            : expr.values.map((item) => SqlExecutor.evalExpr(item, context)));
         let sawNull = false;
         let match = false;
         candidates.forEach((candidate) => {
@@ -12813,10 +13085,15 @@
 
     /** Entry point of the engine: parse, validate, plan and run. */
     const SqlEngine = {
-      run(sql, project, state) {
+      run(sql, project, state, selections) {
         const ejecucion = state || SqlViews.newState();
         const before = ejecucion.ms;
         const ast = new SqlParser(sql).parse();
+        // The placeholders are worth their chosen value (or the first option)
+        // before validating: the rest of the engine only sees their value.
+        if (String(sql).includes("{{")) {
+          SqlParams.bind(ast, project, ejecucion, selections, String(sql));
+        }
         const resolved = SqlValidator.validate(ast, project, ejecucion);
         const plan = SqlPlanner.build(ast, resolved);
         const result = SqlExecutor.execute(plan);
@@ -12828,9 +13105,9 @@
       },
 
       /** Like run(), but returns { ok } instead of throwing errors. */
-      runSafe(sql, project, state) {
+      runSafe(sql, project, state, selections) {
         try {
-          return { ok: true, result: SqlEngine.run(sql, project, state) };
+          return { ok: true, result: SqlEngine.run(sql, project, state, selections) };
         } catch (err) {
           return { ok: false, error: err };
         }
@@ -12839,14 +13116,557 @@
       /** Names of the columns the query would return, without running it
        *  (the plan already has them resolved: alias and asterisk included).
        *  Returns { ok: true, columns } or { ok: false, error }. */
-      columnsSafe(sql, project, state) {
+      columnsSafe(sql, project, state, selections) {
+        const ejecucion = state || SqlViews.newState();
         try {
           const ast = new SqlParser(sql).parse();
-          const resolved = SqlValidator.validate(ast, project, state || SqlViews.newState());
+          if (String(sql).includes("{{")) {
+            SqlParams.bind(ast, project, ejecucion, selections, String(sql));
+          }
+          const resolved = SqlValidator.validate(ast, project, ejecucion);
           return { ok: true, columns: SqlPlanner.build(ast, resolved).columns };
         } catch (err) {
           return { ok: false, error: err };
         }
+      },
+    };
+
+    /* --- 5.6b Parameters ({{ … }}) --------------------------------------- */
+
+    /** Parameters of the queries and of the scripts. A placeholder written
+     *  «{{ … }}» inside the SQL of a query or the JavaScript of a script is
+     *  one parameter; its content says where the values offered by the
+     *  drop-down come from:
+     *    · a range of whole numbers:      {{ 1..100 }}
+     *    · a SELECT over the project:     {{ SELECT id, descripcion FROM … }}
+     *    · an existing table, query or script: {{ consulta_de_referencia }}
+     *  The chosen value is what the parameter is worth when the query or the
+     *  script runs. With no choice (tests, views, scripts that read it) the
+     *  first option is used, so a parameterised query keeps working on its
+     *  own. The selections belong to the interface: they are not written in
+     *  the project. */
+    const SqlParams = {
+      /** Whole numbers an integer range may offer: the drop-down would choke
+       *  with thousands of options. */
+      MAX_RANGE_VALUES: 1000,
+
+      /** Rows a parameter source may return before the drop-down is refused. */
+      MAX_SOURCE_VALUES: 2000,
+
+      /** Longest label of an option. */
+      MAX_LABEL_LENGTH: 120,
+
+      /** Content of a placeholder that is a range of whole numbers. */
+      RANGE: /^\s*(-?\d+)\s*\.\.\s*(-?\d+)\s*$/,
+
+      /** Reads the content of a placeholder: which kind it is and its data. */
+      describe(raw) {
+        const text = String(raw === undefined || raw === null ? "" : raw).trim();
+        if (text === "") {
+          return { kind: "invalid", raw: text };
+        }
+        const range = SqlParams.RANGE.exec(text);
+        if (range) {
+          return { kind: "range", raw: text, from: Number(range[1]), to: Number(range[2]) };
+        }
+        if (/^select\b/i.test(text)) {
+          return { kind: "subquery", raw: text, sql: text };
+        }
+        let name = text;
+        const bracket = /^\[(.*)\]$/.exec(text);
+        if (bracket) {
+          name = bracket[1].trim();
+        }
+        return name === ""
+          ? { kind: "invalid", raw: text }
+          : { kind: "reference", raw: text, name: name };
+      },
+
+      /** AST node of a parameter token, ready to be bound. */
+      node(token) {
+        return {
+          type: "param",
+          raw: token.value,
+          start: token.start,
+          end: token.end,
+          line: token.line,
+          col: token.col,
+        };
+      },
+
+      /** Run state of the engine with the data of the parameters. */
+      stateOf(state) {
+        const ejecucion = state || SqlViews.newState();
+        if (!Array.isArray(ejecucion.paramStack)) {
+          ejecucion.paramStack = [];
+        }
+        return ejecucion;
+      },
+
+      /** Validation error of a parameter: message and hint from the language
+       *  dictionary. */
+      error(key, params) {
+        return new SqlValidationError(
+          I18n.t(key, params),
+          { hint: I18n.t(`${key}Hint`, params) },
+        );
+      },
+
+      /** Puts the position of the placeholder in an error that has none, so
+       *  the panel can underline it in the original SQL. */
+      position(error, node, sql) {
+        if (!error || typeof error !== "object" || !node) {
+          return error;
+        }
+        if (error.line === undefined && node.line !== undefined) {
+          error.line = node.line;
+          error.col = node.col;
+          if (sql) {
+            error.snippet = sqlSnippet(sql, node.line, node.col);
+          }
+        }
+        return error;
+      },
+
+      /** Signature of a value: two options with the same value are one. */
+      valueKey(value) {
+        return `${typeof value}\u0000${JSON.stringify(value)}`;
+      },
+
+      /** Label of an option built from the columns of a row of the source:
+       *  the value comes from the first column and the rest explains it. */
+      rowLabel(row) {
+        return (row || []).map((value) => Utils.formatValue(value)).join(" · ");
+      },
+
+      /** Label shortened to what the drop-down can show. */
+      shortLabel(label) {
+        const text = String(label === undefined || label === null ? "" : label);
+        return text.length > SqlParams.MAX_LABEL_LENGTH
+          ? `${text.slice(0, SqlParams.MAX_LABEL_LENGTH - 1)}…`
+          : text;
+      },
+
+      /** Name looked up in the project, in the order the SQL uses: table
+       *  first, then query, then script. */
+      findSource(project, name, raw) {
+        const resolved = ProjectGraph.resolveSqlSource(project, name);
+        if (!resolved) {
+          throw SqlParams.error("params.unknownSource", { raw: raw, name: name });
+        }
+        return resolved;
+      },
+
+      /** A table read as a parameter source: the values of its columns, with
+       *  the type of each field already applied. */
+      tableResult(project, name) {
+        const table = (project.tables || []).find((candidate) => candidate.name === name);
+        const columns = table.fields.map((field) => field.name);
+        const rows = table.rows.map((row) => table.fields.map((field) => {
+          const value = row[field.name];
+          return field.type ? Model.convertValue(value, field.type) : (value === undefined ? null : value);
+        }));
+        return { columns: columns, rows: rows };
+      },
+
+      /** Result of the source of a parameter: a table, a query, a script or
+       *  the SELECT written in the placeholder. Errors name the parameter. */
+      sourceResult(info, project, state) {
+        const ejecucion = SqlParams.stateOf(state);
+        if (info.kind === "subquery") {
+          const outcome = SqlEngine.runSafe(info.sql, project, ejecucion);
+          if (!outcome.ok) {
+            throw new SqlValidationError(
+              I18n.t("params.sourceError", { raw: info.raw, message: outcome.error.message }),
+              { hint: outcome.error.hint || I18n.t("params.sourceErrorHint") },
+            );
+          }
+          return outcome.result;
+        }
+        const resolved = SqlParams.findSource(project, info.name, info.raw);
+        const key = `${resolved.kind}\u0000${resolved.name.toLowerCase()}`;
+        if (ejecucion.paramStack.includes(key)) {
+          throw SqlParams.error("params.circular", { raw: info.raw, name: resolved.name });
+        }
+        ejecucion.paramStack.push(key);
+        try {
+          if (resolved.kind === "table") {
+            return SqlParams.tableResult(project, resolved.name);
+          }
+          if (resolved.kind === "query") {
+            const query = (project.queries || []).find((candidate) => candidate.name === resolved.name);
+            const outcome = SqlEngine.runSafe(query.sql, project, ejecucion);
+            if (!outcome.ok) {
+              throw new SqlValidationError(
+                I18n.t("params.sourceError", { raw: info.raw, message: outcome.error.message }),
+                { hint: outcome.error.hint || I18n.t("params.sourceErrorHint") },
+              );
+            }
+            return outcome.result;
+          }
+          const script = Model.findScript(project, resolved.name);
+          const outcome = ScriptRunner.executeSync(script, project, ejecucion);
+          if (!outcome.ok) {
+            throw new SqlValidationError(
+              I18n.t("params.sourceError", { raw: info.raw, message: outcome.error.message }),
+              { hint: outcome.error.hint || I18n.t("params.sourceErrorHint") },
+            );
+          }
+          return outcome.result;
+        } finally {
+          ejecucion.paramStack.pop();
+        }
+      },
+
+      /** Options of a parameter and the default one. `listContext` is true
+       *  when the parameter stands for the list of an IN / NOT IN: it then
+       *  offers, whole, every value of the source. */
+      optionsOf(raw, project, state, listContext) {
+        const info = SqlParams.describe(raw);
+        if (info.kind === "invalid") {
+          throw SqlParams.error("params.invalid", { raw: info.raw });
+        }
+        if (info.kind === "range") {
+          const count = Math.abs(info.to - info.from) + 1;
+          if (count > SqlParams.MAX_RANGE_VALUES) {
+            throw SqlParams.error("params.rangeTooBig", {
+              raw: info.raw, count: count, max: SqlParams.MAX_RANGE_VALUES,
+            });
+          }
+          const options = [];
+          const step = info.to >= info.from ? 1 : -1;
+          for (let value = info.from; step > 0 ? value <= info.to : value >= info.to; value += step) {
+            options.push({ label: String(value), values: [value] });
+          }
+          return { info: info, options: options, defaultIndex: 0 };
+        }
+        const result = SqlParams.sourceResult(info, project, state);
+        const rows = result.rows || [];
+        if (rows.length > SqlParams.MAX_SOURCE_VALUES) {
+          throw SqlParams.error("params.tooManyValues", {
+            raw: info.raw, count: rows.length, max: SqlParams.MAX_SOURCE_VALUES,
+          });
+        }
+        const values = [];
+        const labels = [];
+        const seen = new Set();
+        rows.forEach((row) => {
+          const value = row.length > 0 ? row[0] : null;
+          // A null never matches and is no use in a filter.
+          if (value === null) {
+            return;
+          }
+          const key = SqlParams.valueKey(value);
+          if (seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          values.push(value);
+          labels.push(SqlParams.shortLabel(SqlParams.rowLabel(row)));
+        });
+        const options = values.map((value, index) => ({
+          label: labels[index],
+          values: [value],
+        }));
+        if (listContext && options.length > 1) {
+          options.unshift({
+            label: I18n.t("params.allOption", { count: options.length }),
+            values: values.slice(),
+          });
+          return { info: info, options: options, defaultIndex: 0 };
+        }
+        if (options.length === 0) {
+          if (listContext) {
+            // An empty list matches nothing (and NOT IN matches every row).
+            return {
+              info: info,
+              options: [{ label: I18n.t("params.emptyOption"), values: [] }],
+              defaultIndex: 0,
+            };
+          }
+          throw SqlParams.error("params.noValues", { raw: info.raw });
+        }
+        return { info: info, options: options, defaultIndex: 0 };
+      },
+
+      /** Parameters of an AST, in the order they are written, with the mark
+       *  of those that stand for the list of an IN. */
+      collect(ast) {
+        const found = [];
+        const visit = (value, parent) => {
+          if (value === null || typeof value !== "object") {
+            return;
+          }
+          if (Array.isArray(value)) {
+            value.forEach((item) => visit(item, parent));
+            return;
+          }
+          if (value.type === "param") {
+            found.push({
+              node: value,
+              listContext: Boolean(parent && parent.type === "in" && parent.param === value),
+            });
+            return;
+          }
+          Object.keys(value).forEach((key) => {
+            if (value[key] !== null && typeof value[key] === "object") {
+              visit(value[key], value);
+            }
+          });
+        };
+        visit(ast, null);
+        found.sort((left, right) => (left.node.start || 0) - (right.node.start || 0));
+        return found;
+      },
+
+      /** Binds the parameters of an AST: the chosen option (or the default)
+       *  is written in the node, ready for the executor. `selections` is the
+       *  list of chosen option indexes, in the order of the parameters. */
+      bind(ast, project, state, selections, sql) {
+        const ejecucion = SqlParams.stateOf(state);
+        const entries = SqlParams.collect(ast);
+        if (entries.length === 0) {
+          return 0;
+        }
+        entries.forEach((entry, index) => {
+          let options;
+          try {
+            options = SqlParams.optionsOf(entry.node.raw, project, ejecucion, entry.listContext);
+          } catch (err) {
+            SqlParams.position(err, entry.node, sql);
+            throw err;
+          }
+          let selected = selections && Number.isInteger(selections[index])
+            ? selections[index]
+            : options.defaultIndex;
+          if (selected < 0 || selected >= options.options.length) {
+            selected = options.defaultIndex;
+          }
+          const values = options.options[selected].values;
+          if (entry.listContext) {
+            entry.node.values = values.slice();
+          } else {
+            entry.node.value = values.length > 0 ? values[0] : null;
+          }
+        });
+        return entries.length;
+      },
+
+      /** Places of the {{ … }} of a SQL, read with the lexer of the engine
+       *  (so the ones inside strings and comments do not count). A SQL that
+       *  cannot be read has no parameters: they come back as an empty list. */
+      paramSpans(sql) {
+        try {
+          return new SqlLexer(String(sql)).tokenize()
+            .filter((token) => token.type === "param")
+            .map((token) => ({ raw: token.raw, start: token.start, end: token.end }));
+        } catch (err) {
+          if (!(err instanceof SqlParseError)) {
+            throw err;
+          }
+          return [];
+        }
+      },
+
+      /** The text with the content of every {{ … }} rewritten by `rewrite`
+       *  (the braces and the surrounding text are kept). With `script` the
+       *  placeholders are scanned outside JavaScript strings and comments. */
+      rewriteText(text, rewrite, script) {
+        const source = String(text === undefined || text === null ? "" : text);
+        const spans = script ? SqlParams.scanCode(source) : SqlParams.paramSpans(source);
+        if (spans.length === 0) {
+          return source;
+        }
+        let result = "";
+        let cursor = 0;
+        spans.forEach((span) => {
+          const updated = rewrite(span.raw);
+          const content = updated === undefined || updated === null ? span.raw : String(updated);
+          result += source.slice(cursor, span.start);
+          result += content === span.raw ? source.slice(span.start, span.end) : `{{${content}}}`;
+          cursor = span.end;
+        });
+        return result + source.slice(cursor);
+      },
+
+      /** Analysis of the parameters of a SQL for the interface: every one
+       *  with its label, its options and its default (or the reason why it
+       *  cannot be offered). It runs the sources, never the query. */
+      analyze(sql, project, state) {
+        const ejecucion = SqlParams.stateOf(state);
+        let ast;
+        try {
+          ast = new SqlParser(sql).parse();
+        } catch (err) {
+          return { ok: false, error: err, params: [] };
+        }
+        const params = SqlParams.collect(ast).map((entry) => {
+          const base = {
+            raw: entry.node.raw,
+            start: entry.node.start,
+            end: entry.node.end,
+            line: entry.node.line,
+            col: entry.node.col,
+            listContext: entry.listContext,
+          };
+          try {
+            const options = SqlParams.optionsOf(entry.node.raw, project, ejecucion, entry.listContext);
+            return Object.assign(base, {
+              kind: options.info.kind,
+              options: options.options,
+              defaultIndex: options.defaultIndex,
+              error: "",
+              hint: "",
+            });
+          } catch (err) {
+            SqlParams.position(err, entry.node, sql);
+            return Object.assign(base, {
+              kind: "invalid",
+              options: [],
+              defaultIndex: 0,
+              error: err.message,
+              hint: err.hint || "",
+            });
+          }
+        });
+        return { ok: true, params: params, error: null };
+      },
+
+      /** Length of a JavaScript text literal, so the scanner can jump over
+       *  it without reading placeholders inside it. */
+      skipCodeString(code, start) {
+        const quote = code[start];
+        let index = start + 1;
+        while (index < code.length) {
+          if (code[index] === "\\") {
+            index += 2;
+            continue;
+          }
+          if (code[index] === quote) {
+            return index + 1;
+          }
+          index += 1;
+        }
+        return code.length;
+      },
+
+      /** Placeholders of a JavaScript text: those outside its strings and
+       *  comments, in code order. */
+      scanCode(code) {
+        const text = String(code === undefined || code === null ? "" : code);
+        const spans = [];
+        let index = 0;
+        while (index < text.length) {
+          const char = text[index];
+          if (char === "'" || char === "\"" || char === "`") {
+            index = SqlParams.skipCodeString(text, index);
+            continue;
+          }
+          if (char === "/" && text[index + 1] === "/") {
+            const end = text.indexOf("\n", index + 2);
+            index = end < 0 ? text.length : end + 1;
+            continue;
+          }
+          if (char === "/" && text[index + 1] === "*") {
+            const end = text.indexOf("*/", index + 2);
+            index = end < 0 ? text.length : end + 2;
+            continue;
+          }
+          if (char === "{" && text[index + 1] === "{") {
+            const end = text.indexOf("}}", index + 2);
+            if (end < 0) {
+              spans.push({
+                raw: text.slice(index + 2).trim(),
+                start: index,
+                end: text.length,
+                unterminated: true,
+              });
+              break;
+            }
+            spans.push({ raw: text.slice(index + 2, end).trim(), start: index, end: end + 2 });
+            index = end + 2;
+            continue;
+          }
+          index += 1;
+        }
+        return spans;
+      },
+
+      /** Analysis of the parameters of a script: every placeholder with its
+       *  options and its default, or the reason why it cannot be offered. */
+      analyzeCode(code, project, state) {
+        const ejecucion = SqlParams.stateOf(state);
+        const params = SqlParams.scanCode(code).map((span) => {
+          const base = {
+            raw: span.raw,
+            start: span.start,
+            end: span.end,
+            listContext: false,
+          };
+          try {
+            if (span.unterminated) {
+              throw SqlParams.error("params.unterminated", { raw: span.raw });
+            }
+            const options = SqlParams.optionsOf(span.raw, project, ejecucion, false);
+            return Object.assign(base, {
+              kind: options.info.kind,
+              options: options.options,
+              defaultIndex: options.defaultIndex,
+              error: "",
+              hint: "",
+            });
+          } catch (err) {
+            return Object.assign(base, {
+              kind: "invalid",
+              options: [],
+              defaultIndex: 0,
+              error: err.message,
+              hint: err.hint || "",
+            });
+          }
+        });
+        return { ok: true, params: params };
+      },
+
+      /** JavaScript literal of a value of a parameter. */
+      jsLiteral(value) {
+        if (value === null || value === undefined) {
+          return "null";
+        }
+        if (typeof value === "number") {
+          return Number.isFinite(value) ? String(value) : "null";
+        }
+        if (typeof value === "boolean") {
+          return value ? "true" : "false";
+        }
+        if (typeof value === "string") {
+          return JSON.stringify(value);
+        }
+        const json = JSON.stringify(value);
+        return json === undefined ? "null" : json;
+      },
+
+      /** The JavaScript text with every placeholder replaced by the chosen
+       *  value (the first option when there is none). */
+      applyCode(code, analysis, selections) {
+        let result = "";
+        let cursor = 0;
+        analysis.params.forEach((param, index) => {
+          if (param.options.length === 0) {
+            throw SqlParams.error("params.noValues", { raw: param.raw });
+          }
+          let selected = selections && Number.isInteger(selections[index])
+            ? selections[index]
+            : param.defaultIndex;
+          if (selected < 0 || selected >= param.options.length) {
+            selected = param.defaultIndex;
+          }
+          const option = param.options[selected] || param.options[param.defaultIndex] || param.options[0];
+          const value = option.values.length > 0 ? option.values[0] : null;
+          result += code.slice(cursor, param.start) + SqlParams.jsLiteral(value);
+          cursor = param.end;
+        });
+        return result + code.slice(cursor);
       },
     };
 
@@ -16136,6 +16956,18 @@
       /** Last result run (to preview, copy and download as CSV). */
       lastResult: null,
 
+      /** Value chosen for each parameter of each query, by query object: the
+       *  selections live in the session and are not written in the project. */
+      paramValues: new WeakMap(),
+
+      /** Last analysis of the parameters of the open query, to key and refresh
+       *  the chosen values when the SQL is edited. */
+      lastParams: [],
+
+      /** Index chosen for the parameters of the open query, in the order the
+       *  placeholders appear in the SQL. */
+      lastSelections: [],
+
       /** Current page of the result and selected row (grey). */
       page: 0,
       selectedRow: null,
@@ -16235,6 +17067,12 @@
         document.getElementById("btn-copy-query-name").addEventListener("click", () => UiQueries.copyName());
         document.getElementById("query-description").addEventListener("change", () => UiQueries.saveDescription());
         document.getElementById("query-keywords").addEventListener("change", () => UiQueries.saveKeywords());
+        document.getElementById("query-params").addEventListener("change", (event) => {
+          const select = event.target.closest("select[data-param]");
+          if (select) {
+            UiQueries.changeParam(Number(select.dataset.param), Number(select.value));
+          }
+        });
         document.getElementById("query-sql").addEventListener("change", () => UiQueries.saveSql());
         document.getElementById("query-sql").addEventListener("keydown", (event) => {
           if (event.ctrlKey && event.code === "Space") {
@@ -16516,6 +17354,106 @@
         setStatus(I18n.t("queries.removed", { name: name, orphans: orphans }));
       },
 
+      /** Parameters of the SQL of the editor, already analysed: their options
+       *  come from the ranges, the SELECTs and the names written in them. */
+      analyzedParams(query) {
+        const editor = document.getElementById("query-sql");
+        const sql = editor && editor.value !== undefined ? editor.value : (query ? query.sql : "");
+        return SqlParams.analyze(sql, Store.project);
+      },
+
+      /** Chosen option of each parameter of the query (the default one when
+       *  the stored choice does not exist or does not fit the new options). */
+      selectionsFor(query, analysis) {
+        const stored = (query && UiQueries.paramValues.get(query)) || new Map();
+        return analysis.params.map((param) => {
+          const selected = stored.get(param.raw);
+          return Number.isInteger(selected) && selected >= 0 && selected < param.options.length
+            ? selected
+            : param.defaultIndex;
+        });
+      },
+
+      /** Paints the bar of parameters: one drop-down per placeholder of the
+       *  SQL, or the reason why it cannot be offered. It is hidden when the
+       *  query has no parameters. */
+      renderParams() {
+        const bar = document.getElementById("query-params");
+        if (!bar) {
+          return;
+        }
+        const query = UiQueries.activeQueryOrNull();
+        bar.textContent = "";
+        if (!query) {
+          bar.hidden = true;
+          return;
+        }
+        const analysis = UiQueries.analyzedParams(query);
+        if (!analysis.ok || analysis.params.length === 0) {
+          bar.hidden = true;
+          return;
+        }
+        const selections = UiQueries.selectionsFor(query, analysis);
+        UiQueries.lastParams = analysis.params;
+        UiQueries.lastSelections = selections;
+        bar.hidden = false;
+        analysis.params.forEach((param, index) => {
+          const item = document.createElement("span");
+          item.className = "param";
+          const label = document.createElement("span");
+          label.className = "param-label";
+          label.textContent = `{{ ${param.raw} }}`;
+          label.title = I18n.t("params.chooseTip", { raw: param.raw });
+          item.appendChild(label);
+          if (param.error) {
+            const error = document.createElement("span");
+            error.className = "param-error";
+            error.textContent = param.error;
+            error.title = param.hint || param.error;
+            item.appendChild(error);
+          } else {
+            const select = document.createElement("select");
+            select.dataset.param = String(index);
+            select.title = I18n.t("params.chooseTip", { raw: param.raw });
+            select.setAttribute("aria-label", I18n.t("params.parameter", { n: index + 1 }));
+            param.options.forEach((option, optionIndex) => {
+              const choice = document.createElement("option");
+              choice.value = String(optionIndex);
+              choice.textContent = option.label;
+              if (optionIndex === selections[index]) {
+                choice.selected = true;
+              }
+              select.appendChild(choice);
+            });
+            select.value = String(selections[index]);
+            item.appendChild(select);
+          }
+          bar.appendChild(item);
+        });
+      },
+
+      /** Remembers the value chosen in one drop-down of the bar and runs the
+       *  query again so the result follows it. The run is the same synchronous
+       *  work of the Run button: the value is already on screen. */
+      changeParam(index, selected) {
+        const query = UiQueries.activeQueryOrNull();
+        if (!query) {
+          return;
+        }
+        const param = UiQueries.lastParams[index];
+        if (!param) {
+          return;
+        }
+        const stored = new Map(UiQueries.paramValues.get(query) || []);
+        stored.set(param.raw, selected);
+        UiQueries.paramValues.set(query, stored);
+        UiQueries.lastSelections[index] = selected;
+        const outcome = UiQueries.execute();
+        if (outcome) {
+          setStatus(I18n.t("params.changed", { name: query.name }));
+        }
+      },
+
       /** Selects a query and loads its content into the editor. */
       select(name) {
         const query = Store.project.queries.find((candidate) => candidate.name === name);
@@ -16537,6 +17475,7 @@
         document.getElementById("query-sql").value = query.sql;
         UiQueries.clearOutput();
         UiQueries.updateTestControls();
+        UiQueries.renderParams();
         setStatus(I18n.t("queries.selected", { name: name }));
       },
 
@@ -16679,6 +17618,7 @@
         if (editor.value !== query.sql) {
           editor.value = query.sql;
         }
+        UiQueries.renderParams();
       },
 
       saveSql() {
@@ -16692,12 +17632,13 @@
           UiProject.markDirty();
           UiDataLinks.update();
         }
+        UiQueries.renderParams();
       },
 
       /** Runs the SQL of the editor and shows results, plan or error. Returns
        *  the engine result, or null when there is nothing to run or the SQL
        *  fails (the warning is already on screen). */
-      execute() {
+      execute(defaultParams) {
         const query = UiQueries.activeQueryOrNull();
         if (!query) {
           return null;
@@ -16721,7 +17662,11 @@
           });
           return null;
         }
-        const outcome = SqlEngine.runSafe(sql, Store.project);
+        const analysis = UiQueries.analyzedParams(query);
+        const selections = defaultParams || !analysis.ok
+          ? null
+          : UiQueries.selectionsFor(query, analysis);
+        const outcome = SqlEngine.runSafe(sql, Store.project, null, selections);
         if (!outcome.ok) {
           UiQueries.showError(UiQueries.describeError(outcome.error));
           setStatus(I18n.t("queries.errorStatus", { name: query.name, message: outcome.error.message }));
@@ -16762,7 +17707,7 @@
           setStatus(I18n.t("queries.openToConvert"));
           return false;
         }
-        const outcome = UiQueries.execute();
+        const outcome = UiQueries.execute(true);
         if (!outcome) {
           return false;
         }
@@ -17188,6 +18133,15 @@
     const UiScripts = {
       /** Last result run (to paint the grid and paginate it). */
       lastResult: null,
+
+      /** Value chosen for each parameter of each script, by script object. */
+      paramValues: new WeakMap(),
+
+      /** Last analysis of the parameters of the open script. */
+      lastParams: [],
+
+      /** Index chosen for the parameters of the open script. */
+      lastSelections: [],
       lastMs: null,
       page: 0,
       selectedRow: null,
@@ -17206,6 +18160,12 @@
         document.getElementById("btn-copy-script-name").addEventListener("click", () => UiScripts.copyName());
         document.getElementById("script-description").addEventListener("change", () => UiScripts.saveDescription());
         document.getElementById("script-keywords").addEventListener("change", () => UiScripts.saveKeywords());
+        document.getElementById("script-params").addEventListener("change", (event) => {
+          const select = event.target.closest("select[data-param]");
+          if (select) {
+            UiScripts.changeParam(Number(select.dataset.param), Number(select.value));
+          }
+        });
         document.getElementById("script-code").addEventListener("change", () => UiScripts.saveCode());
         document.getElementById("script-code").addEventListener("keydown", (event) => {
           if (event.ctrlKey && event.code === "Space") {
@@ -17274,6 +18234,102 @@
         UiScripts.create();
       },
 
+      /** Parameters of the code of the editor, already analysed. */
+      analyzedParams(script) {
+        const editor = document.getElementById("script-code");
+        const code = editor && editor.value !== undefined ? editor.value : (script ? script.code : "");
+        return SqlParams.analyzeCode(code, Store.project);
+      },
+
+      /** Chosen option of each parameter of the script. */
+      selectionsFor(script, analysis) {
+        const stored = (script && UiScripts.paramValues.get(script)) || new Map();
+        return analysis.params.map((param) => {
+          const selected = stored.get(param.raw);
+          return Number.isInteger(selected) && selected >= 0 && selected < param.options.length
+            ? selected
+            : param.defaultIndex;
+        });
+      },
+
+      /** Paints the bar of parameters of the open script: one drop-down per
+       *  placeholder of its code, or the reason why it cannot be offered. */
+      renderParams() {
+        const bar = document.getElementById("script-params");
+        if (!bar) {
+          return;
+        }
+        const script = UiScripts.activeScriptOrNull();
+        bar.textContent = "";
+        if (!script) {
+          bar.hidden = true;
+          return;
+        }
+        const analysis = UiScripts.analyzedParams(script);
+        if (!analysis.ok || analysis.params.length === 0) {
+          bar.hidden = true;
+          return;
+        }
+        const selections = UiScripts.selectionsFor(script, analysis);
+        UiScripts.lastParams = analysis.params;
+        UiScripts.lastSelections = selections;
+        bar.hidden = false;
+        analysis.params.forEach((param, index) => {
+          const item = document.createElement("span");
+          item.className = "param";
+          const label = document.createElement("span");
+          label.className = "param-label";
+          label.textContent = `{{ ${param.raw} }}`;
+          label.title = I18n.t("params.chooseTip", { raw: param.raw });
+          item.appendChild(label);
+          if (param.error) {
+            const error = document.createElement("span");
+            error.className = "param-error";
+            error.textContent = param.error;
+            error.title = param.hint || param.error;
+            item.appendChild(error);
+          } else {
+            const select = document.createElement("select");
+            select.dataset.param = String(index);
+            select.title = I18n.t("params.chooseTip", { raw: param.raw });
+            select.setAttribute("aria-label", I18n.t("params.parameter", { n: index + 1 }));
+            param.options.forEach((option, optionIndex) => {
+              const choice = document.createElement("option");
+              choice.value = String(optionIndex);
+              choice.textContent = option.label;
+              if (optionIndex === selections[index]) {
+                choice.selected = true;
+              }
+              select.appendChild(choice);
+            });
+            select.value = String(selections[index]);
+            item.appendChild(select);
+          }
+          bar.appendChild(item);
+        });
+      },
+
+      /** Remembers the value chosen in one drop-down of the bar and runs the
+       *  script again. */
+      async changeParam(index, selected) {
+        const script = UiScripts.activeScriptOrNull();
+        if (!script) {
+          return;
+        }
+        const param = UiScripts.lastParams[index];
+        if (!param) {
+          return;
+        }
+        const stored = new Map(UiScripts.paramValues.get(script) || []);
+        stored.set(param.raw, selected);
+        UiScripts.paramValues.set(script, stored);
+        UiScripts.lastSelections[index] = selected;
+        const result = await Busy.run(UiScripts.busyMessage(), () => UiScripts.run());
+        if (result) {
+          setStatus(I18n.t("params.changed", { name: script.name }));
+        }
+      },
+
       /** Selects a script and loads it into the editor. */
       select(name) {
         const script = Model.findScript(Store.project, name);
@@ -17294,6 +18350,7 @@
         UiScripts.renderHelp();
         UiScripts.clearOutput();
         UiScripts.updateTestControls();
+        UiScripts.renderParams();
         setStatus(I18n.t("scripts.selected", { name: name }));
       },
 
@@ -17427,6 +18484,7 @@
           Ui.renderSidebarScripts();
           UiDataLinks.update();
         }
+        UiScripts.renderParams();
       },
 
       /** Deletes the open script after asking for confirmation. */
@@ -17511,7 +18569,7 @@
           setStatus(I18n.t("scripts.noScript"));
           return false;
         }
-        const result = await UiScripts.run();
+        const result = await UiScripts.run(true);
         if (!result) {
           return false;
         }
@@ -17611,14 +18669,18 @@
       },
 
       /** Runs the open script and paints its result or its error. */
-      async run() {
+      async run(defaultParams) {
         const script = UiScripts.activeScriptOrNull();
         if (!script) {
           setStatus(I18n.t("scripts.noScript"));
           return null;
         }
         UiScripts.saveCode();
-        const outcome = await ScriptRunner.execute(script, Store.project);
+        const analysis = UiScripts.analyzedParams(script);
+        const selections = defaultParams || !analysis.ok
+          ? null
+          : UiScripts.selectionsFor(script, analysis);
+        const outcome = await ScriptRunner.execute(script, Store.project, null, selections);
         UiScripts.clearOutput();
         if (!outcome.ok) {
           UiScripts.showError(outcome.error);
@@ -18248,8 +19310,28 @@
         };
       },
 
+      /** The code of the script with its {{ … }} parameters replaced by the
+       *  chosen value (the first option when there is no choice yet). */
+      codeWithParams(script, project, state, selections) {
+        if (!String(script.code || "").includes("{{")) {
+          return script.code;
+        }
+        const analysis = SqlParams.analyzeCode(script.code, project, state);
+        return SqlParams.applyCode(script.code, analysis, selections);
+      },
+
+      /** Error of a script whose parameters cannot be read, with the shape the
+       *  panel of the script view expects. */
+      paramError(error) {
+        return {
+          title: I18n.t("scripts.errorTitle"),
+          message: error && error.message ? error.message : String(error),
+          hint: (error && error.hint) || "",
+        };
+      },
+
       /** Runs the script with the full JavaScript support (including await). */
-      async execute(script, project, state) {
+      async execute(script, project, state, selections) {
         if (!script.code || script.code.trim() === "") {
           return ScriptRunner.emptyCodeError();
         }
@@ -18258,13 +19340,19 @@
         if (ejecucion.stack.some((item) => item.key === key)) {
           return ScriptRunner.cycleOutcome(script, ejecucion);
         }
+        let code;
+        try {
+          code = ScriptRunner.codeWithParams(script, project, ejecucion, selections);
+        } catch (err) {
+          return { ok: false, error: ScriptRunner.paramError(err) };
+        }
         ejecucion.stack.push({ key, name: script.name });
         const started = window.performance.now();
         let value;
         try {
           const context = ScriptRunner.context(project, ejecucion);
           const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-          const fn = new AsyncFunction("tables", "queries", "scripts", ScriptRunner.body(script.code));
+          const fn = new AsyncFunction("tables", "queries", "scripts", ScriptRunner.body(code));
           value = await fn(context.tables, context.queries, context.scripts);
         } catch (err) {
           return { ok: false, error: ScriptRunner.describeError(err, script.code) };
@@ -18287,7 +19375,7 @@
 
       /** Runs the script synchronously, for the project tests and for a script
        *  read as a table: an asynchronous script is reported as an error. */
-      executeSync(script, project, state) {
+      executeSync(script, project, state, selections) {
         if (!script.code || script.code.trim() === "") {
           return ScriptRunner.emptyCodeError();
         }
@@ -18296,12 +19384,18 @@
         if (ejecucion.stack.some((item) => item.key === key)) {
           return ScriptRunner.cycleOutcome(script, ejecucion);
         }
+        let code;
+        try {
+          code = ScriptRunner.codeWithParams(script, project, ejecucion, selections);
+        } catch (err) {
+          return { ok: false, error: ScriptRunner.paramError(err) };
+        }
         ejecucion.stack.push({ key, name: script.name });
         const started = window.performance.now();
         let value;
         try {
           const context = ScriptRunner.context(project, ejecucion);
-          const fn = new Function("tables", "queries", "scripts", ScriptRunner.body(script.code));
+          const fn = new Function("tables", "queries", "scripts", ScriptRunner.body(code));
           value = fn(context.tables, context.queries, context.scripts);
         } catch (err) {
           return { ok: false, error: ScriptRunner.describeError(err, script.code) };
@@ -20944,6 +22038,8 @@
         // The static markup is re-translated by applyDom, but the sidebar, the
         // summaries and the dashboard are built by the JS: they need a repaint.
         Ui.renderAll();
+        UiQueries.renderParams();
+        UiScripts.renderParams();
         setStatus(I18n.t("language.changed", { language: I18n.LANGUAGES[I18n.current] }));
       },
     };
@@ -26078,6 +27174,197 @@
       assertEqual(boton.disabled, false, "and it is still enabled when the query is opened again");
 
       restoreMiniProject(antes);
+    });
+
+    /* --- Cases T14: parameters of queries and scripts ------------------- */
+
+    /** Project of whole numbers used by the cases of the parameters: a table,
+     *  a query and a script that offer values to the parameterised ones. */
+    function buildParamProject() {
+      const numbers = Model.createTable("numeros", [{ name: "n" }, { name: "label" }]);
+      numbers.rows = [
+        { n: 1, label: "uno" },
+        { n: 2, label: "dos" },
+        { n: 3, label: "tres" },
+      ];
+      return {
+        name: "parametros",
+        tables: [numbers],
+        queries: [
+          { name: "mayores", description: "", sql: "SELECT n FROM numeros WHERE n >= 2 ORDER BY n" },
+          { name: "con_parametro", description: "", sql: "SELECT n FROM numeros WHERE n IN {{ 1..3 }} ORDER BY n" },
+          { name: "lee_parametro", description: "", sql: "SELECT n FROM [con_parametro] ORDER BY n" },
+          { name: "filtrada", description: "Lee el parámetro de otra consulta", sql: "SELECT n FROM numeros WHERE n IN {{ mayores }} ORDER BY n" },
+        ],
+        scripts: [
+          { name: "pares", description: "", code: "return tables[\"numeros\"].filter((fila) => fila.n >= 2).map((fila) => ({ n: fila.n }));" },
+          { name: "script_parametro", description: "", code: "const limite = {{ 1..3 }};\nreturn tables[\"numeros\"].filter((fila) => fila.n === limite);" },
+        ],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+    }
+
+    /** Runs a query with the given chosen values (null: the defaults). */
+    function runParamSql(sql, selections) {
+      const outcome = SqlEngine.runSafe(sql, buildParamProject(), null, selections);
+      assert(outcome.ok, "valid query: " + (outcome.error && outcome.error.message));
+      return outcome.result.rows.map((row) => row[0]);
+    }
+
+    SelfTests.add("When_RangeParameter_Expect_FirstValueByDefault", () => {
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n = {{ 1..3 }}", null), [1], "the first value of the range");
+    });
+
+    SelfTests.add("When_RangeParameterWithSelection_Expect_ChosenValue", () => {
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n = {{ 1..3 }}", [2]), [3], "the chosen value");
+    });
+
+    SelfTests.add("When_RangeParameterInList_Expect_OneValueByDefault", () => {
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n IN {{ 1..3 }}", null), [1], "one value of the list");
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n IN {{ 1..3 }}", [1]), [2], "the chosen value");
+    });
+
+    SelfTests.add("When_ReferenceParameterInList_Expect_EveryValueByDefault", () => {
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n IN {{ mayores }}", null), [2, 3], "every value of the query, at once");
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n IN {{ mayores }}", [1]), [2], "one chosen value");
+    });
+
+    SelfTests.add("When_NotInReferenceParameter_Expect_RestOfRows", () => {
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n NOT IN {{ mayores }}", null), [1], "the values the query does not return");
+    });
+
+    SelfTests.add("When_ScalarSubqueryParameter_Expect_Value", () => {
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n = {{ SELECT n FROM numeros WHERE label = 'dos' }}", null), [2], "the value of the SELECT");
+    });
+
+    SelfTests.add("When_ScriptIsParameterSource_Expect_Values", () => {
+      assertEqual(runParamSql("SELECT n FROM numeros WHERE n IN {{ pares }}", null), [2, 3], "the rows of the script");
+    });
+
+    SelfTests.add("When_ScriptParameter_Expect_ValueAndSelection", () => {
+      const project = buildParamProject();
+      const script = Model.findScript(project, "script_parametro");
+      const byDefault = ScriptRunner.executeSync(script, project);
+      assert(byDefault.ok, "the script runs: " + (byDefault.error && byDefault.error.message));
+      assertEqual(byDefault.result.rows.map((row) => row[0]), [1], "the first value of the range");
+      const chosen = ScriptRunner.executeSync(script, project, null, [2]);
+      assert(chosen.ok, "the script runs with a chosen value: " + (chosen.error && chosen.error.message));
+      assertEqual(chosen.result.rows.map((row) => row[0]), [3], "the chosen value");
+    });
+
+    SelfTests.add("When_ParameterInHaving_Expect_FilteredGroups", () => {
+      const sql = "SELECT label, COUNT(*) AS c FROM numeros GROUP BY label HAVING COUNT(*) >= {{ 1..3 }} ORDER BY label";
+      const outcome = SqlEngine.runSafe(sql, buildParamProject());
+      assert(outcome.ok, "valid query: " + (outcome.error && outcome.error.message));
+      assertEqual(outcome.result.rows.length, 3, "with 1 every group passes");
+      const strict = SqlEngine.runSafe(sql, buildParamProject(), null, [1]);
+      assert(strict.ok, "valid query with a chosen value: " + (strict.error && strict.error.message));
+      assertEqual(strict.result.rows.length, 0, "with 2 no group passes");
+    });
+
+    SelfTests.add("When_ParameterisedQueryReadAsTable_Expect_DefaultValue", () => {
+      const outcome = SqlEngine.runSafe("SELECT n FROM [con_parametro] ORDER BY n", buildParamProject());
+      assert(outcome.ok, "the query that reads another one runs: " + (outcome.error && outcome.error.message));
+      assertEqual(outcome.result.rows.map((row) => row[0]), [1], "the reading query uses the default value");
+    });
+
+    SelfTests.add("When_UnknownParameterSource_Expect_Error", () => {
+      const outcome = SqlEngine.runSafe("SELECT n FROM numeros WHERE n IN {{ no_existe }}", buildParamProject());
+      assert(!outcome.ok, "an unknown source is an error");
+      assert(outcome.error.message.includes("no_existe"), "the message names the source: " + outcome.error.message);
+    });
+
+    SelfTests.add("When_TooBigRangeParameter_Expect_Error", () => {
+      const outcome = SqlEngine.runSafe("SELECT n FROM numeros WHERE n IN {{ 1..5000 }}", buildParamProject());
+      assert(!outcome.ok, "a range the drop-down cannot offer is an error");
+      assert(outcome.error.message.includes("5000"), "the message explains it: " + outcome.error.message);
+    });
+
+    SelfTests.add("When_RenameInsideParameter_Expect_SqlRewritten", () => {
+      const renamed = SqlRename.renameTable(
+        "SELECT n FROM numeros WHERE n IN {{ SELECT n FROM numeros WHERE n > 1 }}",
+        "numeros",
+        "cifras",
+      );
+      assertEqual(
+        renamed,
+        "SELECT n FROM cifras WHERE n IN {{ SELECT n FROM cifras WHERE n > 1 }}",
+        "the table of the SELECT written in the parameter follows the rename",
+      );
+      const referenced = SqlRename.renameTable(
+        "SELECT n FROM numeros WHERE n IN {{ mayores }}",
+        "mayores",
+        "otros",
+      );
+      assert(referenced.includes("{{ otros }}"), "the name of the parameter follows the rename: " + referenced);
+    });
+
+    SelfTests.add("When_ParameterReadsQuery_Expect_Dependency", () => {
+      const project = buildParamProject();
+      const graph = ProjectGraph.build(project);
+      const sources = ProjectGraph.sourcesIn(graph, "query", "filtrada").map((ref) => `${ref.kind}:${ref.name}`);
+      assert(sources.includes("query:mayores"), "the query named in the parameter is a dependency: " + sources.join(", "));
+      assert(sources.includes("table:numeros"), "and so is the table it reads: " + sources.join(", "));
+    });
+
+    SelfTests.add("When_ParameterisedQueryAsTest_Expect_AssertChecked", () => {
+      const project = buildParamProject();
+      const query = project.queries.find((candidate) => candidate.name === "con_parametro");
+      const outcome = SqlEngine.runSafe(query.sql, project);
+      assert(outcome.ok, "the query runs: " + (outcome.error && outcome.error.message));
+      query.assert = Persistence.assertFromResult(outcome.result);
+      const item = ProjectTests.runQuery(query, project);
+      assertEqual(item.status, "ok", "the assert of the default value fits");
+    });
+
+    SelfTests.add("When_QueryWithParameters_Expect_DropdownBar", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        script: Ui.state.activeScript,
+      };
+      Store.replaceProject(buildParamProject());
+      UiQueries.select("con_parametro");
+      const bar = document.getElementById("query-params");
+      assert(!bar.hidden, "the bar of parameters is on screen");
+      const select = bar.querySelector("select[data-param]");
+      assert(select !== null, "with a drop-down for the parameter");
+      assertEqual([...select.options].map((option) => option.textContent), ["1", "2", "3"], "the values of the range");
+      assertEqual(select.value, "0", "the first value is the default one");
+      const byDefault = UiQueries.execute();
+      assertEqual(byDefault.result.rows.map((row) => row[0]), [1], "the default value is used");
+      select.value = "2";
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      assertEqual(UiQueries.lastResult.rows.map((row) => row[0]), [3], "changing the value runs the query again");
+      UiQueries.select("mayores");
+      assert(bar.hidden, "a query without parameters hides the bar");
+      restoreMiniProject(antes);
+      Ui.state.activeScript = antes.script || null;
+    });
+
+    SelfTests.add("When_ScriptWithParameters_Expect_DropdownBar", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+        script: Ui.state.activeScript,
+      };
+      Store.replaceProject(buildParamProject());
+      UiScripts.select("script_parametro");
+      const bar = document.getElementById("script-params");
+      assert(!bar.hidden, "the bar of parameters is on screen");
+      const select = bar.querySelector("select[data-param]");
+      assert(select !== null, "with a drop-down for the parameter");
+      assertEqual([...select.options].map((option) => option.textContent), ["1", "2", "3"], "the values of the range");
+      UiScripts.select("pares");
+      assert(bar.hidden, "a script without parameters hides the bar");
+      restoreMiniProject(antes);
+      Ui.state.activeScript = antes.script || null;
     });
 
     /* --- Cases T8: sidebar tips with the fields ------------------------- */
@@ -31358,6 +32645,7 @@
       SqlPlanner,
       SqlExecutor,
       SqlEngine,
+      SqlParams,
       SqlRename,
       ProjectGraph,
       ProjectTests,
