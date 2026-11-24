@@ -187,3 +187,34 @@ The code of a script accepts the notation too; the minimum grade is chosen
 between 5 and 10:
 
 {{script:P11 · Matrículas con nota mínima (script con parámetro)|rows:8|format:id_matricula=#,##0;nota=0.0|title:Enrolments with grade 5 or more (8 of 32)|totals:avg(nota)=Average grade}}
+
+## 6. Several parameters
+
+A single query may carry **several parameters**. Each one has its own drop-down
+and its own header, and changing one recalculates the result with the current
+values of the others. Ranges, subqueries and references to queries or scripts
+can be mixed.
+
+### Two ranges in a BETWEEN
+
+Minimum and maximum capacity, each one in its drop-down:
+
+{{query:P12 · Aulas entre dos capacidades (dos rangos)|format:capacidad=#,##0|title:Capacities between 20 and 50 (default values)|totals:count(*)=Classrooms}}
+
+### Two subqueries: year and status
+
+The year is a list («All» included) and the status is a single value:
+
+{{query:P13 · Matrículas por curso y estado (dos subconsultas)|format:total=#,##0|title:One year and one status|totals:sum(total)=Enrolments}}
+
+### Two references: degree and campus
+
+The degree and the campus come from their own subqueries, one per parameter:
+
+{{query:P16 · Becados de un estudio y una sede (dos referencias)|rows:0|title:Scholarship students by degree and campus|totals:count(*)=Rows}}
+
+### A script with two parameters
+
+The minimum and maximum grade are chosen separately:
+
+{{script:P17 · Matrículas entre dos notas (script con dos parámetros)|format:id_matricula=#,##0;nota=0.0|title:Grades between 5 and 6 (default values)|totals:avg(nota)=Average grade}}

@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 221 consultas, 34 scripts)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 226 consultas, 35 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -23293,6 +23293,294 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P11 · Ingresos entre dos costes (dos rangos)",
+      "description": "Dos parámetros de rango en un BETWEEN: coste diario mínimo y máximo.",
+      "keywords": [
+        "salud",
+        "parametros",
+        "varios",
+        "rango"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_ingreso, coste_dia, dias_previstos FROM ingresos WHERE coste_dia BETWEEN {{ 200..500 | Coste mínimo }} AND {{ 500..900 | Coste máximo }} ORDER BY coste_dia, id_ingreso",
+      "assert": {
+        "columns": [
+          "id_ingreso",
+          "coste_dia",
+          "dias_previstos"
+        ],
+        "rows": [
+          [
+            19,
+            225,
+            3
+          ],
+          [
+            28,
+            259,
+            3
+          ],
+          [
+            39,
+            262,
+            2
+          ],
+          [
+            47,
+            294,
+            8
+          ],
+          [
+            31,
+            316,
+            2
+          ],
+          [
+            13,
+            337,
+            4
+          ],
+          [
+            41,
+            339,
+            4
+          ],
+          [
+            7,
+            373,
+            7
+          ],
+          [
+            34,
+            423,
+            6
+          ],
+          [
+            40,
+            427,
+            11
+          ],
+          [
+            23,
+            431,
+            11
+          ],
+          [
+            36,
+            472,
+            13
+          ],
+          [
+            27,
+            483,
+            13
+          ],
+          [
+            30,
+            490,
+            14
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P12 · Citas por estado y tipo (dos subconsultas)",
+      "description": "Dos parámetros de subconsulta: el estado y el tipo de cita, a la vez.",
+      "keywords": [
+        "salud",
+        "parametros",
+        "varios",
+        "subconsulta"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT estado, tipo, COUNT(*) AS citas FROM citas WHERE estado = {{ SELECT estado FROM citas GROUP BY estado ORDER BY estado | Estado }} AND tipo = {{ SELECT tipo FROM citas GROUP BY tipo ORDER BY tipo | Tipo }} GROUP BY estado, tipo ORDER BY estado, tipo",
+      "assert": {
+        "columns": [
+          "estado",
+          "tipo",
+          "citas"
+        ],
+        "rows": [
+          [
+            "Atendida",
+            "Primera consulta",
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P13 · Pacientes de una ciudad y un seguro (referencia y subconsulta)",
+      "description": "Dos parámetros: las ciudades de una consulta guardada y un seguro de una subconsulta.",
+      "keywords": [
+        "salud",
+        "parametros",
+        "varios",
+        "pacientes"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT nombre, apellidos, ciudad FROM pacientes WHERE ciudad IN {{ P01 · Ciudades de los hospitales (origen del parámetro) | Ciudad }} AND id_seguro = {{ SELECT id_seguro FROM seguros ORDER BY id_seguro | Seguro }} ORDER BY apellidos, nombre",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "ciudad"
+        ],
+        "rows": [
+          [
+            "Adrián",
+            "Alonso González",
+            "Barcelona"
+          ],
+          [
+            "Julia",
+            "Díaz Domínguez",
+            "Bilbao"
+          ],
+          [
+            "Diego",
+            "Díaz Martínez",
+            "Madrid"
+          ],
+          [
+            "Pablo",
+            "López González",
+            "Sevilla"
+          ],
+          [
+            "Luis",
+            "Marín Iglesias",
+            "Bogotá"
+          ],
+          [
+            "Francisco",
+            "Muñoz García",
+            "Madrid"
+          ],
+          [
+            "Isabel",
+            "Torres Torres",
+            "Quito"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P14 · Habitaciones de una planta con camas mínimas (dos rangos)",
+      "description": "Dos parámetros de rango: la planta y el número mínimo de camas.",
+      "keywords": [
+        "salud",
+        "parametros",
+        "varios",
+        "habitaciones"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT codigo, tipo, num_camas, planta FROM habitaciones WHERE planta = {{ 0..5 | Planta }} AND num_camas >= {{ 0..2 | Camas mínimas }} ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "tipo",
+          "num_camas",
+          "planta"
+        ],
+        "rows": [
+          [
+            "H2-101",
+            "Individual",
+            1,
+            0
+          ],
+          [
+            "H3-100",
+            "UCI",
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P15 · Ingresos de un hospital con coste mínimo (referencia y rango)",
+      "description": "Dos parámetros: el hospital (lista de un script) y el coste diario mínimo (rango).",
+      "keywords": [
+        "salud",
+        "parametros",
+        "varios",
+        "referencia"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT h.nombre AS hospital, i.id_ingreso, i.coste_dia FROM hospitales AS h INNER JOIN habitaciones AS r ON r.id_hospital = h.id_hospital INNER JOIN ingresos AS i ON i.id_habitacion = r.id_habitacion WHERE h.id_hospital IN {{ P10 · Hospitales para el parámetro | Hospital }} AND i.coste_dia >= {{ 200..900 | Coste mínimo }} ORDER BY i.coste_dia DESC, i.id_ingreso LIMIT 10",
+      "assert": {
+        "columns": [
+          "hospital",
+          "id_ingreso",
+          "coste_dia"
+        ],
+        "rows": [
+          [
+            "Hospital Universitario La Paz",
+            45,
+            950
+          ],
+          [
+            "Hospital Universitario La Paz",
+            46,
+            926
+          ],
+          [
+            "Hospital Clínic de Barcelona",
+            25,
+            884
+          ],
+          [
+            "Hospital Virgen del Rocío",
+            8,
+            879
+          ],
+          [
+            "Hospital Virgen del Rocío",
+            22,
+            864
+          ],
+          [
+            "Hospital Virgen del Rocío",
+            21,
+            844
+          ],
+          [
+            "Hospital Metropolitano de Quito",
+            42,
+            834
+          ],
+          [
+            "Hospital Metropolitano de Quito",
+            2,
+            831
+          ],
+          [
+            "Clínica Santa Elena",
+            48,
+            830
+          ],
+          [
+            "Clínica Santa Elena",
+            15,
+            822
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
@@ -27471,6 +27759,34 @@
           [
             50,
             632,
+            true
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P16 · Facturas entre dos importes (script con dos parámetros)",
+      "description": "Script parametrizado dos veces: importe mínimo y máximo, cada uno con su desplegable.",
+      "keywords": [
+        "salud",
+        "parametros",
+        "varios",
+        "script"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "const importeMinimo = {{ 100..500 | Importe mínimo }};\nconst importeMaximo = {{ 200..1000 | Importe máximo }};\nreturn tables[\"facturas\"]\n  .filter((factura) => factura.importe >= importeMinimo && factura.importe <= importeMaximo)\n  .map((factura) => ({\n    id_factura: factura.id_factura,\n    importe: factura.importe,\n    pagada: factura.pagada,\n  }));",
+      "assert": {
+        "columns": [
+          "id_factura",
+          "importe",
+          "pagada"
+        ],
+        "rows": [
+          [
+            9,
+            132,
             true
           ]
         ]

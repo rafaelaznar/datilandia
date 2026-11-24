@@ -188,3 +188,34 @@ El código del script también acepta la notación; la nota mínima se elige ent
 y 10:
 
 {{script:P11 · Matrículas con nota mínima (script con parámetro)|rows:8|format:id_matricula=#,##0;nota=0.0|title:Matrículas con nota 5 o más (8 de 32)|totals:avg(nota)=Nota media}}
+
+## 6. Varios parámetros
+
+Una misma consulta puede llevar **varios parámetros**. Cada uno tiene su propio
+desplegable y su cabecera, y al cambiar uno se recalcula el resultado con los
+valores actuales de los demás. Se pueden mezclar rangos, subconsultas y
+referencias a consultas o scripts.
+
+### Dos rangos en un BETWEEN
+
+Capacidad mínima y máxima, cada una en su desplegable:
+
+{{query:P12 · Aulas entre dos capacidades (dos rangos)|format:capacidad=#,##0|title:Capacidades entre 20 y 50 (valores por defecto)|totals:count(*)=Aulas}}
+
+### Dos subconsultas: curso y estado
+
+El curso es una lista («Todos» incluido) y el estado es un valor único:
+
+{{query:P13 · Matrículas por curso y estado (dos subconsultas)|format:total=#,##0|title:Un curso y un estado|totals:sum(total)=Matrículas}}
+
+### Dos referencias: estudio y sede
+
+El estudio y la sede salen de sendas subconsultas, una por cada parámetro:
+
+{{query:P16 · Becados de un estudio y una sede (dos referencias)|rows:0|title:Becados por estudio y sede|totals:count(*)=Filas}}
+
+### Un script con dos parámetros
+
+La nota mínima y la máxima se eligen por separado:
+
+{{script:P17 · Matrículas entre dos notas (script con dos parámetros)|format:id_matricula=#,##0;nota=0.0|title:Notas entre 5 y 6 (valores por defecto)|totals:avg(nota)=Nota media}}

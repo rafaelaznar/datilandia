@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 165 consultas, 31 scripts)",
+  "name": "Pruebas SQL · Educación (8 tablas, 170 consultas, 32 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -9090,6 +9090,285 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P12 · Aulas entre dos capacidades (dos rangos)",
+      "description": "Dos parámetros de rango en un BETWEEN: capacidad mínima y máxima.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "varios",
+        "rango"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT codigo, capacidad, planta FROM aulas WHERE capacidad BETWEEN {{ 20..60 | Capacidad mínima }} AND {{ 50..120 | Capacidad máxima }} ORDER BY capacidad, codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad",
+          "planta"
+        ],
+        "rows": [
+          [
+            "C-LAB2",
+            20,
+            1
+          ],
+          [
+            "M-002",
+            22,
+            1
+          ],
+          [
+            "C-LAB1",
+            24,
+            1
+          ],
+          [
+            "L-302",
+            25,
+            3
+          ],
+          [
+            "K-201",
+            30,
+            2
+          ],
+          [
+            "R-102",
+            35,
+            1
+          ],
+          [
+            "P-201",
+            40,
+            2
+          ],
+          [
+            "K-102",
+            45,
+            1
+          ],
+          [
+            "L-301",
+            50,
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P13 · Matrículas por curso y estado (dos subconsultas)",
+      "description": "Dos parámetros de subconsulta: el curso (lista) y el estado (un solo valor).",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "varios",
+        "subconsulta"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT curso_academico, estado, COUNT(*) AS total FROM matriculas WHERE curso_academico IN {{ SELECT curso_academico FROM matriculas GROUP BY curso_academico ORDER BY curso_academico | Curso }} AND estado = {{ SELECT estado FROM matriculas GROUP BY estado ORDER BY estado | Estado }} GROUP BY curso_academico, estado ORDER BY curso_academico, estado",
+      "assert": {
+        "columns": [
+          "curso_academico",
+          "estado",
+          "total"
+        ],
+        "rows": [
+          [
+            "2025-2026",
+            "activa",
+            13
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P14 · Docentes de una categoría con horas mínimas (subconsulta y rango)",
+      "description": "Dos parámetros: la categoría sale de una subconsulta y las horas de un rango.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "varios",
+        "docentes"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT nombre, apellidos, categoria, horas_semanales FROM docentes WHERE categoria = {{ SELECT DISTINCT categoria FROM docentes ORDER BY categoria | Categoría }} AND horas_semanales >= {{ 5..20 | Horas mínimas }} ORDER BY horas_semanales DESC, apellidos",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "categoria",
+          "horas_semanales"
+        ],
+        "rows": [
+          [
+            "Hugo",
+            "Naranjo Peña",
+            "Asociado",
+            8
+          ],
+          [
+            "Andrés",
+            "Cano Duarte",
+            "Asociado",
+            6
+          ],
+          [
+            "Iván",
+            "Requena Soto",
+            "Asociado",
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P15 · Edificios de una sede con plantas mínimas (referencia y rango)",
+      "description": "Dos parámetros: la sede de una consulta guardada y el número mínimo de plantas.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "varios",
+        "referencia"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT e.nombre, e.plantas, e.anio_construccion FROM edificios AS e WHERE e.id_sede IN {{ P01 · Sedes que dan valores al parámetro | Sede }} AND e.plantas >= {{ 1..5 | Plantas mínimas }} ORDER BY e.plantas DESC, e.nombre",
+      "assert": {
+        "columns": [
+          "nombre",
+          "plantas",
+          "anio_construccion"
+        ],
+        "rows": [
+          [
+            "Biblioteca Central",
+            6,
+            1968
+          ],
+          [
+            "Edificio Ramón y Cajal",
+            5,
+            1997
+          ],
+          [
+            "Aulario Kepler",
+            4,
+            1972
+          ],
+          [
+            "Bloque Bolívar",
+            4,
+            2006
+          ],
+          [
+            "Aulario Pitágoras",
+            3,
+            1988
+          ],
+          [
+            "Laboratorios Curie",
+            3,
+            1990
+          ],
+          [
+            "Pabellón Deportivo",
+            2,
+            2001
+          ],
+          [
+            "Anexo Marina",
+            1,
+            2012
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P16 · Becados de un estudio y una sede (dos referencias)",
+      "description": "Dos parámetros de subconsulta que filtran por estudio y por sede a la vez.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "varios",
+        "estudiantes"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT nombre, apellidos, codigo_estudio, id_sede FROM estudiantes WHERE es_becado = true AND codigo_estudio IN {{ SELECT codigo FROM estudios ORDER BY codigo | Estudio }} AND id_sede IN {{ P01 · Sedes que dan valores al parámetro | Sede }} ORDER BY apellidos, nombre",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "codigo_estudio",
+          "id_sede"
+        ],
+        "rows": [
+          [
+            "Nerea",
+            "Castro Peña",
+            "GEDU",
+            2
+          ],
+          [
+            "Ana",
+            "García López",
+            "GINF",
+            1
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal",
+            "GINF",
+            1
+          ],
+          [
+            "Sofía",
+            "Hernández Ruiz",
+            "GINF",
+            1
+          ],
+          [
+            "Lucía",
+            "Moreno Pascual",
+            "MSW",
+            2
+          ],
+          [
+            "Rubén",
+            "Parra Aguilar",
+            "GEDU",
+            2
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias",
+            "GMED",
+            3
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo",
+            "GEDU",
+            2
+          ],
+          [
+            "Irene",
+            "Suárez Nieto",
+            "GMED",
+            3
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
@@ -11624,6 +11903,74 @@
           [
             46,
             8,
+            "superada"
+          ],
+          [
+            47,
+            6,
+            "superada"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P17 · Matrículas entre dos notas (script con dos parámetros)",
+      "description": "Script parametrizado dos veces: nota mínima y nota máxima, cada una con su desplegable.",
+      "keywords": [
+        "educacion",
+        "parametros",
+        "varios",
+        "script"
+      ],
+      "folder": "I · Parámetros",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "const notaMinima = {{ 5..10 | Nota mínima }};\nconst notaMaxima = {{ 6..10 | Nota máxima }};\nreturn tables[\"matriculas\"]\n  .filter((matricula) => matricula.nota !== null && matricula.nota >= notaMinima && matricula.nota <= notaMaxima)\n  .map((matricula) => ({\n    id_matricula: matricula.id_matricula,\n    nota: matricula.nota,\n    estado: matricula.estado,\n  }));",
+      "assert": {
+        "columns": [
+          "id_matricula",
+          "nota",
+          "estado"
+        ],
+        "rows": [
+          [
+            5,
+            6,
+            "superada"
+          ],
+          [
+            6,
+            5,
+            "superada"
+          ],
+          [
+            17,
+            6,
+            "superada"
+          ],
+          [
+            18,
+            5.5,
+            "superada"
+          ],
+          [
+            25,
+            5,
+            "superada"
+          ],
+          [
+            32,
+            5,
+            "superada"
+          ],
+          [
+            33,
+            6,
+            "superada"
+          ],
+          [
+            35,
+            6,
             "superada"
           ],
           [

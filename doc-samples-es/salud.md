@@ -187,3 +187,34 @@ El código del script también acepta la notación; el coste diario mínimo se e
 entre 200 y 900:
 
 {{script:P09 · Ingresos con coste mínimo (script con parámetro)|rows:8|format:id_ingreso=#,##0;coste_dia=#,##0|title:Ingresos con coste 200 o más (8 de 49)|totals:avg(coste_dia)=Coste medio}}
+
+## 6. Varios parámetros
+
+Una misma consulta puede llevar **varios parámetros**. Cada uno tiene su propio
+desplegable y su cabecera, y al cambiar uno se recalcula el resultado con los
+valores actuales de los demás. Se pueden mezclar rangos, subconsultas y
+referencias a consultas o scripts.
+
+### Dos rangos en un BETWEEN
+
+Coste diario mínimo y máximo, cada uno en su desplegable:
+
+{{query:P11 · Ingresos entre dos costes (dos rangos)|format:id_ingreso=#,##0;coste_dia=#,##0|title:Coste diario entre 200 y 500 (valores por defecto)|totals:avg(coste_dia)=Coste medio}}
+
+### Dos subconsultas: estado y tipo
+
+El estado y el tipo de cita salen de sendas subconsultas:
+
+{{query:P12 · Citas por estado y tipo (dos subconsultas)|format:citas=#,##0|title:Un estado y un tipo|totals:sum(citas)=Citas}}
+
+### Referencia y rango: hospital y coste mínimo
+
+El hospital (lista de un script) y el coste diario mínimo se combinan:
+
+{{query:P15 · Ingresos de un hospital con coste mínimo (referencia y rango)|format:id_ingreso=#,##0;coste_dia=#,##0|title:Hospital y coste mínimo|totals:count(*)=Filas}}
+
+### Un script con dos parámetros
+
+El importe mínimo y el máximo se eligen por separado:
+
+{{script:P16 · Facturas entre dos importes (script con dos parámetros)|format:id_factura=#,##0;importe=#,##0.00 €|title:Importes entre 100 y 200 (valores por defecto)|totals:avg(importe)=Importe medio}}

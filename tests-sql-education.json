@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 165 queries, 31 scripts)",
+  "name": "SQL tests · Education (8 tables, 170 queries, 32 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -9090,6 +9090,279 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P12 · Classrooms between two capacities (two ranges)",
+      "description": "Two range parameters in a BETWEEN: minimum and maximum capacity.",
+      "keywords": [
+        "education",
+        "parameters",
+        "several",
+        "range"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT code, capacity, floor FROM classrooms WHERE capacity BETWEEN {{ 20..60 | Minimum capacity }} AND {{ 50..120 | Maximum capacity }} ORDER BY capacity, code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity",
+          "floor"
+        ],
+        "rows": [
+          [
+            "C-LAB2",
+            20,
+            1
+          ],
+          [
+            "M-002",
+            22,
+            1
+          ],
+          [
+            "C-LAB1",
+            24,
+            1
+          ],
+          [
+            "L-302",
+            25,
+            3
+          ],
+          [
+            "K-201",
+            30,
+            2
+          ],
+          [
+            "R-102",
+            35,
+            1
+          ],
+          [
+            "P-201",
+            40,
+            2
+          ],
+          [
+            "K-102",
+            45,
+            1
+          ],
+          [
+            "L-301",
+            50,
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P13 · Enrolments by year and status (two subqueries)",
+      "description": "Two subquery parameters: the year (a list) and the status (one value).",
+      "keywords": [
+        "education",
+        "parameters",
+        "several",
+        "subquery"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT academic_year, status, COUNT(*) AS total FROM enrollments WHERE academic_year IN {{ SELECT academic_year FROM enrollments GROUP BY academic_year ORDER BY academic_year | Year }} AND status = {{ SELECT status FROM enrollments GROUP BY status ORDER BY status | Status }} GROUP BY academic_year, status ORDER BY academic_year, status",
+      "assert": {
+        "columns": [
+          "academic_year",
+          "status",
+          "total"
+        ],
+        "rows": [
+          [
+            "2025-2026",
+            "active",
+            13
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P14 · Teachers of a category with minimum hours (subquery and range)",
+      "description": "Two parameters: the category from a subquery and the hours from a range.",
+      "keywords": [
+        "education",
+        "parameters",
+        "several",
+        "teachers"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, last_name, category, weekly_hours FROM teachers WHERE category = {{ SELECT DISTINCT category FROM teachers ORDER BY category | Category }} AND weekly_hours >= {{ 5..20 | Minimum hours }} ORDER BY weekly_hours DESC, last_name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "category",
+          "weekly_hours"
+        ],
+        "rows": [
+          [
+            "Youssef",
+            "Amrani Belkacem",
+            "Assistant",
+            12
+          ],
+          [
+            "Tomás",
+            "Arroyo Vidal",
+            "Assistant",
+            10
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P15 · Buildings of a campus with minimum floors (reference and range)",
+      "description": "Two parameters: the campus of a saved query and the minimum number of floors.",
+      "keywords": [
+        "education",
+        "parameters",
+        "several",
+        "reference"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT b.name, b.floors, b.construction_year FROM buildings AS b WHERE b.id_campus IN {{ P01 · Campuses that give the parameter its values | Campus }} AND b.floors >= {{ 1..5 | Minimum floors }} ORDER BY b.floors DESC, b.name",
+      "assert": {
+        "columns": [
+          "name",
+          "floors",
+          "construction_year"
+        ],
+        "rows": [
+          [
+            "Central Library",
+            6,
+            1968
+          ],
+          [
+            "Ramón y Cajal Building",
+            5,
+            1997
+          ],
+          [
+            "Bolívar Block",
+            4,
+            2006
+          ],
+          [
+            "Kepler Lecture Hall",
+            4,
+            1972
+          ],
+          [
+            "Curie Laboratories",
+            3,
+            1990
+          ],
+          [
+            "Pythagoras Lecture Hall",
+            3,
+            1988
+          ],
+          [
+            "Sports Pavilion",
+            2,
+            2001
+          ],
+          [
+            "Marina Annex",
+            1,
+            2012
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P16 · Scholarship students of a degree and a campus (two references)",
+      "description": "Two subquery parameters that filter by degree and by campus at the same time.",
+      "keywords": [
+        "education",
+        "parameters",
+        "several",
+        "students"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, last_name, degree_code, id_campus FROM students WHERE has_scholarship = true AND degree_code IN {{ SELECT code FROM degrees ORDER BY code | Degree }} AND id_campus IN {{ P01 · Campuses that give the parameter its values | Campus }} ORDER BY last_name, name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "degree_code",
+          "id_campus"
+        ],
+        "rows": [
+          [
+            "Nerea",
+            "Castro Peña",
+            "GEDU",
+            2
+          ],
+          [
+            "Ana",
+            "García López",
+            "GINF",
+            1
+          ],
+          [
+            "Sara",
+            "Guerrero Vidal",
+            "GINF",
+            1
+          ],
+          [
+            "Sofía",
+            "Hernández Ruiz",
+            "GINF",
+            1
+          ],
+          [
+            "Lucía",
+            "Moreno Pascual",
+            "MSW",
+            2
+          ],
+          [
+            "Rubén",
+            "Parra Aguilar",
+            "GEDU",
+            2
+          ],
+          [
+            "Carmen",
+            "Santos Iglesias",
+            "GMED",
+            3
+          ],
+          [
+            "Hugo",
+            "Serrano Bravo",
+            "GEDU",
+            2
+          ],
+          [
+            "Irene",
+            "Suárez Nieto",
+            "GMED",
+            3
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
@@ -11624,6 +11897,74 @@
           [
             46,
             8,
+            "passed"
+          ],
+          [
+            47,
+            6,
+            "passed"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P17 · Enrolments between two grades (script with two parameters)",
+      "description": "Script parameterised twice: minimum and maximum grade, each with its own drop-down.",
+      "keywords": [
+        "education",
+        "parameters",
+        "several",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "const minimumGrade = {{ 5..10 | Minimum grade }};\nconst maximumGrade = {{ 6..10 | Maximum grade }};\nreturn tables[\"enrollments\"]\n  .filter((enrolment) => enrolment.grade !== null && enrolment.grade >= minimumGrade && enrolment.grade <= maximumGrade)\n  .map((enrolment) => ({\n    id_enrollment: enrolment.id_enrollment,\n    grade: enrolment.grade,\n    status: enrolment.status,\n  }));",
+      "assert": {
+        "columns": [
+          "id_enrollment",
+          "grade",
+          "status"
+        ],
+        "rows": [
+          [
+            5,
+            6,
+            "passed"
+          ],
+          [
+            6,
+            5,
+            "passed"
+          ],
+          [
+            17,
+            6,
+            "passed"
+          ],
+          [
+            18,
+            5.5,
+            "passed"
+          ],
+          [
+            25,
+            5,
+            "passed"
+          ],
+          [
+            32,
+            5,
+            "passed"
+          ],
+          [
+            33,
+            6,
+            "passed"
+          ],
+          [
+            35,
+            6,
             "passed"
           ],
           [

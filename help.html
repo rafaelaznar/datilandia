@@ -376,7 +376,7 @@ return summary.map((row, index) =&gt; {
 <li>Los <b>rangos</b> admiten como máximo 1000 valores y las fuentes como máximo 2000 filas, para que el desplegable no se vuelva inmanejable; si se superan, se avisa con el motivo.</li>
 <li>Si el origen del parámetro no existe, tiene un error de SQL o se lee en un círculo, el desplegable muestra el <b>motivo</b> y el error se explica también al ejecutar.</li>
 <li>Renombrar una tabla, una consulta o un script reescribe también las <b>referencias y los SELECT de los parámetros</b>; las dependencias y la matriz de relaciones cuentan lo que leen los parámetros.</li>
-<li>Los <a href="#es-test-files">ficheros de prueba</a> traen una carpeta de ejemplos (<b>I · Parámetros</b>) con las tres formas, un <code>HAVING</code> con rango, un <code>NOT IN</code> con referencia y un script con parámetro.</li>
+<li>Los <a href="#es-test-files">ficheros de prueba</a> traen una carpeta de ejemplos (<b>I · Parámetros</b>) con las tres formas, un <code>HAVING</code> con rango, un <code>NOT IN</code> con referencia, un script con parámetro y varias consultas y scripts con dos parámetros.</li>
 </ul>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Volver arriba</a></div></section>
 <section class="help-bloque" id="es-relations">
@@ -478,13 +478,13 @@ return summary.map((row, index) =&gt; {
 <tr><th>Fichero</th><th>Idioma</th><th>Contenido</th></tr>
 </thead>
 <tbody>
-<tr><td><code>pruebas-sql-educacion.json</code></td><td>Español</td><td>8 tablas, 165 consultas y 31 scripts</td></tr>
-<tr><td><code>pruebas-sql-salud.json</code></td><td>Español</td><td>20 tablas, 221 consultas y 34 scripts</td></tr>
-<tr><td><code>tests-sql-education.json</code></td><td>Inglés</td><td>8 tablas, 165 consultas y 31 scripts</td></tr>
-<tr><td><code>tests-sql-health.json</code></td><td>Inglés</td><td>20 tablas, 221 consultas y 34 scripts</td></tr>
+<tr><td><code>pruebas-sql-educacion.json</code></td><td>Español</td><td>8 tablas, 170 consultas y 32 scripts</td></tr>
+<tr><td><code>pruebas-sql-salud.json</code></td><td>Español</td><td>20 tablas, 226 consultas y 35 scripts</td></tr>
+<tr><td><code>tests-sql-education.json</code></td><td>Inglés</td><td>8 tablas, 170 consultas y 32 scripts</td></tr>
+<tr><td><code>tests-sql-health.json</code></td><td>Inglés</td><td>20 tablas, 226 consultas y 35 scripts</td></tr>
 </tbody>
 </table>
-<p>Las versiones en español y en inglés son equivalentes: los mismos casos con los nombres traducidos. <b>Educación</b> usa las carpetas de tablas <b>Estructura</b>, <b>Personas</b>, <b>Académico</b> y <b>Matrículas</b>; <b>salud</b>, <b>Centro</b>, <b>Catálogos</b>, <b>Personas</b>, <b>Asistencial</b> y <b>Facturación</b>. Consultas y scripts se agrupan en las carpetas <b>A · Básicas y agregados</b>, <b>B · Uniones (join)</b>, <b>C · Consultas relacionadas</b>, <b>D · Integridad</b>, <b>E · Vistas</b>, <b>F · Subconsultas</b>, <b>G · Uniones</b>, <b>H · Scripts como tablas</b> y <b>I · Parámetros</b>, que reúne los ejemplos de parametrización de consultas y scripts con <code>{{ … }}</code>.</p>
+<p>Las versiones en español y en inglés son equivalentes: los mismos casos con los nombres traducidos. <b>Educación</b> usa las carpetas de tablas <b>Estructura</b>, <b>Personas</b>, <b>Académico</b> y <b>Matrículas</b>; <b>salud</b>, <b>Centro</b>, <b>Catálogos</b>, <b>Personas</b>, <b>Asistencial</b> y <b>Facturación</b>. Consultas y scripts se agrupan en las carpetas <b>A · Básicas y agregados</b>, <b>B · Uniones (join)</b>, <b>C · Consultas relacionadas</b>, <b>D · Integridad</b>, <b>E · Vistas</b>, <b>F · Subconsultas</b>, <b>G · Uniones</b>, <b>H · Scripts como tablas</b> y <b>I · Parámetros</b>, que reúne los ejemplos de parametrización de consultas y scripts con <code>{{ … }}</code>, incluidas varias consultas y scripts con dos parámetros cada uno.</p>
 <p>Al abrirlos se ejecuta la batería automáticamente: el informe debe salir todo correcto. Si quieres modificar uno, usa <b>Guardar proyecto como</b> para no sobrescribir el original. El botón <b>Pruebas</b> vuelve a lanzar la batería cuando quieras.</p>
 <div class="help-callout"><b>Para practicar:</b> abre un fichero, elige una consulta de la carpeta A, cámbiala y usa <b>Convertir en test</b> para guardar tu propio resultado esperado.</div>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Volver arriba</a></div>
@@ -1228,7 +1228,7 @@ return summary.map((row, index) =&gt; {
 <li><b>Ranges</b> allow at most 1000 values and sources at most 2000 rows, so the drop-down stays manageable; beyond that a message explains it.</li>
 <li>When the source of the parameter does not exist, has a SQL error or reads itself in a circle, the drop-down shows the <b>reason</b> and the error is explained when running too.</li>
 <li>Renaming a table, a query or a script also rewrites the <b>references and the SELECTs of the parameters</b>; the dependencies and the relationship matrix count what the parameters read.</li>
-<li>The <a href="#en-test-files">test files</a> bring a folder of examples (<b>I · Parameters</b>) with the three forms, a <code>HAVING</code> with a range, a <code>NOT IN</code> with a reference and a script with a parameter.</li>
+<li>The <a href="#en-test-files">test files</a> bring a folder of examples (<b>I · Parameters</b>) with the three forms, a <code>HAVING</code> with a range, a <code>NOT IN</code> with a reference, a script with a parameter and several queries and scripts with two parameters.</li>
 </ul>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Volver arriba</a></div></section>
 <section class="help-bloque" id="en-relations">
@@ -1330,13 +1330,13 @@ return summary.map((row, index) =&gt; {
 <tr><th>File</th><th>Language</th><th>Content</th></tr>
 </thead>
 <tbody>
-<tr><td><code>pruebas-sql-educacion.json</code></td><td>Spanish</td><td>8 tables, 165 queries and 31 scripts</td></tr>
-<tr><td><code>pruebas-sql-salud.json</code></td><td>Spanish</td><td>20 tables, 221 queries and 34 scripts</td></tr>
-<tr><td><code>tests-sql-education.json</code></td><td>English</td><td>8 tables, 165 queries and 31 scripts</td></tr>
-<tr><td><code>tests-sql-health.json</code></td><td>English</td><td>20 tables, 221 queries and 34 scripts</td></tr>
+<tr><td><code>pruebas-sql-educacion.json</code></td><td>Spanish</td><td>8 tables, 170 queries and 32 scripts</td></tr>
+<tr><td><code>pruebas-sql-salud.json</code></td><td>Spanish</td><td>20 tables, 226 queries and 35 scripts</td></tr>
+<tr><td><code>tests-sql-education.json</code></td><td>English</td><td>8 tables, 170 queries and 32 scripts</td></tr>
+<tr><td><code>tests-sql-health.json</code></td><td>English</td><td>20 tables, 226 queries and 35 scripts</td></tr>
 </tbody>
 </table>
-<p>The Spanish and English versions are equivalent: the same cases with translated names. <b>Education</b> uses the table folders <b>Structure</b>, <b>People</b>, <b>Academic</b> and <b>Enrollments</b>; <b>health</b> uses <b>Hospital</b>, <b>Catalogues</b>, <b>People</b>, <b>Care</b> and <b>Billing</b>. Queries and scripts are grouped in the folders <b>A · Basics and aggregation</b>, <b>B · Joins</b>, <b>C · Related queries</b>, <b>D · Integrity</b>, <b>E · Views</b>, <b>F · Subqueries</b>, <b>G · Unions</b>, <b>H · Scripts as tables</b> and <b>I · Parameters</b>, which gathers the examples of parameterised queries and scripts with <code>{{ … }}</code>.</p>
+<p>The Spanish and English versions are equivalent: the same cases with translated names. <b>Education</b> uses the table folders <b>Structure</b>, <b>People</b>, <b>Academic</b> and <b>Enrollments</b>; <b>health</b> uses <b>Hospital</b>, <b>Catalogues</b>, <b>People</b>, <b>Care</b> and <b>Billing</b>. Queries and scripts are grouped in the folders <b>A · Basics and aggregation</b>, <b>B · Joins</b>, <b>C · Related queries</b>, <b>D · Integrity</b>, <b>E · Views</b>, <b>F · Subqueries</b>, <b>G · Unions</b>, <b>H · Scripts as tables</b> and <b>I · Parameters</b>, which gathers the examples of parameterised queries and scripts with <code>{{ … }}</code>, including several queries and scripts with two parameters each.</p>
 <p>Opening them runs the battery automatically: the report should be all correct. If you want to change one, use <b>Save project as</b> so you do not overwrite the original. The <b>Tests</b> button runs the battery again whenever you want.</p>
 <div class="help-callout"><b>To practise:</b> open a file, choose a query from folder A, change it and use <b>Turn into test</b> to store your own expected result.</div>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Back to top</a></div>

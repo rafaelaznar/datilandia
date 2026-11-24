@@ -187,3 +187,34 @@ The code of a script accepts the notation too; the minimum daily cost is chosen
 between 200 and 900:
 
 {{script:P09 · Ingresos con coste mínimo (script con parámetro)|rows:8|format:id_ingreso=#,##0;coste_dia=#,##0|title:Admissions with cost 200 or more (8 of 49)|totals:avg(coste_dia)=Average cost}}
+
+## 6. Several parameters
+
+A single query may carry **several parameters**. Each one has its own drop-down
+and its own header, and changing one recalculates the result with the current
+values of the others. Ranges, subqueries and references to queries or scripts
+can be mixed.
+
+### Two ranges in a BETWEEN
+
+Minimum and maximum daily cost, each one in its drop-down:
+
+{{query:P11 · Ingresos entre dos costes (dos rangos)|format:id_ingreso=#,##0;coste_dia=#,##0|title:Daily cost between 200 and 500 (default values)|totals:avg(coste_dia)=Average cost}}
+
+### Two subqueries: status and type
+
+The appointment status and type come from their own subqueries:
+
+{{query:P12 · Citas por estado y tipo (dos subconsultas)|format:citas=#,##0|title:One status and one type|totals:sum(citas)=Appointments}}
+
+### Reference and range: hospital and minimum cost
+
+The hospital (a script list) and the minimum daily cost are combined:
+
+{{query:P15 · Ingresos de un hospital con coste mínimo (referencia y rango)|format:id_ingreso=#,##0;coste_dia=#,##0|title:Hospital and minimum cost|totals:count(*)=Rows}}
+
+### A script with two parameters
+
+The minimum and maximum amount are chosen separately:
+
+{{script:P16 · Facturas entre dos importes (script con dos parámetros)|format:id_factura=#,##0;importe=#,##0.00 €|title:Amounts between 100 and 200 (default values)|totals:avg(importe)=Average amount}}

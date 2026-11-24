@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Health and hospitals (20 tables, 221 queries, 34 scripts)",
+  "name": "SQL tests · Health and hospitals (20 tables, 226 queries, 35 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -23293,6 +23293,294 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P11 · Admissions between two costs (two ranges)",
+      "description": "Two range parameters in a BETWEEN: minimum and maximum daily cost.",
+      "keywords": [
+        "health",
+        "parameters",
+        "several",
+        "range"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT id_admission, cost_per_day, expected_days FROM admissions WHERE cost_per_day BETWEEN {{ 200..500 | Minimum cost }} AND {{ 500..900 | Maximum cost }} ORDER BY cost_per_day, id_admission",
+      "assert": {
+        "columns": [
+          "id_admission",
+          "cost_per_day",
+          "expected_days"
+        ],
+        "rows": [
+          [
+            19,
+            225,
+            3
+          ],
+          [
+            28,
+            259,
+            3
+          ],
+          [
+            39,
+            262,
+            2
+          ],
+          [
+            47,
+            294,
+            8
+          ],
+          [
+            31,
+            316,
+            2
+          ],
+          [
+            13,
+            337,
+            4
+          ],
+          [
+            41,
+            339,
+            4
+          ],
+          [
+            7,
+            373,
+            7
+          ],
+          [
+            34,
+            423,
+            6
+          ],
+          [
+            40,
+            427,
+            11
+          ],
+          [
+            23,
+            431,
+            11
+          ],
+          [
+            36,
+            472,
+            13
+          ],
+          [
+            27,
+            483,
+            13
+          ],
+          [
+            30,
+            490,
+            14
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P12 · Appointments by status and type (two subqueries)",
+      "description": "Two subquery parameters: the status and the type of the appointment, at once.",
+      "keywords": [
+        "health",
+        "parameters",
+        "several",
+        "subquery"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT status, type, COUNT(*) AS appointments FROM appointments WHERE status = {{ SELECT status FROM appointments GROUP BY status ORDER BY status | Status }} AND type = {{ SELECT type FROM appointments GROUP BY type ORDER BY type | Type }} GROUP BY status, type ORDER BY status, type",
+      "assert": {
+        "columns": [
+          "status",
+          "type",
+          "appointments"
+        ],
+        "rows": [
+          [
+            "attended",
+            "emergency",
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P13 · Patients of a city and an insurer (reference and subquery)",
+      "description": "Two parameters: the cities of a saved query and an insurer from a subquery.",
+      "keywords": [
+        "health",
+        "parameters",
+        "several",
+        "patients"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT name, last_name, city FROM patients WHERE city IN {{ P01 · Cities of the hospitals (parameter source) | City }} AND id_insurer = {{ SELECT id_insurer FROM insurers ORDER BY id_insurer | Insurer }} ORDER BY last_name, name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "city"
+        ],
+        "rows": [
+          [
+            "Adrián",
+            "Alonso González",
+            "Barcelona"
+          ],
+          [
+            "Julia",
+            "Díaz Domínguez",
+            "Bilbao"
+          ],
+          [
+            "Diego",
+            "Díaz Martínez",
+            "Madrid"
+          ],
+          [
+            "Pablo",
+            "López González",
+            "Sevilla"
+          ],
+          [
+            "Luis",
+            "Marín Iglesias",
+            "Bogotá"
+          ],
+          [
+            "Francisco",
+            "Muñoz García",
+            "Madrid"
+          ],
+          [
+            "Isabel",
+            "Torres Torres",
+            "Quito"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P14 · Rooms of a floor with minimum beds (two ranges)",
+      "description": "Two range parameters: the floor and the minimum number of beds.",
+      "keywords": [
+        "health",
+        "parameters",
+        "several",
+        "rooms"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT code, type, num_beds, floor FROM rooms WHERE floor = {{ 0..5 | Floor }} AND num_beds >= {{ 0..2 | Minimum beds }} ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "type",
+          "num_beds",
+          "floor"
+        ],
+        "rows": [
+          [
+            "H2-101",
+            "single",
+            1,
+            0
+          ],
+          [
+            "H3-100",
+            "ICU",
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P15 · Admissions of a hospital with minimum cost (reference and range)",
+      "description": "Two parameters: the hospital (a script list) and the minimum daily cost (a range).",
+      "keywords": [
+        "health",
+        "parameters",
+        "several",
+        "reference"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dde5fa",
+      "starred": true,
+      "sql": "SELECT h.name AS hospital, i.id_admission, i.cost_per_day FROM hospitals AS h INNER JOIN rooms AS r ON r.id_hospital = h.id_hospital INNER JOIN admissions AS i ON i.id_room = r.id_room WHERE h.id_hospital IN {{ P10 · Hospitals for the parameter | Hospital }} AND i.cost_per_day >= {{ 200..900 | Minimum cost }} ORDER BY i.cost_per_day DESC, i.id_admission LIMIT 10",
+      "assert": {
+        "columns": [
+          "hospital",
+          "id_admission",
+          "cost_per_day"
+        ],
+        "rows": [
+          [
+            "La Paz University Hospital",
+            45,
+            950
+          ],
+          [
+            "La Paz University Hospital",
+            46,
+            926
+          ],
+          [
+            "Barcelona Clínic Hospital",
+            25,
+            884
+          ],
+          [
+            "Virgen del Rocío Hospital",
+            8,
+            879
+          ],
+          [
+            "Virgen del Rocío Hospital",
+            22,
+            864
+          ],
+          [
+            "Virgen del Rocío Hospital",
+            21,
+            844
+          ],
+          [
+            "Quito Metropolitan Hospital",
+            42,
+            834
+          ],
+          [
+            "Quito Metropolitan Hospital",
+            2,
+            831
+          ],
+          [
+            "Santa Elena Clinic",
+            48,
+            830
+          ],
+          [
+            "Santa Elena Clinic",
+            15,
+            822
+          ]
+        ]
+      }
     }
   ],
   "scripts": [
@@ -27471,6 +27759,34 @@
           [
             50,
             632,
+            true
+          ]
+        ]
+      }
+    },
+    {
+      "name": "P16 · Invoices between two amounts (script with two parameters)",
+      "description": "Script parameterised twice: minimum and maximum amount, each with its own drop-down.",
+      "keywords": [
+        "health",
+        "parameters",
+        "several",
+        "script"
+      ],
+      "folder": "I · Parameters",
+      "color": "#dcf1d4",
+      "starred": true,
+      "code": "const minimumAmount = {{ 100..500 | Minimum amount }};\nconst maximumAmount = {{ 200..1000 | Maximum amount }};\nreturn tables[\"invoices\"]\n  .filter((invoice) => invoice.amount >= minimumAmount && invoice.amount <= maximumAmount)\n  .map((invoice) => ({\n    id_invoice: invoice.id_invoice,\n    amount: invoice.amount,\n    paid: invoice.paid,\n  }));",
+      "assert": {
+        "columns": [
+          "id_invoice",
+          "amount",
+          "paid"
+        ],
+        "rows": [
+          [
+            9,
+            132,
             true
           ]
         ]
