@@ -11,7 +11,8 @@
     "F · Subconsultas",
     "G · Uniones",
     "H · Scripts como tablas",
-    "I · Parámetros"
+    "I · Parámetros",
+    "J · PIVOT"
   ],
   "tableFolders": [
     "Estructura",
@@ -9369,6 +9370,310 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P01 · Matrículas por estado y curso",
+      "description": "PIVOT con estados en filas, cursos en columnas y COUNT(*), con totales de fila y columna.",
+      "keywords": [
+        "pivot",
+        "tabla dinámica",
+        "recuento",
+        "media",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT estado) BY (SELECT curso_academico) FROM matriculas VALUES COUNT(*) AS matriculas TOTALS ROWS GRAND COLUMNS GRAND;",
+      "assert": {
+        "columns": [
+          "estado",
+          "2024-2025",
+          "2025-2026",
+          "Total general"
+        ],
+        "rows": [
+          [
+            "activa",
+            0,
+            13,
+            13
+          ],
+          [
+            "anulada",
+            1,
+            2,
+            3
+          ],
+          [
+            "superada",
+            26,
+            6,
+            32
+          ],
+          [
+            "Total general",
+            27,
+            21,
+            48
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P02 · Plazas y aulas por planta y proyector",
+      "description": "Dos medidas en columnas (plazas y aulas) por planta y proyector, con totales.",
+      "keywords": [
+        "pivot",
+        "tabla dinámica",
+        "recuento",
+        "media",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT planta) BY (SELECT tiene_proyector) FROM aulas VALUES SUM(capacidad) AS plazas, COUNT(*) AS aulas TOTALS ROWS GRAND COLUMNS GRAND MEASURES ON COLUMNS;",
+      "assert": {
+        "columns": [
+          "planta",
+          "false plazas",
+          "false aulas",
+          "true plazas",
+          "true aulas",
+          "Total general plazas",
+          "Total general aulas"
+        ],
+        "rows": [
+          [
+            "1",
+            153,
+            4,
+            251,
+            6,
+            404,
+            10
+          ],
+          [
+            "2",
+            12,
+            1,
+            70,
+            2,
+            82,
+            3
+          ],
+          [
+            "3",
+            25,
+            1,
+            130,
+            2,
+            155,
+            3
+          ],
+          [
+            "Total general",
+            190,
+            6,
+            451,
+            10,
+            641,
+            16
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P03 · Nota media por estado y curso",
+      "description": "AVG(nota) por estado y curso; una celda vacía se rellena con «–» y un agregado nulo con «n/d».",
+      "keywords": [
+        "pivot",
+        "tabla dinámica",
+        "recuento",
+        "media",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT estado) BY (SELECT curso_academico) FROM matriculas VALUES AVG(nota) AS nota_media TOTALS ROWS GRAND COLUMNS GRAND FILL EMPTY '–', NULLVALUE 'n/d';",
+      "assert": {
+        "columns": [
+          "estado",
+          "2024-2025",
+          "2025-2026",
+          "Total general"
+        ],
+        "rows": [
+          [
+            "activa",
+            "–",
+            "n/d",
+            "n/d"
+          ],
+          [
+            "anulada",
+            "n/d",
+            "n/d",
+            "n/d"
+          ],
+          [
+            "superada",
+            7.076923076923077,
+            8.333333333333334,
+            7.3125
+          ],
+          [
+            "Total general",
+            7.076923076923077,
+            8.333333333333334,
+            7.3125
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P04 · Carga docente por categoría e investigación",
+      "description": "AVG(horas_semanales) y COUNT(*) de docentes por categoría y perfil investigador.",
+      "keywords": [
+        "pivot",
+        "tabla dinámica",
+        "recuento",
+        "media",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT categoria) BY (SELECT es_investigador) FROM docentes VALUES AVG(horas_semanales) AS horas_medias, COUNT(*) AS docentes TOTALS ROWS GRAND COLUMNS GRAND;",
+      "assert": {
+        "columns": [
+          "categoria",
+          "false horas_medias",
+          "false docentes",
+          "true horas_medias",
+          "true docentes",
+          "Total general horas_medias",
+          "Total general docentes"
+        ],
+        "rows": [
+          [
+            "Asociado",
+            6.666666666666667,
+            3,
+            null,
+            0,
+            6.666666666666667,
+            3
+          ],
+          [
+            "Ayudante",
+            10,
+            1,
+            12,
+            1,
+            11,
+            2
+          ],
+          [
+            "Catedrática",
+            null,
+            0,
+            15.666666666666666,
+            3,
+            15.666666666666666,
+            3
+          ],
+          [
+            "Titular",
+            17.5,
+            2,
+            18.5,
+            2,
+            18,
+            4
+          ],
+          [
+            "Total general",
+            10.833333333333334,
+            6,
+            16,
+            6,
+            13.416666666666666,
+            12
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P05 · Aulas por planta, proyector y pizarra",
+      "description": "Columnas jerárquicas (proyector y tipo de pizarra) con subtotal por el primer nivel.",
+      "keywords": [
+        "pivot",
+        "tabla dinámica",
+        "recuento",
+        "media",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT planta) BY (SELECT tiene_proyector, tipo_pizarra) FROM aulas VALUES COUNT(*) AS aulas TOTALS ROWS GRAND COLUMNS SUBTOTAL BY tiene_proyector GRAND;",
+      "assert": {
+        "columns": [
+          "planta",
+          "false · tiza",
+          "false · (null)",
+          "false Subtotal",
+          "true · digital",
+          "true · tiza",
+          "true · (null)",
+          "true Subtotal",
+          "Total general"
+        ],
+        "rows": [
+          [
+            "1",
+            3,
+            1,
+            4,
+            4,
+            1,
+            1,
+            6,
+            10
+          ],
+          [
+            "2",
+            0,
+            1,
+            1,
+            2,
+            0,
+            0,
+            2,
+            3
+          ],
+          [
+            "3",
+            0,
+            1,
+            1,
+            2,
+            0,
+            0,
+            2,
+            3
+          ],
+          [
+            "Total general",
+            3,
+            3,
+            6,
+            8,
+            1,
+            1,
+            10,
+            16
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
     }
   ],
   "scripts": [

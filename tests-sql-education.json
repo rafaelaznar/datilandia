@@ -11,7 +11,8 @@
     "F · Subqueries",
     "G · Unions",
     "H · Scripts as tables",
-    "I · Parameters"
+    "I · Parameters",
+    "J · PIVOT"
   ],
   "tableFolders": [
     "Structure",
@@ -9363,6 +9364,310 @@
           ]
         ]
       }
+    },
+    {
+      "name": "P01 · Enrollments by status and year",
+      "description": "PIVOT with status rows, academic-year columns and COUNT(*), plus row and column totals.",
+      "keywords": [
+        "pivot",
+        "dynamic table",
+        "count",
+        "average",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT status) BY (SELECT academic_year) FROM enrollments VALUES COUNT(*) AS enrollments TOTALS ROWS GRAND COLUMNS GRAND;",
+      "assert": {
+        "columns": [
+          "status",
+          "2024-2025",
+          "2025-2026",
+          "Grand total"
+        ],
+        "rows": [
+          [
+            "active",
+            0,
+            13,
+            13
+          ],
+          [
+            "cancelled",
+            1,
+            2,
+            3
+          ],
+          [
+            "passed",
+            26,
+            6,
+            32
+          ],
+          [
+            "Grand total",
+            27,
+            21,
+            48
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P02 · Seats and rooms by floor and projector",
+      "description": "Two measures on columns (seats and rooms) by floor and projector, with totals.",
+      "keywords": [
+        "pivot",
+        "dynamic table",
+        "count",
+        "average",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT floor) BY (SELECT has_projector) FROM classrooms VALUES SUM(capacity) AS seats, COUNT(*) AS rooms TOTALS ROWS GRAND COLUMNS GRAND MEASURES ON COLUMNS;",
+      "assert": {
+        "columns": [
+          "floor",
+          "false seats",
+          "false rooms",
+          "true seats",
+          "true rooms",
+          "Grand total seats",
+          "Grand total rooms"
+        ],
+        "rows": [
+          [
+            "1",
+            153,
+            4,
+            251,
+            6,
+            404,
+            10
+          ],
+          [
+            "2",
+            12,
+            1,
+            70,
+            2,
+            82,
+            3
+          ],
+          [
+            "3",
+            25,
+            1,
+            130,
+            2,
+            155,
+            3
+          ],
+          [
+            "Grand total",
+            190,
+            6,
+            451,
+            10,
+            641,
+            16
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P03 · Average grade by status and year",
+      "description": "AVG(grade) by status and year; an empty cell is filled with “–” and a null aggregate with “n/d”.",
+      "keywords": [
+        "pivot",
+        "dynamic table",
+        "count",
+        "average",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT status) BY (SELECT academic_year) FROM enrollments VALUES AVG(grade) AS average_grade TOTALS ROWS GRAND COLUMNS GRAND FILL EMPTY '–', NULLVALUE 'n/d';",
+      "assert": {
+        "columns": [
+          "status",
+          "2024-2025",
+          "2025-2026",
+          "Grand total"
+        ],
+        "rows": [
+          [
+            "active",
+            "–",
+            "n/d",
+            "n/d"
+          ],
+          [
+            "cancelled",
+            "n/d",
+            "n/d",
+            "n/d"
+          ],
+          [
+            "passed",
+            7.076923076923077,
+            8.333333333333334,
+            7.3125
+          ],
+          [
+            "Grand total",
+            7.076923076923077,
+            8.333333333333334,
+            7.3125
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P04 · Teacher load by category and research",
+      "description": "AVG(weekly_hours) and COUNT(*) of teachers by category and research profile.",
+      "keywords": [
+        "pivot",
+        "dynamic table",
+        "count",
+        "average",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT category) BY (SELECT is_researcher) FROM teachers VALUES AVG(weekly_hours) AS average_hours, COUNT(*) AS teachers TOTALS ROWS GRAND COLUMNS GRAND;",
+      "assert": {
+        "columns": [
+          "category",
+          "false average_hours",
+          "false teachers",
+          "true average_hours",
+          "true teachers",
+          "Grand total average_hours",
+          "Grand total teachers"
+        ],
+        "rows": [
+          [
+            "Assistant",
+            10,
+            1,
+            12,
+            1,
+            11,
+            2
+          ],
+          [
+            "Associate",
+            6.666666666666667,
+            3,
+            null,
+            0,
+            6.666666666666667,
+            3
+          ],
+          [
+            "Full professor",
+            null,
+            0,
+            15.666666666666666,
+            3,
+            15.666666666666666,
+            3
+          ],
+          [
+            "Senior lecturer",
+            17.5,
+            2,
+            18.5,
+            2,
+            18,
+            4
+          ],
+          [
+            "Grand total",
+            10.833333333333334,
+            6,
+            16,
+            6,
+            13.416666666666666,
+            12
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
+    },
+    {
+      "name": "P05 · Classrooms by floor, projector and board",
+      "description": "Hierarchical columns (projector and board type) with a subtotal by the first column level.",
+      "keywords": [
+        "pivot",
+        "dynamic table",
+        "count",
+        "average",
+        "subtotal"
+      ],
+      "sql": "PIVOT (SELECT floor) BY (SELECT has_projector, board_type) FROM classrooms VALUES COUNT(*) AS rooms TOTALS ROWS GRAND COLUMNS SUBTOTAL BY has_projector GRAND;",
+      "assert": {
+        "columns": [
+          "floor",
+          "false · chalk",
+          "false · (null)",
+          "false Subtotal",
+          "true · chalk",
+          "true · digital",
+          "true · (null)",
+          "true Subtotal",
+          "Grand total"
+        ],
+        "rows": [
+          [
+            "1",
+            3,
+            1,
+            4,
+            1,
+            4,
+            1,
+            6,
+            10
+          ],
+          [
+            "2",
+            0,
+            1,
+            1,
+            0,
+            2,
+            0,
+            2,
+            3
+          ],
+          [
+            "3",
+            0,
+            1,
+            1,
+            0,
+            2,
+            0,
+            2,
+            3
+          ],
+          [
+            "Grand total",
+            3,
+            3,
+            6,
+            1,
+            8,
+            1,
+            10,
+            16
+          ]
+        ]
+      },
+      "folder": "J · PIVOT",
+      "color": "#dcf1d4"
     }
   ],
   "scripts": [
