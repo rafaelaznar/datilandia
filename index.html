@@ -4301,6 +4301,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.relatedRowQueryName": "{tableName}→{targetTable} · row of {targetTableName} with {field} = {value}",
         "ui.resultFields": "Result fields",
         "ui.resultFieldsError": "Result fields: cannot be calculated ({message})",
+        "ui.resultFieldsPivot": "PIVOT row fields",
+        "ui.resultFieldsPivotHint": "Column fields depend on the data; they are shown when unfolding the query in Insert or when running it.",
+        "ui.resultFieldsReadsPivot": "Result fields: not calculated here because the query reads a PIVOT.",
         "ui.rowAdded": "Row added to “{tableName}” (total {total}).",
         "ui.rowDeleted": "Row deleted from “{tableName}” ({remaining} left).",
         "ui.rowFieldSelected": "Row {number} · field “{field}” ({tableName}).",
@@ -5484,6 +5487,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "ui.relatedRowQueryName": "{tableName}→{targetTable} · fila de {targetTableName} con {field} = {value}",
         "ui.resultFields": "Campos del resultado",
         "ui.resultFieldsError": "Campos del resultado: no se pueden calcular ({message})",
+        "ui.resultFieldsPivot": "Campos de fila del PIVOT",
+        "ui.resultFieldsPivotHint": "Los campos de columna dependen de los datos; aparecen al desplegar la consulta en Insertar o al ejecutarla.",
+        "ui.resultFieldsReadsPivot": "Campos del resultado: no se calculan aquí porque la consulta lee un PIVOT.",
         "ui.rowAdded": "Fila añadida a «{tableName}» (total {total}).",
         "ui.rowDeleted": "Fila eliminada de «{tableName}» (quedan {remaining}).",
         "ui.rowFieldSelected": "Fila {number} · campo «{field}» ({tableName}).",
@@ -13823,6 +13829,25 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           : { ok: false, error: outcome.error };
       },
 
+      /** Fields that a PIVOT query returns without reading a single row: the
+       *  dimensions of the row axis (and the measure column, when the
+       *  measures go on the rows). The columns of the result depend on the
+       *  members of the column axis, so they cannot be known without running
+       *  the query; tips use this instead of paying that cost. */
+      staticColumns(sql) {
+        try {
+          const ast = new PivotParser(sql).parse();
+          PivotEngine.validate(ast);
+          const columns = ast.row.dims.map((dim) => dim.alias || dim.expr);
+          if (ast.measuresOn === "rows") {
+            columns.push(I18n.t("pivot.measureColumn"));
+          }
+          return { ok: true, columns };
+        } catch (err) {
+          return { ok: false, error: err };
+        }
+      },
+
       /** Parameters of a PIVOT query for the drop-down bar. The SQL parser does
        *  not understand PIVOT, so the param tokens are read directly. */
       analyzeParams(sql, project, state) {
@@ -15832,6 +15857,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  change a tip (a field, a foreign key, another query) can go stale. */
       tipMemo: new WeakMap(),
 
+      /** Memo of which queries read a PIVOT, keyed by the usage analysis of
+       *  the project. */
+      pivotTipMemo: new WeakMap(),
+
       /** Shape the tips were last painted for: while it does not change, the
        *  per-tip inputs do not need to be worked out again. */
       lastTipShape: null,
@@ -16642,9 +16671,52 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           : visibles;
       },
 
+      /** Set of queries that read a PIVOT, directly or through other queries.
+       *  It is worked out once per usage analysis, walking the reverse edges
+       *  from every PIVOT. `usage` already follows the FROM/JOIN and the
+       *  parameter sources. */
+      pivotReaders(usage) {
+        let readers = Ui.pivotTipMemo.get(usage);
+        if (readers) {
+          return readers;
+        }
+        readers = new Set();
+        const reverse = new Map();
+        (usage && usage.lee ? usage.lee : new Map()).forEach((targets, name) => {
+          targets.forEach((target) => {
+            if (!reverse.has(target)) {
+              reverse.set(target, []);
+            }
+            reverse.get(target).push(name);
+          });
+        });
+        const pending = (Store.project.queries || [])
+          .filter((query) => PivotEngine.isPivot(query.sql))
+          .map((query) => query.name);
+        while (pending.length > 0) {
+          const target = pending.pop();
+          (reverse.get(target) || []).forEach((reader) => {
+            if (!readers.has(reader)) {
+              readers.add(reader);
+              pending.push(reader);
+            }
+          });
+        }
+        Ui.pivotTipMemo.set(usage, readers);
+        return readers;
+      },
+
+      /** Does a query read a PIVOT, directly or through another query? */
+      readsPivot(usage, name) {
+        return usage ? Ui.pivotReaders(usage).has(String(name)) : false;
+      },
+
       /** Tip of a sidebar query: its description, the columns the SELECT
        *  returns (when the query cannot be parsed, the reason instead of the
-       *  columns), its data sources and the objects that read it. */
+       *  columns), its data sources and the objects that read it. A PIVOT
+       *  only shows its row fields: the columns depend on the data and are
+       *  read on demand (Insert) or when the query runs, never to paint the
+       *  sidebar. The same rule applies to a query that reads a PIVOT. */
       queryTip(query, usage, shape, graph, validation, tipInputs) {
         // The tip validates the SQL of the query, and the sidebar rebuilds every
         // tip on every repaint. Two checks keep that from happening: the whole
@@ -16662,15 +16734,32 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           cached.signature = signature;
           return cached.text;
         }
-        const columns = SqlEngine.columnsSafe(query.sql, Store.project, validation);
-        const lineas = [columns.ok
-          ? Ui.fieldsTip(query.description, I18n.t("ui.resultFields"), columns.columns)
-          : Ui.joinTip(query.description, I18n.t("ui.resultFieldsError", { message: columns.error.message }))];
+        const graphNow = graph === undefined ? ProjectGraph.build(Store.project) : graph;
+        const uso = usage === undefined ? SqlViews.usage(Store.project) : usage;
+        const pivot = PivotEngine.isPivot(query.sql);
+        const readsPivot = !pivot && Ui.readsPivot(uso, query.name);
+        const columns = readsPivot
+          ? null
+          : (pivot
+            ? PivotEngine.staticColumns(query.sql)
+            : SqlEngine.columnsSafe(query.sql, Store.project, validation));
+        const lineas = [];
+        if (readsPivot) {
+          lineas.push(Ui.joinTip(query.description, I18n.t("ui.resultFieldsReadsPivot")));
+        } else if (columns.ok) {
+          lineas.push(pivot
+            ? Ui.fieldsTip(query.description, I18n.t("ui.resultFieldsPivot"), columns.columns)
+            : Ui.fieldsTip(query.description, I18n.t("ui.resultFields"), columns.columns));
+          if (pivot) {
+            lineas.push(I18n.t("ui.resultFieldsPivotHint"));
+          }
+        } else {
+          lineas.push(Ui.joinTip(query.description, I18n.t("ui.resultFieldsError", { message: columns.error.message })));
+        }
         const keywords = Ui.keywordsLine(query.keywords);
         if (keywords) {
           lineas.push(keywords);
         }
-        const graphNow = graph === undefined ? ProjectGraph.build(Store.project) : graph;
         const sources = ProjectGraph.sourcesIn(graphNow, "query", query.name);
         if (sources.length > 0) {
           lineas.push(I18n.t("ui.dataSourcesLine", { total: sources.length, names: Ui.refList(sources) }));
@@ -30473,6 +30562,82 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       );
       assert(pista("rota").includes("no_existe"), "with the reason of the error: " + pista("rota"));
       restoreMiniProject(antes);
+    });
+
+    SelfTests.add("When_PointAtSidebarPivot_Expect_RowFieldsWithoutRunning", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+      };
+      const project = buildPivotTestProject();
+      project.queries = [
+        {
+          name: "pivot",
+          description: "Pivot of the sales",
+          sql: "PIVOT (SELECT region) BY (SELECT fiscal_year) FROM sales VALUES SUM(revenue) AS ingresos TOTALS ROWS GRAND COLUMNS GRAND",
+        },
+        { name: "reader", description: "Reads the pivot", sql: "SELECT region FROM pivot" },
+        { name: "far", description: "Reads the reader", sql: "SELECT region FROM reader" },
+      ];
+      Store.replaceProject(project);
+      const originalRun = PivotEngine.run;
+      let runs = 0;
+      PivotEngine.run = function (...args) {
+        runs += 1;
+        return originalRun.apply(this, args);
+      };
+      try {
+        Ui.renderSidebarQueries();
+        const pista = (name) => document.querySelector(`#list-queries li[data-name="${name}"]`).title;
+        assert(pista("pivot").includes(I18n.t("ui.resultFieldsPivot")), "the tip names the row fields: " + pista("pivot"));
+        assert(pista("pivot").includes("region"), "and shows the row dimension");
+        assert(pista("pivot").includes(I18n.t("ui.resultFieldsPivotHint")), "and explains that the columns need the data: " + pista("pivot"));
+        assert(pista("reader").includes(I18n.t("ui.resultFieldsReadsPivot")), "a query that reads a PIVOT is not evaluated either: " + pista("reader"));
+        assert(pista("far").includes(I18n.t("ui.resultFieldsReadsPivot")), "nor a query that reads another one that reads a PIVOT: " + pista("far"));
+        assertEqual(runs, 0, "painting the tips runs no PIVOT");
+      } finally {
+        PivotEngine.run = originalRun;
+        restoreMiniProject(antes);
+      }
+    });
+
+    SelfTests.add("When_UnfoldPivotInInsertPicker_Expect_ColumnsOnDemand", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        view: Ui.state.view,
+        table: Ui.state.activeTable,
+        query: Ui.state.activeQuery,
+      };
+      const project = buildPivotTestProject();
+      project.queries = [{
+        name: "pivot",
+        description: "",
+        sql: "PIVOT (SELECT region) BY (SELECT fiscal_year) FROM sales VALUES SUM(revenue) AS ingresos TOTALS ROWS GRAND COLUMNS GRAND",
+      }];
+      Store.replaceProject(project);
+      UiQueryInsert.unfolded.clear();
+      UiQueryInsert.columns.clear();
+      const originalRun = PivotEngine.run;
+      let runs = 0;
+      PivotEngine.run = function (...args) {
+        runs += 1;
+        return originalRun.apply(this, args);
+      };
+      try {
+        const fields = UiQueryInsert.fieldsOf("query", project.queries[0]);
+        assertEqual(fields.error, "", "the insert picker can read the fields");
+        assert(fields.fields.length > 2, "it lists the row and column fields: " + fields.fields.map((field) => field.name).join(", "));
+        assertEqual(runs, 1, "the picker reads them on demand, once");
+      } finally {
+        PivotEngine.run = originalRun;
+        UiQueryInsert.unfolded.clear();
+        UiQueryInsert.columns.clear();
+        restoreMiniProject(antes);
+      }
     });
 
     /* --- Cases T9: name and description bar ----------------------------- */
