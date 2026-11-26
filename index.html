@@ -94,7 +94,9 @@
       background: none;
       color: inherit;
       font: inherit;
+      font-size: 11px;
       font-weight: bold;
+      letter-spacing: 0.03em;
       cursor: pointer;
     }
 
@@ -103,20 +105,60 @@
       text-decoration: underline;
     }
 
-    /* Project name: read-only in the header (it is changed in
-       “Settings”), trimmed when it is very long. */
+    /* Project name: read-only in the bar under the header (it is changed in
+       “Settings”). It is written in full: if it is very long it wraps instead
+       of being trimmed. */
     #project-name {
+      min-width: 0;
       font-weight: bold;
-      max-width: 34ch;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      overflow-wrap: anywhere;
+    }
+
+    /* Line under the header: the whole project name, the whole path and file
+       name it comes from, and the state of the project (saved or not, test or
+       not). Long names and paths wrap rather than being trimmed. */
+    #file-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px 10px;
+      align-items: baseline;
+      padding: 2px 6px;
+      border-bottom: 1px solid #bbb;
+      background: #fafafa;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    #file-bar .file-bar-project,
+    #file-bar .file-bar-file {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    #file-bar .file-bar-file {
+      flex: 1 1 30ch;
+    }
+
+    #file-bar .file-bar-status {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
       white-space: nowrap;
     }
 
-    /* Right-hand group of the bar: the unsaved changes note, the test mode
-       marker and the language picker. It travels as one piece, so when the
-       bar wraps (long labels in Spanish) the picker does not stay alone in
-       a new line. */
+    #project-file {
+      min-width: 0;
+      color: #333;
+      overflow-wrap: anywhere;
+    }
+
+    /* Right-hand group of the bar: the language picker. It travels as one
+       piece, so when the bar wraps (long labels in Spanish) the picker does
+       not stay alone in a new line. */
     .header-right {
       display: flex;
       align-items: center;
@@ -126,16 +168,14 @@
 
     #project-dirty {
       white-space: nowrap;
+      color: #555;
     }
 
-    /* Empty and invisible, but still in the flow: with the group anchored to
-       the end, the indicator does not travel with the buttons. */
-    #project-dirty:empty {
-      visibility: hidden;
+    #project-dirty.is-saved {
+      color: #060;
     }
 
-    /* Test mode indicator of the project: at the very top right,
-       behind the unsaved changes warning. */
+    /* Test mode indicator of the project, in the project bar. */
     #project-test {
       padding: 0 4px;
       border: 1px solid #bbb;
@@ -2461,9 +2501,6 @@
        STRUCTURE: project header, sidebar, views and status.
        ===================================================================== -->
   <header id="header">
-    <button class="with-icon" data-i18n-title="markup.button.goHomePageSummaryEverything" id="mark" type="button" title="Ir a la página de inicio (resumen de todo lo que puedes hacer)"><svg class="icon" data-icon="chart" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.5 21H16.5C18.9853 21 21 18.9853 21 16.5V12V7.5C21 5.01472 18.9853 3 16.5 3H12H7.5C5.01472 3 3 5.01472 3 7.5V16.5C3 18.9853 5.01472 21 7.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.6667 12.5556H15.5C16.3284 12.5556 17 13.2271 17 14.0556V15.5C17 16.3284 16.3284 17 15.5 17H15.3333H13.6667M13.6667 12.5556V8.5C13.6667 7.67157 12.9951 7 12.1667 7H11.8333C11.0049 7 10.3333 7.67157 10.3333 8.5V10M13.6667 12.5556V17M10.3333 10H8.5C7.67157 10 7 10.6716 7 11.5V16.4444C7 16.7513 7.24873 17 7.55556 17H10.3333M10.3333 10V17M13.6667 17H10.3333" stroke="currentColor" stroke-width="1.5"/></svg>DATILANDIA</button>
-    <span class="muted" data-i18n="project.label">Proyecto:</span>
-    <span data-i18n-aria-label="markup.span.projectName" data-i18n-title="markup.span.projectNameChangedSettings" id="project-name" title="Nombre del proyecto (se cambia en «Ajustes»)" aria-label="Nombre del proyecto">Sin título</span>
     <button class="with-icon" data-i18n-title="markup.button.newProjectDiscardsCurrentOne" id="btn-new" type="button" title="Nuevo proyecto (descarta el actual)"><svg class="icon" data-icon="add-box" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 12.485L3.76983 7.78911M12 12.485V20.7297M12 12.485L15.6 10.2M3.76983 7.78911C4.29845 6.8289 5.07782 6.0305 6.04032 5.51183L9.54033 3.62579C11.0887 2.7914 12.9113 2.7914 14.4597 3.62579L15.6 4.35M3.76983 7.78911C3.27509 8.68778 3 9.72818 3 10.8136V13.1864C3 15.4316 4.17701 17.4841 6.04033 18.4882L9.54033 20.3742C11.0887 21.2086 12.9113 21.2086 14.4597 20.3742L17.9597 18.4882C19.823 17.4841 21 15.4316 21 13.1864V12.485" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 5.5V9.5M21 7.5H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.new">Nuevo proyecto</span></button>
     <button class="with-icon" data-i18n-title="markup.button.openProjectFromJSONFile" id="btn-open" type="button" title="Abrir un proyecto desde fichero JSON"><svg class="icon" data-icon="open-folder" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.5V10.2414C20 8.94493 18.8766 7.92817 17.5808 7.97033C15.5033 8.03793 12.6649 7.95741 11.5 7.12774C10.8433 6.65998 10.6248 6.15674 10.2188 5.40785C9.50343 4.08869 8.31881 3 6.8182 3H5.65625C4.18924 3 3 4.18924 3 5.65625V7.12774V14.6953V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 16L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5.15705 12.7291L3.39963 16.0625C2.22841 18.2839 3.77194 21 6.20558 21H16.037C17.2053 21 18.2807 20.3373 18.843 19.2709L20.6004 15.9375C21.7716 13.7161 20.2281 11 17.7944 11H7.96299C6.79475 11 5.71928 11.6627 5.15705 12.7291Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.openJSON">Abrir proyecto</span></button>
     <input id="file-open" type="file" accept=".json" title="Fichero de proyecto JSON" hidden>
@@ -2472,17 +2509,40 @@
     <button class="with-icon" data-i18n-title="markup.button.goDataImportPanel" id="btn-import" type="button" title="Ir al panel de importación de datos"><svg class="icon" data-icon="import" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M3 11.5C3 10.1193 4.11929 9 5.5 9H7.07692C7.58672 9 8 9.41328 8 9.92308V10.3462C8 10.6223 8.22386 10.8462 8.5 10.8462H12H15.5C15.7761 10.8462 16 10.6223 16 10.3462V9.92308C16 9.41328 16.4133 9 16.9231 9H18.5C19.8807 9 21 10.1193 21 11.5V16.5C21 18.9853 18.9853 21 16.5 21H7.5C5.01472 21 3 18.9853 3 16.5V11.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M14 16L12.4934 17.6583C12.2289 17.9494 11.7711 17.9494 11.5066 17.6583L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 13.5L12 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 6.5V4.67785C5 3.7512 5.89543 3 7 3H17C18.1046 3 19 3.7512 19 4.67785V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9.5V8.5C4 7.39543 4.89543 6.5 6 6.5H18C19.1046 6.5 20 7.39543 20 8.5V9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.importData">Importar datos</span></button>
     <button class="with-icon" data-i18n-title="markup.button.mergeTablesTip" id="btn-merge-tables" type="button" title="Fusionar varias tablas en una tabla nueva"><svg class="icon" data-icon="exchange" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M18 9L15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 15L6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.mergeTables">Fusionar tablas…</span></button>
     <button class="with-icon" data-i18n-title="markup.button.settingsProjectNameRowsPer" id="btn-settings" type="button" title="Ajustes: nombre del proyecto, filas por página y CSV al importar/exportar"><svg class="icon" data-icon="settings" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M10.4959 4.20228C10.858 2.59924 13.142 2.59924 13.5041 4.20228L13.632 4.7684C13.8667 5.80733 15.0589 6.30116 15.9595 5.73247L16.4502 5.42259C17.8398 4.54511 19.4549 6.16021 18.5774 7.54977L18.2675 8.0405C17.6988 8.94107 18.1927 10.1333 19.2316 10.368L19.7977 10.4959C21.4008 10.858 21.4008 13.142 19.7977 13.5041L19.2316 13.632C18.1927 13.8667 17.6988 15.0589 18.2675 15.9595L18.5774 16.4502C19.4549 17.8398 17.8398 19.4549 16.4502 18.5774L15.9595 18.2675C15.0589 17.6988 13.8667 18.1927 13.632 19.2316L13.5041 19.7977C13.142 21.4008 10.858 21.4008 10.4959 19.7977L10.368 19.2316C10.1333 18.1927 8.94107 17.6988 8.0405 18.2675L7.54977 18.5774C6.16021 19.4549 4.54512 17.8398 5.42259 16.4502L5.73247 15.9595C6.30116 15.0589 5.80732 13.8667 4.76839 13.632L4.20228 13.5041C2.59924 13.142 2.59924 10.858 4.20228 10.4959L4.7684 10.368C5.80733 10.1333 6.30116 8.94107 5.73247 8.0405L5.42259 7.54977C4.54511 6.1602 6.16021 4.54512 7.54977 5.42259L8.0405 5.73247C8.94107 6.30116 10.1333 5.80732 10.368 4.76839L10.4959 4.20228Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.settings">Ajustes</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.loadTablesTip" id="btn-load-tables" type="button" title="Cargar tablas desde un fichero JSON: las tablas con el mismo nombre se sustituyen y las demás se añaden"><svg class="icon" data-icon="open-folder" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.5V10.2414C20 8.94493 18.8766 7.92817 17.5808 7.97033C15.5033 8.03793 12.6649 7.95741 11.5 7.12774C10.8433 6.65998 10.6248 6.15674 10.2188 5.40785C9.50343 4.08869 8.31881 3 6.8182 3H5.65625C4.18924 3 3 4.18924 3 5.65625V7.12774V14.6953V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 16L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5.15705 12.7291L3.39963 16.0625C2.22841 18.2839 3.77194 21 6.20558 21H16.037C17.2053 21 18.2807 20.3373 18.843 19.2709L20.6004 15.9375C21.7716 13.7161 20.2281 11 17.7944 11H7.96299C6.79475 11 5.71928 11.6627 5.15705 12.7291Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.loadTables">Cargar tablas</span></button>
+    <input id="file-load-tables" type="file" accept=".json,application/json" title="Fichero JSON de tablas" hidden>
+    <button class="with-icon" data-i18n-title="markup.button.saveTablesTip" id="btn-save-tables" type="button" title="Guardar solo las tablas, con sus carpetas, en un fichero JSON"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.saveTables">Guardar tablas</span></button>
+    <button class="with-icon" data-i18n-title="markup.button.loadObjectsTip" id="btn-load-objects" type="button" title="Cargar consultas y scripts desde un fichero JSON: los que tienen el mismo nombre se sustituyen y los demás se añaden"><svg class="icon" data-icon="open-folder" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.5V10.2414C20 8.94493 18.8766 7.92817 17.5808 7.97033C15.5033 8.03793 12.6649 7.95741 11.5 7.12774C10.8433 6.65998 10.6248 6.15674 10.2188 5.40785C9.50343 4.08869 8.31881 3 6.8182 3H5.65625C4.18924 3 3 4.18924 3 5.65625V7.12774V14.6953V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 16L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5.15705 12.7291L3.39963 16.0625C2.22841 18.2839 3.77194 21 6.20558 21H16.037C17.2053 21 18.2807 20.3373 18.843 19.2709L20.6004 15.9375C21.7716 13.7161 20.2281 11 17.7944 11H7.96299C6.79475 11 5.71928 11.6627 5.15705 12.7291Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.loadObjects">Cargar consultas y scripts</span></button>
+    <input id="file-load-objects" type="file" accept=".json,application/json" title="Fichero JSON de consultas y scripts" hidden>
+    <button class="with-icon" data-i18n-title="markup.button.saveObjectsTip" id="btn-save-objects" type="button" title="Guardar solo las consultas y scripts, con sus carpetas, en un fichero JSON"><svg class="icon" data-icon="download" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M20 11.2192V14.2192C20 16.7045 17.9853 18.7192 15.5 18.7192H8.5C6.01472 18.7192 4 16.7045 4 14.2192V11.2192" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 13.0239L11.988 16L9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.saveObjects">Guardar consultas y scripts</span></button>
     <button class="with-icon" data-i18n-title="markup.button.testsRunsEveryQueryCompares" id="btn-tests" type="button" hidden title="Pruebas: ejecuta todas las consultas y compara cada resultado con el resultado asertado (assert) del proyecto (aparece cuando alguna consulta es un test)"><svg class="icon" data-icon="check-circle" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 12L10.9976 14.5L15.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="markup.button.tests">Pruebas</span></button>
     <button class="with-icon" data-i18n-title="markup.button.selfTestsRunsProgramS" id="btn-auto-test" type="button" title="Auto-tests: ejecuta la batería interna de pruebas del programa (motor SQL, utilidades e interfaz) y muestra el informe"><svg class="icon" data-icon="verification" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9.80078 12L11.4655 14L14.8008 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.8595 3.53849C11.4503 2.8205 12.5497 2.8205 13.1405 3.53849L14.2132 4.84192C14.5258 5.22174 15.0069 5.42104 15.4965 5.37349L17.1767 5.21032C18.1022 5.12044 18.8796 5.89779 18.7897 6.8233L18.6265 8.50345C18.579 8.99306 18.7783 9.4742 19.1581 9.78678L20.4615 10.8595C21.1795 11.4503 21.1795 12.5497 20.4615 13.1405L19.1581 14.2132C18.7783 14.5258 18.579 15.0069 18.6265 15.4965L18.7897 17.1767C18.8796 18.1022 18.1022 18.8796 17.1767 18.7897L15.4965 18.6265C15.0069 18.579 14.5258 18.7783 14.2132 19.1581L13.1405 20.4615C12.5497 21.1795 11.4503 21.1795 10.8595 20.4615L9.78678 19.1581C9.4742 18.7783 8.99306 18.579 8.50345 18.6265L6.8233 18.7897C5.89779 18.8796 5.12044 18.1022 5.21032 17.1767L5.37349 15.4965C5.42104 15.0069 5.22174 14.5258 4.84192 14.2132L3.53849 13.1405C2.8205 12.5497 2.8205 11.4503 3.53849 10.8595L4.84192 9.78678C5.22174 9.4742 5.42104 8.99306 5.37349 8.50345L5.21032 6.8233C5.12044 5.89779 5.89779 5.12044 6.8233 5.21032L8.50345 5.37349C8.99306 5.42104 9.4742 5.22174 9.78678 4.84192L10.8595 3.53849Z" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="markup.button.selfTests">Auto-tests</span></button><button class="with-icon" data-i18n-title="markup.button.helpTip" id="btn-help" type="button" title="Abrir la ayuda completa en otra pestaña"><svg class="icon" data-icon="help" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M9.4 9.2C9.6 8 10.6 7 12 7C13.5 7 14.6 8 14.6 9.3C14.6 10.3 14.1 10.8 13.2 11.4C12.4 12 12 12.5 12 13.5V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg><span data-i18n="markup.button.help">Ayuda</span></button>
     <span class="header-right">
-      <span id="project-dirty" class="warning" aria-live="polite"></span>
-      <span data-i18n-title="markup.span.showsWhetherProjectIsTest" id="project-test" title="Indica si el proyecto está en modo test"></span>
       <label class="language-picker">
         <span class="muted" data-i18n="language.label">Language</span>
         <select id="language-select" data-i18n-title="language.title" title="Interface language (saved with the project settings)"></select>
       </label>
     </span>
   </header>
+
+  <!-- Line under the header: the whole project name, the whole path and file
+       name it comes from and the state of the project (saved or not, test or
+       not). The project name is changed in «Settings»; here it is only shown. -->
+  <div data-i18n-aria-label="project.fileBarAria" data-i18n-title="project.fileBarTip" id="file-bar" aria-label="Proyecto, fichero y estado" title="Nombre del proyecto, fichero y estado">
+    <button class="with-icon" data-i18n-title="markup.button.goHomePageSummaryEverything" id="mark" type="button" title="Ir a la página de inicio (resumen de todo lo que puedes hacer)"><svg class="icon" data-icon="chart" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7.5 21H16.5C18.9853 21 21 18.9853 21 16.5V12V7.5C21 5.01472 18.9853 3 16.5 3H12H7.5C5.01472 3 3 5.01472 3 7.5V16.5C3 18.9853 5.01472 21 7.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.6667 12.5556H15.5C16.3284 12.5556 17 13.2271 17 14.0556V15.5C17 16.3284 16.3284 17 15.5 17H15.3333H13.6667M13.6667 12.5556V8.5C13.6667 7.67157 12.9951 7 12.1667 7H11.8333C11.0049 7 10.3333 7.67157 10.3333 8.5V10M13.6667 12.5556V17M10.3333 10H8.5C7.67157 10 7 10.6716 7 11.5V16.4444C7 16.7513 7.24873 17 7.55556 17H10.3333M10.3333 10V17M13.6667 17H10.3333" stroke="currentColor" stroke-width="1.5"/></svg>DATILANDIA</button>
+    <span class="file-bar-project">
+      <span class="muted" data-i18n="project.label">Proyecto:</span>
+      <span data-i18n-aria-label="markup.span.projectName" data-i18n-title="markup.span.projectNameChangedSettings" id="project-name" title="Nombre del proyecto (se cambia en «Ajustes»)" aria-label="Nombre del proyecto">Sin título</span>
+    </span>
+    <span class="file-bar-file">
+      <span class="muted" data-i18n="project.fileLabel">Fichero:</span>
+      <span id="project-file" class="mono" title=""></span>
+    </span>
+    <span class="file-bar-status">
+      <span id="project-dirty" class="warning" aria-live="polite"></span>
+      <span data-i18n-title="markup.span.showsWhetherProjectIsTest" id="project-test" title="Indica si el proyecto está en modo test"></span>
+    </span>
+  </div>
 
   <!-- History bar: a link to every place visited, so you can go back to any
        of them. The URL never changes, so the place on screen is saved inside. -->
@@ -2594,6 +2654,14 @@
               <dd class="data-figure" data-data="scriptsWithTest">0</dd>
             </div>
             <div class="data">
+              <dt data-i18n-title="dashboard.parameterizedTip" data-i18n="dashboard.parameterized" class="data-name" title="Consultas y scripts con parámetros {{ … }}">Parametrizadas</dt>
+              <dd class="data-figure" data-data="parameterized">0</dd>
+            </div>
+            <div class="data">
+              <dt data-i18n-title="dashboard.pivotTip" data-i18n="dashboard.pivot" class="data-name" title="Consultas que son sentencias PIVOT">Consultas PIVOT</dt>
+              <dd class="data-figure" data-data="pivotQueries">0</dd>
+            </div>
+            <div class="data">
               <dt data-i18n-title="markup.dt.queriesWhoseResultAnotherQuery" data-i18n="markup.dt.queriesUsedAsTables" class="data-name" title="Consultas y scripts cuyo resultado lee otra consulta o script, como si fuera una tabla">Consultas como tabla</dt>
               <dd class="data-figure" data-data="views">0</dd>
             </div>
@@ -2667,6 +2735,10 @@
               <h3 id="dashboard-usage-title" data-i18n="dashboard.usage">Uso y mantenimiento</h3>
               <ul class="dashboard-metrics" id="dashboard-usage"></ul>
             </section>
+            <section class="dashboard-panel" aria-labelledby="dashboard-params-title">
+              <h3 id="dashboard-params-title" data-i18n="dashboard.paramsAndPivot">Parámetros y PIVOT</h3>
+              <ul class="dashboard-metrics" id="dashboard-params"></ul>
+            </section>
           </div>
         </section>
         <div class="welcome-hero">
@@ -2685,7 +2757,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
         </pre>
         <h2 data-i18n="markup.h2.welcome">Bienvenido</h2>
-        <p data-i18n-html="markup.p.datilandiaIsSingleFileData"><b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, vistas (consultas y scripts usados como tabla) y relaciones. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página.</p>
+        <p data-i18n-html="markup.p.datilandiaIsSingleFileData"><b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b> y los <b>consultas con SQL</b>. Las tablas, las consultas y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, vistas (consultas y scripts usados como tabla) y relaciones. Pulsa <b>DATILANDIA</b> en la barra del proyecto para volver a esta página.</p>
         </div>
 
       </section>
@@ -3180,8 +3252,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
     <h3 data-i18n="markup.h3.project">Proyecto</h3>
     <div class="toolbar">
       <label data-i18n="markup.label.projectName" for="aj-name-project">Nombre del proyecto:</label>
-      <input id="aj-name-project" type="text" size="32" maxlength="80" placeholder="Untitled" title="Nombre del proyecto; se muestra en la barra superior">
-      <span data-i18n="markup.span.itIsShownTopBar" class="muted">Se muestra en la barra superior; por defecto «Sin título».</span>
+      <input id="aj-name-project" type="text" size="32" maxlength="80" placeholder="Untitled" title="Nombre del proyecto; se muestra en la barra del proyecto">
+      <span data-i18n="markup.span.itIsShownTopBar" class="muted">Se muestra en la barra del proyecto; por defecto «Sin título».</span>
     </div>
     <h3 data-i18n="markup.h3.rowsPerPage">Filas por página</h3>
     <div class="toolbar">
@@ -3443,6 +3515,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.importPastedText": "Import the pasted text",
         "markup.button.lastPage": "Last page",
         "markup.button.lastPageResult": "Last page of the result",
+        "markup.button.loadObjects": "Load queries and scripts",
+        "markup.button.loadObjectsTip": "Load queries and scripts from a JSON file: same-name ones are replaced and the rest are added",
+        "markup.button.loadTables": "Load tables",
+        "markup.button.loadTablesTip": "Load tables from a JSON file: same-name tables are replaced and the rest are added",
+        "markup.button.saveObjects": "Save queries and scripts",
+        "markup.button.saveObjectsTip": "Save only the queries and scripts, with their folders, to a JSON file",
+        "markup.button.saveTables": "Save tables",
+        "markup.button.saveTablesTip": "Save only the tables, with their folders, to a JSON file",
         "markup.button.new": "New project",
         "markup.button.newProjectDiscardsCurrentOne": "New project (discards the current one)",
         "markup.button.nextPage": "Next page",
@@ -3569,7 +3649,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.label.tables": "Tables:",
         "markup.p.everyFileCreatesTableFile": "Every file creates a table with the file name (without the extension, in lower case and with _). The JSON must be an array of objects with the same properties; the CSV must have the same fields in every row.",
         "markup.p.everyForeignKeyAppearsCell": "Every foreign key appears in the cell of the table that defines it (row, child) pointing to the table and the target field (column, parent): field → target field.",
-        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> is a single-file data analysis notebook: you <b>import</b> files or paste text, you <b>edit them as tables</b>, you <b>query them with SQL</b> and you combine everything with <b>JavaScript scripts</b>. Tables, queries, scripts and settings are saved together in <b>a JSON project file</b> that runs entirely in the browser. A project can also bring its own <b>tests</b> (test mode): datilandia runs them when it opens it and shows you the report. The <b>dashboard</b> above summarises the open project: tables, rows, fields, foreign keys, queries, scripts, tests, dependencies, views (queries and scripts used as tables), relations, the largest tables, the test coverage and the field types. Press <b>DATILANDIA</b> in the top bar to come back to this page. Press <b>Help</b> to open the complete help in another tab.",
+        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> is a single-file data analysis notebook: you <b>import</b> files or paste text, you <b>edit them as tables</b>, you <b>query them with SQL</b> and you combine everything with <b>JavaScript scripts</b>. Tables, queries, scripts and settings are saved together in <b>a JSON project file</b> that runs entirely in the browser. A project can also bring its own <b>tests</b> (test mode): datilandia runs them when it opens it and shows you the report. The <b>dashboard</b> above summarises the open project: tables, rows, fields, foreign keys, queries, scripts, tests, dependencies, views (queries and scripts used as tables), relations, the largest tables, the test coverage and the field types. Press <b>DATILANDIA</b> in the project bar to come back to this page. Press <b>Help</b> to open the complete help in another tab.",
         "markup.p.importColumnTypes": "The data is read as it comes and every column is stored with the <b>type</b> you choose: in <b>text</b> the leading zeros are kept.",
         "markup.p.originHas01Related": "An <b>origin</b> has 0 or 1 related targets.",
         "markup.p.targetHas01Several": "A <b>target</b> has 0, 1 or several related origins.",
@@ -3584,7 +3664,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.select.fieldDelimiterCSVFiles": "Field delimiter for CSV files",
         "markup.span.autoNumberedIDFieldIs": "The auto-numbered ID field is not changed.",
         "markup.span.formatIsDetectedItsOwn": "The format is detected on its own: JSON if it starts with [ or {; if not, CSV.",
-        "markup.span.itIsShownTopBar": "It is shown in the top bar; by default «Untitled».",
+        "markup.span.itIsShownTopBar": "It is shown in the project bar; by default «Untitled».",
         "markup.span.projectName": "Project name",
         "markup.span.projectNameChangedSettings": "Project name (changed in «Settings»)",
         "markup.span.showsWhetherProjectIsTest": "Shows whether the project is in test mode",
@@ -3726,7 +3806,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "busy.working": "Working…",
         "busy.importing": "Importing data…",
         "busy.updatingTable": "Updating the table…",
+        "busy.loadingPartial": "Loading the JSON file…",
         "busy.openingProject": "Opening the project…",
+        "busy.savingPartial": "Saving the JSON file…",
         "busy.savingProject": "Saving the project…",
         "busy.exportingCsv": "Exporting CSV…",
         "busy.exportingJson": "Exporting JSON…",
@@ -3772,6 +3854,32 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "model.fieldNameEmpty": "The field name cannot be empty.",
         "model.fieldNotFound": "Field “{fieldName}” does not exist in table “{tableName}”.",
         "model.tableHasIdField": "Table “{tableName}” already has an ID field (“{fieldName}”).",
+        "partial.cancelled": "Load cancelled.",
+        "partial.confirmObjects": {"one":"Load {count} query or script from “{file}”? Queries and scripts with the same name are replaced (overwritten) by the ones in the file.","other":"Load {count} queries and scripts from “{file}”? Queries and scripts with the same name are replaced (overwritten) by the ones in the file."},
+        "partial.confirmTables": {"one":"Load {count} table from “{file}”? Tables with the same name are replaced (overwritten) by the ones in the file.","other":"Load {count} tables from “{file}”? Tables with the same name are replaced (overwritten) by the ones in the file."},
+        "partial.continue": "Continue?",
+        "partial.fileTypeObjects": "Datilandia queries and scripts (JSON)",
+        "partial.fileTypeTables": "Datilandia tables (JSON)",
+        "partial.loadFailed": "“{file}” could not be loaded: {count} problem(s).",
+        "partial.loadFailedDetail": "“{file}” could not be loaded:\n\n• {detail}{rest}",
+        "partial.noOverwrite": "No name is repeated: nothing will be replaced.",
+        "partial.notObjectsFile": "This file has no queries or scripts. Use “Load tables” if it is a tables file.",
+        "partial.notTablesFile": "This file has no tables. Use “Load queries and scripts” if it is a queries file.",
+        "partial.nothingObjectsToSave": "There are no queries or scripts to save.",
+        "partial.nothingToSave": "There are no tables to save.",
+        "partial.objectsFileSuffix": "queries",
+        "partial.queryCount": {"one":"{count} query","other":"{count} queries"},
+        "partial.scriptCount": {"one":"{count} script","other":"{count} scripts"},
+        "partial.tableCount": {"one":"{count} table","other":"{count} tables"},
+        "partial.objectsLoaded": "Queries and scripts loaded from “{file}”: {queries}, {scripts}. Added: {added} · Replaced: {replaced}.",
+        "partial.objectsSaved": "Queries and scripts saved in “{name}”: {queries} and {scripts}.",
+        "partial.overwriteList": "They will be replaced: {names}.",
+        "partial.saveCancelled": "Save cancelled.",
+        "partial.tablesFileSuffix": "tables",
+        "partial.tablesLoaded": "Tables loaded from “{file}”. Added: {added} · Replaced: {replaced}.",
+        "partial.tablesSaved": "Tables saved in “{name}”: {tables}.",
+        "partial.unknownFile": "The file is neither a tables file nor a queries and scripts file.",
+        "partial.unknownKind": "The \"kind\" of the file must be \"tables\" or \"objects\".",
         "persistence.assertColumnsInvalid": "{where}: \"assert.columns\" must be a list of column names.",
         "persistence.assertEmpty": "{where}: \"assert\" needs at least \"rows\", \"rowCount\" or \"columns\" to check anything.",
         "persistence.assertIgnoreOrderInvalid": "{where}: \"assert.ignoreOrder\" must be true or false.",
@@ -3824,6 +3932,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "persistence.valueTypeInvalid": "{rowLabel}, field \"{fieldName}\": expected text, number, boolean or null (found {kind}).",
         "project.confirmDiscard": "There are unsaved changes that will be lost when you {action}. Continue?",
         "project.confirmNew": "Discard the current project and start a new one?",
+        "project.fileBarAria": "Project, file and state",
+        "project.fileBarTip": "Project name, file it was loaded from and whether it is saved and has tests",
+        "project.fileLabel": "File:",
+        "project.fileNameOnly": "The browser only provides the file name, not its folder.",
+        "project.noFile": "No file",
         "project.fileType": "Datilandia project (JSON)",
         "project.loadFailed": "“{file}” could not be loaded: {count} problem(s).",
         "project.loadFailedDetail": "“{file}” could not be loaded:\n\n• {detail}{rest}",
@@ -3838,6 +3951,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "project.savedIn": "Project saved in “{name}” ({tables} tables, {queries} queries).",
         "project.testMode": "test mode",
         "project.testModeTip": "Project in test mode: some query or script checks an asserted result (assert) and it is checked when opening the file",
+        "project.notSaved": "Not saved",
+        "project.notSavedTip": "The project has not been saved to a file yet",
+        "project.saved": "Saved",
+        "project.savedTip": "The project has no pending changes",
         "project.unsavedChanges": "Unsaved changes",
         "project.unsavedChangesTip": "Save the project with “Save project” or Ctrl+S",
         "project.windowTitle": "{dot}datilandia — world of data",
@@ -4364,6 +4481,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "dashboard.loadTime": "Load time",
         "dashboard.structure": "Structure",
         "dashboard.usage": "Usage and maintenance",
+        "dashboard.paramsAndPivot": "Parameters and PIVOT",
+        "dashboard.parameterized": "Parameterised",
+        "dashboard.parameterizedTip": "Queries and scripts with {{ … }} parameters",
+        "dashboard.parameterizedQueries": "Parameterised queries",
+        "dashboard.parameterizedScripts": "Parameterised scripts",
+        "dashboard.pivot": "PIVOT queries",
+        "dashboard.pivotTip": "Queries that are PIVOT statements",
+        "dashboard.pivotQueries": "PIVOT queries",
         "dashboard.averageRows": "Rows per table (avg.)",
         "dashboard.averageFields": "Fields per table (avg.)",
         "dashboard.largestTable": "Largest table",
@@ -4629,6 +4754,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.importPastedText": "Importar lo pegado",
         "markup.button.lastPage": "Última página",
         "markup.button.lastPageResult": "Última página del resultado",
+        "markup.button.loadObjects": "Cargar consultas y scripts",
+        "markup.button.loadObjectsTip": "Cargar consultas y scripts desde un fichero JSON: los que tienen el mismo nombre se sustituyen y los demás se añaden",
+        "markup.button.loadTables": "Cargar tablas",
+        "markup.button.loadTablesTip": "Cargar tablas desde un fichero JSON: las tablas con el mismo nombre se sustituyen y las demás se añaden",
+        "markup.button.saveObjects": "Guardar consultas y scripts",
+        "markup.button.saveObjectsTip": "Guardar solo las consultas y scripts, con sus carpetas, en un fichero JSON",
+        "markup.button.saveTables": "Guardar tablas",
+        "markup.button.saveTablesTip": "Guardar solo las tablas, con sus carpetas, en un fichero JSON",
         "markup.button.new": "Nuevo proyecto",
         "markup.button.newProjectDiscardsCurrentOne": "Nuevo proyecto (descarta el actual)",
         "markup.button.nextPage": "Página siguiente",
@@ -4755,7 +4888,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.label.tables": "Tablas:",
         "markup.p.everyFileCreatesTableFile": "Cada fichero crea una tabla con el nombre del fichero (sin extensión, en minúsculas y con _). El JSON debe ser un array de objetos con las mismas propiedades; el CSV debe tener los mismos campos en todas las filas.",
         "markup.p.everyForeignKeyAppearsCell": "Cada clave ajena aparece en la casilla de la tabla que la define (fila, hijo) apuntando a la tabla y el campo de destino (columna, padre): campo → campo destino.",
-        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b>, los <b>consultas con SQL</b> y lo combinas todo con <b>scripts JavaScript</b>. Las tablas, las consultas, los scripts y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, scripts, pruebas, dependencias, vistas (consultas y scripts usados como tabla), relaciones, las tablas con más filas, la cobertura de pruebas y los tipos de campo. Pulsa <b>DATILANDIA</b> en la barra superior para volver a esta página. Pulsa <b>Ayuda</b> para abrir la ayuda completa en otra pestaña.",
+        "markup.p.datilandiaIsSingleFileData": "<b>DATILANDIA</b> es un cuaderno de análisis de datos en un solo fichero: <b>importas</b> ficheros o pegas texto, los <b>editas como tablas</b>, los <b>consultas con SQL</b> y lo combinas todo con <b>scripts JavaScript</b>. Las tablas, las consultas, los scripts y los ajustes se guardan juntos en <b>un fichero de proyecto JSON</b> que se ejecuta enteramente en el navegador. Un proyecto puede traer además sus <b>pruebas</b> (modo test): datilandia las ejecuta al abrirlo y te enseña el informe. El <b>salpicadero</b> de arriba resume el proyecto abierto: tablas, filas, campos, claves ajenas, consultas, scripts, pruebas, dependencias, vistas (consultas y scripts usados como tabla), relaciones, las tablas con más filas, la cobertura de pruebas y los tipos de campo. Pulsa <b>DATILANDIA</b> en la barra del proyecto para volver a esta página. Pulsa <b>Ayuda</b> para abrir la ayuda completa en otra pestaña.",
         "markup.p.importColumnTypes": "Los datos se leen tal cual y cada columna se guarda con el <b>tipo</b> que elijas: en <b>texto</b> se conservan los ceros a la izquierda.",
         "markup.p.originHas01Related": "Un <b>origen</b> tiene 0 o 1 destinos relacionados.",
         "markup.p.targetHas01Several": "Un <b>destino</b> tiene 0, 1 o varios orígenes relacionados.",
@@ -4770,7 +4903,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.select.fieldDelimiterCSVFiles": "Separador de campos para ficheros CSV",
         "markup.span.autoNumberedIDFieldIs": "El campo ID autonumérico no se modifica.",
         "markup.span.formatIsDetectedItsOwn": "El formato se detecta solo: JSON si empieza por [ o {; si no, CSV.",
-        "markup.span.itIsShownTopBar": "Se muestra en la barra superior; por defecto «Sin título».",
+        "markup.span.itIsShownTopBar": "Se muestra en la barra del proyecto; por defecto «Sin título».",
         "markup.span.projectName": "Nombre del proyecto",
         "markup.span.projectNameChangedSettings": "Nombre del proyecto (se cambia en «Ajustes»)",
         "markup.span.showsWhetherProjectIsTest": "Indica si el proyecto está en modo test",
@@ -4912,7 +5045,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "busy.working": "Trabajando…",
         "busy.importing": "Importando datos…",
         "busy.updatingTable": "Actualizando la tabla…",
+        "busy.loadingPartial": "Cargando el fichero JSON…",
         "busy.openingProject": "Abriendo el proyecto…",
+        "busy.savingPartial": "Guardando el fichero JSON…",
         "busy.savingProject": "Guardando el proyecto…",
         "busy.exportingCsv": "Exportando CSV…",
         "busy.exportingJson": "Exportando JSON…",
@@ -4958,6 +5093,32 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "model.fieldNameEmpty": "El nombre del campo no puede estar vacío.",
         "model.fieldNotFound": "El campo «{fieldName}» no existe en la tabla «{tableName}».",
         "model.tableHasIdField": "La tabla «{tableName}» ya tiene campo ID («{fieldName}»).",
+        "partial.cancelled": "Carga cancelada.",
+        "partial.confirmObjects": {"one":"Se va a cargar {count} consulta o script desde «{file}». Las consultas y scripts con el mismo nombre se sustituyen (se machacan) por los del fichero.","other":"Se van a cargar {count} consultas y scripts desde «{file}». Las consultas y scripts con el mismo nombre se sustituyen (se machacan) por los del fichero."},
+        "partial.confirmTables": {"one":"Se va a cargar {count} tabla desde «{file}». Las tablas con el mismo nombre se sustituyen (se machacan) por las del fichero.","other":"Se van a cargar {count} tablas desde «{file}». Las tablas con el mismo nombre se sustituyen (se machacan) por las del fichero."},
+        "partial.continue": "¿Continuar?",
+        "partial.fileTypeObjects": "Consultas y scripts de datilandia (JSON)",
+        "partial.fileTypeTables": "Tablas de datilandia (JSON)",
+        "partial.loadFailed": "No se pudo cargar «{file}»: {count} problema(s).",
+        "partial.loadFailedDetail": "No se pudo cargar «{file}»:\n\n• {detail}{rest}",
+        "partial.noOverwrite": "No hay ningún nombre repetido: no se sustituirá nada.",
+        "partial.notObjectsFile": "Este fichero no contiene consultas ni scripts. Usa «Cargar tablas» si es un fichero de tablas.",
+        "partial.notTablesFile": "Este fichero no contiene tablas. Usa «Cargar consultas y scripts» si es un fichero de consultas.",
+        "partial.nothingObjectsToSave": "No hay consultas ni scripts que guardar.",
+        "partial.nothingToSave": "No hay tablas que guardar.",
+        "partial.objectsFileSuffix": "consultas",
+        "partial.queryCount": {"one":"{count} consulta","other":"{count} consultas"},
+        "partial.scriptCount": {"one":"{count} script","other":"{count} scripts"},
+        "partial.tableCount": {"one":"{count} tabla","other":"{count} tablas"},
+        "partial.objectsLoaded": "Consultas y scripts cargados desde «{file}»: {queries}, {scripts}. Añadidos: {added} · Sustituidos: {replaced}.",
+        "partial.objectsSaved": "Consultas y scripts guardados en «{name}»: {queries} y {scripts}.",
+        "partial.overwriteList": "Se sustituirán: {names}.",
+        "partial.saveCancelled": "Guardado cancelado.",
+        "partial.tablesFileSuffix": "tablas",
+        "partial.tablesLoaded": "Tablas cargadas desde «{file}». Añadidas: {added} · Sustituidas: {replaced}.",
+        "partial.tablesSaved": "Tablas guardadas en «{name}»: {tables}.",
+        "partial.unknownFile": "El fichero no es de tablas ni de consultas y scripts.",
+        "partial.unknownKind": "El campo \"kind\" del fichero debe ser \"tables\" u \"objects\".",
         "persistence.assertColumnsInvalid": "{where}: \"assert.columns\" debe ser una lista de nombres de columna.",
         "persistence.assertEmpty": "{where}: \"assert\" necesita al menos \"rows\", \"rowCount\" o \"columns\" para comprobar algo.",
         "persistence.assertIgnoreOrderInvalid": "{where}: \"assert.ignoreOrder\" debe ser true o false.",
@@ -5010,6 +5171,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "persistence.valueTypeInvalid": "{rowLabel}, campo \"{fieldName}\": se esperaba texto, número, booleano o null (se encontró {kind}).",
         "project.confirmDiscard": "Hay cambios sin guardar que se perderán al {action}. ¿Continuar?",
         "project.confirmNew": "¿Descartar el proyecto actual y empezar uno nuevo?",
+        "project.fileBarAria": "Proyecto, fichero y estado",
+        "project.fileBarTip": "Nombre del proyecto, fichero del que se ha cargado y si está guardado y tiene test",
+        "project.fileLabel": "Fichero:",
+        "project.fileNameOnly": "El navegador solo proporciona el nombre del fichero, no su carpeta.",
+        "project.noFile": "Sin fichero",
         "project.fileType": "Proyecto datilandia (JSON)",
         "project.loadFailed": "No se pudo cargar «{file}»: {count} problema(s).",
         "project.loadFailedDetail": "No se pudo cargar «{file}»:\n\n• {detail}{rest}",
@@ -5024,6 +5190,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "project.savedIn": "Proyecto guardado en «{name}» ({tables} tablas, {queries} consultas).",
         "project.testMode": "modo test",
         "project.testModeTip": "Proyecto en modo test: alguna consulta o script comprueba un resultado asertado (assert) y se comprueba al abrirlo",
+        "project.notSaved": "Sin guardar",
+        "project.notSavedTip": "El proyecto todavía no se ha guardado en un fichero",
+        "project.saved": "Guardado",
+        "project.savedTip": "El proyecto no tiene cambios pendientes",
         "project.unsavedChanges": "Cambios pendientes de guardar",
         "project.unsavedChangesTip": "Guarda el proyecto con «Guardar proyecto» o Ctrl+S",
         "project.windowTitle": "{dot}datilandia — el mundo de los datos",
@@ -5550,6 +5720,14 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "dashboard.loadTime": "Tiempo de carga",
         "dashboard.structure": "Estructura",
         "dashboard.usage": "Uso y mantenimiento",
+        "dashboard.paramsAndPivot": "Parámetros y PIVOT",
+        "dashboard.parameterized": "Parametrizadas",
+        "dashboard.parameterizedTip": "Consultas y scripts con parámetros {{ … }}",
+        "dashboard.parameterizedQueries": "Consultas parametrizadas",
+        "dashboard.parameterizedScripts": "Scripts parametrizados",
+        "dashboard.pivot": "Consultas PIVOT",
+        "dashboard.pivotTip": "Consultas que son sentencias PIVOT",
+        "dashboard.pivotQueries": "Consultas PIVOT",
         "dashboard.averageRows": "Filas por tabla (media)",
         "dashboard.averageFields": "Campos por tabla (media)",
         "dashboard.largestTable": "Tabla más grande",
@@ -6014,6 +6192,17 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           || (project.scripts || []).some((script) => Boolean(script.assert));
       },
 
+      /** Does a SQL or a JavaScript script carry {{ … }} parameters? Strings
+       *  and comments are skipped, so a parameter inside them does not count. */
+      hasParameters(text, script) {
+        try {
+          const spans = script ? SqlParams.scanCode(text) : SqlParams.paramSpans(text);
+          return spans.length > 0;
+        } catch (err) {
+          return false;
+        }
+      },
+
       /** Figures of the open project for the welcome dashboard: tables, rows and
        *  fields added up, foreign keys, queries (how many check an asserted
        *  result and how many are read as a table) and related table pairs.
@@ -6080,6 +6269,18 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const scriptsWithTest = scripts.filter((script) => Boolean(script.assert)).length;
         const tested = queriesWithTest + scriptsWithTest;
         const testable = queries.length + scripts.length;
+        let parameterizedQueries = 0;
+        let pivotQueries = 0;
+        queries.forEach((query) => {
+          if (Model.hasParameters(query.sql)) {
+            parameterizedQueries += 1;
+          }
+          if (PivotEngine.isPivot(query.sql)) {
+            pivotQueries += 1;
+          }
+        });
+        const parameterizedScripts = scripts.filter((script) => Model.hasParameters(script.code, true)).length;
+        const parameterized = parameterizedQueries + parameterizedScripts;
         const tableFolders = Model.foldersOf(project, "tables");
         const objectFolders = Model.foldersOf(project, "objects");
         const emptyTableFolders = tableFolders
@@ -6105,6 +6306,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           queriesWithTest,
           scripts: scripts.length,
           scriptsWithTest,
+          parameterized,
+          parameterizedQueries,
+          parameterizedScripts,
+          pivotQueries,
           relatedPairs: parejas.size,
           views,
           dependencies,
@@ -8600,6 +8805,386 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         const fileName = Persistence.projectFileName(project);
         Utils.downloadChunks(fileName, [...Persistence.serializeProjectChunks(project)]);
         return fileName;
+      },
+    };
+
+    /* =====================================================================
+       8b · PARTIAL PROJECT FILES
+       Two files besides the project file: one with only the tables (and their
+       folders) and one with only the queries and scripts (and their folders).
+       Loading them merges them into the open project: an item with the same
+       name replaces the one already there; the rest is kept.
+       ===================================================================== */
+
+    const PartialProject = {
+      /** Kind of content of a partial file. */
+      TABLES: "tables",
+      OBJECTS: "objects",
+
+      isKind(kind) {
+        return kind === PartialProject.TABLES || kind === PartialProject.OBJECTS;
+      },
+
+      /** Plain object written to the file: only the kind asked for. */
+      toJson(project, kind) {
+        if (kind === PartialProject.TABLES) {
+          const tableFolders = Model.foldersOf(project, "tables").filter((name) => name);
+          const content = {
+            format: Persistence.FORMAT,
+            version: Persistence.VERSION,
+            kind: PartialProject.TABLES,
+            name: project.name || "",
+          };
+          if (tableFolders.length > 0) {
+            content.tableFolders = tableFolders;
+          }
+          // Like the whole project file, a field without a known type takes the
+          // one detected in its rows before it is written.
+          (project.tables || []).forEach((table) => {
+            table.fields.forEach((field) => {
+              if (!Model.FIELD_TYPES.includes(field.type)) {
+                field.type = Model.fieldTypeFromRows(table.rows, field.name);
+              }
+            });
+          });
+          content.tables = (project.tables || []).map((table) => Persistence.tableToJson(table));
+          return content;
+        }
+        if (kind !== PartialProject.OBJECTS) {
+          throw new Error(`Unknown partial project kind: ${kind}`);
+        }
+        const folders = Model.foldersOf(project, "queries").filter((name) => name);
+        const queries = project.queries || [];
+        const scripts = Array.isArray(project.scripts) ? project.scripts : [];
+        const content = {
+          format: Persistence.FORMAT,
+          version: Persistence.VERSION,
+          kind: PartialProject.OBJECTS,
+          name: project.name || "",
+          queries: queries.map((query) => Persistence.queryToJson(query)),
+        };
+        if (folders.length > 0) {
+          content.folders = folders;
+        }
+        if (scripts.length > 0) {
+          content.scripts = scripts.map((script) => Persistence.scriptToJson(script));
+        }
+        // The mixed order of queries and scripts is part of what is saved, so
+        // the file keeps the order in which they are shown.
+        const order = Model.objectsInOrder(project)
+          .map((entry) => Model.objectKey(entry.kind, entry.item.name));
+        if (order.length > 0) {
+          content.objectOrder = order;
+        }
+        return content;
+      },
+
+      /** Serialised partial file, in one text. */
+      serialize(project, kind) {
+        return JSON.stringify(PartialProject.toJson(project, kind), null, 2);
+      },
+
+      /** Serialised partial file in chunks, for files too large for one string. */
+      *serializeChunks(project, kind) {
+        yield* jsonBatches(PartialProject.toJson(project, kind));
+      },
+
+      /** Suggested name of the partial file (slug + suffix + .json). */
+      fileName(project, kind) {
+        const base = Utils.slugify(project.name) || I18n.t("project.defaultFileName");
+        const suffix = I18n.t(kind === PartialProject.TABLES
+          ? "partial.tablesFileSuffix"
+          : "partial.objectsFileSuffix");
+        return `${base}_${suffix}.json`;
+      },
+
+      /** Validates a JSON text of tables or of queries and scripts.
+       *  `expectedKind` is the button pressed: the file must carry that kind.
+       *  Returns { ok: true, ... } or { ok: false, errors: [...] }. */
+      parse(text, expectedKind) {
+        let root;
+        try {
+          root = JSON.parse(text);
+        } catch (err) {
+          return { ok: false, errors: [I18n.t("persistence.invalidJson", { message: err.message })] };
+        }
+        return PartialProject.parseRoot(root, expectedKind);
+      },
+
+      /** Same as parse, from a binary stream read in chunks. */
+      async parseStream(stream, expectedKind) {
+        let root;
+        try {
+          root = await parseJsonStreamValue(stream);
+        } catch (err) {
+          return { ok: false, errors: [I18n.t("persistence.invalidJson", { message: err.message })] };
+        }
+        return PartialProject.parseRoot(root, expectedKind);
+      },
+
+      /** Kind of content of a parsed file, or null when it cannot be guessed
+       *  (a whole project file carries both kinds, so the button decides). */
+      guessKind(root) {
+        const hasTables = Array.isArray(root.tables);
+        const hasObjects = Array.isArray(root.queries) || Array.isArray(root.scripts);
+        if (hasTables && !hasObjects) {
+          return PartialProject.TABLES;
+        }
+        if (hasObjects && !hasTables) {
+          return PartialProject.OBJECTS;
+        }
+        return null;
+      },
+
+      /** Validates a plain object and turns it into a partial file. A whole
+       *  project file is accepted too: the kind asked for is read from it. */
+      parseRoot(root, expectedKind) {
+        const errors = [];
+        if (root === null || typeof root !== "object" || Array.isArray(root)) {
+          return { ok: false, errors: [I18n.t("persistence.rootNotObject")] };
+        }
+        if (root.format !== Persistence.FORMAT) {
+          errors.push(I18n.t("persistence.notProject", { format: Persistence.FORMAT }));
+        }
+        if (root.version !== Persistence.VERSION) {
+          errors.push(I18n.t("persistence.unsupportedVersion", { version: JSON.stringify(root.version), supported: Persistence.VERSION }));
+        }
+        if (root.kind !== undefined && !PartialProject.isKind(root.kind)) {
+          errors.push(I18n.t("partial.unknownKind"));
+        }
+        const declaredKind = PartialProject.isKind(root.kind) ? root.kind : null;
+        const expected = PartialProject.isKind(expectedKind) ? expectedKind : null;
+        const kind = expected || declaredKind || PartialProject.guessKind(root);
+        if (kind === null) {
+          errors.push(I18n.t("partial.unknownFile"));
+          return { ok: false, errors };
+        }
+        if (expected && declaredKind && declaredKind !== expected) {
+          errors.push(I18n.t(expected === PartialProject.TABLES
+            ? "partial.notTablesFile"
+            : "partial.notObjectsFile"));
+          return { ok: false, errors };
+        }
+        if (kind === PartialProject.TABLES) {
+          if (!Array.isArray(root.tables)) {
+            errors.push(I18n.t("partial.notTablesFile"));
+            return { ok: false, errors };
+          }
+          return PartialProject.parseTables(root, errors);
+        }
+        if (!Array.isArray(root.queries) && !Array.isArray(root.scripts)) {
+          errors.push(I18n.t("partial.notObjectsFile"));
+          return { ok: false, errors };
+        }
+        return PartialProject.parseObjects(root, errors);
+      },
+
+      /** Tables half of parseRoot. */
+      parseTables(root, errors) {
+        const tables = [];
+        root.tables.forEach((rawTable, index) => {
+          const table = Persistence.parseTable(rawTable, index, errors);
+          if (table) {
+            tables.push(table);
+          }
+        });
+        const seen = new Set();
+        tables.forEach((table) => {
+          if (seen.has(table.name)) {
+            errors.push(I18n.t("persistence.duplicateTableName", { tableName: table.name }));
+          }
+          seen.add(table.name);
+        });
+        const tableFolders = Persistence.parseFolders(root.tableFolders, "tableFolders", errors);
+        tables.forEach((table) => {
+          if (table.folder && !tableFolders.includes(table.folder)) {
+            tableFolders.push(table.folder);
+          }
+        });
+        if (errors.length > 0) {
+          return { ok: false, errors };
+        }
+        const name = typeof root.name === "string" && root.name.trim() !== "" ? root.name : "";
+        return { ok: true, kind: PartialProject.TABLES, name, tables, tableFolders, queries: [], scripts: [], folders: [], objectOrder: [] };
+      },
+
+      /** Queries and scripts half of parseRoot. */
+      parseObjects(root, errors) {
+        const queries = Persistence.parseQueries(root.queries, errors);
+        const scripts = Persistence.parseScripts(root.scripts, errors);
+        const seenQueries = new Set();
+        queries.forEach((query) => {
+          if (seenQueries.has(query.name)) {
+            errors.push(I18n.t("persistence.duplicateQueryName", { queryName: query.name }));
+          }
+          seenQueries.add(query.name);
+        });
+        const seenScripts = new Set();
+        scripts.forEach((script) => {
+          if (seenScripts.has(script.name)) {
+            errors.push(I18n.t("persistence.duplicateScriptName", { scriptName: script.name }));
+          }
+          seenScripts.add(script.name);
+        });
+        const folders = Persistence.parseFolders(root.folders, "folders", errors);
+        const rawScriptFolders = Persistence.parseFolders(root.scriptFolders, "scriptFolders", errors);
+        [...queries, ...scripts].forEach((item) => {
+          if (item.folder && !folders.includes(item.folder)) {
+            folders.push(item.folder);
+          }
+        });
+        rawScriptFolders.forEach((name) => {
+          if (!folders.includes(name)) {
+            folders.push(name);
+          }
+        });
+        const knownObjects = new Set(
+          queries.map((query) => Model.objectKey("query", query.name))
+            .concat(scripts.map((script) => Model.objectKey("script", script.name))),
+        );
+        const objectOrder = [];
+        (Array.isArray(root.objectOrder) ? root.objectOrder : []).forEach((key) => {
+          if (typeof key === "string" && knownObjects.has(key) && !objectOrder.includes(key)) {
+            objectOrder.push(key);
+          }
+        });
+        if (errors.length > 0) {
+          return { ok: false, errors };
+        }
+        const name = typeof root.name === "string" && root.name.trim() !== "" ? root.name : "";
+        return { ok: true, kind: PartialProject.OBJECTS, name, tables: [], tableFolders: [], queries, scripts, folders, objectOrder };
+      },
+
+      /** Names of the items of the file that already exist in the project and
+       *  would be replaced. */
+      conflicts(project, parsed, kind) {
+        if (kind === PartialProject.TABLES) {
+          const current = new Set((project.tables || []).map((table) => table.name));
+          return {
+            tables: parsed.tables.filter((table) => current.has(table.name)).map((table) => table.name),
+            queries: [],
+            scripts: [],
+          };
+        }
+        const currentQueries = new Set((project.queries || []).map((query) => query.name));
+        const currentScripts = new Set((project.scripts || []).map((script) => script.name));
+        return {
+          tables: [],
+          queries: parsed.queries.filter((query) => currentQueries.has(query.name)).map((query) => query.name),
+          scripts: parsed.scripts.filter((script) => currentScripts.has(script.name)).map((script) => script.name),
+        };
+      },
+
+      /** All names that would be replaced, without repetitions. */
+      conflictNames(project, parsed, kind) {
+        const found = PartialProject.conflicts(project, parsed, kind);
+        return [...new Set([...found.tables, ...found.queries, ...found.scripts])];
+      },
+
+      /** Merges a parsed partial file into the project: same names replace,
+       *  new ones are appended and the folders are joined. Returns the lists of
+       *  added and replaced items as { kind, name }. */
+      merge(project, parsed, kind) {
+        if (kind === PartialProject.TABLES) {
+          if (!Array.isArray(project.tables)) {
+            project.tables = [];
+          }
+          const folders = Array.isArray(project.tableFolders) ? project.tableFolders : (project.tableFolders = []);
+          const index = new Map(project.tables.map((table, position) => [table.name, position]));
+          const added = [];
+          const replaced = [];
+          (parsed.tables || []).forEach((table) => {
+            const position = index.get(table.name);
+            if (position === undefined) {
+              project.tables.push(table);
+              index.set(table.name, project.tables.length - 1);
+              added.push({ kind: "table", name: table.name });
+            } else {
+              project.tables[position] = table;
+              replaced.push({ kind: "table", name: table.name });
+            }
+          });
+          (parsed.tableFolders || []).forEach((name) => {
+            if (!folders.includes(name)) {
+              folders.push(name);
+            }
+          });
+          (parsed.tables || []).forEach((table) => {
+            if (table.folder && !folders.includes(table.folder)) {
+              folders.push(table.folder);
+            }
+          });
+          return { added, replaced };
+        }
+        if (!Array.isArray(project.queries)) {
+          project.queries = [];
+        }
+        if (!Array.isArray(project.scripts)) {
+          project.scripts = [];
+        }
+        // The order that is already on screen is kept; the new items follow it
+        // in the order of the file.
+        const existingOrder = Model.objectsInOrder(project)
+          .map((entry) => Model.objectKey(entry.kind, entry.item.name));
+        const folders = Array.isArray(project.folders) ? project.folders : (project.folders = []);
+        const queryIndex = new Map(project.queries.map((query, position) => [query.name, position]));
+        const scriptIndex = new Map(project.scripts.map((script, position) => [script.name, position]));
+        const added = [];
+        const replaced = [];
+        (parsed.queries || []).forEach((query) => {
+          const position = queryIndex.get(query.name);
+          if (position === undefined) {
+            project.queries.push(query);
+            queryIndex.set(query.name, project.queries.length - 1);
+            added.push({ kind: "query", name: query.name });
+          } else {
+            project.queries[position] = query;
+            replaced.push({ kind: "query", name: query.name });
+          }
+        });
+        (parsed.scripts || []).forEach((script) => {
+          const position = scriptIndex.get(script.name);
+          if (position === undefined) {
+            project.scripts.push(script);
+            scriptIndex.set(script.name, project.scripts.length - 1);
+            added.push({ kind: "script", name: script.name });
+          } else {
+            project.scripts[position] = script;
+            replaced.push({ kind: "script", name: script.name });
+          }
+        });
+        (parsed.folders || []).forEach((name) => {
+          if (!folders.includes(name)) {
+            folders.push(name);
+          }
+        });
+        [...(parsed.queries || []), ...(parsed.scripts || [])].forEach((item) => {
+          if (item.folder && !folders.includes(item.folder)) {
+            folders.push(item.folder);
+          }
+        });
+        // Queries and scripts share the folder list.
+        project.folders = folders;
+        project.scriptFolders = folders.slice();
+        const knownObjects = new Set(project.queries
+          .map((query) => Model.objectKey("query", query.name))
+          .concat(project.scripts.map((script) => Model.objectKey("script", script.name))));
+        const order = [];
+        const seen = new Set();
+        const addKey = (key) => {
+          if (knownObjects.has(key) && !seen.has(key)) {
+            seen.add(key);
+            order.push(key);
+          }
+        };
+        existingOrder.forEach(addKey);
+        (parsed.objectOrder || []).forEach(addKey);
+        project.queries.forEach((query) => addKey(Model.objectKey("query", query.name)));
+        project.scripts.forEach((script) => addKey(Model.objectKey("script", script.name)));
+        if (order.length > 0) {
+          project.objectOrder = order;
+        }
+        return { added, replaced };
       },
     };
 
@@ -16056,6 +16641,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  the dashboard and the auxiliary panels. */
       renderChrome() {
         UiTests.updateButton();
+        UiProject.updateFileBar();
         UiProject.updateTestingIndicator();
         UiProject.updateDirtyIndicator();
         UiQueries.updateTestControls();
@@ -24161,23 +24747,94 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Marks the project as saved (no pending changes). */
       markClean() {
-        if (Store.dirty) {
-          Store.dirty = false;
-          UiProject.updateDirtyIndicator();
-        }
+        Store.dirty = false;
+        UiProject.updateDirtyIndicator();
       },
 
-      /** Reflects the «unsaved» state in the header and the title. */
+      /** Reflects in the project bar whether the project is saved to a file,
+       *  has pending changes or has not been saved yet, and also in the title
+       *  of the window. */
       updateDirtyIndicator() {
         const marker = document.getElementById("project-dirty");
-        marker.textContent = Store.dirty ? I18n.t("project.unsavedChanges") : "";
-        marker.title = Store.dirty ? I18n.t("project.unsavedChangesTip") : "";
+        const hasFile = Boolean(UiProject.fileMeta && (UiProject.fileMeta.path || UiProject.fileMeta.name));
+        const saved = !Store.dirty && hasFile;
+        const notSaved = !Store.dirty && !hasFile;
+        if (saved) {
+          marker.textContent = I18n.t("project.saved");
+          marker.title = I18n.t("project.savedTip");
+        } else if (notSaved) {
+          marker.textContent = I18n.t("project.notSaved");
+          marker.title = I18n.t("project.notSavedTip");
+        } else {
+          marker.textContent = I18n.t("project.unsavedChanges");
+          marker.title = I18n.t("project.unsavedChangesTip");
+        }
+        marker.classList.toggle("is-saved", saved);
+        marker.classList.toggle("warning", Store.dirty);
         document.title = I18n.t("project.windowTitle", { dot: Store.dirty ? "● " : "" });
       },
 
-      /** Shows the project name in the header (read-only). */
+      /** Shows the project name and the loaded file in the bar under the
+       *  header (both read-only). */
       showName() {
-        document.getElementById("project-name").textContent = Store.project.name || I18n.t("misc.untitled");
+        UiProject.updateFileBar();
+      },
+
+      /** File name without its folder, for callers that hand in a full path. */
+      baseNameOf(value) {
+        const text = String(value == null ? "" : value).replace(/\\/g, "/");
+        const name = text.slice(text.lastIndexOf("/") + 1);
+        return name || text;
+      },
+
+      /** Whole path of a file when the environment provides one (the File
+       *  System Access API only gives the name; some shells add `path` or
+       *  `webkitRelativePath`). It falls back to the full name it was given. */
+      pathOf(file, fileName) {
+        const candidates = [];
+        if (file && typeof file.path === "string" && file.path.trim() !== "") {
+          candidates.push(file.path);
+        }
+        if (file && typeof file.webkitRelativePath === "string" && file.webkitRelativePath.trim() !== "") {
+          candidates.push(file.webkitRelativePath);
+        }
+        if (typeof fileName === "string" && fileName.trim() !== "") {
+          candidates.push(fileName);
+        }
+        if (file && typeof file.name === "string" && file.name.trim() !== "") {
+          candidates.push(file.name);
+        }
+        return candidates.find((candidate) => /[\\/]/.test(candidate)) || candidates[0] || "";
+      },
+
+      /** Repaints the line under the header: the project name and the whole
+       *  path and file name of the loaded file (or «No file» if none). */
+      updateFileBar() {
+        const name = document.getElementById("project-name");
+        if (name) {
+          name.textContent = Store.project.name || I18n.t("misc.untitled");
+        }
+        const file = document.getElementById("project-file");
+        if (!file) {
+          return;
+        }
+        const meta = UiProject.fileMeta;
+        const path = meta && (meta.path || meta.name) ? (meta.path || meta.name) : "";
+        file.textContent = path || I18n.t("project.noFile");
+        file.title = !path
+          ? I18n.t("project.noFile")
+          : (/[\\/]/.test(path) ? path : `${path} — ${I18n.t("project.fileNameOnly")}`);
+      },
+
+      /** Remembers the file the project was just saved in, so the project bar
+       *  shows it. */
+      noteSavedFile(fileName, path) {
+        const meta = UiProject.fileMeta || {};
+        UiProject.fileMeta = Object.assign({}, meta, {
+          name: UiProject.baseNameOf(fileName),
+          path: path || fileName,
+        });
+        UiProject.updateFileBar();
       },
 
       /** Renames the project when its name is no more than the «Untitled»
@@ -24191,7 +24848,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         }
       },
 
-      /** Reflects in the header whether the project is in test mode. */
+      /** Reflects in the project bar whether the project is in test mode. */
       updateTestingIndicator() {
         const mark = document.getElementById("project-test");
         const test = Model.isTestProject(Store.project);
@@ -24221,9 +24878,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           UiProject.setName(I18n.t("misc.untitled"));
         }
         const fileName = Persistence.projectFileName(Store.project);
+        // With a file handle already open, «Save» overwrites that file and the
+        // path it had is kept; «Save as» or the first save asks for a new file,
+        // whose folder the browser does not reveal.
+        const reuseHandle = !as && Boolean(UiProject.fileHandle);
         if (typeof window.showSaveFilePicker === "function") {
           try {
-            if (as || !UiProject.fileHandle) {
+            if (!reuseHandle) {
               UiProject.fileHandle = await window.showSaveFilePicker({
                 suggestedName: fileName,
                 types: [{ description: I18n.t("project.fileType"), accept: { "application/json": [".json"] } }],
@@ -24243,8 +24904,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
                 throw err;
               }
             });
+            const savedName = UiProject.fileHandle.name;
+            const knownPath = reuseHandle && UiProject.fileMeta && /[\\/]/.test(UiProject.fileMeta.path || "")
+              ? UiProject.fileMeta.path
+              : savedName;
+            UiProject.noteSavedFile(savedName, knownPath);
             UiProject.markClean();
-            setStatus(I18n.t("project.savedIn", { name: UiProject.fileHandle.name, tables: Store.project.tables.length, queries: Store.project.queries.length }));
+            setStatus(I18n.t("project.savedIn", { name: savedName, tables: Store.project.tables.length, queries: Store.project.queries.length }));
             return true;
           } catch (err) {
             if (err && err.name === "AbortError") {
@@ -24255,6 +24921,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           }
         }
         const savedName = await Busy.run(I18n.t("busy.savingProject"), () => Persistence.saveToFile(Store.project));
+        UiProject.noteSavedFile(savedName, savedName);
         UiProject.markClean();
         setStatus(I18n.t("project.savedIn", { name: savedName, tables: Store.project.tables.length, queries: Store.project.queries.length }));
         return true;
@@ -24328,7 +24995,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           ? window.performance.now()
           : Date.now();
         UiProject.fileMeta = {
-          name: fileName,
+          name: UiProject.baseNameOf(fileName) || file.name,
+          path: UiProject.pathOf(file, fileName),
           size: Number.isFinite(file.size) ? file.size : null,
           lastModified: Number.isFinite(file.lastModified) ? file.lastModified : null,
           loadedAt: Date.now(),
@@ -24350,9 +25018,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
       /** Loads a project from text; it reports the errors when there are any. */
       openText(text, fileName) {
-        if (!UiProject.fileMeta || UiProject.fileMeta.name !== fileName) {
+        const name = UiProject.baseNameOf(fileName);
+        const path = UiProject.pathOf(null, fileName);
+        if (!UiProject.fileMeta || UiProject.fileMeta.name !== name || UiProject.fileMeta.path !== path) {
           UiProject.fileMeta = {
-            name: fileName,
+            name,
+            path,
             size: null,
             lastModified: null,
             loadedAt: Date.now(),
@@ -24421,6 +25092,200 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         App.refresh();
         Settings.open();
         setStatus(I18n.t("project.newProject"));
+      },
+    };
+
+    /* =====================================================================
+       9ab · PARTIAL FILES: TABLES AND QUERIES/SCRIPTS
+       Two buttons load and two save JSON files with only one of the two parts
+       of the project. Loading merges: same names replace, the rest is added.
+       ===================================================================== */
+
+    const UiPartialFiles = {
+      /** Wires the four buttons and the two hidden file pickers. */
+      bind() {
+        [
+          ["tables", "btn-load-tables", "btn-save-tables", "file-load-tables"],
+          ["objects", "btn-load-objects", "btn-save-objects", "file-load-objects"],
+        ].forEach(([kind, loadId, saveId, inputId]) => {
+          document.getElementById(loadId).addEventListener("click", () => UiPartialFiles.choose(kind));
+          document.getElementById(saveId).addEventListener("click", () => UiPartialFiles.save(kind));
+          document.getElementById(inputId).addEventListener("change", (event) => {
+            UiPartialFiles.openFile(event.target.files[0], kind, inputId);
+          });
+        });
+      },
+
+      /** Opens the system picker of the files of that kind. */
+      choose(kind) {
+        document.getElementById(kind === PartialProject.TABLES ? "file-load-tables" : "file-load-objects").click();
+      },
+
+      /** Reads the chosen file and merges it into the project. */
+      async openFile(file, kind, inputId) {
+        if (!file) {
+          return;
+        }
+        const displayName = UiProject.pathOf(file, file.name) || file.name;
+        try {
+          const parsed = await Busy.run(I18n.t("busy.loadingPartial"), () => (typeof file.stream === "function"
+            ? PartialProject.parseStream(file.stream(), kind)
+            : file.text().then((text) => PartialProject.parse(text, kind))));
+          if (!parsed.ok) {
+            UiPartialFiles.showLoadErrors(displayName, parsed.errors);
+            return;
+          }
+          UiPartialFiles.apply(parsed, kind, displayName);
+        } catch (err) {
+          window.alert(I18n.t("project.readError", { name: displayName, message: err.message }));
+        } finally {
+          const input = document.getElementById(inputId);
+          if (input) {
+            input.value = "";
+          }
+        }
+      },
+
+      /** Confirmation text: it always warns that same-name items are replaced. */
+      confirmMessage(parsed, kind, fileName) {
+        const total = kind === PartialProject.TABLES
+          ? parsed.tables.length
+          : parsed.queries.length + parsed.scripts.length;
+        const lines = [
+          I18n.t(kind === PartialProject.TABLES ? "partial.confirmTables" : "partial.confirmObjects", {
+            count: total,
+            file: fileName,
+          }),
+        ];
+        const names = PartialProject.conflictNames(Store.project, parsed, kind);
+        if (names.length > 0) {
+          lines.push(I18n.t("partial.overwriteList", { names: UiPartialFiles.nameList(names) }));
+        } else {
+          lines.push(I18n.t("partial.noOverwrite"));
+        }
+        lines.push(I18n.t("partial.continue"));
+        return lines.join("\n");
+      },
+
+      /** A short, quoted list of names for the confirmation. */
+      nameList(names) {
+        const MAX = 12;
+        const shown = names.slice(0, MAX).map((name) => `«${name}»`);
+        if (names.length > MAX) {
+          shown.push(`… (+${names.length - MAX})`);
+        }
+        return shown.join(", ");
+      },
+
+      /** Asks and, if accepted, merges the parsed file into the open project.
+       *  Returns the merge result (added and replaced items) or null. */
+      apply(parsed, kind, fileName) {
+        if (!window.confirm(UiPartialFiles.confirmMessage(parsed, kind, fileName))) {
+          setStatus(I18n.t("partial.cancelled"));
+          return null;
+        }
+        const result = PartialProject.merge(Store.project, parsed, kind);
+        UiProject.markDirty();
+        App.refresh();
+        // A query or script that replaced the one on screen has to be painted
+        // again: otherwise the editor would keep the old SQL or code and the
+        // next run would write it over the loaded one.
+        const replaced = new Set(result.replaced.map((item) => `${item.kind}:${item.name}`));
+        if (Ui.state.view === "query" && Ui.state.activeQuery && replaced.has(`query:${Ui.state.activeQuery}`)) {
+          UiQueries.select(Ui.state.activeQuery);
+        } else if (Ui.state.view === "script" && Ui.state.activeScript && replaced.has(`script:${Ui.state.activeScript}`)) {
+          UiScripts.select(Ui.state.activeScript);
+        }
+        if (kind === PartialProject.TABLES) {
+          setStatus(I18n.t("partial.tablesLoaded", {
+            file: fileName,
+            added: result.added.length,
+            replaced: result.replaced.length,
+          }));
+        } else {
+          setStatus(I18n.t("partial.objectsLoaded", {
+            file: fileName,
+            queries: I18n.t("partial.queryCount", { count: parsed.queries.length }),
+            scripts: I18n.t("partial.scriptCount", { count: parsed.scripts.length }),
+            added: result.added.length,
+            replaced: result.replaced.length,
+          }));
+        }
+        return result;
+      },
+
+      /** Saves the tables or the queries and scripts in their own JSON file. */
+      async save(kind) {
+        const isEmpty = kind === PartialProject.TABLES
+          ? (Store.project.tables || []).length === 0
+          : (Store.project.queries || []).length === 0
+            && (Array.isArray(Store.project.scripts) ? Store.project.scripts.length === 0 : true);
+        if (isEmpty) {
+          setStatus(I18n.t(kind === PartialProject.TABLES ? "partial.nothingToSave" : "partial.nothingObjectsToSave"));
+          return false;
+        }
+        const fileName = PartialProject.fileName(Store.project, kind);
+        if (typeof window.showSaveFilePicker === "function") {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: fileName,
+              types: [{
+                description: I18n.t(kind === PartialProject.TABLES ? "partial.fileTypeTables" : "partial.fileTypeObjects"),
+                accept: { "application/json": [".json"] },
+              }],
+            });
+            await Busy.run(I18n.t("busy.savingPartial"), async () => {
+              const writable = await handle.createWritable();
+              try {
+                for (const chunk of PartialProject.serializeChunks(Store.project, kind)) {
+                  await writable.write(chunk);
+                }
+                await writable.close();
+              } catch (err) {
+                try {
+                  await writable.abort();
+                } catch (ignored) {
+                  // The stream may already be closed: the interesting error is above.
+                }
+                throw err;
+              }
+            });
+            setStatus(UiPartialFiles.savedStatus(kind, handle.name || fileName));
+            return true;
+          } catch (err) {
+            if (err && err.name === "AbortError") {
+              setStatus(I18n.t("partial.saveCancelled"));
+              return false;
+            }
+            // Without file access, the file is downloaded below.
+          }
+        }
+        Utils.downloadChunks(fileName, [...PartialProject.serializeChunks(Store.project, kind)]);
+        setStatus(UiPartialFiles.savedStatus(kind, fileName));
+        return true;
+      },
+
+      /** Status line after saving a partial file. */
+      savedStatus(kind, name) {
+        return kind === PartialProject.TABLES
+          ? I18n.t("partial.tablesSaved", {
+            name: name,
+            tables: I18n.t("partial.tableCount", { count: (Store.project.tables || []).length }),
+          })
+          : I18n.t("partial.objectsSaved", {
+            name: name,
+            queries: I18n.t("partial.queryCount", { count: (Store.project.queries || []).length }),
+            scripts: I18n.t("partial.scriptCount", { count: (Store.project.scripts || []).length }),
+          });
+      },
+
+      /** Shows the validation errors of a partial file. */
+      showLoadErrors(fileName, errors) {
+        setStatus(I18n.t("partial.loadFailed", { file: fileName, count: errors.length }));
+        const MAX = 20;
+        const detail = errors.slice(0, MAX).join("\n• ");
+        const rest = errors.length > MAX ? I18n.t("misc.moreIssuesNewline", { count: errors.length - MAX }) : "";
+        window.alert(I18n.t("partial.loadFailedDetail", { file: fileName, detail: detail, rest: rest }));
       },
     };
 
@@ -24658,6 +25523,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiDashboard.renderTestCoverage(project, figures);
         UiDashboard.renderStructure(figures);
         UiDashboard.renderUsage(figures);
+        UiDashboard.renderParamsAndPivot(figures);
         const qualityNote = document.getElementById("dashboard-quality-note");
         if (qualityNote) {
           qualityNote.hidden = !figures.qualityLimited;
@@ -24733,6 +25599,21 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           ["dashboard.emptyFolders", String(figures.emptyFolders)],
           ["dashboard.emptyTablesCard", String(figures.emptyTables)],
           ["dashboard.isolatedTables", String(figures.isolatedTables)],
+        ].forEach(([key, value]) => UiDashboard.metric(list, key, value));
+      },
+
+      /** Parameters and PIVOT panel: how many queries and scripts carry
+       *  {{ … }} parameters and how many queries are PIVOT statements. */
+      renderParamsAndPivot(figures) {
+        const list = document.getElementById("dashboard-params");
+        if (!list) {
+          return;
+        }
+        list.textContent = "";
+        [
+          ["dashboard.parameterizedQueries", String(figures.parameterizedQueries)],
+          ["dashboard.parameterizedScripts", String(figures.parameterizedScripts)],
+          ["dashboard.pivotQueries", String(figures.pivotQueries)],
         ].forEach(([key, value]) => UiDashboard.metric(list, key, value));
       },
 
@@ -25965,7 +26846,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         // whoever runs the battery would change the result, so the whole run is
         // measured over a stable, wide page and the real width is put back. The
         // width is the one the top bar needs with its icons and the longest
-        // labels (Spanish) in one line.
+        // labels (Spanish) in one line, including the four partial-file
+        // buttons (load/save tables and load/save queries and scripts).
         const ancho = document.body.style.minWidth;
         document.body.style.minWidth = "1680px";
         const language = I18n.current;
@@ -27691,6 +28573,485 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       );
     });
 
+    /* --- Cases T3b: partial files (only tables or only queries/scripts) -- */
+
+    /** Project used as the source of the partial files of these cases. */
+    function partialDemoProject() {
+      return {
+        name: "Partial demo",
+        folders: ["Sales"],
+        tableFolders: ["People"],
+        tables: [
+          {
+            name: "people",
+            description: "People",
+            idField: "id",
+            nextId: 3,
+            folder: "People",
+            fields: [
+              { name: "id", type: "number", description: null },
+              { name: "name", type: "string", description: null },
+            ],
+            rows: [{ id: 1, name: "Ada" }, { id: 2, name: "Linus" }],
+          },
+          {
+            name: "rooms",
+            description: "Rooms",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "code", type: "string", description: null }],
+            rows: [{ code: "A" }],
+          },
+        ],
+        queries: [
+          { name: "q1", description: "All people", sql: "SELECT * FROM people", folder: "Sales" },
+          { name: "q2", description: "All rooms", sql: "SELECT * FROM rooms", folder: "Sales" },
+        ],
+        scripts: [{ name: "s1", description: "", code: "return [];", folder: "Sales" }],
+        objectOrder: ["script:s1", "query:q2", "query:q1"],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+    }
+
+    SelfTests.add("When_SaveTablesFile_Expect_OnlyTablesJson", () => {
+      const project = partialDemoProject();
+      const json = PartialProject.toJson(project, PartialProject.TABLES);
+      assertEqual(json.format, "datilandia", "it is a datilandia JSON");
+      assertEqual(json.kind, "tables", "it declares the tables kind");
+      assertEqual(json.name, "Partial demo", "it remembers the project name");
+      assertEqual(json.tables.map((table) => table.name), ["people", "rooms"], "it carries the tables");
+      assertEqual(json.tableFolders, ["People"], "and their folders");
+      assertEqual(json.queries, undefined, "it carries no queries");
+      assertEqual(json.scripts, undefined, "it carries no scripts");
+      assertEqual(json.settings, undefined, "it carries no settings");
+      const text = PartialProject.serialize(project, PartialProject.TABLES);
+      assert(text.includes('"kind": "tables"'), "the kind is written");
+      assert(!text.includes('"queries"'), "the queries key is not written");
+      assert(!text.includes('"scripts"'), "the scripts key is not written");
+      const parsed = PartialProject.parse(text, PartialProject.TABLES);
+      assert(parsed.ok, "the file is valid: " + JSON.stringify(parsed.errors));
+      assertEqual(parsed.tables.map((table) => table.name), ["people", "rooms"], "the round trip keeps both tables");
+      assertEqual(parsed.tables[0].folder, "People", "with their folder");
+      assertEqual(parsed.tableFolders, ["People"], "and the folder list");
+      assertEqual(parsed.queries, [], "with no queries");
+      assertEqual(parsed.scripts, [], "and no scripts");
+      assertEqual(
+        PartialProject.fileName(project, PartialProject.TABLES),
+        `partial_demo_${I18n.t("partial.tablesFileSuffix")}.json`,
+        "the suggested name says it is the tables file",
+      );
+    });
+
+    SelfTests.add("When_SaveObjectsFile_Expect_OnlyQueriesAndScriptsJson", () => {
+      const project = partialDemoProject();
+      const json = PartialProject.toJson(project, PartialProject.OBJECTS);
+      assertEqual(json.kind, "objects", "it declares the queries and scripts kind");
+      assertEqual(json.queries.map((query) => query.name), ["q1", "q2"], "it carries the queries");
+      assertEqual(json.scripts.map((script) => script.name), ["s1"], "and the scripts");
+      assertEqual(json.folders, ["Sales"], "with their shared folders");
+      assertEqual(json.objectOrder, ["script:s1", "query:q2", "query:q1"], "and the mixed order");
+      assertEqual(json.tables, undefined, "it carries no tables");
+      assertEqual(json.settings, undefined, "it carries no settings");
+      const text = PartialProject.serialize(project, PartialProject.OBJECTS);
+      assert(text.includes('"kind": "objects"'), "the kind is written");
+      assert(!text.includes('"tables"'), "the tables key is not written");
+      const parsed = PartialProject.parse(text, PartialProject.OBJECTS);
+      assert(parsed.ok, "the file is valid: " + JSON.stringify(parsed.errors));
+      assertEqual(parsed.queries.map((query) => query.name), ["q1", "q2"], "the round trip keeps the queries");
+      assertEqual(parsed.scripts.map((script) => script.name), ["s1"], "and the scripts");
+      assertEqual(parsed.folders, ["Sales"], "and the folders");
+      assertEqual(parsed.objectOrder, ["script:s1", "query:q2", "query:q1"], "and the order");
+      assertEqual(parsed.tables, [], "with no tables");
+      assertEqual(
+        PartialProject.fileName(project, PartialProject.OBJECTS),
+        `partial_demo_${I18n.t("partial.objectsFileSuffix")}.json`,
+        "the suggested name says it is the queries file",
+      );
+    });
+
+    SelfTests.add("When_PartialFileInChunks_Expect_SameText", () => {
+      const project = partialDemoProject();
+      [PartialProject.TABLES, PartialProject.OBJECTS].forEach((kind) => {
+        const text = PartialProject.serialize(project, kind);
+        const chunks = [...PartialProject.serializeChunks(project, kind)].join("");
+        assertEqual(chunks, text, "the chunks of a " + kind + " file join to its text");
+      });
+    });
+
+    SelfTests.add("When_LoadTablesFile_Expect_SameNameReplacedAndNewAdded", () => {
+      const partialSource = partialDemoProject();
+      partialSource.tables = [
+        partialSource.tables[0],
+        {
+          name: "cities",
+          description: "Cities",
+          idField: null,
+          nextId: 1,
+          folder: "Places",
+          fields: [{ name: "name", type: "string", description: null }],
+          rows: [{ name: "Madrid" }],
+        },
+      ];
+      const target = {
+        name: "Target",
+        tables: [
+          {
+            name: "people",
+            description: "old definition",
+            idField: "id",
+            nextId: 2,
+            fields: [
+              { name: "id", type: "number", description: null },
+              { name: "name", type: "string", description: null },
+            ],
+            rows: [{ id: 9, name: "Old" }],
+            folder: "Existing",
+          },
+          {
+            name: "rooms",
+            description: "kept",
+            idField: null,
+            nextId: 1,
+            fields: [{ name: "code", type: "string", description: null }],
+            rows: [{ code: "Z" }],
+          },
+        ],
+        tableFolders: ["Existing"],
+        queries: [],
+        scripts: [],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      const partialText = PartialProject.serialize(partialSource, PartialProject.TABLES);
+      const parsed = PartialProject.parse(partialText, PartialProject.TABLES);
+      assert(parsed.ok, "the tables file is valid: " + JSON.stringify(parsed.errors));
+      assertEqual(PartialProject.conflictNames(target, parsed, PartialProject.TABLES), ["people"], "only «people» is repeated");
+      const result = PartialProject.merge(target, parsed, PartialProject.TABLES);
+      assertEqual(result.replaced.map((item) => item.name), ["people"], "the repeated table is replaced");
+      assertEqual(result.added.map((item) => item.name), ["cities"], "the one that was not there is added");
+      assertEqual(target.tables.map((table) => table.name), ["people", "rooms", "cities"], "replaced in place, without duplicating");
+      assertEqual(target.tables[0].description, "People", "the repeated table is the one of the file");
+      assertEqual(target.tables[0].rows, [{ id: 1, name: "Ada" }, { id: 2, name: "Linus" }], "with its rows");
+      assertEqual(target.tables[1].description, "kept", "the other table is untouched");
+      assertEqual(target.tableFolders, ["Existing", "People", "Places"], "the folders are joined without repetitions");
+    });
+
+    SelfTests.add("When_LoadObjectsFile_Expect_SameNameReplacedAndNewAdded", () => {
+      const partialSource = partialDemoProject();
+      partialSource.folders = ["Sales", "New"];
+      partialSource.queries = [
+        { name: "q1", description: "new q1", sql: "SELECT 2", folder: "Sales" },
+        { name: "q3", description: "new q3", sql: "SELECT 3", folder: "New" },
+      ];
+      partialSource.scripts = [
+        { name: "s1", description: "", code: "return 1;", folder: "Sales" },
+        { name: "s2", description: "", code: "return 2;", folder: "New" },
+      ];
+      partialSource.objectOrder = ["query:q3", "script:s2", "query:q1", "script:s1"];
+      const target = {
+        name: "Target",
+        tables: [],
+        folders: ["Existing"],
+        queries: [
+          { name: "q1", description: "old q1", sql: "SELECT 1", folder: "Existing" },
+          { name: "q2", description: "old q2", sql: "SELECT 20", folder: "Existing" },
+        ],
+        scripts: [{ name: "s1", description: "", code: "return 0;", folder: "Existing" }],
+        objectOrder: ["query:q1", "query:q2", "script:s1"],
+        settings: Utils.cloneJson(DEFAULT_SETTINGS),
+      };
+      const parsed = PartialProject.parse(
+        PartialProject.serialize(partialSource, PartialProject.OBJECTS),
+        PartialProject.OBJECTS,
+      );
+      assert(parsed.ok, "the queries file is valid: " + JSON.stringify(parsed.errors));
+      assertEqual(
+        PartialProject.conflictNames(target, parsed, PartialProject.OBJECTS),
+        ["q1", "s1"],
+        "only the query and the script with the same name are repeated",
+      );
+      const result = PartialProject.merge(target, parsed, PartialProject.OBJECTS);
+      assertEqual(result.replaced.map((item) => item.name), ["q1", "s1"], "the repeated ones are replaced");
+      assertEqual(result.added.map((item) => item.name), ["q3", "s2"], "the new ones are added");
+      assertEqual(target.queries.map((query) => query.name), ["q1", "q2", "q3"], "the queries are kept and completed");
+      assertEqual(target.queries[0].sql, "SELECT 2", "the repeated query is the one of the file");
+      assertEqual(target.queries[1].sql, "SELECT 20", "the other query is untouched");
+      assertEqual(target.scripts.map((script) => script.name), ["s1", "s2"], "same with the scripts");
+      assertEqual(target.scripts[0].code, "return 1;", "the repeated script is the one of the file");
+      assertEqual(target.folders, ["Existing", "Sales", "New"], "the shared folders are joined");
+      assertEqual(target.scriptFolders, target.folders, "queries and scripts share the folder list");
+      assertEqual(
+        Model.objectsInOrder(target).map((entry) => Model.objectKey(entry.kind, entry.item.name)),
+        ["query:q1", "query:q2", "script:s1", "query:q3", "script:s2"],
+        "the order on screen is kept and the new objects follow it",
+      );
+    });
+
+    SelfTests.add("When_LoadPartialFileOfAnotherKind_Expect_Rejected", () => {
+      const project = partialDemoProject();
+      const tablesText = PartialProject.serialize(project, PartialProject.TABLES);
+      const objectsText = PartialProject.serialize(project, PartialProject.OBJECTS);
+      const wrongTables = PartialProject.parse(objectsText, PartialProject.TABLES);
+      assert(!wrongTables.ok, "a queries file cannot be loaded as tables");
+      assert(
+        wrongTables.errors.some((error) => error === I18n.t("partial.notTablesFile")),
+        "the error says to use the other button: " + JSON.stringify(wrongTables.errors),
+      );
+      const wrongObjects = PartialProject.parse(tablesText, PartialProject.OBJECTS);
+      assert(!wrongObjects.ok, "a tables file cannot be loaded as queries");
+      assert(
+        wrongObjects.errors.some((error) => error === I18n.t("partial.notObjectsFile")),
+        "the error says to use the other button: " + JSON.stringify(wrongObjects.errors),
+      );
+      const invalidJson = PartialProject.parse("{ not json", PartialProject.TABLES);
+      assert(!invalidJson.ok, "broken JSON is rejected");
+      const unknownKind = PartialProject.parse(JSON.stringify({
+        format: "datilandia",
+        version: 1,
+        kind: "other",
+        tables: [],
+      }), PartialProject.TABLES);
+      assert(!unknownKind.ok, "an unknown kind is rejected");
+      assert(
+        unknownKind.errors.some((error) => error === I18n.t("partial.unknownKind")),
+        "and it says which kinds are accepted: " + JSON.stringify(unknownKind.errors),
+      );
+    });
+
+    SelfTests.add("When_WholeProjectOpenedAsPartial_Expect_KindAsked", () => {
+      const text = Persistence.serializeProject(partialDemoProject());
+      const asTables = PartialProject.parse(text, PartialProject.TABLES);
+      assert(asTables.ok, "a whole project is accepted as tables: " + JSON.stringify(asTables.errors));
+      assertEqual(asTables.tables.map((table) => table.name), ["people", "rooms"], "with only its tables");
+      assertEqual(asTables.queries, [], "and no queries");
+      const asObjects = PartialProject.parse(text, PartialProject.OBJECTS);
+      assert(asObjects.ok, "a whole project is accepted as queries: " + JSON.stringify(asObjects.errors));
+      assertEqual(asObjects.queries.map((query) => query.name), ["q1", "q2"], "with its queries");
+      assertEqual(asObjects.scripts.map((script) => script.name), ["s1"], "and its scripts");
+      assertEqual(asObjects.tables, [], "and no tables");
+    });
+
+    SelfTests.add("When_LoadTables_Expect_ConfirmationNamesRepeatedTables", () => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        confirm: window.confirm,
+        fileMeta: UiProject.fileMeta,
+      };
+      try {
+        const target = {
+          name: "UI target",
+          tables: [{
+            name: "people",
+            description: "old",
+            idField: "id",
+            nextId: 2,
+            fields: [
+              { name: "id", type: "number", description: null },
+              { name: "name", type: "string", description: null },
+            ],
+            rows: [{ id: 9, name: "Old" }],
+          }],
+          queries: [],
+          scripts: [],
+          settings: Utils.cloneJson(DEFAULT_SETTINGS),
+        };
+        Store.replaceProject(target);
+        Store.dirty = false;
+        UiProject.showName();
+        const parsed = PartialProject.parse(
+          PartialProject.serialize(partialDemoProject(), PartialProject.TABLES),
+          PartialProject.TABLES,
+        );
+        let message = "";
+        window.confirm = (text) => {
+          message = text;
+          return true;
+        };
+        const result = UiPartialFiles.apply(parsed, PartialProject.TABLES, "tables-demo.json");
+        assert(result !== null, "accepting the confirmation loads the file");
+        assert(message.includes("tables-demo.json"), "the confirmation names the file: " + message);
+        assert(message.includes("people"), "and the table that will be replaced: " + message);
+        assertEqual(Store.dirty, true, "loading tables leaves changes to save");
+        assertEqual(Store.project.tables.map((table) => table.name), ["people", "rooms"], "the table is replaced and the new one added");
+        assertEqual(Store.project.tables[0].rows[0].name, "Ada", "with the rows of the file");
+        assert(
+          document.getElementById("status").textContent.includes("tables-demo.json"),
+          "the status names the file: " + document.getElementById("status").textContent,
+        );
+        const beforeCancel = Utils.cloneJson(Store.project);
+        window.confirm = () => false;
+        const cancelled = UiPartialFiles.apply(parsed, PartialProject.TABLES, "another.json");
+        assertEqual(cancelled, null, "cancelling changes nothing");
+        assertEqual(Store.project, beforeCancel, "and the project stays as it was");
+        assertEqual(document.getElementById("status").textContent, I18n.t("partial.cancelled"), "the status says it was cancelled");
+      } finally {
+        window.confirm = before.confirm;
+        Store.replaceProject(before.project);
+        UiProject.fileMeta = before.fileMeta;
+        UiProject.showName();
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
+      }
+    });
+
+    SelfTests.add("When_LoadQueriesReplacesActiveQuery_Expect_EditorRefreshed", () => {
+      const before = {
+        project: Utils.cloneJson(Store.project),
+        dirty: Store.dirty,
+        confirm: window.confirm,
+        view: Ui.state.view,
+        query: Ui.state.activeQuery,
+        script: Ui.state.activeScript,
+      };
+      try {
+        Store.replaceProject({
+          name: "UI queries",
+          tables: [],
+          queries: [{ name: "q1", description: "old", sql: "SELECT 1" }],
+          scripts: [],
+          folders: [],
+          settings: Utils.cloneJson(DEFAULT_SETTINGS),
+        });
+        Store.dirty = false;
+        Ui.renderAll();
+        UiQueries.select("q1");
+        assertEqual(document.getElementById("query-sql").value, "SELECT 1", "the editor opens with the query");
+        const parsed = PartialProject.parse(JSON.stringify({
+          format: "datilandia",
+          version: 1,
+          kind: "objects",
+          name: "Incoming",
+          queries: [{ name: "q1", description: "new", sql: "SELECT 2" }],
+        }), PartialProject.OBJECTS);
+        assert(parsed.ok, "the queries file is valid: " + JSON.stringify(parsed.errors));
+        window.confirm = () => true;
+        const result = UiPartialFiles.apply(parsed, PartialProject.OBJECTS, "queries.json");
+        assert(result !== null, "accepting the confirmation loads the file");
+        assertEqual(Store.project.queries[0].sql, "SELECT 2", "the project keeps the loaded SQL");
+        assertEqual(document.getElementById("query-sql").value, "SELECT 2", "and the editor paints it again");
+        assertEqual(document.getElementById("query-name").value, "q1", "with the same name in the field");
+      } finally {
+        window.confirm = before.confirm;
+        Store.replaceProject(before.project);
+        UiProject.showName();
+        Ui.state.activeQuery = before.query;
+        Ui.state.activeScript = before.script;
+        Ui.showView(before.view);
+        Ui.renderAll();
+        Store.dirty = before.dirty;
+        UiProject.updateDirtyIndicator();
+      }
+    });
+
+    SelfTests.add("When_ProjectBar_Expect_NameAndWholeFilePath", () => {
+      const before = { name: Store.project.name, meta: UiProject.fileMeta };
+      try {
+        Store.project.name = "Bar project";
+        UiProject.fileMeta = { name: "p.json", path: "/home/rafa/projects/p.json" };
+        UiProject.showName();
+        assertEqual(document.getElementById("project-name").textContent, "Bar project", "the bar shows the project name");
+        assertEqual(
+          document.getElementById("project-file").textContent,
+          "/home/rafa/projects/p.json",
+          "and the whole path and file name",
+        );
+        assertEqual(
+          document.getElementById("project-file").title,
+          "/home/rafa/projects/p.json",
+          "also in the tip, for when it is trimmed",
+        );
+        const header = document.getElementById("header");
+        const bar = document.getElementById("file-bar");
+        assertEqual(bar.previousElementSibling, header, "the bar goes right under the header");
+        assertEqual(header.querySelector("#project-name"), null, "the header keeps only the buttons");
+        assertEqual(bar.firstElementChild, document.getElementById("mark"), "the brand opens the project bar");
+        assertEqual(header.contains(document.getElementById("mark")), false, "and it is no longer in the header");
+        assertEqual(
+          bar.querySelector("#project-name").previousElementSibling.textContent,
+          I18n.t("project.label"),
+          "the name keeps its label in front",
+        );
+        assertEqual(bar.contains(document.getElementById("project-dirty")), true, "the saved state lives in the project bar");
+        assertEqual(bar.contains(document.getElementById("project-test")), true, "so does the test mode");
+        assertEqual(header.contains(document.getElementById("project-dirty")), false, "and not in the header any more");
+        assertEqual(header.contains(document.getElementById("project-test")), false, "neither the test mode");
+        const nameStyle = getComputedStyle(document.getElementById("project-name"));
+        const fileStyle = getComputedStyle(document.getElementById("project-file"));
+        [nameStyle, fileStyle].forEach((style) => {
+          assertEqual(style.maxWidth, "none", "the name and the path have no width limit");
+          assertEqual(style.whiteSpace, "normal", "so they wrap instead of being cut");
+          assert(style.textOverflow !== "ellipsis", "and they are not trimmed with an ellipsis");
+        });
+        UiProject.fileMeta = null;
+        UiProject.showName();
+        assertEqual(document.getElementById("project-file").textContent, I18n.t("project.noFile"), "without a file it says so");
+        UiProject.fileMeta = { name: "solo.json", path: "solo.json" };
+        UiProject.showName();
+        assertEqual(document.getElementById("project-file").textContent, "solo.json", "with no path it shows the full name");
+      } finally {
+        Store.project.name = before.name;
+        UiProject.fileMeta = before.meta;
+        UiProject.showName();
+      }
+    });
+
+    SelfTests.add("When_ProjectState_ExpectSavedOrUnsavedInProjectBar", () => {
+      const before = { dirty: Store.dirty, meta: UiProject.fileMeta };
+      try {
+        const marker = document.getElementById("project-dirty");
+        UiProject.fileMeta = { name: "p.json", path: "/home/rafa/p.json" };
+        Store.dirty = false;
+        UiProject.updateDirtyIndicator();
+        assertEqual(marker.textContent, I18n.t("project.saved"), "a project saved to a file says so");
+        assertEqual(marker.title, I18n.t("project.savedTip"), "with its explanation in the tip");
+        assertEqual(marker.classList.contains("is-saved"), true, "and the saved style");
+        assertEqual(marker.classList.contains("warning"), false, "without the warning style");
+        Store.dirty = true;
+        UiProject.updateDirtyIndicator();
+        assertEqual(marker.textContent, I18n.t("project.unsavedChanges"), "a project with changes says it is pending");
+        assertEqual(marker.title, I18n.t("project.unsavedChangesTip"), "with the tip to save it");
+        assertEqual(marker.classList.contains("is-saved"), false, "without the saved style");
+        assertEqual(marker.classList.contains("warning"), true, "and with the warning style");
+        Store.dirty = false;
+        UiProject.fileMeta = null;
+        UiProject.updateDirtyIndicator();
+        assertEqual(marker.textContent, I18n.t("project.notSaved"), "a new project with no file says it is not saved");
+        assertEqual(marker.title, I18n.t("project.notSavedTip"), "with its explanation in the tip");
+        assertEqual(marker.classList.contains("is-saved"), false, "without the saved style");
+        assertEqual(marker.classList.contains("warning"), false, "and it is not painted as a warning");
+      } finally {
+        Store.dirty = before.dirty;
+        UiProject.fileMeta = before.meta;
+        UiProject.updateDirtyIndicator();
+      }
+    });
+
+    SelfTests.add("When_PartialButtons_ExpectLoadSavePairsInTheHeader", () => {
+      const ids = ["btn-load-tables", "btn-save-tables", "btn-load-objects", "btn-save-objects"];
+      ids.forEach((id) => {
+        const button = document.getElementById(id);
+        assert(button !== null, "the header has the button «" + id + "»");
+        assert(button.querySelector("svg.icon") !== null, "with its icon: " + id);
+        assert(button.title.length > 0, "and a tip that explains it: " + id);
+        assert(button.textContent.trim().length > 0, "and a visible label: " + id);
+      });
+      ["file-load-tables", "file-load-objects"].forEach((id) => {
+        const input = document.getElementById(id);
+        assertEqual(input.type, "file", "the picker «" + id + "» is a file input");
+        assertEqual(input.hidden, true, "and it stays hidden");
+        assert(input.accept.includes(".json"), "it takes JSON files: " + input.accept);
+      });
+      SelfTests.inLanguage("es", () => {
+        assertEqual(document.getElementById("btn-load-tables").textContent, "Cargar tablas", "the Spanish label");
+        assertEqual(document.getElementById("btn-save-objects").textContent, "Guardar consultas y scripts", "and the other one");
+      });
+      SelfTests.inLanguage("en", () => {
+        assertEqual(document.getElementById("btn-load-tables").textContent, "Load tables", "the English label");
+        assertEqual(document.getElementById("btn-save-objects").textContent, "Save queries and scripts", "and the other one");
+      });
+    });
+
     /* --- Cases T4: import ----------------------------------------------- */
 
     SelfTests.add("When_CsvQuotedDelimiter_Expect_SingleField", () => {
@@ -28677,18 +30038,18 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
     /* --- Cases N: project name and close warning ------------------------ */
 
-    SelfTests.add("When_ProjectNameInHeader_Expect_TextOnly", () => {
+    SelfTests.add("When_ProjectNameInProjectBar_Expect_TextOnly", () => {
       const header = document.getElementById("project-name");
-      assertEqual(header.tagName, "SPAN", "in the header the name is just text");
+      assertEqual(header.tagName, "SPAN", "in the project bar the name is just text");
       assertEqual(header.children.length, 0, "without controls inside");
       assertEqual(header.previousElementSibling.textContent, "Project:", "the «Project:» label goes in front");
     });
 
-    SelfTests.add("When_SetProjectName_Expect_HeaderShowsItAndMarksDirty", () => {
+    SelfTests.add("When_SetProjectName_Expect_ProjectBarShowsItAndMarksDirty", () => {
       const antes = { project: Utils.cloneJson(Store.project), dirty: Store.dirty };
       UiProject.setName("Annual report");
       assertEqual(Store.project.name, "Annual report", "project name");
-      assertEqual(document.getElementById("project-name").textContent, "Annual report", "the header shows it");
+      assertEqual(document.getElementById("project-name").textContent, "Annual report", "the project bar shows it");
       assertEqual(Store.dirty, true, "it is pending save");
       UiProject.setName("   ");
       assertEqual(document.getElementById("project-name").textContent, "Untitled", "no name → “Untitled”");
@@ -28709,12 +30070,12 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(Store.project.name, "Untitled", "the new project is called «Untitled»");
       Settings.close();
       assertEqual(dialogo.open, false, "it can be closed with the default name");
-      assertEqual(document.getElementById("project-name").textContent, "Untitled", "the header shows it");
+      assertEqual(document.getElementById("project-name").textContent, "Untitled", "the project bar shows it");
       document.getElementById("btn-settings").click();
       field.value = "  Mi project  ";
       Settings.applyFromDialog();
       assertEqual(Store.project.name, "Mi project", "name changed (no spaces)");
-      assertEqual(document.getElementById("project-name").textContent, "Mi project", "the header shows it");
+      assertEqual(document.getElementById("project-name").textContent, "Mi project", "the project bar shows it");
       field.value = "   ";
       Settings.applyFromDialog();
       assertEqual(Store.project.name, "Untitled", "an empty name goes back to «Untitled»");
@@ -29368,6 +30729,45 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       };
     }
 
+    /** Project with parameterised queries and scripts and with PIVOT queries,
+     *  for the dashboard cases. */
+    function projectDeParametrosYPivot() {
+      const project = projectDeFigures();
+      project.queries = [
+        { name: "plain", description: "", sql: "SELECT * FROM campuses", assert: null },
+        { name: "params", description: "", sql: "SELECT * FROM campuses WHERE id_campus IN {{ 1..3 }}", assert: null },
+        { name: "literal", description: "", sql: "SELECT '{{ not a parameter }}' FROM campuses", assert: null },
+        {
+          name: "pivot",
+          description: "",
+          sql: "PIVOT (SELECT id_campus) BY (SELECT id_classroom) FROM classrooms VALUES COUNT(*) AS total",
+          assert: null,
+        },
+        {
+          name: "pivot_params",
+          description: "",
+          sql: "PIVOT (SELECT id_campus WHERE id_campus IN {{ 1..3 }}) BY (SELECT id_classroom) FROM classrooms VALUES COUNT(*) AS total",
+          assert: null,
+        },
+      ];
+      project.scripts = [
+        {
+          name: "params",
+          description: "",
+          code: "return tables[\"campuses\"].filter((row) => row.id_campus === {{ 1..3 }});",
+          assert: null,
+        },
+        {
+          name: "literal",
+          description: "",
+          code: "const note = \"{{ not a parameter }}\";\nreturn tables[\"campuses\"];",
+          assert: null,
+        },
+        { name: "plain", description: "", code: "return tables[\"campuses\"];", assert: null },
+      ];
+      return project;
+    }
+
     SelfTests.add("When_ProjectStatsOfKnownProject_Expect_ExactTotals", () => {
       const figures = Model.projectStats(projectDeFigures());
       assertEqual(figures.tables, 3, "tables");
@@ -29378,6 +30778,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(figures.queriesWithTest, 1, "queries with an asserted result");
       assertEqual(figures.scripts, 0, "scripts");
       assertEqual(figures.scriptsWithTest, 0, "scripts with an asserted result");
+      assertEqual(figures.parameterizedQueries, 0, "no query carries parameters");
+      assertEqual(figures.parameterizedScripts, 0, "no script carries parameters");
+      assertEqual(figures.parameterized, 0, "no parameterised statement");
+      assertEqual(figures.pivotQueries, 0, "no PIVOT query");
       assertEqual(figures.relatedPairs, 2, "related pairs: campuses–classrooms and the self-reference campus–campus");
       assertEqual(figures.views, 0, "queries used as tables: here every FROM name is a table one");
       assertEqual(figures.dependencies, 2, "each query reads one table");
@@ -29398,6 +30802,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           queriesWithTest: 0,
           scripts: 0,
           scriptsWithTest: 0,
+          parameterized: 0,
+          parameterizedQueries: 0,
+          parameterizedScripts: 0,
+          pivotQueries: 0,
           relatedPairs: 0,
           views: 0,
           dependencies: 0,
@@ -29416,6 +30824,15 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         },
         "an empty project has no figure",
       );
+    });
+
+    SelfTests.add("When_ProjectStats_ExpectParameterizedAndPivotCounts", () => {
+      const project = projectDeParametrosYPivot();
+      const figures = Model.projectStats(project);
+      assertEqual(figures.parameterizedQueries, 2, "the query with a parameter and the PIVOT with a parameter");
+      assertEqual(figures.parameterizedScripts, 1, "only the script whose placeholder is outside a text");
+      assertEqual(figures.parameterized, 3, "the card adds queries and scripts");
+      assertEqual(figures.pivotQueries, 2, "the two PIVOT statements");
     });
 
     SelfTests.add("When_ProjectHasScripts_Expect_DashboardCountsThem", () => {
@@ -29454,6 +30871,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(figure("queriesWithTest"), "1", "the queries with an asserted result");
       assertEqual(figure("scripts"), "0", "the scripts");
       assertEqual(figure("scriptsWithTest"), "0", "the scripts with an asserted result");
+      assertEqual(figure("parameterized"), "0", "the parameterised statements");
+      assertEqual(figure("pivotQueries"), "0", "the PIVOT queries");
       assertEqual(figure("relatedPairs"), "2", "the related pairs of tables");
       assertEqual(figure("views"), "0", "the queries used as tables");
       assertEqual(figure("dependencies"), "2", "the links between queries and their sources");
@@ -29473,6 +30892,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         true,
         "the coverage note counts the tested object",
       );
+      assertEqual(
+        document.querySelectorAll("#dashboard-params li").length,
+        3,
+        "the parameters and PIVOT panel lists its three figures",
+      );
 
       Store.replaceProject(antes.project);
       Ui.state.activeTable = antes.table;
@@ -29487,6 +30911,39 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       const bienvenida = () => document.getElementById("view-vacio").textContent;
       SelfTests.inLanguage("es", () => assert(bienvenida().includes("salpicadero"), "the welcome page explains that the dashboard is above"));
       SelfTests.inLanguage("en", () => assert(bienvenida().includes("dashboard"), "and in English it says dashboard"));
+    });
+
+    SelfTests.add("When_DashboardWithParamsAndPivot_ExpectCardsAndPanel", () => {
+      const antes = {
+        project: Utils.cloneJson(Store.project),
+        table: Ui.state.activeTable,
+        view: Ui.state.view,
+        dirty: Store.dirty,
+      };
+      try {
+        Store.replaceProject(projectDeParametrosYPivot());
+        Ui.renderAll();
+        const figure = (key) => document.querySelector(`#view-vacio .dashboard [data-data="${key}"]`).textContent;
+        assertEqual(figure("parameterized"), "3", "the card adds the two queries and the script with parameters");
+        assertEqual(figure("pivotQueries"), "2", "the card counts the two PIVOT queries");
+        const metrics = [...document.querySelectorAll("#dashboard-params li")].map((item) => [
+          item.querySelector(".metric-name").textContent,
+          item.querySelector(".metric-value").textContent,
+        ]);
+        assertEqual(metrics, [
+          [I18n.t("dashboard.parameterizedQueries"), "2"],
+          [I18n.t("dashboard.parameterizedScripts"), "1"],
+          [I18n.t("dashboard.pivotQueries"), "2"],
+        ], "the panel breaks the figures down by kind");
+      } finally {
+        Store.replaceProject(antes.project);
+        Ui.state.activeTable = antes.table;
+        Ui.showView(antes.view);
+        UiProject.showName();
+        Ui.renderAll();
+        Store.dirty = antes.dirty;
+        UiProject.updateDirtyIndicator();
+      }
     });
 
     /* --- Cases T7b: test mode (assert and report) ----------------------- */
@@ -29921,7 +31378,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(query.assert.ignoreOrder, false, "and without ignoring the order");
       assertEqual(Model.isTestProject(Store.project), true, "the project goes into test mode because of that query");
       assertEqual(document.getElementById("btn-tests").hidden, false, "the «Tests» button shows up");
-      assertEqual(document.getElementById("project-test").textContent, "test mode", "the indicator of the header says so");
+      assertEqual(document.getElementById("project-test").textContent, "test mode", "the indicator of the project bar says so");
       const mark = document.querySelector("#list-queries li .mark-test");
       assert(mark !== null, "the query carries its mark in the sidebar");
       assertEqual(mark.textContent, "test", "and the mark says “test”");
@@ -29989,7 +31446,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         { name: "otra", description: "", sql: "SELECT code FROM classrooms" },
       ]));
       Ui.renderAll();
-      assertEqual(document.getElementById("project-test").textContent, "no tests", "without any asserted query, the header says so");
+      assertEqual(document.getElementById("project-test").textContent, "no tests", "without any asserted query, the project bar says so");
       assertEqual(document.getElementById("btn-tests").hidden, true, "and the “Tests” button stays hidden");
       assertEqual(
         [...document.querySelectorAll("#list-queries li .mark-test")].map((item) => item.textContent),
@@ -30078,7 +31535,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(query.assert, undefined, "on confirm, the query is left without an assert");
       assertEqual(boton.disabled, true, "and “Remove test” is disabled again");
       assertEqual(Model.isTestProject(Store.project), false, "with no tests left, the project is no longer a test project");
-      assertEqual(document.getElementById("project-test").textContent, "no tests", "and the header says so");
+      assertEqual(document.getElementById("project-test").textContent, "no tests", "and the project bar says so");
       assertEqual(document.getElementById("btn-tests").hidden, true, "the «Tests» button disappears");
       assertEqual(ProjectTests.runQuery(query, Store.project).status, "skip", "the query goes to «unchecked»");
       assertEqual(document.querySelector("#list-queries li .mark-test").textContent, "no test", "and its sidebar mark says so");
@@ -30111,7 +31568,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       }
       assertEqual(Store.project.queries[0].assert, undefined, "the chosen query is left without an assert");
       assertEqual(Model.isTestProject(Store.project), true, "but the project stays in test mode because of the other one");
-      assertEqual(document.getElementById("project-test").textContent, "test mode", "and the header keeps it");
+      assertEqual(document.getElementById("project-test").textContent, "test mode", "and the project bar keeps it");
       assertEqual(document.getElementById("btn-tests").hidden, false, "the «Tests» button is still in the bar");
 
       restoreMiniProject(antes);
@@ -32950,7 +34407,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
     });
 
     SelfTests.add("When_IconSet_Expect_EveryControlCarriesItsOwnIcon", () => {
-      const controls = [...document.querySelectorAll("#header button, #sidebar button, .toolbar button, .dlg-header button")]
+      const controls = [...document.querySelectorAll("#header button, #file-bar button, #sidebar button, .toolbar button, .dlg-header button")]
         // The two buttons that fold a whole panel only get theirs when there is
         // something to fold, and the colour swatch of a query is no icon.
         .filter((button) => button.id !== "btn-fold-all" && button.id !== "btn-fold-all-tables" && !button.classList.contains("color-query"));
@@ -34129,7 +35586,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(document.getElementById("btn-fold-all").title, "Plegar todas las carpetas", "and the button that folds every folder");
       assertEqual(document.querySelector("#list-tables .name").textContent, "Todas las tablas", "the header of the list of tables too");
       assertEqual(document.querySelector("#list-tables button.folder-toggle").title, "Plegar la lista de tablas", "with its fold button");
-      assertEqual(document.getElementById("project-dirty").textContent, "Cambios pendientes de guardar", "and the note of the header about the unsaved changes");
+      assertEqual(document.getElementById("project-dirty").textContent, "Cambios pendientes de guardar", "and the note of the project bar about the unsaved changes");
       select.value = "en";
       select.dispatchEvent(new Event("change"));
       Store.replaceProject(before.project);
@@ -35562,6 +37019,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       init() {
         Busy.bind();
         UiProject.bind();
+        UiPartialFiles.bind();
         Ui.bind();
         UiSearch.bind();
         UiSummary.bind();
@@ -35587,7 +37045,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         UiLanguage.bind();
         Settings.apply();
         // The name of a project that has none is a label, so it is written in
-        // the language the interface starts in (and the header shows it).
+        // the language the interface starts in (and the project bar shows it).
         Store.project.name = I18n.t("misc.untitled");
         UiProject.showName();
         Ui.showView("vacio");
@@ -35606,6 +37064,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       Utils,
       Model,
       Persistence,
+      PartialProject,
       Importer,
       Search,
       Settings,
