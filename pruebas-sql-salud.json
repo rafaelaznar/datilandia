@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 226 consultas, 35 scripts)",
+  "name": "Pruebas SQL · Salud y hospitales (20 tablas, 246 consultas, 35 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -12,7 +12,9 @@
     "G · Uniones",
     "H · Scripts como tablas",
     "I · Parámetros",
-    "J · PIVOT"
+    "J · PIVOT",
+    "K · CASE e IF",
+    "L · Funciones en SELECT y PIVOT"
   ],
   "tableFolders": [
     "Centro",
@@ -13741,6 +13743,88 @@
       "color": "#fce4e4"
     },
     {
+      "name": "A61 · REGEXPR_INSTR: posición de la primera coincidencia y banderas",
+      "description": "Los tres ejemplos: 123 empieza en 4, sin dígitos da 0 y el ancla ^ coincide en 1. También comprueba la bandera i, el alias REGEXP_INSTR y un texto NULL.",
+      "keywords": [
+        "salud",
+        "regex",
+        "funciones",
+        "posicion"
+      ],
+      "sql": "SELECT REGEXPR_INSTR('abc123def', '[0-9]+') AS digitos, REGEXPR_INSTR('hola', '[0-9]+') AS sin_coincidencia, REGEXPR_INSTR('404 Not Found', '^[0-9]+') AS al_inicio, REGEXPR_INSTR('xxABCyy', 'abc', 'i') AS con_bandera, REGEXPR_INSTR('xxABCyy', 'abc') AS sin_bandera, REGEXP_INSTR('abc123def', '[0-9]+') AS alias, REGEXPR_INSTR(NULL, '[0-9]+') AS texto_nulo FROM hospitales LIMIT 1",
+      "assert": {
+        "columns": [
+          "digitos",
+          "sin_coincidencia",
+          "al_inicio",
+          "con_bandera",
+          "sin_bandera",
+          "alias",
+          "texto_nulo"
+        ],
+        "rows": [
+          [
+            4,
+            0,
+            1,
+            3,
+            0,
+            4,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A62 · REGEXPR_INSTR sobre apellidos",
+      "description": "Busca el primer espacio de cada apellido: Rubio González en 6, Navarro Molina en 8 y Díaz Domínguez en 5.",
+      "keywords": [
+        "salud",
+        "regex",
+        "funciones",
+        "pacientes"
+      ],
+      "sql": "SELECT id_paciente, apellidos, REGEXPR_INSTR(apellidos, ' ') AS primer_espacio FROM pacientes WHERE id_paciente <= 5 ORDER BY id_paciente",
+      "assert": {
+        "columns": [
+          "id_paciente",
+          "apellidos",
+          "primer_espacio"
+        ],
+        "rows": [
+          [
+            1,
+            "Rubio González",
+            6
+          ],
+          [
+            2,
+            "Navarro Molina",
+            8
+          ],
+          [
+            3,
+            "Muñoz García",
+            6
+          ],
+          [
+            4,
+            "López Martín",
+            6
+          ],
+          [
+            5,
+            "Díaz Domínguez",
+            5
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
       "name": "B01 · Hospitales con sus servicios",
       "description": "INNER JOIN 1:M entre hospital y servicio.",
       "keywords": [
@@ -23927,6 +24011,732 @@
       },
       "folder": "J · PIVOT",
       "color": "#dcf1d4"
+    },
+    {
+      "name": "K01 · Aseguradoras por cobertura (CASE buscado)",
+      "description": "CASE buscado con el límite en 60: menos de 60 es baja, entre 60 y 85 media y el resto alta.",
+      "keywords": [
+        "salud",
+        "case",
+        "funciones",
+        "seguros"
+      ],
+      "sql": "SELECT nombre, cobertura_porcentaje, CASE WHEN cobertura_porcentaje < 60 THEN 'Baja' WHEN cobertura_porcentaje BETWEEN 60 AND 85 THEN 'Media' ELSE 'Alta' END AS cobertura FROM seguros ORDER BY cobertura_porcentaje",
+      "assert": {
+        "columns": [
+          "nombre",
+          "cobertura_porcentaje",
+          "cobertura"
+        ],
+        "rows": [
+          [
+            "Cobertura Básica",
+            50,
+            "Baja"
+          ],
+          [
+            "VidaPlena",
+            60,
+            "Media"
+          ],
+          [
+            "Andes Salud",
+            70,
+            "Media"
+          ],
+          [
+            "Seguros Médicos del Norte",
+            75,
+            "Media"
+          ],
+          [
+            "Mutua Laboral",
+            85,
+            "Media"
+          ],
+          [
+            "Salud Pública",
+            90,
+            "Alta"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K02 · Intervenciones por riesgo (CASE simple)",
+      "description": "CASE simple: compara el riesgo con cada WHEN usando = y devuelve una etiqueta por valor distinto.",
+      "keywords": [
+        "salud",
+        "case",
+        "funciones",
+        "intervenciones"
+      ],
+      "sql": "SELECT DISTINCT riesgo, CASE riesgo WHEN 'Bajo' THEN 'Bajo' WHEN 'Medio' THEN 'Medio' WHEN 'Alto' THEN 'Alto' ELSE 'Desconocido' END AS etiqueta FROM intervenciones ORDER BY riesgo",
+      "assert": {
+        "columns": [
+          "riesgo",
+          "etiqueta"
+        ],
+        "rows": [
+          [
+            "Alto",
+            "Alto"
+          ],
+          [
+            "Bajo",
+            "Bajo"
+          ],
+          [
+            "Medio",
+            "Medio"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K03 · Pacientes sin teléfono (CASE IS NULL)",
+      "description": "El CASE buscado detecta el teléfono ausente con IS NULL y conserva el teléfono real en el resto.",
+      "keywords": [
+        "salud",
+        "case",
+        "nulos",
+        "pacientes"
+      ],
+      "sql": "SELECT nombre, apellidos, CASE WHEN telefono IS NULL THEN 'Desconocido' ELSE telefono END AS contacto FROM pacientes WHERE telefono IS NULL ORDER BY apellidos LIMIT 5",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "contacto"
+        ],
+        "rows": [
+          [
+            "Sergio",
+            "Delgado Ruiz",
+            "Desconocido"
+          ],
+          [
+            "Diego",
+            "Díaz Martínez",
+            "Desconocido"
+          ],
+          [
+            "Marina",
+            "Gil Gutiérrez",
+            "Desconocido"
+          ],
+          [
+            "Jorge",
+            "Iglesias Gutiérrez",
+            "Desconocido"
+          ],
+          [
+            "Pilar",
+            "Iglesias Navarro",
+            "Desconocido"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K04 · Pacientes con IF",
+      "description": "IF(condición, valor, sustituto) es la abreviatura de CASE WHEN condición THEN valor ELSE sustituto END.",
+      "keywords": [
+        "salud",
+        "if",
+        "funciones",
+        "pacientes"
+      ],
+      "sql": "SELECT id_paciente, IF(es_cronico, 'Crónico', 'Agudo') AS tipo FROM pacientes WHERE id_paciente <= 6 ORDER BY id_paciente",
+      "assert": {
+        "columns": [
+          "id_paciente",
+          "tipo"
+        ],
+        "rows": [
+          [
+            1,
+            "Agudo"
+          ],
+          [
+            2,
+            "Agudo"
+          ],
+          [
+            3,
+            "Crónico"
+          ],
+          [
+            4,
+            "Crónico"
+          ],
+          [
+            5,
+            "Agudo"
+          ],
+          [
+            6,
+            "Agudo"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K05 · Médicos por experiencia (CASE en GROUP BY)",
+      "description": "La misma expresión CASE clasifica a los médicos y se repite en GROUP BY: 14 veteranos y 16 jóvenes.",
+      "keywords": [
+        "salud",
+        "case",
+        "group-by",
+        "medicos"
+      ],
+      "sql": "SELECT CASE WHEN anios_experiencia >= 20 THEN 'Veterano' ELSE 'Joven' END AS grupo, COUNT(*) AS n FROM medicos GROUP BY CASE WHEN anios_experiencia >= 20 THEN 'Veterano' ELSE 'Joven' END ORDER BY grupo",
+      "assert": {
+        "columns": [
+          "grupo",
+          "n"
+        ],
+        "rows": [
+          [
+            "Joven",
+            16
+          ],
+          [
+            "Veterano",
+            14
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L01 · Funciones numéricas: ABS y ROUND",
+      "description": "Aplica ABS y ROUND a los precios de los medicamentos: un decimal y distancia a 5.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "numericas",
+        "abs",
+        "round"
+      ],
+      "sql": "SELECT id_medicamento, precio, ROUND(precio, 1) AS redondeado, ROUND(ABS(precio - 5), 2) AS distancia FROM medicamentos WHERE id_medicamento <= 4 ORDER BY id_medicamento",
+      "assert": {
+        "columns": [
+          "id_medicamento",
+          "precio",
+          "redondeado",
+          "distancia"
+        ],
+        "rows": [
+          [
+            1,
+            4.5,
+            4.5,
+            0.5
+          ],
+          [
+            2,
+            3.2,
+            3.2,
+            1.8
+          ],
+          [
+            3,
+            6.8,
+            6.8,
+            1.8
+          ],
+          [
+            4,
+            5.1,
+            5.1,
+            0.1
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L02 · Funciones de texto: UPPER, LOWER, LENGTH, TRIM, SUBSTR y CONCAT",
+      "description": "Aplica las seis funciones de texto a los tres primeros medicamentos.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "texto",
+        "upper",
+        "lower",
+        "length",
+        "trim",
+        "substr",
+        "concat"
+      ],
+      "sql": "SELECT id_medicamento, UPPER(nombre) AS nombre_mayus, LOWER(presentacion) AS presentacion_minus, LENGTH(principio_activo) AS letras, TRIM(nombre) AS recortado, SUBSTR(nombre, 1, 4) AS prefijo, CONCAT(nombre, ' (', presentacion, ')') AS etiqueta FROM medicamentos WHERE id_medicamento <= 3 ORDER BY id_medicamento",
+      "assert": {
+        "columns": [
+          "id_medicamento",
+          "nombre_mayus",
+          "presentacion_minus",
+          "letras",
+          "recortado",
+          "prefijo",
+          "etiqueta"
+        ],
+        "rows": [
+          [
+            1,
+            "IBUPROFENO",
+            "comprimido",
+            10,
+            "Ibuprofeno",
+            "Ibup",
+            "Ibuprofeno (Comprimido)"
+          ],
+          [
+            2,
+            "PARACETAMOL",
+            "comprimido",
+            11,
+            "Paracetamol",
+            "Para",
+            "Paracetamol (Comprimido)"
+          ],
+          [
+            3,
+            "AMOXICILINA",
+            "cápsula",
+            11,
+            "Amoxicilina",
+            "Amox",
+            "Amoxicilina (Cápsula)"
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L03 · Expresiones regulares: INSTR y REPLACE",
+      "description": "Usa REGEXPR_INSTR para localizar la @ en los correos de médicos y REGEXPR_REPLACE para enmascarar los dígitos del número de colegiado.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "regex",
+        "instr",
+        "replace"
+      ],
+      "sql": "SELECT id_medico, email, REGEXPR_INSTR(email, '@') AS posicion_arroba, REGEXPR_REPLACE(num_colegiado, '[0-9]', '#') AS enmascarado FROM medicos WHERE id_medico <= 3 ORDER BY id_medico",
+      "assert": {
+        "columns": [
+          "id_medico",
+          "email",
+          "posicion_arroba",
+          "enmascarado"
+        ],
+        "rows": [
+          [
+            1,
+            "clara.1@hospital.es",
+            8,
+            "########"
+          ],
+          [
+            2,
+            "diego.2@hospital.es",
+            8,
+            "########"
+          ],
+          [
+            3,
+            "elena.3@hospital.es",
+            8,
+            "########"
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L04 · Funciones de NULL: COALESCE, IFNULL y NULLIF",
+      "description": "Usa COALESCE, IFNULL y NULLIF sobre el teléfono y el tipo de seguro.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "null",
+        "coalesce",
+        "ifnull",
+        "nullif"
+      ],
+      "sql": "SELECT id_seguro, COALESCE(telefono, 'Sin teléfono') AS telefono, IFNULL(tipo, 'Desconocido') AS tipo, NULLIF(tipo, 'Público') AS no_publico FROM seguros ORDER BY id_seguro",
+      "assert": {
+        "columns": [
+          "id_seguro",
+          "telefono",
+          "tipo",
+          "no_publico"
+        ],
+        "rows": [
+          [
+            1,
+            "900100100",
+            "Público",
+            null
+          ],
+          [
+            2,
+            "910200200",
+            "Privado",
+            "Privado"
+          ],
+          [
+            3,
+            "920300300",
+            "Privado",
+            "Privado"
+          ],
+          [
+            4,
+            "930400400",
+            "Mixto",
+            "Mixto"
+          ],
+          [
+            5,
+            "Sin teléfono",
+            "Privado",
+            "Privado"
+          ],
+          [
+            6,
+            "960600600",
+            "Público",
+            null
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L05 · Funciones condicionales: IF y CASE",
+      "description": "Usa IF y CASE para clasificar pacientes por cronicidad y longitud del teléfono.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "condicionales",
+        "if",
+        "case"
+      ],
+      "sql": "SELECT id_paciente, IF(es_cronico, 'Crónico', 'Agudo') AS tipo, CASE WHEN telefono IS NULL THEN 'Sin teléfono' WHEN LENGTH(telefono) = 9 THEN 'Válido' ELSE 'Otro' END AS estado_telefono FROM pacientes WHERE id_paciente <= 6 ORDER BY id_paciente",
+      "assert": {
+        "columns": [
+          "id_paciente",
+          "tipo",
+          "estado_telefono"
+        ],
+        "rows": [
+          [
+            1,
+            "Agudo",
+            "Válido"
+          ],
+          [
+            2,
+            "Agudo",
+            "Válido"
+          ],
+          [
+            3,
+            "Crónico",
+            "Válido"
+          ],
+          [
+            4,
+            "Crónico",
+            "Sin teléfono"
+          ],
+          [
+            5,
+            "Agudo",
+            "Válido"
+          ],
+          [
+            6,
+            "Agudo",
+            "Válido"
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L06 · Funciones de agregado: COUNT, SUM, AVG, MIN y MAX",
+      "description": "Ejecuta COUNT(*), COUNT(columna), COUNT(DISTINCT), SUM, AVG, MIN y MAX sobre las visitas.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "agregados",
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ],
+      "sql": "SELECT COUNT(*) AS total, COUNT(motivo) AS con_motivo, COUNT(DISTINCT id_medico) AS medicos, SUM(coste) AS coste, AVG(coste) AS coste_medio, MIN(coste) AS coste_min, MAX(coste) AS coste_max FROM visitas",
+      "assert": {
+        "columns": [
+          "total",
+          "con_motivo",
+          "medicos",
+          "coste",
+          "coste_medio",
+          "coste_min",
+          "coste_max"
+        ],
+        "rows": [
+          [
+            60,
+            60,
+            26,
+            9007,
+            150.11666666666667,
+            40,
+            260
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L07 · PIVOT con todas las funciones de agregado",
+      "description": "PIVOT con COUNT, SUM, AVG, MIN y MAX como medidas, una medida por fila, por tipo de habitación y ocupación.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "pivot",
+        "agregados"
+      ],
+      "sql": "PIVOT (SELECT tipo) BY (SELECT ocupada) FROM habitaciones VALUES COUNT(*) AS habitaciones, SUM(num_camas) AS camas, AVG(num_camas) AS camas_medias, MIN(num_camas) AS camas_min, MAX(num_camas) AS camas_max TOTALS ROWS GRAND COLUMNS GRAND MEASURES ON ROWS;",
+      "assert": {
+        "columns": [
+          "tipo",
+          "Medida",
+          "false",
+          "true",
+          "Total general"
+        ],
+        "rows": [
+          [
+            "Doble",
+            "habitaciones",
+            2,
+            10,
+            12
+          ],
+          [
+            "Doble",
+            "camas",
+            4,
+            20,
+            24
+          ],
+          [
+            "Doble",
+            "camas_medias",
+            2,
+            2,
+            2
+          ],
+          [
+            "Doble",
+            "camas_min",
+            2,
+            2,
+            2
+          ],
+          [
+            "Doble",
+            "camas_max",
+            2,
+            2,
+            2
+          ],
+          [
+            "Individual",
+            "habitaciones",
+            8,
+            3,
+            11
+          ],
+          [
+            "Individual",
+            "camas",
+            7,
+            3,
+            10
+          ],
+          [
+            "Individual",
+            "camas_medias",
+            0.875,
+            1,
+            0.9090909090909091
+          ],
+          [
+            "Individual",
+            "camas_min",
+            0,
+            1,
+            0
+          ],
+          [
+            "Individual",
+            "camas_max",
+            1,
+            1,
+            1
+          ],
+          [
+            "UCI",
+            "habitaciones",
+            4,
+            5,
+            9
+          ],
+          [
+            "UCI",
+            "camas",
+            4,
+            5,
+            9
+          ],
+          [
+            "UCI",
+            "camas_medias",
+            1,
+            1,
+            1
+          ],
+          [
+            "UCI",
+            "camas_min",
+            1,
+            1,
+            1
+          ],
+          [
+            "UCI",
+            "camas_max",
+            1,
+            1,
+            1
+          ],
+          [
+            "Total general",
+            "habitaciones",
+            14,
+            18,
+            32
+          ],
+          [
+            "Total general",
+            "camas",
+            15,
+            28,
+            43
+          ],
+          [
+            "Total general",
+            "camas_medias",
+            1.0714285714285714,
+            1.5555555555555556,
+            1.34375
+          ],
+          [
+            "Total general",
+            "camas_min",
+            0,
+            1,
+            0
+          ],
+          [
+            "Total general",
+            "camas_max",
+            2,
+            2,
+            2
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L08 · PIVOT con funciones escalares en el eje de filas",
+      "description": "PIVOT con funciones escalares en el eje de filas: UPPER y CASE crean el grupo de experiencia, REGEXPR_INSTR filtra los médicos con correo y COUNT/AVG agregan.",
+      "keywords": [
+        "salud",
+        "funciones",
+        "pivot",
+        "escalares",
+        "case",
+        "regexpr_instr"
+      ],
+      "sql": "PIVOT (SELECT UPPER(CASE WHEN anios_experiencia >= 20 THEN 'veterano' ELSE 'joven' END) AS grupo WHERE REGEXPR_INSTR(email, '@') > 0) BY (SELECT es_investigador) FROM medicos VALUES COUNT(*) AS medicos, AVG(anios_experiencia) AS experiencia_media TOTALS ROWS GRAND COLUMNS GRAND;",
+      "assert": {
+        "columns": [
+          "grupo",
+          "false medicos",
+          "false experiencia_media",
+          "true medicos",
+          "true experiencia_media",
+          "Total general medicos",
+          "Total general experiencia_media"
+        ],
+        "rows": [
+          [
+            "JOVEN",
+            8,
+            9.875,
+            5,
+            7.4,
+            13,
+            8.923076923076923
+          ],
+          [
+            "VETERANO",
+            9,
+            25.555555555555557,
+            4,
+            24.25,
+            13,
+            25.153846153846153
+          ],
+          [
+            "Total general",
+            17,
+            18.176470588235293,
+            9,
+            14.88888888888889,
+            26,
+            17.03846153846154
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
     }
   ],
   "scripts": [

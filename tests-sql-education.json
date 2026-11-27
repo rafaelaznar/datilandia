@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "SQL tests · Education (8 tables, 170 queries, 32 scripts)",
+  "name": "SQL tests · Education (8 tables, 190 queries, 32 scripts)",
   "folders": [
     "A · Basics and aggregation",
     "B · Joins",
@@ -12,7 +12,9 @@
     "G · Unions",
     "H · Scripts as tables",
     "I · Parameters",
-    "J · PIVOT"
+    "J · PIVOT",
+    "K · CASE and IF",
+    "L · Functions in SELECT and PIVOT"
   ],
   "tableFolders": [
     "Structure",
@@ -3959,6 +3961,74 @@
             "North Campus",
             "North Campus",
             "code-01 / code-02"
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A48 · REGEXPR_INSTR: first match position and flags",
+      "description": "The three examples: 123 starts at 4, no digit gives 0 and the ^ anchor matches at 1. It also checks the i flag, the alias REGEXP_INSTR and a NULL text.",
+      "keywords": [
+        "education",
+        "regex",
+        "functions",
+        "position"
+      ],
+      "sql": "SELECT REGEXPR_INSTR('abc123def', '[0-9]+') AS digits, REGEXPR_INSTR('hola', '[0-9]+') AS no_match, REGEXPR_INSTR('404 Not Found', '^[0-9]+') AS at_start, REGEXPR_INSTR('xxABCyy', 'abc', 'i') AS with_flag, REGEXPR_INSTR('xxABCyy', 'abc') AS without_flag, REGEXP_INSTR('abc123def', '[0-9]+') AS alias, REGEXPR_INSTR(NULL, '[0-9]+') AS null_text FROM campuses LIMIT 1",
+      "assert": {
+        "columns": [
+          "digits",
+          "no_match",
+          "at_start",
+          "with_flag",
+          "without_flag",
+          "alias",
+          "null_text"
+        ],
+        "rows": [
+          [
+            4,
+            0,
+            1,
+            3,
+            0,
+            4,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Basics and aggregation",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A49 · REGEXPR_INSTR over classroom codes",
+      "description": "Finds the first digit of each code: B-SALA has none, while C-LAB1 and K-101 start their digits at 6 and 3.",
+      "keywords": [
+        "education",
+        "regex",
+        "functions",
+        "classrooms"
+      ],
+      "sql": "SELECT code, REGEXPR_INSTR(code, '[0-9]+') AS first_digit FROM classrooms WHERE code IN ('K-101', 'B-SALA', 'C-LAB1') ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "first_digit"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            0
+          ],
+          [
+            "C-LAB1",
+            6
+          ],
+          [
+            "K-101",
+            3
           ]
         ]
       },
@@ -9668,6 +9738,692 @@
       },
       "folder": "J · PIVOT",
       "color": "#dcf1d4"
+    },
+    {
+      "name": "K01 · Classrooms by size (searched CASE)",
+      "description": "Searched CASE with overlapping conditions: below 25 is small, 25–55 medium and the rest large. The boundary 55 is medium and 60 is large.",
+      "keywords": [
+        "education",
+        "case",
+        "functions",
+        "classrooms"
+      ],
+      "sql": "SELECT code, capacity, CASE WHEN capacity < 25 THEN 'Small' WHEN capacity BETWEEN 25 AND 55 THEN 'Medium' ELSE 'Large' END AS size FROM classrooms WHERE capacity >= 55 ORDER BY capacity DESC, code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity",
+          "size"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            "Large"
+          ],
+          [
+            "R-101",
+            70,
+            "Large"
+          ],
+          [
+            "K-101",
+            60,
+            "Large"
+          ],
+          [
+            "P-101",
+            55,
+            "Medium"
+          ],
+          [
+            "P-102",
+            55,
+            "Medium"
+          ]
+        ]
+      },
+      "folder": "K · CASE and IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K02 · Degrees by cycle (simple CASE)",
+      "description": "Simple CASE: compares the level with each WHEN using = and maps Bachelor and Master to a cycle.",
+      "keywords": [
+        "education",
+        "case",
+        "functions",
+        "degrees"
+      ],
+      "sql": "SELECT code, CASE level WHEN 'Bachelor' THEN 'Undergraduate' WHEN 'Master' THEN 'Postgraduate' ELSE 'Other' END AS cycle FROM degrees ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "cycle"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "Undergraduate"
+          ],
+          [
+            "GINF",
+            "Undergraduate"
+          ],
+          [
+            "GMED",
+            "Undergraduate"
+          ],
+          [
+            "MBD",
+            "Postgraduate"
+          ],
+          [
+            "MSW",
+            "Postgraduate"
+          ],
+          [
+            "TDER",
+            "Undergraduate"
+          ]
+        ]
+      },
+      "folder": "K · CASE and IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K03 · Teachers without an office (CASE IS NULL)",
+      "description": "The searched CASE catches the missing office with IS NULL, so it does not fall into ELSE silently.",
+      "keywords": [
+        "education",
+        "case",
+        "null",
+        "teachers"
+      ],
+      "sql": "SELECT name, last_name, CASE WHEN office IS NULL THEN 'No office' ELSE office END AS room FROM teachers WHERE office IS NULL ORDER BY last_name",
+      "assert": {
+        "columns": [
+          "name",
+          "last_name",
+          "room"
+        ],
+        "rows": [
+          [
+            "Andrés",
+            "Cano Duarte",
+            "No office"
+          ],
+          [
+            "Hugo",
+            "Naranjo Peña",
+            "No office"
+          ],
+          [
+            "Iván",
+            "Requena Soto",
+            "No office"
+          ]
+        ]
+      },
+      "folder": "K · CASE and IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K04 · Large classrooms with IF",
+      "description": "IF(condition, value, substitute) is the shorthand of CASE WHEN condition THEN value ELSE substitute END.",
+      "keywords": [
+        "education",
+        "if",
+        "functions",
+        "classrooms"
+      ],
+      "sql": "SELECT code, IF(capacity >= 55, 'Large', 'Small') AS size FROM classrooms WHERE code IN ('B-SALA', 'K-102', 'C-LAB1') ORDER BY capacity DESC",
+      "assert": {
+        "columns": [
+          "code",
+          "size"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            "Large"
+          ],
+          [
+            "K-102",
+            "Small"
+          ],
+          [
+            "C-LAB1",
+            "Small"
+          ]
+        ]
+      },
+      "folder": "K · CASE and IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K05 · Teachers by load (CASE in GROUP BY)",
+      "description": "The same CASE expression classifies the rows and is used again in GROUP BY: six teachers in each group.",
+      "keywords": [
+        "education",
+        "case",
+        "group-by",
+        "teachers"
+      ],
+      "sql": "SELECT CASE WHEN weekly_hours >= 15 THEN 'High load' ELSE 'Low load' END AS load, COUNT(*) AS n FROM teachers GROUP BY CASE WHEN weekly_hours >= 15 THEN 'High load' ELSE 'Low load' END ORDER BY load",
+      "assert": {
+        "columns": [
+          "load",
+          "n"
+        ],
+        "rows": [
+          [
+            "High load",
+            6
+          ],
+          [
+            "Low load",
+            6
+          ]
+        ]
+      },
+      "folder": "K · CASE and IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L01 · Numeric functions: ABS and ROUND",
+      "description": "Applies ABS and ROUND to classroom capacity: distance from 50 and one decimal of capacity / 3.",
+      "keywords": [
+        "education",
+        "functions",
+        "numeric",
+        "abs",
+        "round"
+      ],
+      "sql": "SELECT code, capacity, ABS(capacity - 50) AS distance, ROUND(capacity / 3.0, 1) AS third FROM classrooms WHERE capacity >= 55 ORDER BY capacity DESC, code",
+      "assert": {
+        "columns": [
+          "code",
+          "capacity",
+          "distance",
+          "third"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            30,
+            26.7
+          ],
+          [
+            "R-101",
+            70,
+            20,
+            23.3
+          ],
+          [
+            "K-101",
+            60,
+            10,
+            20
+          ],
+          [
+            "P-101",
+            55,
+            5,
+            18.3
+          ],
+          [
+            "P-102",
+            55,
+            5,
+            18.3
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L02 · Text functions: UPPER, LOWER, LENGTH, TRIM, SUBSTR and CONCAT",
+      "description": "Applies the six text functions to the first three teachers.",
+      "keywords": [
+        "education",
+        "functions",
+        "text",
+        "upper",
+        "lower",
+        "length",
+        "trim",
+        "substr",
+        "concat"
+      ],
+      "sql": "SELECT id_teacher, UPPER(name) AS upper_name, LOWER(last_name) AS lower_last_name, LENGTH(last_name) AS letters, TRIM(name) AS trimmed, SUBSTR(last_name, 1, 5) AS prefix, CONCAT(name, ' ', last_name) AS full_name FROM teachers WHERE id_teacher <= 3 ORDER BY id_teacher",
+      "assert": {
+        "columns": [
+          "id_teacher",
+          "upper_name",
+          "lower_last_name",
+          "letters",
+          "trimmed",
+          "prefix",
+          "full_name"
+        ],
+        "rows": [
+          [
+            1,
+            "ELENA",
+            "vargas ruiz",
+            11,
+            "Elena",
+            "Varga",
+            "Elena Vargas Ruiz"
+          ],
+          [
+            2,
+            "MARC",
+            "oliver pons",
+            11,
+            "Marc",
+            "Olive",
+            "Marc Oliver Pons"
+          ],
+          [
+            3,
+            "NIEVES",
+            "salgado ortiz",
+            13,
+            "Nieves",
+            "Salga",
+            "Nieves Salgado Ortiz"
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L03 · Regular expressions: REPLACE and INSTR",
+      "description": "Uses REGEXPR_REPLACE to mask digits and REGEXPR_INSTR to locate the first digit in three classroom codes.",
+      "keywords": [
+        "education",
+        "functions",
+        "regex",
+        "replace",
+        "instr"
+      ],
+      "sql": "SELECT code, REGEXPR_REPLACE(code, '[0-9]', '#') AS masked, REGEXPR_INSTR(code, '[0-9]+') AS first_digit FROM classrooms WHERE code IN ('K-101', 'B-SALA', 'C-LAB1') ORDER BY code",
+      "assert": {
+        "columns": [
+          "code",
+          "masked",
+          "first_digit"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            "B-SALA",
+            0
+          ],
+          [
+            "C-LAB1",
+            "C-LAB#",
+            6
+          ],
+          [
+            "K-101",
+            "K-###",
+            3
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L04 · NULL functions: COALESCE, IFNULL and NULLIF",
+      "description": "Uses COALESCE, IFNULL and NULLIF over office, email and category: missing values and the value equal to Associate are transformed.",
+      "keywords": [
+        "education",
+        "functions",
+        "null",
+        "coalesce",
+        "ifnull",
+        "nullif"
+      ],
+      "sql": "SELECT id_teacher, COALESCE(office, 'No office') AS office, IFNULL(email, 'No email') AS email, NULLIF(category, 'Associate') AS not_associate FROM teachers WHERE id_teacher <= 4 ORDER BY id_teacher",
+      "assert": {
+        "columns": [
+          "id_teacher",
+          "office",
+          "email",
+          "not_associate"
+        ],
+        "rows": [
+          [
+            1,
+            "D-201",
+            "elena.vargas@uni.es",
+            "Full professor"
+          ],
+          [
+            2,
+            "D-114",
+            "marc.oliver@uni.es",
+            "Senior lecturer"
+          ],
+          [
+            3,
+            "D-115",
+            "No email",
+            "Senior lecturer"
+          ],
+          [
+            4,
+            "No office",
+            "ivan.requena@uni.es",
+            null
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L05 · Conditional functions: IF and CASE",
+      "description": "Uses IF and both CASE forms to classify three classrooms by capacity.",
+      "keywords": [
+        "education",
+        "functions",
+        "conditional",
+        "if",
+        "case"
+      ],
+      "sql": "SELECT code, IF(capacity >= 55, 'Large', 'Small') AS size, CASE WHEN capacity < 25 THEN 'Tiny' WHEN capacity BETWEEN 25 AND 55 THEN 'Medium' ELSE 'Large' END AS category FROM classrooms WHERE code IN ('B-SALA', 'K-102', 'C-LAB1') ORDER BY capacity DESC",
+      "assert": {
+        "columns": [
+          "code",
+          "size",
+          "category"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            "Large",
+            "Large"
+          ],
+          [
+            "K-102",
+            "Small",
+            "Medium"
+          ],
+          [
+            "C-LAB1",
+            "Small",
+            "Tiny"
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L06 · Aggregate functions: COUNT, SUM, AVG, MIN and MAX",
+      "description": "Runs COUNT(*), COUNT(column), COUNT(DISTINCT), SUM, AVG, MIN and MAX over teachers.",
+      "keywords": [
+        "education",
+        "functions",
+        "aggregate",
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ],
+      "sql": "SELECT COUNT(*) AS total, COUNT(office) AS with_office, COUNT(DISTINCT category) AS categories, SUM(weekly_hours) AS hours, AVG(weekly_hours) AS average_hours, MIN(weekly_hours) AS min_hours, MAX(weekly_hours) AS max_hours FROM teachers",
+      "assert": {
+        "columns": [
+          "total",
+          "with_office",
+          "categories",
+          "hours",
+          "average_hours",
+          "min_hours",
+          "max_hours"
+        ],
+        "rows": [
+          [
+            12,
+            9,
+            4,
+            161,
+            13.416666666666666,
+            6,
+            20
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L07 · PIVOT with all aggregate functions",
+      "description": "PIVOT with COUNT, SUM, AVG, MIN and MAX as measures, one measure per row, by floor and projector.",
+      "keywords": [
+        "education",
+        "functions",
+        "pivot",
+        "aggregate"
+      ],
+      "sql": "PIVOT (SELECT floor) BY (SELECT has_projector) FROM classrooms VALUES COUNT(*) AS rooms, SUM(capacity) AS seats, AVG(capacity) AS average_seats, MIN(capacity) AS min_seats, MAX(capacity) AS max_seats TOTALS ROWS GRAND COLUMNS GRAND MEASURES ON ROWS;",
+      "assert": {
+        "columns": [
+          "floor",
+          "Measure",
+          "false",
+          "true",
+          "Grand total"
+        ],
+        "rows": [
+          [
+            "1",
+            "rooms",
+            4,
+            6,
+            10
+          ],
+          [
+            "1",
+            "seats",
+            153,
+            251,
+            404
+          ],
+          [
+            "1",
+            "average_seats",
+            38.25,
+            41.833333333333336,
+            40.4
+          ],
+          [
+            "1",
+            "min_seats",
+            18,
+            20,
+            18
+          ],
+          [
+            "1",
+            "max_seats",
+            55,
+            70,
+            70
+          ],
+          [
+            "2",
+            "rooms",
+            1,
+            2,
+            3
+          ],
+          [
+            "2",
+            "seats",
+            12,
+            70,
+            82
+          ],
+          [
+            "2",
+            "average_seats",
+            12,
+            35,
+            27.333333333333332
+          ],
+          [
+            "2",
+            "min_seats",
+            12,
+            30,
+            12
+          ],
+          [
+            "2",
+            "max_seats",
+            12,
+            40,
+            40
+          ],
+          [
+            "3",
+            "rooms",
+            1,
+            2,
+            3
+          ],
+          [
+            "3",
+            "seats",
+            25,
+            130,
+            155
+          ],
+          [
+            "3",
+            "average_seats",
+            25,
+            65,
+            51.666666666666664
+          ],
+          [
+            "3",
+            "min_seats",
+            25,
+            50,
+            25
+          ],
+          [
+            "3",
+            "max_seats",
+            25,
+            80,
+            80
+          ],
+          [
+            "Grand total",
+            "rooms",
+            6,
+            10,
+            16
+          ],
+          [
+            "Grand total",
+            "seats",
+            190,
+            451,
+            641
+          ],
+          [
+            "Grand total",
+            "average_seats",
+            31.666666666666668,
+            45.1,
+            40.0625
+          ],
+          [
+            "Grand total",
+            "min_seats",
+            12,
+            20,
+            12
+          ],
+          [
+            "Grand total",
+            "max_seats",
+            55,
+            80,
+            80
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L08 · PIVOT with scalar functions in the row axis",
+      "description": "PIVOT with scalar functions in the row axis: UPPER and CASE create the load, REGEXPR_INSTR filters teachers with an e-mail, and COUNT/AVG aggregate.",
+      "keywords": [
+        "education",
+        "functions",
+        "pivot",
+        "scalar",
+        "case",
+        "regexpr_instr"
+      ],
+      "sql": "PIVOT (SELECT UPPER(CASE WHEN weekly_hours >= 15 THEN 'high' ELSE 'low' END) AS load WHERE REGEXPR_INSTR(email, '@') > 0) BY (SELECT is_researcher) FROM teachers VALUES COUNT(*) AS teachers, AVG(weekly_hours) AS average_hours TOTALS ROWS GRAND COLUMNS GRAND;",
+      "assert": {
+        "columns": [
+          "load",
+          "false teachers",
+          "false average_hours",
+          "true teachers",
+          "true average_hours",
+          "Grand total teachers",
+          "Grand total average_hours"
+        ],
+        "rows": [
+          [
+            "HIGH",
+            1,
+            19,
+            4,
+            17.5,
+            5,
+            17.8
+          ],
+          [
+            "LOW",
+            3,
+            6.666666666666667,
+            1,
+            14,
+            4,
+            8.5
+          ],
+          [
+            "Grand total",
+            4,
+            9.75,
+            5,
+            16.8,
+            9,
+            13.666666666666666
+          ]
+        ]
+      },
+      "folder": "L · Functions in SELECT and PIVOT",
+      "color": "#dde5fa"
     }
   ],
   "scripts": [

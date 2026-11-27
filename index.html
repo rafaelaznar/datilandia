@@ -3695,6 +3695,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlFunctions.sum": "SUM([DISTINCT] number)",
         "sqlFunctions.substr": "SUBSTR(text, start, [length])",
         "sqlFunctions.regexprReplace": "REGEXPR_REPLACE(text, pattern, replacement[, flags])",
+        "sqlFunctions.regexprInstr": "REGEXPR_INSTR(text, pattern[, flags])",
         "sqlFunctions.concat": "CONCAT(text, text, …)",
         "sqlFunctions.round": "ROUND(number, decimals)",
         "sqlFunctions.nullif": "NULLIF(value1, value2)",
@@ -3703,6 +3704,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlFunctions.lower": "LOWER(text)",
         "sqlFunctions.length": "LENGTH(text)",
         "sqlFunctions.ifnull": "IFNULL(value, substitute)",
+        "sqlFunctions.if": "IF(condition, value, substitute)",
+        "sqlFunctions.case": "CASE WHEN condition THEN result [WHEN …] [ELSE result] END",
         "sqlFunctions.count": "COUNT(*) or COUNT([DISTINCT] column)",
         "sqlFunctions.coalesce": "COALESCE(value1, value2, …)",
         "sqlFunctions.avg": "AVG([DISTINCT] number)",
@@ -4309,6 +4312,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlValidator.unsupportedExpression": "Unsupported expression: “{type}”.",
         "sqlValidator.usageHint": "Usage: {doc}.",
         "sqlValidator.wrongArgCount": "Function “{functionName}” expects {expected}, but received {received}.",
+        "sqlValidator.caseTypes": "The result branches of {expression} must share a common type; found: {types}.",
+        "sqlValidator.caseTypesHint": "Use the same type in every THEN/ELSE branch; NULL fits any type. Example: CASE WHEN … THEN 'text' ELSE 'other text' END.",
         "sqlViews.checkSqlHint": "Check its SQL: it runs when read from another query.",
         "sqlViews.circularQueries": "The queries use each other in a circle: {chain}. A query cannot read its own result, either directly or indirectly.",
         "sqlViews.circularQueriesHint": "Remove one of those queries from the FROM: at least one of them must read only project tables.",
@@ -4934,6 +4939,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlFunctions.sum": "SUM([DISTINCT] número)",
         "sqlFunctions.substr": "SUBSTR(texto, inicio, [longitud])",
         "sqlFunctions.regexprReplace": "REGEXPR_REPLACE(texto, patrón, sustitución[, banderas])",
+        "sqlFunctions.regexprInstr": "REGEXPR_INSTR(texto, patrón[, banderas])",
         "sqlFunctions.concat": "CONCAT(texto, texto, …)",
         "sqlFunctions.round": "ROUND(número, decimales)",
         "sqlFunctions.nullif": "NULLIF(valor1, valor2)",
@@ -4942,6 +4948,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlFunctions.lower": "LOWER(texto)",
         "sqlFunctions.length": "LENGTH(texto)",
         "sqlFunctions.ifnull": "IFNULL(valor, sustituto)",
+        "sqlFunctions.if": "IF(condición, valor, sustituto)",
+        "sqlFunctions.case": "CASE WHEN condición THEN resultado [WHEN …] [ELSE resultado] END",
         "sqlFunctions.count": "COUNT(*) o COUNT([DISTINCT] columna)",
         "sqlFunctions.coalesce": "COALESCE(valor1, valor2, …)",
         "sqlFunctions.avg": "AVG([DISTINCT] número)",
@@ -5548,6 +5556,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "sqlValidator.unsupportedExpression": "Expresión no soportada: «{type}».",
         "sqlValidator.usageHint": "Uso: {doc}.",
         "sqlValidator.wrongArgCount": "La función «{functionName}» espera {expected}, y recibió {received}.",
+        "sqlValidator.caseTypes": "Las ramas de resultado de {expression} deben compartir un tipo común; se encontraron: {types}.",
+        "sqlValidator.caseTypesHint": "Usa el mismo tipo en todas las ramas THEN/ELSE; NULL encaja con cualquiera. Ejemplo: CASE WHEN … THEN 'texto' ELSE 'otro texto' END.",
         "sqlViews.checkSqlHint": "Revisa su SQL: se ejecuta al leerla desde otra consulta.",
         "sqlViews.circularQueries": "Las consultas se usan en círculo: {chain}. Una consulta no puede leer su propio resultado, ni directa ni indirectamente.",
         "sqlViews.circularQueriesHint": "Quita del FROM una de esas consultas: alguna tiene que leer solo tablas del proyecto.",
@@ -10088,6 +10098,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       "WHERE", "GROUP", "BY", "HAVING", "ORDER", "ASC", "DESC", "NULLS", "FIRST",
       "LAST", "LIMIT", "OFFSET", "AND", "OR", "NOT", "NULL", "TRUE", "FALSE",
       "IS", "IN", "BETWEEN", "LIKE", "ESCAPE", "EXISTS", "ANY", "SOME", "ALL",
+      "CASE", "WHEN", "THEN", "ELSE", "END",
     ];
 
     /** Turns the SQL text into tokens with line and column. */
@@ -11078,6 +11089,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             this.next();
             return { type: "exists", query: this.parseSubquery(), not: false };
           }
+          if (token.value === "CASE") {
+            this.next();
+            return this.parseCase();
+          }
           if (token.value === "SELECT") {
             throw this.expectedError(token, I18n.t("sqlParser.expression"));
           }
@@ -11121,6 +11136,33 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           return { type: "column", table, name };
         }
         throw this.expectedError(token, I18n.t("sqlParser.expression"));
+      }
+
+      /** CASE expression, already consumed the CASE keyword. Two forms:
+       *
+       *   CASE WHEN condition THEN result … [ELSE result] END
+       *   CASE value WHEN candidate THEN result … [ELSE result] END
+       *
+       * The searched form keeps the condition; the simple one keeps the value
+       * to compare and every candidate. The runtime decides between them. */
+      parseCase() {
+        let operand = null;
+        if (!(this.peek().type === "keyword" && this.peek().value === "WHEN")) {
+          operand = this.parseExpression();
+        }
+        if (this.matchKeyword("WHEN")) {
+          const whens = [];
+          do {
+            const when = this.parseExpression();
+            this.expectKeyword("THEN");
+            const then = this.parseExpression();
+            whens.push({ when, then });
+          } while (this.matchKeyword("WHEN"));
+          const elseExpr = this.matchKeyword("ELSE") ? this.parseExpression() : null;
+          this.expectKeyword("END");
+          return { type: "case", operand, whens, else: elseExpr };
+        }
+        throw this.expectedError(this.peek(), "WHEN");
       }
 
       parseCall(name) {
@@ -11888,10 +11930,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       SUBSTR: { min: 2, max: 3, doc: "sqlFunctions.substr" },
       REGEXPR_REPLACE: { min: 3, max: 4, doc: "sqlFunctions.regexprReplace" },
       REGEXP_REPLACE: { min: 3, max: 4, doc: "sqlFunctions.regexprReplace" },
+      REGEXPR_INSTR: { min: 2, max: 3, doc: "sqlFunctions.regexprInstr" },
+      REGEXP_INSTR: { min: 2, max: 3, doc: "sqlFunctions.regexprInstr" },
       CONCAT: { min: 1, max: 9, doc: "sqlFunctions.concat" },
       COALESCE: { min: 1, max: 9, doc: "sqlFunctions.coalesce" },
       IFNULL: { min: 2, max: 2, doc: "sqlFunctions.ifnull" },
       NULLIF: { min: 2, max: 2, doc: "sqlFunctions.nullif" },
+      IF: { min: 3, max: 3, doc: "sqlFunctions.if" },
     };
 
     /** Aggregate functions available (min./max. arguments and usage). */
@@ -12129,6 +12174,22 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        *  left out so walks do not reach into another query. */
       childExpressions(expr) {
         const children = [];
+        // CASE keeps its branches in { when, then } objects: walk them by hand
+        // so every generic walk (aggregates, sources, subqueries, grouping)
+        // reaches the conditions and the results.
+        if (expr.type === "case") {
+          if (expr.operand) {
+            children.push(expr.operand);
+          }
+          expr.whens.forEach((branch) => {
+            children.push(branch.when);
+            children.push(branch.then);
+          });
+          if (expr.else) {
+            children.push(expr.else);
+          }
+          return children;
+        }
         const isExpression = (value) => value && typeof value === "object"
           && typeof value.type === "string" && value.type !== "select" && value.type !== "union";
         Object.values(expr).forEach((value) => {
@@ -12220,6 +12281,9 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           case "subquery":
             SqlValidator.validateSubquery(expr, context, true);
             return;
+          case "case":
+            SqlValidator.validateCase(expr, contextName, context, insideAggregate);
+            return;
           case "call":
             SqlValidator.validateCall(expr, contextName, context, insideAggregate);
             return;
@@ -12254,6 +12318,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           node.source = target.alias;
           node.field = canonical;
           node.meta = target.table.fields.find((field) => field.name === canonical) || null;
+          node.valueTable = target.table;
           if (outerSource) {
             node.outer = true;
             context.outerRefs.add(outerSource.alias.toLowerCase());
@@ -12277,6 +12342,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
               node.source = source.alias;
               node.field = source.fields.get(node.name.toLowerCase());
               node.meta = source.table.fields.find((field) => field.name === node.field) || null;
+              node.valueTable = source.table;
               node.outer = true;
               context.outerRefs.add(source.alias.toLowerCase());
               return;
@@ -12293,6 +12359,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
           node.source = matches[0].alias;
           node.field = matches[0].fields.get(node.name.toLowerCase());
           node.meta = matches[0].table.fields.find((field) => field.name === node.field) || null;
+          node.valueTable = matches[0].table;
         }
         if (context.requiresGrouping && !insideAggregate && ["select", "having", "order"].includes(contextName)) {
           const key = `${node.source}.${node.field}`.toLowerCase();
@@ -12370,6 +12437,142 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         expr.source = source.alias;
       },
 
+      /** Validates a CASE expression and checks that every result branch has
+       *  a common type. The searched form (operand null) uses each `when` as a
+       *  condition; the simple form compares the operand with each one. */
+      validateCase(node, contextName, context, insideAggregate) {
+        if (node.operand) {
+          SqlValidator.walk(node.operand, contextName, context, insideAggregate);
+        }
+        node.whens.forEach((branch) => {
+          SqlValidator.walk(branch.when, contextName, context, insideAggregate);
+          SqlValidator.walk(branch.then, contextName, context, insideAggregate);
+        });
+        if (node.else) {
+          SqlValidator.walk(node.else, contextName, context, insideAggregate);
+        }
+        SqlValidator.checkResultTypes(node, "CASE", node.whens.map((branch) => branch.then).concat(node.else ? [node.else] : []));
+      },
+
+      /** Type of an expression, as far as the engine can know it without
+       *  running it. `null` is a value that fits any branch; `unknown` is an
+       *  expression whose type cannot be told in advance. */
+      expressionType(expr) {
+        if (!expr) {
+          return "null";
+        }
+        switch (expr.type) {
+          case "literal":
+            return expr.value === null ? "null" : typeof expr.value;
+          case "param":
+            return Object.hasOwn(expr, "value") && expr.value !== null ? typeof expr.value : "unknown";
+          case "column": {
+            if (!expr.meta || !Model.FIELD_TYPES.includes(expr.meta.type)) {
+              return "unknown";
+            }
+            // A field declared as string may hold numbers (tables created in
+            // code or imported without inference). The value read at runtime
+            // is the number, so the branch type follows the values.
+            if (expr.meta.type === "string" && expr.valueTable && Array.isArray(expr.valueTable.rows)) {
+              return Model.fieldTypeFromRows(expr.valueTable.rows, expr.field);
+            }
+            return expr.meta.type;
+          }
+          case "unary":
+            return expr.op === "not" ? "boolean" : "number";
+          case "binary":
+            if (expr.op === "and" || expr.op === "or") {
+              return "boolean";
+            }
+            if (["=", "==", "!=", "<>", "<", "<=", ">", ">="].includes(expr.op)) {
+              return "boolean";
+            }
+            return expr.op === "||" ? "string" : "number";
+          case "isnull":
+          case "between":
+          case "like":
+          case "in":
+          case "exists":
+          case "quantified":
+            return "boolean";
+          case "case":
+            return expr.resultType || "unknown";
+          case "subquery": {
+            const ast = expr.query || expr.ast;
+            if (!ast || ast.type !== "select" || !ast.columns || ast.columns.length !== 1) {
+              return "unknown";
+            }
+            const column = ast.columns[0];
+            return column && column.expr && column.expr.type !== "star"
+              ? SqlValidator.expressionType(column.expr)
+              : "unknown";
+          }
+          case "call":
+            return SqlValidator.callType(expr);
+          default:
+            return "unknown";
+        }
+      },
+
+      /** Type returned by a function call, according to its name. */
+      callType(node) {
+        const name = node.func || String(node.name || "").toUpperCase();
+        if (node.isAggregate) {
+          if (name === "COUNT" || name === "SUM" || name === "AVG") {
+            return "number";
+          }
+          return node.args && node.args[0] ? SqlValidator.expressionType(node.args[0]) : "unknown";
+        }
+        if (["ABS", "ROUND", "LENGTH", "REGEXPR_INSTR", "REGEXP_INSTR"].includes(name)) {
+          return "number";
+        }
+        if (["UPPER", "LOWER", "TRIM", "SUBSTR", "REGEXPR_REPLACE", "REGEXP_REPLACE", "CONCAT"].includes(name)) {
+          return "string";
+        }
+        if (name === "COALESCE" || name === "IFNULL") {
+          return SqlValidator.commonType((node.args || []).map((arg) => SqlValidator.expressionType(arg))).type;
+        }
+        if (name === "NULLIF") {
+          return node.args && node.args[0] ? SqlValidator.expressionType(node.args[0]) : "unknown";
+        }
+        if (name === "IF") {
+          return SqlValidator.commonType((node.args || []).map((arg) => SqlValidator.expressionType(arg)).slice(1)).type;
+        }
+        return "unknown";
+      },
+
+      /** Common type of a list of branch types. NULL and unknown fit any type;
+       *  two different known types have no common type (conflict). */
+      commonType(types) {
+        let common = "null";
+        for (const type of types) {
+          if (type === "null" || type === "unknown" || type === undefined) {
+            continue;
+          }
+          if (common === "null") {
+            common = type;
+          } else if (common !== type) {
+            return { type: null, conflict: true };
+          }
+        }
+        return { type: common, conflict: false };
+      },
+
+      /** Checks the common type of the result branches of CASE/IF and stores
+       *  it in the node. A mismatch is a validation error, not a silent
+       *  coercion. */
+      checkResultTypes(node, expression, branches) {
+        const types = branches.map((branch) => SqlValidator.expressionType(branch));
+        const merged = SqlValidator.commonType(types);
+        if (merged.conflict) {
+          throw new SqlValidationError(
+            I18n.t("sqlValidator.caseTypes", { expression: expression, types: types.join(", ") }),
+            { hint: I18n.t("sqlValidator.caseTypesHint") },
+          );
+        }
+        node.resultType = merged.type;
+      },
+
       /** Validates a function: existence, use, arity and arguments. */
       validateCall(node, contextName, context, insideAggregate) {
         const name = node.name.toUpperCase();
@@ -12431,6 +12634,11 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         node.isAggregate = Boolean(aggregate);
         if (!isStar) {
           node.args.forEach((arg) => SqlValidator.walk(arg, contextName, context, insideAggregate || Boolean(aggregate)));
+        }
+        // IF(condition, x, y) is shorthand for CASE WHEN condition THEN x ELSE y
+        // END: both result branches must share a type, checked now.
+        if (name === "IF") {
+          SqlValidator.checkResultTypes(node, "IF", node.args.slice(1));
         }
       },
 
@@ -12821,6 +13029,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             return `${SqlPlanner.expressionLabel(expr.expr)} ${expr.op.toUpperCase()} ${expr.quantifier.toUpperCase()} (…)`;
           case "subquery":
             return I18n.t("sqlPlanner.subqueryColumn");
+          case "case":
+            return expr.operand
+              ? `CASE ${SqlPlanner.expressionLabel(expr.operand)} … END`
+              : "CASE … END";
           default:
             return "?";
         }
@@ -13247,14 +13459,53 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             return SqlExecutor.evalQuantified(expr, context);
           case "subquery":
             return SqlExecutor.evalScalarSubquery(expr, context);
+          case "case":
+            return SqlExecutor.evalCase(expr, context);
           case "call":
             if (expr.isAggregate) {
               return context.aggregates ? context.aggregates.get(expr) : null;
+            }
+            if (expr.func === "IF") {
+              return SqlExecutor.evalIf(expr, context);
             }
             return SqlExecutor.evalScalarFunction(expr, context);
           default:
             throw new SqlRuntimeError(I18n.t("sqlExecutor.cannotEvaluate", { expressionType: expr.type }), {});
         }
+      },
+
+      /** CASE, in both forms. Only the chosen result is evaluated, and the
+       *  WHEN conditions are tried in order, so the first true one wins. A
+       *  NULL condition is not true. Without a true branch and without ELSE the
+       *  result is NULL. In the simple form the comparison is `=`: a NULL
+       *  operand or candidate never matches. */
+      evalCase(expr, context) {
+        if (expr.operand) {
+          const value = SqlExecutor.evalExpr(expr.operand, context);
+          if (value !== null) {
+            for (const branch of expr.whens) {
+              const candidate = SqlExecutor.evalExpr(branch.when, context);
+              if (candidate !== null && SqlExecutor.strictEquals(value, candidate)) {
+                return SqlExecutor.evalExpr(branch.then, context);
+              }
+            }
+          }
+          return expr.else ? SqlExecutor.evalExpr(expr.else, context) : null;
+        }
+        for (const branch of expr.whens) {
+          if (SqlExecutor.evalCondition(branch.when, context) === true) {
+            return SqlExecutor.evalExpr(branch.then, context);
+          }
+        }
+        return expr.else ? SqlExecutor.evalExpr(expr.else, context) : null;
+      },
+
+      /** IF(condition, x, y), the shorthand of CASE WHEN condition THEN x ELSE
+       *  y END. The condition must be boolean (NULL counts as not true) and
+       *  only the chosen branch is evaluated. */
+      evalIf(expr, context) {
+        const condition = SqlExecutor.evalCondition(expr.args[0], context);
+        return SqlExecutor.evalExpr(condition === true ? expr.args[1] : expr.args[2], context);
       },
 
       evalUnary(expr, context) {
@@ -13573,6 +13824,19 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         return comparison >= 0;
       },
 
+      /** Compiles a regular expression with its flags, with a detailed error
+       *  when the pattern is not valid. */
+      compileRegex(pattern, flags) {
+        try {
+          return new RegExp(pattern, flags);
+        } catch (err) {
+          throw new SqlRuntimeError(
+            I18n.t("sqlExecutor.invalidRegex", { message: err.message }),
+            { hint: I18n.t("sqlExecutor.invalidRegexHint") },
+          );
+        }
+      },
+
       evalScalarFunction(expr, context) {
         const args = expr.args.map((arg) => SqlExecutor.evalExpr(arg, context));
         switch (expr.func) {
@@ -13621,16 +13885,18 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
             const replacement = String(args[2]);
             const extra = args.length > 3 && args[3] !== null ? String(args[3]) : "";
             const flags = extra.includes("g") ? extra : `g${extra}`;
-            let regex;
-            try {
-              regex = new RegExp(pattern, flags);
-            } catch (err) {
-              throw new SqlRuntimeError(
-                I18n.t("sqlExecutor.invalidRegex", { message: err.message }),
-                { hint: I18n.t("sqlExecutor.invalidRegexHint") },
-              );
+            return text.replace(SqlExecutor.compileRegex(pattern, flags), replacement);
+          }
+          case "REGEXPR_INSTR":
+          case "REGEXP_INSTR": {
+            if (args[0] === null || args[1] === null) {
+              return null;
             }
-            return text.replace(regex, replacement);
+            const text = String(args[0]);
+            const pattern = String(args[1]);
+            const flags = args.length > 2 && args[2] !== null ? String(args[2]) : "";
+            const match = SqlExecutor.compileRegex(pattern, flags).exec(text);
+            return match ? match.index + 1 : 0;
           }
           case "CONCAT":
             return args.some((value) => value === null) ? null : args.join("");
@@ -29720,14 +29986,22 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
 
     /** Sample project with data for the SQL execution tests. */
     function buildSqlTestProject() {
-      const employees = Model.createTable("employees", [{ name: "name" }, { name: "department" }, { name: "age" }, { name: "active" }]);
+      const employees = Model.createTable("employees", [
+        { name: "name", type: "string" },
+        { name: "department", type: "string" },
+        { name: "age", type: "number" },
+        { name: "active", type: "boolean" },
+      ]);
       employees.rows = [
         { name: "Ana", department: "Sales", age: 31, active: true },
         { name: "Luis", department: "IT", age: 45, active: false },
         { name: "Marta", department: "Sales", age: 28, active: true },
         { name: "Pep", department: null, age: 50, active: true },
       ];
-      const departments = Model.createTable("departments", [{ name: "name" }, { name: "manager" }]);
+      const departments = Model.createTable("departments", [
+        { name: "name", type: "string" },
+        { name: "manager", type: "string" },
+      ]);
       departments.rows = [
         { name: "Sales", manager: "Ana" },
         { name: "IT", manager: "Luis" },
@@ -29976,6 +30250,260 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(nulo.result.rows[0][0], null, "null when an argument is null");
       const malo = SqlEngine.runSafe("SELECT REGEXPR_REPLACE(name, '[', 'x') AS r FROM employees LIMIT 1", project);
       assert(!malo.ok, "an invalid regular expression is an error");
+    });
+
+    SelfTests.add("When_RegexprInstrFunction_Expect_FirstMatchPosition", () => {
+      const project = buildSqlTestProject();
+      const sql = "SELECT REGEXPR_INSTR('abc123def', '[0-9]+') AS digits, "
+        + "REGEXPR_INSTR('hola', '[0-9]+') AS no_match, "
+        + "REGEXPR_INSTR('404 Not Found', '^[0-9]+') AS at_start, "
+        + "REGEXPR_INSTR('xxABCyy', 'abc', 'i') AS with_flag, "
+        + "REGEXPR_INSTR('xxABCyy', 'abc') AS without_flag "
+        + "FROM employees LIMIT 1";
+      const result = SqlEngine.runSafe(sql, project);
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(result.result.rows[0], [4, 0, 1, 3, 0], "1-based position, 0 without a match and the flags");
+      const alias = SqlEngine.runSafe("SELECT REGEXP_INSTR('abc123def', '[0-9]+') AS p FROM employees LIMIT 1", project);
+      assert(alias.ok, "valid query: " + (alias.error && alias.error.message));
+      assertEqual(alias.result.rows[0][0], 4, "the REGEXP_INSTR name is accepted too");
+      const nullText = SqlEngine.runSafe("SELECT REGEXPR_INSTR(NULL, '[0-9]+') AS p FROM employees LIMIT 1", project);
+      assert(nullText.ok, "valid query: " + (nullText.error && nullText.error.message));
+      assertEqual(nullText.result.rows[0][0], null, "null text → null");
+      const nullPattern = SqlEngine.runSafe("SELECT REGEXPR_INSTR('abc', NULL) AS p FROM employees LIMIT 1", project);
+      assert(nullPattern.ok, "valid query: " + (nullPattern.error && nullPattern.error.message));
+      assertEqual(nullPattern.result.rows[0][0], null, "null pattern → null");
+      const nullFlags = SqlEngine.runSafe("SELECT REGEXPR_INSTR('abc123', '[0-9]+', NULL) AS p FROM employees LIMIT 1", project);
+      assert(nullFlags.ok, "valid query: " + (nullFlags.error && nullFlags.error.message));
+      assertEqual(nullFlags.result.rows[0][0], 4, "null flags mean no flags");
+      const invalid = SqlEngine.runSafe("SELECT REGEXPR_INSTR('abc', '[') AS p FROM employees LIMIT 1", project);
+      assert(!invalid.ok, "an invalid regular expression is an error");
+      const inCase = SqlEngine.runSafe(
+        "SELECT CASE WHEN 1 = 1 THEN REGEXPR_INSTR('abc123', '[0-9]+') ELSE 0 END AS p FROM employees LIMIT 1",
+        project,
+      );
+      assert(inCase.ok, "valid query: " + (inCase.error && inCase.error.message));
+      assertEqual(inCase.result.rows[0][0], 4, "the function type is numeric inside CASE");
+    });
+
+    /* --- Cases T7b: CASE and IF ----------------------------------------- */
+
+    SelfTests.add("When_SearchedCase_Expect_FirstTrueBranchAndElse", () => {
+      const sql = "SELECT name, CASE WHEN age < 30 THEN 'young' WHEN age BETWEEN 30 AND 45 THEN 'mid' ELSE 'senior' END AS band FROM employees ORDER BY name";
+      const result = SqlEngine.runSafe(sql, buildSqlTestProject());
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(
+        result.result.rows,
+        [["Ana", "mid"], ["Luis", "mid"], ["Marta", "young"], ["Pep", "senior"]],
+        "the first true WHEN wins; overlapping ranges keep their order",
+      );
+    });
+
+    SelfTests.add("When_CasePriceBoundaries_Expect_MediumAt20And50AndNullElse", () => {
+      const products = Model.createTable("products", [
+        { name: "id", type: "number" },
+        { name: "price", type: "number" },
+      ]);
+      products.rows = [
+        { id: 1, price: 19.99 },
+        { id: 2, price: 20 },
+        { id: 3, price: 50 },
+        { id: 4, price: 50.01 },
+        { id: 5, price: null },
+      ];
+      const project = { name: "t", tables: [products], queries: [] };
+      const result = SqlEngine.runSafe(
+        "SELECT id, CASE WHEN price < 20 THEN 'Low Cost' WHEN price BETWEEN 20 AND 50 THEN 'Medium Cost' ELSE 'High Cost' END AS category FROM products ORDER BY id",
+        project,
+      );
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(
+        result.result.rows,
+        [[1, "Low Cost"], [2, "Medium Cost"], [3, "Medium Cost"], [4, "High Cost"], [5, "High Cost"]],
+        "the boundary belongs to BETWEEN and a NULL condition falls to ELSE",
+      );
+      const withNull = SqlEngine.runSafe(
+        "SELECT id, CASE WHEN price IS NULL THEN 'Unknown' WHEN price < 20 THEN 'Low Cost' WHEN price BETWEEN 20 AND 50 THEN 'Medium Cost' ELSE 'High Cost' END AS category FROM products ORDER BY id",
+        project,
+      );
+      assert(withNull.ok, "valid query: " + (withNull.error && withNull.error.message));
+      assertEqual(
+        withNull.result.rows,
+        [[1, "Low Cost"], [2, "Medium Cost"], [3, "Medium Cost"], [4, "High Cost"], [5, "Unknown"]],
+        "an IS NULL branch classifies the missing price apart",
+      );
+    });
+
+    SelfTests.add("When_CaseNullCondition_Expect_NotTrue", () => {
+      const project = buildSqlTestProject();
+      const sql = "SELECT name, CASE WHEN department IS NULL THEN 'none' WHEN department = 'Sales' THEN 'sales' ELSE 'other' END AS grp FROM employees ORDER BY name";
+      const result = SqlEngine.runSafe(sql, project);
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(
+        result.result.rows,
+        [["Ana", "sales"], ["Luis", "other"], ["Marta", "sales"], ["Pep", "none"]],
+        "the IS NULL branch catches the missing department",
+      );
+      const fallback = SqlEngine.runSafe(
+        "SELECT CASE WHEN department = 'Sales' THEN 'sales' ELSE 'other' END AS grp FROM employees WHERE name = 'Pep'",
+        project,
+      );
+      assert(fallback.ok, "valid query: " + (fallback.error && fallback.error.message));
+      assertEqual(fallback.result.rows, [["other"]], "a NULL WHEN condition is not true and falls to ELSE");
+    });
+
+    SelfTests.add("When_SimpleCase_Expect_EqualityAndNullNeverMatches", () => {
+      const project = buildSqlTestProject();
+      const result = SqlEngine.runSafe(
+        "SELECT name, CASE department WHEN 'Sales' THEN 1 WHEN 'IT' THEN 2 ELSE 9 END AS grp FROM employees ORDER BY name",
+        project,
+      );
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(
+        result.result.rows,
+        [["Ana", 1], ["Luis", 2], ["Marta", 1], ["Pep", 9]],
+        "the simple form compares with = and NULL falls to ELSE",
+      );
+      const nulls = SqlEngine.runSafe(
+        "SELECT name, CASE department WHEN NULL THEN 'matched' ELSE 'not matched' END AS r FROM employees WHERE name = 'Pep'",
+        project,
+      );
+      assert(nulls.ok, "valid query: " + (nulls.error && nulls.error.message));
+      assertEqual(nulls.result.rows, [["Pep", "not matched"]], "NULL never matches in the simple form");
+    });
+
+    SelfTests.add("When_CaseChosenBranchOnly_Expect_ShortCircuit", () => {
+      const project = buildSqlTestProject();
+      const laterWhen = SqlEngine.runSafe(
+        "SELECT CASE WHEN 1 = 1 THEN 'ok' WHEN REGEXPR_REPLACE('x', '[', 'y') = 'x' THEN 'bad' ELSE 'no' END AS v FROM employees LIMIT 1",
+        project,
+      );
+      assert(laterWhen.ok, "valid query: " + (laterWhen.error && laterWhen.error.message));
+      assertEqual(laterWhen.result.rows, [["ok"]], "the WHEN branches after the first true one are not evaluated");
+      const otherThen = SqlEngine.runSafe(
+        "SELECT CASE WHEN 1 = 0 THEN REGEXPR_REPLACE('x', '[', 'y') ELSE 'safe' END AS v FROM employees LIMIT 1",
+        project,
+      );
+      assert(otherThen.ok, "valid query: " + (otherThen.error && otherThen.error.message));
+      assertEqual(otherThen.result.rows, [["safe"]], "the THEN branches that are not chosen are not evaluated");
+      const otherIf = SqlEngine.runSafe(
+        "SELECT IF(1 = 1, 'ok', REGEXPR_REPLACE('x', '[', 'y')) AS v FROM employees LIMIT 1",
+        project,
+      );
+      assert(otherIf.ok, "valid query: " + (otherIf.error && otherIf.error.message));
+      assertEqual(otherIf.result.rows, [["ok"]], "IF also evaluates only the chosen branch");
+      const noElse = SqlEngine.runSafe(
+        "SELECT CASE WHEN 1 = 0 THEN 'x' END AS v FROM employees LIMIT 1",
+        project,
+      );
+      assert(noElse.ok, "valid query: " + (noElse.error && noElse.error.message));
+      assertEqual(noElse.result.rows, [[null]], "without a true branch and without ELSE the result is NULL");
+    });
+
+    SelfTests.add("When_IfFunction_Expect_CaseEquivalent", () => {
+      const project = buildSqlTestProject();
+      const result = SqlEngine.runSafe(
+        "SELECT name, IF(age > 40, 'old', 'young') AS kind FROM employees ORDER BY name",
+        project,
+      );
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(
+        result.result.rows,
+        [["Ana", "young"], ["Luis", "old"], ["Marta", "young"], ["Pep", "old"]],
+        "IF(cond, x, y) behaves as CASE WHEN cond THEN x ELSE y END",
+      );
+      const nulo = SqlEngine.runSafe("SELECT IF(NULL, 'x', 'y') AS v FROM employees LIMIT 1", project);
+      assert(nulo.ok, "valid query: " + (nulo.error && nulo.error.message));
+      assertEqual(nulo.result.rows, [["y"]], "a NULL condition is not true, so IF chooses its ELSE");
+    });
+
+    SelfTests.add("When_CaseInAnyExpression_Expect_WorksEverywhere", () => {
+      const project = buildSqlTestProject();
+      const dentroDeFuncion = SqlEngine.runSafe(
+        "SELECT LENGTH(CASE WHEN age > 40 THEN CONCAT(name, '!') ELSE name END) AS n FROM employees ORDER BY n",
+        project,
+      );
+      assert(dentroDeFuncion.ok, "valid query: " + (dentroDeFuncion.error && dentroDeFuncion.error.message));
+      assertEqual(dentroDeFuncion.result.rows, [[3], [4], [5], [5]], "CASE inside LENGTH and CONCAT");
+      const enWhere = SqlEngine.runSafe(
+        "SELECT name FROM employees WHERE CASE WHEN active THEN 'yes' ELSE 'no' END = 'yes' ORDER BY name",
+        project,
+      );
+      assert(enWhere.ok, "valid query: " + (enWhere.error && enWhere.error.message));
+      assertEqual(enWhere.result.rows.map((row) => row[0]), ["Ana", "Marta", "Pep"], "CASE in WHERE");
+      const enOrder = SqlEngine.runSafe(
+        "SELECT name FROM employees ORDER BY CASE WHEN department IS NULL THEN 0 ELSE 1 END, name",
+        project,
+      );
+      assert(enOrder.ok, "valid query: " + (enOrder.error && enOrder.error.message));
+      assertEqual(enOrder.result.rows.map((row) => row[0]), ["Pep", "Ana", "Luis", "Marta"], "CASE in ORDER BY");
+      const enGroup = SqlEngine.runSafe(
+        "SELECT CASE WHEN age >= 40 THEN 'senior' ELSE 'junior' END AS band, COUNT(*) AS n FROM employees GROUP BY CASE WHEN age >= 40 THEN 'senior' ELSE 'junior' END ORDER BY band",
+        project,
+      );
+      assert(enGroup.ok, "valid query: " + (enGroup.error && enGroup.error.message));
+      assertEqual(enGroup.result.rows, [["junior", 2], ["senior", 2]], "CASE in GROUP BY");
+      const anidada = SqlEngine.runSafe(
+        "SELECT CASE WHEN 1 = 1 THEN CASE WHEN 2 = 2 THEN 'both' ELSE 'inner' END ELSE 'outer' END AS v FROM employees LIMIT 1",
+        project,
+      );
+      assert(anidada.ok, "valid query: " + (anidada.error && anidada.error.message));
+      assertEqual(anidada.result.rows, [["both"]], "CASE nested inside another CASE");
+    });
+
+    SelfTests.add("When_CaseNumericBranches_Expect_NumberType", () => {
+      const project = buildSqlTestProject();
+      const result = SqlEngine.runSafe(
+        "SELECT name, CASE WHEN age >= 40 THEN age ELSE 0 END AS v FROM employees ORDER BY name",
+        project,
+      );
+      assert(result.ok, "valid query: " + (result.error && result.error.message));
+      assertEqual(
+        result.result.rows,
+        [["Ana", 0], ["Luis", 45], ["Marta", 0], ["Pep", 50]],
+        "a number column and a number literal share the number type",
+      );
+      const table = Model.createTable("c", [{ name: "n" }]);
+      table.rows = [{ n: 1 }, { n: 2 }, { n: 3 }];
+      const untyped = { name: "t", tables: [table], queries: [] };
+      const total = SqlEngine.runSafe(
+        "SELECT SUM(CASE WHEN n > 1 THEN n ELSE 0 END) AS total FROM c",
+        untyped,
+      );
+      assert(total.ok, "valid query: " + (total.error && total.error.message));
+      assertEqual(total.result.rows, [[5]], "a field declared as string still follows its number values");
+    });
+
+    SelfTests.add("When_CaseBranchesDifferentTypes_Expect_ValidationError", () => {
+      const project = buildSqlTestProject();
+      const caso = SqlEngine.runSafe(
+        "SELECT CASE WHEN 1 = 1 THEN 1 ELSE 'x' END AS v FROM employees LIMIT 1",
+        project,
+      );
+      assert(!caso.ok, "a CASE with number and text branches must fail");
+      assert(caso.error instanceof SqlValidationError, "it is an analysis error: " + caso.error.name);
+      assert(caso.error.message.includes("CASE"), "the message names CASE: " + caso.error.message);
+      assert(caso.error.message.includes("number") && caso.error.message.includes("string"), "it lists the types: " + caso.error.message);
+      const ifMal = SqlEngine.runSafe("SELECT IF(1 = 1, 1, 'x') AS v FROM employees LIMIT 1", project);
+      assert(!ifMal.ok, "an IF with number and text branches must fail");
+      assert(ifMal.error instanceof SqlValidationError, "it is an analysis error: " + ifMal.error.name);
+      assert(ifMal.error.message.includes("IF"), "the message names IF: " + ifMal.error.message);
+      const conNull = SqlEngine.runSafe(
+        "SELECT CASE WHEN 1 = 1 THEN NULL ELSE 1 END AS v FROM employees LIMIT 1",
+        project,
+      );
+      assert(conNull.ok, "NULL fits the common type: " + (conNull.error && conNull.error.message));
+      assertEqual(conNull.result.rows, [[null]], "NULL is allowed in a branch");
+    });
+
+    SelfTests.add("When_CaseParsed_Expect_BranchesInTheAst", () => {
+      const searched = new SqlParser("SELECT CASE WHEN age > 30 THEN 'x' ELSE 'y' END AS c FROM employees").parse();
+      assertEqual(searched.columns[0].expr.type, "case", "searched CASE node");
+      assertEqual(searched.columns[0].expr.operand, null, "the searched form has no operand");
+      assertEqual(searched.columns[0].expr.whens.length, 1, "one WHEN branch");
+      assertEqual(searched.columns[0].expr.else.value, "y", "the ELSE expression");
+      const simple = new SqlParser("SELECT CASE department WHEN 'Sales' THEN 1 ELSE 2 END AS c FROM employees").parse();
+      assertEqual(simple.columns[0].expr.operand, { type: "column", table: null, name: "department" }, "the simple form keeps the operand");
+      assertEqual(simple.columns[0].expr.whens[0].when.value, "Sales", "the candidate of the WHEN");
     });
 
     SelfTests.add("When_EquiJoin_Expect_HashJoinUsed", () => {

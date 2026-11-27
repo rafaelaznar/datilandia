@@ -1,7 +1,7 @@
 {
   "format": "datilandia",
   "version": 1,
-  "name": "Pruebas SQL · Educación (8 tablas, 170 consultas, 32 scripts)",
+  "name": "Pruebas SQL · Educación (8 tablas, 190 consultas, 32 scripts)",
   "folders": [
     "A · Básicas y agregados",
     "B · Uniones (join)",
@@ -12,7 +12,9 @@
     "G · Uniones",
     "H · Scripts como tablas",
     "I · Parámetros",
-    "J · PIVOT"
+    "J · PIVOT",
+    "K · CASE e IF",
+    "L · Funciones en SELECT y PIVOT"
   ],
   "tableFolders": [
     "Estructura",
@@ -3959,6 +3961,74 @@
             "Campus Norte",
             "Campus Norte",
             "code-01 / code-02"
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A48 · REGEXPR_INSTR: posición de la primera coincidencia y banderas",
+      "description": "Los tres ejemplos: 123 empieza en 4, sin dígitos da 0 y el ancla ^ coincide en 1. También comprueba la bandera i, el alias REGEXP_INSTR y un texto NULL.",
+      "keywords": [
+        "educacion",
+        "regex",
+        "funciones",
+        "posicion"
+      ],
+      "sql": "SELECT REGEXPR_INSTR('abc123def', '[0-9]+') AS digitos, REGEXPR_INSTR('hola', '[0-9]+') AS sin_coincidencia, REGEXPR_INSTR('404 Not Found', '^[0-9]+') AS al_inicio, REGEXPR_INSTR('xxABCyy', 'abc', 'i') AS con_bandera, REGEXPR_INSTR('xxABCyy', 'abc') AS sin_bandera, REGEXP_INSTR('abc123def', '[0-9]+') AS alias, REGEXPR_INSTR(NULL, '[0-9]+') AS texto_nulo FROM sedes LIMIT 1",
+      "assert": {
+        "columns": [
+          "digitos",
+          "sin_coincidencia",
+          "al_inicio",
+          "con_bandera",
+          "sin_bandera",
+          "alias",
+          "texto_nulo"
+        ],
+        "rows": [
+          [
+            4,
+            0,
+            1,
+            3,
+            0,
+            4,
+            null
+          ]
+        ]
+      },
+      "folder": "A · Básicas y agregados",
+      "color": "#fce4e4"
+    },
+    {
+      "name": "A49 · REGEXPR_INSTR sobre códigos de aula",
+      "description": "Busca el primer dígito de cada código: B-SALA no tiene, mientras que C-LAB1 y K-101 empiezan sus dígitos en 6 y 3.",
+      "keywords": [
+        "educacion",
+        "regex",
+        "funciones",
+        "aulas"
+      ],
+      "sql": "SELECT codigo, REGEXPR_INSTR(codigo, '[0-9]+') AS primer_digito FROM aulas WHERE codigo IN ('K-101', 'B-SALA', 'C-LAB1') ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "primer_digito"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            0
+          ],
+          [
+            "C-LAB1",
+            6
+          ],
+          [
+            "K-101",
+            3
           ]
         ]
       },
@@ -9674,6 +9744,692 @@
       },
       "folder": "J · PIVOT",
       "color": "#dcf1d4"
+    },
+    {
+      "name": "K01 · Aulas por tamaño (CASE buscado)",
+      "description": "CASE buscado con condiciones solapadas: menos de 25 es pequeña, entre 25 y 55 mediana y el resto grande. El límite 55 es mediana y 60 es grande.",
+      "keywords": [
+        "educacion",
+        "case",
+        "funciones",
+        "aulas"
+      ],
+      "sql": "SELECT codigo, capacidad, CASE WHEN capacidad < 25 THEN 'Pequeña' WHEN capacidad BETWEEN 25 AND 55 THEN 'Mediana' ELSE 'Grande' END AS tamano FROM aulas WHERE capacidad >= 55 ORDER BY capacidad DESC, codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad",
+          "tamano"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            "Grande"
+          ],
+          [
+            "R-101",
+            70,
+            "Grande"
+          ],
+          [
+            "K-101",
+            60,
+            "Grande"
+          ],
+          [
+            "P-101",
+            55,
+            "Mediana"
+          ],
+          [
+            "P-102",
+            55,
+            "Mediana"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K02 · Estudios por ciclo (CASE simple)",
+      "description": "CASE simple: compara el nivel con cada WHEN usando = y convierte Grado y Máster en un ciclo.",
+      "keywords": [
+        "educacion",
+        "case",
+        "funciones",
+        "estudios"
+      ],
+      "sql": "SELECT codigo, CASE nivel WHEN 'Grado' THEN 'Grado' WHEN 'Máster' THEN 'Posgrado' ELSE 'Otro' END AS ciclo FROM estudios ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "ciclo"
+        ],
+        "rows": [
+          [
+            "GEDU",
+            "Grado"
+          ],
+          [
+            "GINF",
+            "Grado"
+          ],
+          [
+            "GMED",
+            "Grado"
+          ],
+          [
+            "MBD",
+            "Posgrado"
+          ],
+          [
+            "MSW",
+            "Posgrado"
+          ],
+          [
+            "TDER",
+            "Grado"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K03 · Docentes sin despacho (CASE IS NULL)",
+      "description": "El CASE buscado detecta el despacho ausente con IS NULL, así que no cae en ELSE en silencio.",
+      "keywords": [
+        "educacion",
+        "case",
+        "nulos",
+        "docentes"
+      ],
+      "sql": "SELECT nombre, apellidos, CASE WHEN despacho IS NULL THEN 'Sin despacho' ELSE despacho END AS sala FROM docentes WHERE despacho IS NULL ORDER BY apellidos",
+      "assert": {
+        "columns": [
+          "nombre",
+          "apellidos",
+          "sala"
+        ],
+        "rows": [
+          [
+            "Andrés",
+            "Cano Duarte",
+            "Sin despacho"
+          ],
+          [
+            "Hugo",
+            "Naranjo Peña",
+            "Sin despacho"
+          ],
+          [
+            "Iván",
+            "Requena Soto",
+            "Sin despacho"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K04 · Aulas grandes con IF",
+      "description": "IF(condición, valor, sustituto) es la abreviatura de CASE WHEN condición THEN valor ELSE sustituto END.",
+      "keywords": [
+        "educacion",
+        "if",
+        "funciones",
+        "aulas"
+      ],
+      "sql": "SELECT codigo, IF(capacidad >= 55, 'Grande', 'Pequeña') AS tamano FROM aulas WHERE codigo IN ('B-SALA', 'K-102', 'C-LAB1') ORDER BY capacidad DESC",
+      "assert": {
+        "columns": [
+          "codigo",
+          "tamano"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            "Grande"
+          ],
+          [
+            "K-102",
+            "Pequeña"
+          ],
+          [
+            "C-LAB1",
+            "Pequeña"
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "K05 · Docentes por carga (CASE en GROUP BY)",
+      "description": "La misma expresión CASE clasifica las filas y se repite en GROUP BY: seis docentes en cada grupo.",
+      "keywords": [
+        "educacion",
+        "case",
+        "group-by",
+        "docentes"
+      ],
+      "sql": "SELECT CASE WHEN horas_semanales >= 15 THEN 'Carga alta' ELSE 'Carga baja' END AS carga, COUNT(*) AS n FROM docentes GROUP BY CASE WHEN horas_semanales >= 15 THEN 'Carga alta' ELSE 'Carga baja' END ORDER BY carga",
+      "assert": {
+        "columns": [
+          "carga",
+          "n"
+        ],
+        "rows": [
+          [
+            "Carga alta",
+            6
+          ],
+          [
+            "Carga baja",
+            6
+          ]
+        ]
+      },
+      "folder": "K · CASE e IF",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L01 · Funciones numéricas: ABS y ROUND",
+      "description": "Aplica ABS y ROUND al aforo de las aulas: distancia a 50 y un decimal de capacidad / 3.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "numericas",
+        "abs",
+        "round"
+      ],
+      "sql": "SELECT codigo, capacidad, ABS(capacidad - 50) AS distancia, ROUND(capacidad / 3.0, 1) AS tercio FROM aulas WHERE capacidad >= 55 ORDER BY capacidad DESC, codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "capacidad",
+          "distancia",
+          "tercio"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            80,
+            30,
+            26.7
+          ],
+          [
+            "R-101",
+            70,
+            20,
+            23.3
+          ],
+          [
+            "K-101",
+            60,
+            10,
+            20
+          ],
+          [
+            "P-101",
+            55,
+            5,
+            18.3
+          ],
+          [
+            "P-102",
+            55,
+            5,
+            18.3
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L02 · Funciones de texto: UPPER, LOWER, LENGTH, TRIM, SUBSTR y CONCAT",
+      "description": "Aplica las seis funciones de texto a los tres primeros docentes.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "texto",
+        "upper",
+        "lower",
+        "length",
+        "trim",
+        "substr",
+        "concat"
+      ],
+      "sql": "SELECT id_docente, UPPER(nombre) AS nombre_mayus, LOWER(apellidos) AS apellidos_minus, LENGTH(apellidos) AS letras, TRIM(nombre) AS recortado, SUBSTR(apellidos, 1, 5) AS prefijo, CONCAT(nombre, ' ', apellidos) AS nombre_completo FROM docentes WHERE id_docente <= 3 ORDER BY id_docente",
+      "assert": {
+        "columns": [
+          "id_docente",
+          "nombre_mayus",
+          "apellidos_minus",
+          "letras",
+          "recortado",
+          "prefijo",
+          "nombre_completo"
+        ],
+        "rows": [
+          [
+            1,
+            "ELENA",
+            "vargas ruiz",
+            11,
+            "Elena",
+            "Varga",
+            "Elena Vargas Ruiz"
+          ],
+          [
+            2,
+            "MARC",
+            "oliver pons",
+            11,
+            "Marc",
+            "Olive",
+            "Marc Oliver Pons"
+          ],
+          [
+            3,
+            "NIEVES",
+            "salgado ortiz",
+            13,
+            "Nieves",
+            "Salga",
+            "Nieves Salgado Ortiz"
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L03 · Expresiones regulares: REPLACE e INSTR",
+      "description": "Usa REGEXPR_REPLACE para enmascarar dígitos y REGEXPR_INSTR para localizar el primero en tres códigos de aula.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "regex",
+        "replace",
+        "instr"
+      ],
+      "sql": "SELECT codigo, REGEXPR_REPLACE(codigo, '[0-9]', '#') AS enmascarado, REGEXPR_INSTR(codigo, '[0-9]+') AS primer_digito FROM aulas WHERE codigo IN ('K-101', 'B-SALA', 'C-LAB1') ORDER BY codigo",
+      "assert": {
+        "columns": [
+          "codigo",
+          "enmascarado",
+          "primer_digito"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            "B-SALA",
+            0
+          ],
+          [
+            "C-LAB1",
+            "C-LAB#",
+            6
+          ],
+          [
+            "K-101",
+            "K-###",
+            3
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L04 · Funciones de NULL: COALESCE, IFNULL y NULLIF",
+      "description": "Usa COALESCE, IFNULL y NULLIF sobre despacho, correo y categoría: los valores ausentes y el valor Asociado se transforman.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "null",
+        "coalesce",
+        "ifnull",
+        "nullif"
+      ],
+      "sql": "SELECT id_docente, COALESCE(despacho, 'Sin despacho') AS despacho, IFNULL(email, 'Sin correo') AS email, NULLIF(categoria, 'Asociado') AS no_asociado FROM docentes WHERE id_docente <= 4 ORDER BY id_docente",
+      "assert": {
+        "columns": [
+          "id_docente",
+          "despacho",
+          "email",
+          "no_asociado"
+        ],
+        "rows": [
+          [
+            1,
+            "D-201",
+            "elena.vargas@uni.es",
+            "Catedrática"
+          ],
+          [
+            2,
+            "D-114",
+            "marc.oliver@uni.es",
+            "Titular"
+          ],
+          [
+            3,
+            "D-115",
+            "Sin correo",
+            "Titular"
+          ],
+          [
+            4,
+            "Sin despacho",
+            "ivan.requena@uni.es",
+            null
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L05 · Funciones condicionales: IF y CASE",
+      "description": "Usa IF y las dos formas de CASE para clasificar tres aulas por capacidad.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "condicionales",
+        "if",
+        "case"
+      ],
+      "sql": "SELECT codigo, IF(capacidad >= 55, 'Grande', 'Pequeña') AS tamano, CASE WHEN capacidad < 25 THEN 'Diminuta' WHEN capacidad BETWEEN 25 AND 55 THEN 'Mediana' ELSE 'Grande' END AS categoria FROM aulas WHERE codigo IN ('B-SALA', 'K-102', 'C-LAB1') ORDER BY capacidad DESC",
+      "assert": {
+        "columns": [
+          "codigo",
+          "tamano",
+          "categoria"
+        ],
+        "rows": [
+          [
+            "B-SALA",
+            "Grande",
+            "Grande"
+          ],
+          [
+            "K-102",
+            "Pequeña",
+            "Mediana"
+          ],
+          [
+            "C-LAB1",
+            "Pequeña",
+            "Diminuta"
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L06 · Funciones de agregado: COUNT, SUM, AVG, MIN y MAX",
+      "description": "Ejecuta COUNT(*), COUNT(columna), COUNT(DISTINCT), SUM, AVG, MIN y MAX sobre los docentes.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "agregados",
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ],
+      "sql": "SELECT COUNT(*) AS total, COUNT(despacho) AS con_despacho, COUNT(DISTINCT categoria) AS categorias, SUM(horas_semanales) AS horas, AVG(horas_semanales) AS horas_medias, MIN(horas_semanales) AS horas_min, MAX(horas_semanales) AS horas_max FROM docentes",
+      "assert": {
+        "columns": [
+          "total",
+          "con_despacho",
+          "categorias",
+          "horas",
+          "horas_medias",
+          "horas_min",
+          "horas_max"
+        ],
+        "rows": [
+          [
+            12,
+            9,
+            4,
+            161,
+            13.416666666666666,
+            6,
+            20
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L07 · PIVOT con todas las funciones de agregado",
+      "description": "PIVOT con COUNT, SUM, AVG, MIN y MAX como medidas, una medida por fila, por planta y proyector.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "pivot",
+        "agregados"
+      ],
+      "sql": "PIVOT (SELECT planta) BY (SELECT tiene_proyector) FROM aulas VALUES COUNT(*) AS aulas, SUM(capacidad) AS plazas, AVG(capacidad) AS plazas_medias, MIN(capacidad) AS plazas_min, MAX(capacidad) AS plazas_max TOTALS ROWS GRAND COLUMNS GRAND MEASURES ON ROWS;",
+      "assert": {
+        "columns": [
+          "planta",
+          "Medida",
+          "false",
+          "true",
+          "Total general"
+        ],
+        "rows": [
+          [
+            "1",
+            "aulas",
+            4,
+            6,
+            10
+          ],
+          [
+            "1",
+            "plazas",
+            153,
+            251,
+            404
+          ],
+          [
+            "1",
+            "plazas_medias",
+            38.25,
+            41.833333333333336,
+            40.4
+          ],
+          [
+            "1",
+            "plazas_min",
+            18,
+            20,
+            18
+          ],
+          [
+            "1",
+            "plazas_max",
+            55,
+            70,
+            70
+          ],
+          [
+            "2",
+            "aulas",
+            1,
+            2,
+            3
+          ],
+          [
+            "2",
+            "plazas",
+            12,
+            70,
+            82
+          ],
+          [
+            "2",
+            "plazas_medias",
+            12,
+            35,
+            27.333333333333332
+          ],
+          [
+            "2",
+            "plazas_min",
+            12,
+            30,
+            12
+          ],
+          [
+            "2",
+            "plazas_max",
+            12,
+            40,
+            40
+          ],
+          [
+            "3",
+            "aulas",
+            1,
+            2,
+            3
+          ],
+          [
+            "3",
+            "plazas",
+            25,
+            130,
+            155
+          ],
+          [
+            "3",
+            "plazas_medias",
+            25,
+            65,
+            51.666666666666664
+          ],
+          [
+            "3",
+            "plazas_min",
+            25,
+            50,
+            25
+          ],
+          [
+            "3",
+            "plazas_max",
+            25,
+            80,
+            80
+          ],
+          [
+            "Total general",
+            "aulas",
+            6,
+            10,
+            16
+          ],
+          [
+            "Total general",
+            "plazas",
+            190,
+            451,
+            641
+          ],
+          [
+            "Total general",
+            "plazas_medias",
+            31.666666666666668,
+            45.1,
+            40.0625
+          ],
+          [
+            "Total general",
+            "plazas_min",
+            12,
+            20,
+            12
+          ],
+          [
+            "Total general",
+            "plazas_max",
+            55,
+            80,
+            80
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
+    },
+    {
+      "name": "L08 · PIVOT con funciones escalares en el eje de filas",
+      "description": "PIVOT con funciones escalares en el eje de filas: UPPER y CASE crean la carga, REGEXPR_INSTR filtra los docentes con correo y COUNT/AVG agregan.",
+      "keywords": [
+        "educacion",
+        "funciones",
+        "pivot",
+        "escalares",
+        "case",
+        "regexpr_instr"
+      ],
+      "sql": "PIVOT (SELECT UPPER(CASE WHEN horas_semanales >= 15 THEN 'alta' ELSE 'baja' END) AS carga WHERE REGEXPR_INSTR(email, '@') > 0) BY (SELECT es_investigador) FROM docentes VALUES COUNT(*) AS docentes, AVG(horas_semanales) AS horas_medias TOTALS ROWS GRAND COLUMNS GRAND;",
+      "assert": {
+        "columns": [
+          "carga",
+          "false docentes",
+          "false horas_medias",
+          "true docentes",
+          "true horas_medias",
+          "Total general docentes",
+          "Total general horas_medias"
+        ],
+        "rows": [
+          [
+            "ALTA",
+            1,
+            19,
+            4,
+            17.5,
+            5,
+            17.8
+          ],
+          [
+            "BAJA",
+            3,
+            6.666666666666667,
+            1,
+            14,
+            4,
+            8.5
+          ],
+          [
+            "Total general",
+            4,
+            9.75,
+            5,
+            16.8,
+            9,
+            13.666666666666666
+          ]
+        ]
+      },
+      "folder": "L · Funciones en SELECT y PIVOT",
+      "color": "#dde5fa"
     }
   ],
   "scripts": [

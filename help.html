@@ -502,13 +502,13 @@ return summary.map((row, index) =&gt; {
 <tr><th>Fichero</th><th>Idioma</th><th>Contenido</th></tr>
 </thead>
 <tbody>
-<tr><td><code>pruebas-sql-educacion.json</code></td><td>Español</td><td>8 tablas, 170 consultas y 32 scripts</td></tr>
-<tr><td><code>pruebas-sql-salud.json</code></td><td>Español</td><td>20 tablas, 226 consultas y 35 scripts</td></tr>
-<tr><td><code>tests-sql-education.json</code></td><td>Inglés</td><td>8 tablas, 170 consultas y 32 scripts</td></tr>
-<tr><td><code>tests-sql-health.json</code></td><td>Inglés</td><td>20 tablas, 226 consultas y 35 scripts</td></tr>
+<tr><td><code>pruebas-sql-educacion.json</code></td><td>Español</td><td>8 tablas, 190 consultas y 32 scripts</td></tr>
+<tr><td><code>pruebas-sql-salud.json</code></td><td>Español</td><td>20 tablas, 246 consultas y 35 scripts</td></tr>
+<tr><td><code>tests-sql-education.json</code></td><td>Inglés</td><td>8 tablas, 190 consultas y 32 scripts</td></tr>
+<tr><td><code>tests-sql-health.json</code></td><td>Inglés</td><td>20 tablas, 246 consultas y 35 scripts</td></tr>
 </tbody>
 </table>
-<p>Las versiones en español y en inglés son equivalentes: los mismos casos con los nombres traducidos. <b>Educación</b> usa las carpetas de tablas <b>Estructura</b>, <b>Personas</b>, <b>Académico</b> y <b>Matrículas</b>; <b>salud</b>, <b>Centro</b>, <b>Catálogos</b>, <b>Personas</b>, <b>Asistencial</b> y <b>Facturación</b>. Consultas y scripts se agrupan en las carpetas <b>A · Básicas y agregados</b>, <b>B · Uniones (join)</b>, <b>C · Consultas relacionadas</b>, <b>D · Integridad</b>, <b>E · Vistas</b>, <b>F · Subconsultas</b>, <b>G · Uniones</b>, <b>H · Scripts como tablas</b> y <b>I · Parámetros</b>, que reúne los ejemplos de parametrización de consultas y scripts con <code>{{ … }}</code>, incluidas varias consultas y scripts con dos parámetros cada uno.</p>
+<p>Las versiones en español y en inglés son equivalentes: los mismos casos con los nombres traducidos. <b>Educación</b> usa las carpetas de tablas <b>Estructura</b>, <b>Personas</b>, <b>Académico</b> y <b>Matrículas</b>; <b>salud</b>, <b>Centro</b>, <b>Catálogos</b>, <b>Personas</b>, <b>Asistencial</b> y <b>Facturación</b>. Consultas y scripts se agrupan en las carpetas <b>A · Básicas y agregados</b>, <b>B · Uniones (join)</b>, <b>C · Consultas relacionadas</b>, <b>D · Integridad</b>, <b>E · Vistas</b>, <b>F · Subconsultas</b>, <b>G · Uniones</b>, <b>H · Scripts como tablas</b> e <b>I · Parámetros</b>, que reúne los ejemplos de parametrización de consultas y scripts con <code>{{ … }}</code>, incluidas varias consultas y scripts con dos parámetros cada uno. Hay además <b>J · PIVOT</b>, <b>K · CASE e IF</b> y <b>L · Funciones en SELECT y PIVOT</b>.</p>
 <p>Al abrirlos se ejecuta la batería automáticamente: el informe debe salir todo correcto. Si quieres modificar uno, usa <b>Guardar proyecto como</b> para no sobrescribir el original. El botón <b>Pruebas</b> vuelve a lanzar la batería cuando quieras.</p>
 <div class="help-callout"><b>Para practicar:</b> abre un fichero, elige una consulta de la carpeta A, cámbiala y usa <b>Convertir en test</b> para guardar tu propio resultado esperado.</div>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Volver arriba</a></div>
@@ -612,7 +612,32 @@ ORDER BY 1;</pre>
 <dt>Literales e identificadores</dt>
 <dd><code>'texto'</code> y <code>"texto"</code> son <b>ambos texto</b> (para incluir la comilla, duplícala); <code>[Nombre con espacios]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.</dd>
 <dt>Funciones</dt>
-<dd><code>ABS</code>, <code>ROUND(x[, dec])</code> (la mitad se aleja del cero: 2,5 → 3 y −2,5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, inicio[, largo])</code> (1 = primer carácter; los negativos cuentan desde el final), <code>REGEXPR_REPLACE(x, patrón, sustitución[, banderas])</code> (sustituye todas las coincidencias; en la sustitución <code>$1</code>, <code>$&amp;</code>… y banderas como <code>i</code>), <code>CONCAT(x, y, …)</code> (textos unidos; <code>null</code> si algún argumento lo es), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
+<dd>
+<p>Las funciones reciben uno o varios valores y devuelven un valor. Se pueden <b>anidar</b> y usar en cualquier sitio donde se espere una expresión: en <code>SELECT</code>, <code>WHERE</code>, <code>GROUP BY</code>, <code>HAVING</code>, <code>ORDER BY</code>, dentro de otra función o dentro de <code>CASE</code>. Los nombres no distinguen mayúsculas de minúsculas. La mayoría devuelve <code>NULL</code> si un argumento es <code>NULL</code>; <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>, <code>IF</code> y <code>CASE</code> son las que tratan el <code>NULL</code> de forma explícita. Los ejemplos muestran la expresión y su resultado.</p>
+<table class="help-table">
+<thead>
+<tr><th>Función</th><th>Qué hace</th><th>Ejemplos</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ABS(x)</code></td><td>Valor absoluto: quita el signo.</td><td><code>ABS(-7)</code> → <code>7</code><br><code>ABS(3.5)</code> → <code>3.5</code><br><code>ABS(0)</code> → <code>0</code></td></tr>
+<tr><td><code>ROUND(x[, dec])</code></td><td>Redondea a <code>dec</code> decimales (0 por defecto). La mitad se aleja del cero.</td><td><code>ROUND(3.1416, 2)</code> → <code>3.14</code><br><code>ROUND(2.5)</code> → <code>3</code><br><code>ROUND(-2.5)</code> → <code>-3</code><br><code>ROUND(7.8)</code> → <code>8</code></td></tr>
+<tr><td><code>UPPER(x)</code></td><td>Pasa el texto a mayúsculas.</td><td><code>UPPER('Ana')</code> → <code>'ANA'</code><br><code>UPPER('a b')</code> → <code>'A B'</code><br><code>UPPER(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>LOWER(x)</code></td><td>Pasa el texto a minúsculas.</td><td><code>LOWER('Ana')</code> → <code>'ana'</code><br><code>LOWER('A B')</code> → <code>'a b'</code><br><code>LOWER(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>LENGTH(x)</code></td><td>Número de caracteres, espacios incluidos.</td><td><code>LENGTH('abc')</code> → <code>3</code><br><code>LENGTH('  a  ')</code> → <code>5</code><br><code>LENGTH(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>TRIM(x)</code></td><td>Quita los espacios de los extremos; los de dentro se conservan.</td><td><code>TRIM('  Ana  ')</code> → <code>'Ana'</code><br><code>TRIM(' a b ')</code> → <code>'a b'</code><br><code>TRIM(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>SUBSTR(x, inicio[, largo])</code></td><td>Trozo de texto. <code>inicio</code> 1 es el primer carácter; un <code>inicio</code> negativo cuenta desde el final; <code>largo</code> es opcional.</td><td><code>SUBSTR('abcdef', 2, 3)</code> → <code>'bcd'</code><br><code>SUBSTR('abcdef', -2)</code> → <code>'ef'</code><br><code>SUBSTR('abcdef', 2)</code> → <code>'bcdef'</code><br><code>SUBSTR('abc', 10)</code> → <code>''</code></td></tr>
+<tr><td><code>REGEXPR_REPLACE(x, patrón, sustitución[, banderas])</code></td><td>Sustituye todas las coincidencias. En la sustitución, <code>$1</code>, <code>$2</code>… son los grupos y <code>$&amp;</code> el texto encontrado. Banderas: <code>i</code> (mayúsculas/minúsculas), <code>m</code> (multilínea), <code>s</code> (el punto incluye saltos), <code>u</code> (Unicode); <code>g</code> ya va incluida. También se acepta <code>REGEXP_REPLACE</code>.</td><td><code>REGEXPR_REPLACE('a1 b2', '[0-9]', '#')</code> → <code>'a# b#'</code><br><code>REGEXPR_REPLACE('Ana García', '([^ ]+) ([^ ]+)', '$2 $1')</code> → <code>'García Ana'</code><br><code>REGEXPR_REPLACE('A-01', '([A-Z])-([0-9]+)', '$2/$1')</code> → <code>'01/A'</code><br><code>REGEXPR_REPLACE('abc', 'B', 'x', 'i')</code> → <code>'axc'</code></td></tr>
+<tr><td><code>REGEXPR_INSTR(x, patrón[, banderas])</code></td><td>Posición de la primera coincidencia, empezando en 1; <code>0</code> si no hay. Mismas banderas que <code>REGEXPR_REPLACE</code>. También se acepta <code>REGEXP_INSTR</code>.</td><td><code>REGEXPR_INSTR('abc123def', '[0-9]+')</code> → <code>4</code><br><code>REGEXPR_INSTR('hola', '[0-9]+')</code> → <code>0</code><br><code>REGEXPR_INSTR('404 Not Found', '^[0-9]+')</code> → <code>1</code><br><code>REGEXPR_INSTR('xxABCyy', 'abc', 'i')</code> → <code>3</code></td></tr>
+<tr><td><code>CONCAT(x, y, …)</code></td><td>Une textos (los números se convierten a texto); devuelve <code>NULL</code> si algún argumento es <code>NULL</code>.</td><td><code>CONCAT('Ana', ' ', 'García')</code> → <code>'Ana García'</code><br><code>CONCAT('ID-', 7)</code> → <code>'ID-7'</code><br><code>CONCAT('a', NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>COALESCE(a, b, …)</code></td><td>Primer valor que no es <code>NULL</code>; <code>NULL</code> si todos lo son.</td><td><code>COALESCE(NULL, 'x', 'y')</code> → <code>'x'</code><br><code>COALESCE(NULL, NULL, 3)</code> → <code>3</code><br><code>COALESCE(NULL, NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>IFNULL(a, b)</code></td><td><code>b</code> cuando <code>a</code> es <code>NULL</code>; si no, <code>a</code>.</td><td><code>IFNULL(NULL, 0)</code> → <code>0</code><br><code>IFNULL(5, 0)</code> → <code>5</code><br><code>IFNULL('', 'x')</code> → <code>''</code></td></tr>
+<tr><td><code>NULLIF(a, b)</code></td><td><code>NULL</code> cuando <code>a</code> y <code>b</code> son iguales; si no, <code>a</code>. La igualdad es estricta: número y texto no coinciden.</td><td><code>NULLIF(3, 3)</code> → <code>NULL</code><br><code>NULLIF(3, 4)</code> → <code>3</code><br><code>NULLIF('3', 3)</code> → <code>'3'</code><br><code>NULLIF('', '')</code> → <code>NULL</code></td></tr>
+<tr><td><code>IF(cond, x, y)</code></td><td>Abreviatura de <code>CASE WHEN cond THEN x ELSE y END</code>. <code>cond</code> debe ser booleana; <code>NULL</code> cuenta como no verdadera; solo se evalúa la rama elegida.</td><td><code>IF(3 &gt; 2, 'sí', 'no')</code> → <code>'sí'</code><br><code>IF(2 &gt; 3, 'a', 'b')</code> → <code>'b'</code><br><code>IF(NULL, 'x', 'y')</code> → <code>'y'</code></td></tr>
+<tr><td><code>CASE … END</code></td><td>Expresión condicional. La forma buscada usa <code>WHEN condición</code> y gana la primera verdadera; la forma simple <code>CASE valor WHEN candidato</code> compara con <code>=</code>. Solo se evalúa la rama elegida; sin rama verdadera y sin <code>ELSE</code> da <code>NULL</code>; una condición <code>NULL</code> no es verdadera; todos los <code>THEN</code>/<code>ELSE</code> deben compartir un tipo común.</td><td><code>CASE WHEN 20 &lt; 20 THEN 'no' WHEN 20 BETWEEN 20 AND 50 THEN 'medio' ELSE 'alto' END</code> → <code>'medio'</code><br><code>CASE 2 WHEN 1 THEN 'uno' WHEN 2 THEN 'dos' ELSE 'otro' END</code> → <code>'dos'</code><br><code>CASE WHEN NULL THEN 'sí' ELSE 'no' END</code> → <code>'no'</code><br><code>CASE WHEN 1 = 2 THEN 'x' END</code> → <code>NULL</code></td></tr>
+</tbody>
+</table>
+<p><b>Agregados</b> (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>) se explican en <b>GROUP BY / HAVING</b>: trabajan sobre un grupo de filas, no sobre un valor, y no pueden aparecer en <code>WHERE</code>, <code>ON</code> ni <code>GROUP BY</code>.</p>
+</dd>
 <dt>Tipos y conversión</dt>
 <dd>El <b>tipo del campo</b> convierte al consultar: un campo <code>number</code> con valores «31» responde a <code>= 31</code>, y uno <code>boolean</code> a <code>= true</code>. Los datos guardados no se tocan.</dd>
 <dt>Solo lectura</dt>
@@ -848,8 +873,24 @@ LIMIT 3 OFFSET 2;</pre>
 </section>
 <section>
 <h4>Funciones</h4>
-<p><code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>REGEXPR_REPLACE(x, patrón, sustitución[, banderas])</code> reemplaza todas las coincidencias de la expresión regular: en la sustitución, <code>$1</code>, <code>$2</code>… son los grupos y <code>$&amp;</code> el texto encontrado; las banderas opcionales son <code>i</code> (mayúsculas/minúsculas), <code>m</code> (multilínea), <code>s</code> (el punto incluye saltos) y <code>u</code> (Unicode), y la <code>g</code> ya va incluida (también se acepta el nombre <code>REGEXP_REPLACE</code>) · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales.</p>
+<p><code>ABS(x)</code> valor absoluto · <code>ROUND(x[, dec])</code> redondea a dec decimales (0 por defecto) · <code>UPPER(x)</code> y <code>LOWER(x)</code> cambian mayúsculas · <code>LENGTH(x)</code> número de caracteres · <code>TRIM(x)</code> quita espacios de los extremos · <code>SUBSTR(x, inicio[, largo])</code> trozo de texto, con inicio 1 = primer carácter y negativos contando desde el final · <code>REGEXPR_REPLACE(x, patrón, sustitución[, banderas])</code> reemplaza todas las coincidencias de la expresión regular: en la sustitución, <code>$1</code>, <code>$2</code>… son los grupos y <code>$&amp;</code> el texto encontrado; las banderas opcionales son <code>i</code> (mayúsculas/minúsculas), <code>m</code> (multilínea), <code>s</code> (el punto incluye saltos) y <code>u</code> (Unicode), y la <code>g</code> ya va incluida (también se acepta el nombre <code>REGEXP_REPLACE</code>) · <code>REGEXPR_INSTR(x, patrón[, banderas])</code> devuelve la <b>posición de la primera coincidencia</b>, empezando en 1, y <code>0</code> si no hay ninguna (también se acepta <code>REGEXP_INSTR</code>; las banderas son las mismas, sin necesidad de <code>g</code>) · <code>CONCAT(a, b, …)</code> une textos, con <code>null</code> si algún argumento lo es · <code>COALESCE(a, b, …)</code> primer valor que no sea <code>null</code> · <code>IFNULL(a, b)</code> b si a es <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> si a y b son iguales · <code>IF(cond, x, y)</code> es la abreviatura de <code>CASE WHEN cond THEN x ELSE y END</code>; <code>CASE … END</code> se explica en el apartado siguiente.</p>
 <p>Se pueden anidar entre sí y usar tanto en el <code>SELECT</code> como en <code>WHERE</code>, <code>GROUP BY</code> u <code>ORDER BY</code>. Si el argumento es <code>null</code>, el resultado suele ser <code>null</code>.</p>
+</section>
+<section>
+<h4>CASE: una expresión condicional</h4>
+<p><code>CASE</code> <b>no es una función</b>, es una expresión condicional y la forma estándar de SQL para elegir un valor según condiciones. Se escribe con las palabras reservadas <code>CASE</code>, <code>WHEN</code>, <code>THEN</code>, <code>ELSE</code> y <code>END</code>:</p>
+<pre class="sql-ejemplo mono">CASE { WHEN condición THEN resultado }... [ ELSE resultado ] END</pre>
+<p>Reglas de evaluación:</p>
+<ul>
+<li>Las ramas <code>WHEN</code> se evalúan <b>en orden</b> y gana la <b>primera verdadera</b>; las demás <b>no se evalúan</b> (cortocircuito). El orden importa cuando las condiciones se solapan: <code>20</code> entra en <code>BETWEEN 20 AND 50</code> porque la primera condición ya lo descartó de <code>'Low Cost'</code>.</li>
+<li>Solo se evalúa la rama elegida (el <code>THEN</code> elegido o el <code>ELSE</code>). Eso permite patrones seguros: <code>CASE WHEN b = 0 THEN NULL ELSE x / b END</code> nunca evalúa la división por cero.</li>
+<li>Sin rama verdadera y sin <code>ELSE</code> → <code>NULL</code>. El <code>ELSE</code> es opcional.</li>
+<li>Una condición <code>WHEN</code> que da <code>NULL</code> cuenta como <b>no verdadera</b>, igual que en <code>IF</code>.</li>
+<li>La <b>forma simple</b> <code>CASE valor WHEN candidato THEN resultado … END</code> compara con <code>=</code>: <code>NULL</code> nunca coincide con nada. Para comprobar <code>NULL</code> hay que usar la forma buscada: <code>CASE WHEN precio IS NULL THEN 'Unknown' … END</code>.</li>
+<li><b>Tipos:</b> todos los <code>THEN</code>/<code>ELSE</code> deben tener un tipo común compatible (en los ejemplos, todos texto); si no lo tienen, es un <b>error en tiempo de análisis</b>, no un silencio. El tipo del resultado es ese tipo común, más <code>NULL</code> posible. <code>NULL</code> encaja con cualquier tipo; número y texto, o booleano y número, no se mezclan.</li>
+<li><code>CASE</code> es una <b>expresión</b>: vale en cualquier sitio donde se espere una expresión, como <code>SELECT</code>, <code>WHERE</code>, <code>ORDER BY</code>, <code>GROUP BY</code>, dentro de una función (<code>LENGTH(CASE … END)</code>) y anidada dentro de otra <code>CASE</code>.</li>
+<li><code>IF(cond, x, y)</code> ≡ <code>CASE WHEN cond THEN x ELSE y END</code>. Mantenemos las dos: <code>IF</code> es azúcar sintáctico y <code>CASE</code> es la forma general.</li>
+</ul>
 </section>
 <section>
 <h4>Tipos de campo y conversión</h4>
@@ -871,6 +912,45 @@ ORDER BY letras DESC;</pre>
 <pre class="sql-ejemplo mono">SELECT TRIM(REGEXPR_REPLACE('  Ana   García  ', '[ ]+', ' ')) AS nombre_limpio,
        REGEXPR_REPLACE('García, Ana', '([^,]+), (.+)', '$2 $1') AS nombre_ordenado,
        REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codigos;</pre>
+<h4>Posición de la primera coincidencia con REGEXPR_INSTR</h4>
+<pre class="sql-ejemplo mono">SELECT REGEXPR_INSTR('abc123def', '[0-9]+') AS digitos,       -- 4
+       REGEXPR_INSTR('hola', '[0-9]+') AS sin_digitos,        -- 0
+       REGEXPR_INSTR('404 Not Found', '^[0-9]+') AS al_inicio, -- 1
+       REGEXPR_INSTR('xxABCyy', 'abc', 'i') AS con_bandera;    -- 3
+
+-- La posición empieza en 1. Si el texto o el patrón son NULL, el resultado es NULL.
+SELECT codigo, REGEXPR_INSTR(codigo, '[0-9]+') AS primer_digito
+FROM aulas
+WHERE codigo IN ('K-101', 'B-SALA', 'C-LAB1')
+ORDER BY codigo;</pre>
+<h4>CASE: categorías con la forma buscada</h4>
+<pre class="sql-ejemplo mono">SELECT nombre, precio,
+  CASE
+    WHEN precio &lt; 20 THEN 'Low Cost'
+    WHEN precio BETWEEN 20 AND 50 THEN 'Medium Cost'
+    ELSE 'High Cost'
+  END AS categoria_precio
+FROM productos;
+-- 19.99 → Low Cost · 20 → Medium Cost · 50 → Medium Cost · 50.01 → High Cost
+-- precio NULL → ninguna condición es verdadera → 'High Cost'</pre>
+<h4>La trampa del NULL y la forma simple</h4>
+<pre class="sql-ejemplo mono">-- Si un precio NULL debe clasificarse aparte, la primera rama lo detecta:
+SELECT nombre,
+  CASE WHEN precio IS NULL THEN 'Unknown' ELSE 'Known' END AS precio_conocido
+FROM productos;
+
+-- Forma simple: compara la columna con cada WHEN usando =
+SELECT nombre,
+  CASE categoria_id
+    WHEN 1 THEN 'Bebidas'
+    WHEN 2 THEN 'Condimentos'
+    ELSE 'Otros'
+  END AS categoria
+FROM productos;
+
+-- IF es la abreviatura de CASE
+SELECT nombre, IF(precio &lt; 20, 'Low Cost', 'Not low cost') AS gama
+FROM productos;</pre>
 <h4>Comentarios, comillas y nombres entre corchetes</h4>
 <pre class="sql-ejemplo mono">-- Ventas sin anular (nombre con espacios)
 SELECT [fecha pedido] AS fecha,
@@ -985,7 +1065,7 @@ TOTALS ROWS GRAND
 <section>
 <h4>Errores, plan y límites</h4>
 <p>Si algo está mal escrito, el mensaje indica <b>línea y columna</b>, enseña el fragmento y sugiere el nombre más parecido. Al ejecutar, el <b>plan</b> muestra cada paso con su tiempo.</p>
-<p>Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni tampoco <code>CASE</code>. Para cruzar tablas se usan joins y subconsultas; para juntar resultados, <code>UNION</code>.</p>
+<p>Las consultas son de solo lectura: no existen <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>. Para cruzar tablas se usan joins y subconsultas; para juntar resultados, <code>UNION</code>; para elegir valores según condiciones, <code>CASE</code> e <code>IF</code>.</p>
 <p>Se ejecuta <b>una sola sentencia</b>: el <code>;</code> final se acepta, pero no encadenes varias consultas separadas por <code>;</code> (todo lo que vaya después se considera un error de sobra).</p>
 </section>
 <section>
@@ -1057,7 +1137,8 @@ keyword      = "SELECT" | "DISTINCT" | "UNION" | "FROM" | "AS" | "INNER"
              | "FIRST" | "LAST" | "LIMIT" | "OFFSET" | "AND" | "OR"
              | "NOT" | "NULL" | "TRUE" | "FALSE" | "IS" | "IN"
              | "BETWEEN" | "LIKE" | "ESCAPE" | "EXISTS" | "ANY"
-             | "SOME" | "ALL" ;
+             | "SOME" | "ALL" | "CASE" | "WHEN" | "THEN" | "ELSE"
+             | "END" ;
 integer      = digit { digit } ;
 number       = digit { digit } [ "." { digit } ] | "." digit { digit } ;
 string       = "'" { char | "''" } "'" | '"' { char | '""' } '"' ;
@@ -1137,13 +1218,24 @@ primary        = number | string | "NULL" | "TRUE" | "FALSE"
                | "(" select_query ")"
                | "(" expression ")"
                | "*"
+               | case_expr
                | identifier [ "(" [ "DISTINCT" ]
                                   [ "*" | expression { "," expression } ] ")"
-                            | "." ( identifier | "*" ) ] ;</pre>
+                            | "." ( identifier | "*" ) ] ;
+
+case_expr      = searched_case | simple_case ;
+searched_case  = "CASE" "WHEN" expression "THEN" expression
+                 { "WHEN" expression "THEN" expression }
+                 [ "ELSE" expression ] "END" ;
+simple_case    = "CASE" expression
+                 "WHEN" expression "THEN" expression
+                 { "WHEN" expression "THEN" expression }
+                 [ "ELSE" expression ] "END" ;</pre>
 <ul>
 <li>El orden de las reglas es el de <b>precedencia</b>: <code>OR</code> agrupa menos que <code>AND</code>, <code>AND</code> menos que <code>NOT</code>, <code>NOT</code> menos que las comparaciones, y así hasta los paréntesis. Dos detalles del dialecto: las comparaciones se pueden <b>encadenar</b> de izquierda a derecha (<code>a = b = c</code>) y la concatenación <code>||</code> se agrupa <b>antes</b> que <code>* / %</code>; por eso <code>a * b || c</code> es <code>a * (b || c)</code>. Usa paréntesis si quieres otra agrupación.</li>
 <li><code>IS</code> solo admite <code>NULL</code> (<code>IS NULL</code>, <code>IS NOT NULL</code>). En <code>BETWEEN</code> los dos extremos son expresiones aditivas; en <code>LIKE</code> el patrón es aditivo y <code>ESCAPE</code> exige un texto entre comillas.</li>
 <li><code>IN</code> admite una lista de expresiones, una subconsulta o un parámetro; <code>EXISTS</code> y las subconsultas escalares van entre paréntesis. <code>ANY</code>/<code>SOME</code>/<code>ALL</code> solo valen detrás de un comparador y delante de una subconsulta.</li>
+<li><code>CASE</code> tiene dos formas: la buscada (<code>CASE WHEN condición THEN resultado … END</code>) y la simple (<code>CASE valor WHEN candidato THEN resultado … END</code>). <code>ELSE</code> es opcional; sin rama verdadera y sin <code>ELSE</code> el resultado es <code>null</code>. En la forma simple la comparación es <code>=</code>, así que <code>null</code> no coincide con nada. Las ramas se evalúan en orden y solo se ejecuta la elegida; todos los <code>THEN</code>/<code>ELSE</code> deben compartir un tipo común. <code>IF(cond, x, y)</code> equivale a <code>CASE WHEN cond THEN x ELSE y END</code>.</li>
 <li>La gramática acepta cualquier <code>identifier(…)</code> como llamada; el validador solo admite las funciones de «Forma general y dialecto». Los agregados son <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> y <code>MAX</code>, con <code>DISTINCT</code> dentro. No se anidan agregados, no van en <code>WHERE</code>, <code>ON</code> ni <code>GROUP BY</code>, y <code>*</code> solo vale en <code>COUNT</code>.</li>
 <li><code>table.*</code> y <code>*</code> son expresiones de la gramática; el validador decide en qué sitios tienen sentido. Un nombre cualificado es <code>tabla.columna</code> o <code>tabla.*</code>, con un solo punto.</li>
 </ul>
@@ -1233,6 +1325,7 @@ hidden_option = ( "INCLUDE" | "EXCLUDE" ) "HIDDEN" ;</pre>
 <li><b>Agregados.</b> <code>COUNT(*)</code> cuenta filas; <code>COUNT(expr)</code> cuenta valores no nulos; <code>SUM</code> y <code>AVG</code> ignoran los <code>null</code> (<code>AVG</code> divide entre los valores no nulos); <code>MIN</code>/<code>MAX</code> ignoran los <code>null</code>; sin valores, todos salvo <code>COUNT</code> devuelven <code>null</code>. <code>DISTINCT</code> dentro del agregado quita valores repetidos. Las columnas propias que no están dentro de un agregado deben aparecer en la lista de <code>GROUP BY</code>, solas o dentro de una expresión.</li>
 <li><b>Comparaciones y tipos.</b> <code>=</code> y <code>&lt;&gt;</code> distinguen el tipo (<code>1</code> no es <code>'1'</code>). Para ordenar y para <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> los textos numéricos se comparan por su valor y los tipos se ordenan <code>boolean &lt; number &lt; string</code>. Los campos con tipo declarado se convierten antes de comparar.</li>
 <li><b>Aritmética y funciones.</b> Una operación con <code>null</code> da <code>null</code>; dividir o hacer <code>%</code> entre cero da <code>null</code>; <code>||</code> y <code>CONCAT</code> dan <code>null</code> si algún argumento es <code>null</code>. Las funciones escalares suelen devolver <code>null</code> si un argumento lo es, salvo <code>COALESCE</code>, <code>IFNULL</code> y <code>NULLIF</code>.</li>
+<li><b>CASE e IF.</b> Las ramas <code>WHEN</code> se prueban en orden y gana la primera verdadera; si una da <code>null</code> no es verdadera. Solo se evalúa la rama elegida (o el <code>ELSE</code>), así que las demás no se ejecutan. Sin rama verdadera y sin <code>ELSE</code> el resultado es <code>null</code>. En la forma simple <code>CASE valor WHEN candidato … END</code> la comparación es <code>=</code> y <code>null</code> no coincide con nada. Todos los <code>THEN</code>/<code>ELSE</code> deben compartir un tipo común (con <code>null</code> permitido); si no, la consulta se rechaza al analizarla. <code>IF(cond, x, y)</code> es exactamente <code>CASE WHEN cond THEN x ELSE y END</code>.</li>
 </ul>
 
 <h4>Fuentes, vistas y parámetros</h4>
@@ -1278,10 +1371,10 @@ hidden_option = ( "INCLUDE" | "EXCLUDE" ) "HIDDEN" ;</pre>
 
 <ul>
 <li><b>Nombres y dependencias.</b> Las tablas, consultas, scripts y columnas deben existir; las consultas se pueden leer como tablas (vistas) y no puede haber círculos. El nombre de una tabla gana al de una consulta con el mismo nombre.</li>
-<li><b>Funciones y agregados.</b> Solo se ejecutan las funciones admitidas, con su número de argumentos; <code>DISTINCT</code> solo vale dentro de un agregado, los agregados no se anidan ni aparecen en <code>WHERE</code>, <code>ON</code> o <code>GROUP BY</code>, y <code>*</code> solo vale en <code>COUNT</code>.</li>
+<li><b>Funciones y agregados.</b> Solo se ejecutan las funciones admitidas, con su número de argumentos; <code>CASE</code> e <code>IF</code> son expresiones y siguen sus propias reglas (ramas y tipo común). <code>DISTINCT</code> solo vale dentro de un agregado, los agregados no se anidan ni aparecen en <code>WHERE</code>, <code>ON</code> o <code>GROUP BY</code>, y <code>*</code> solo vale en <code>COUNT</code>.</li>
 <li><b>Límites de PIVOT.</b> <code>TOP</code>/<code>BOTTOM</code> solo se aplica a la última dimensión de su eje; <code>WITHIN PARENT</code> no vale en la primera; <code>SUBTOTAL BY</code> no puede usar la última; <code>COMPUTE CELLS</code> solo vale para <code>SUM</code>, <code>COUNT</code>, <code>MIN</code> y <code>MAX</code> sin <code>DISTINCT</code> ni <code>SHOW</code>; <code>ONLY</code> debe nombrar medidas existentes y los alias de medida no se repiten.</li>
 <li><b>Parámetros.</b> Los rangos admiten como máximo 1000 valores y las fuentes como máximo 2000 filas; el valor elegido no se guarda en el proyecto. Los detalles están en «Parámetros de consultas y scripts».</li>
-<li><b>Solo lectura y una sentencia.</b> No hay <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni <code>CASE</code>, <code>CAST</code>, <code>WITH</code> ni funciones de ventana: todo eso no está en la gramática. Se ejecuta una sola sentencia; lo que vaya después del <code>;</code> final es un error.</li>
+<li><b>Solo lectura y una sentencia.</b> No hay <code>INSERT</code>, <code>UPDATE</code> ni <code>DELETE</code>, ni <code>CAST</code>, <code>WITH</code> ni funciones de ventana: todo eso no está en la gramática. <code>CASE</code> e <code>IF</code> sí están: son expresiones condicionales, no sentencias de escritura. Se ejecuta una sola sentencia; lo que vaya después del <code>;</code> final es un error.</li>
 </ul>
 <p class="muted">La gramática es sintáctica: <code>SELECT foo FROM bar</code> cumple la forma aunque <code>bar</code> no exista. Los errores, el plan y los límites de ejecución se explican en «<a href="#es-sql-limites">Límites, errores y pruebas</a>».</p>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Volver arriba</a></div></section>
@@ -1719,13 +1812,13 @@ return summary.map((row, index) =&gt; {
 <tr><th>File</th><th>Language</th><th>Content</th></tr>
 </thead>
 <tbody>
-<tr><td><code>pruebas-sql-educacion.json</code></td><td>Spanish</td><td>8 tables, 170 queries and 32 scripts</td></tr>
-<tr><td><code>pruebas-sql-salud.json</code></td><td>Spanish</td><td>20 tables, 226 queries and 35 scripts</td></tr>
-<tr><td><code>tests-sql-education.json</code></td><td>English</td><td>8 tables, 170 queries and 32 scripts</td></tr>
-<tr><td><code>tests-sql-health.json</code></td><td>English</td><td>20 tables, 226 queries and 35 scripts</td></tr>
+<tr><td><code>pruebas-sql-educacion.json</code></td><td>Spanish</td><td>8 tables, 190 queries and 32 scripts</td></tr>
+<tr><td><code>pruebas-sql-salud.json</code></td><td>Spanish</td><td>20 tables, 246 queries and 35 scripts</td></tr>
+<tr><td><code>tests-sql-education.json</code></td><td>English</td><td>8 tables, 190 queries and 32 scripts</td></tr>
+<tr><td><code>tests-sql-health.json</code></td><td>English</td><td>20 tables, 246 queries and 35 scripts</td></tr>
 </tbody>
 </table>
-<p>The Spanish and English versions are equivalent: the same cases with translated names. <b>Education</b> uses the table folders <b>Structure</b>, <b>People</b>, <b>Academic</b> and <b>Enrollments</b>; <b>health</b> uses <b>Hospital</b>, <b>Catalogues</b>, <b>People</b>, <b>Care</b> and <b>Billing</b>. Queries and scripts are grouped in the folders <b>A · Basics and aggregation</b>, <b>B · Joins</b>, <b>C · Related queries</b>, <b>D · Integrity</b>, <b>E · Views</b>, <b>F · Subqueries</b>, <b>G · Unions</b>, <b>H · Scripts as tables</b> and <b>I · Parameters</b>, which gathers the examples of parameterised queries and scripts with <code>{{ … }}</code>, including several queries and scripts with two parameters each.</p>
+<p>The Spanish and English versions are equivalent: the same cases with translated names. <b>Education</b> uses the table folders <b>Structure</b>, <b>People</b>, <b>Academic</b> and <b>Enrollments</b>; <b>health</b> uses <b>Hospital</b>, <b>Catalogues</b>, <b>People</b>, <b>Care</b> and <b>Billing</b>. Queries and scripts are grouped in the folders <b>A · Basics and aggregation</b>, <b>B · Joins</b>, <b>C · Related queries</b>, <b>D · Integrity</b>, <b>E · Views</b>, <b>F · Subqueries</b>, <b>G · Unions</b>, <b>H · Scripts as tables</b> and <b>I · Parameters</b>, which gathers the examples of parameterised queries and scripts with <code>{{ … }}</code>, including several queries and scripts with two parameters each. There are also <b>J · PIVOT</b>, <b>K · CASE and IF</b> and <b>L · Functions in SELECT and PIVOT</b>.</p>
 <p>Opening them runs the battery automatically: the report should be all correct. If you want to change one, use <b>Save project as</b> so you do not overwrite the original. The <b>Tests</b> button runs the battery again whenever you want.</p>
 <div class="help-callout"><b>To practise:</b> open a file, choose a query from folder A, change it and use <b>Turn into test</b> to store your own expected result.</div>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Back to top</a></div>
@@ -1829,7 +1922,32 @@ ORDER BY 1;</pre>
 <dt>Literals and identifiers</dt>
 <dd><code>'text'</code> and <code>"text"</code> are <b>both text</b> (to include the quote, double it); <code>[Name with spaces]</code>; <code>NULL</code>, <code>TRUE</code>, <code>FALSE</code>.</dd>
 <dt>Functions</dt>
-<dd><code>ABS</code>, <code>ROUND(x[, dec])</code> (the half moves away from zero: 2.5 → 3 and −2.5 → −3), <code>UPPER</code>, <code>LOWER</code>, <code>LENGTH</code>, <code>TRIM</code>, <code>SUBSTR(x, start[, length])</code> (1 = first character; negative ones count from the end), <code>REGEXPR_REPLACE(x, pattern, replacement[, flags])</code> (replaces every match; in the replacement <code>$1</code>, <code>$&amp;</code>… and flags such as <code>i</code>), <code>CONCAT(x, y, …)</code> (texts joined; <code>null</code> if any argument is), <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>.</dd>
+<dd>
+<p>Functions take one or more values and return one value. They can be <b>nested</b> and used wherever an expression is accepted: in <code>SELECT</code>, <code>WHERE</code>, <code>GROUP BY</code>, <code>HAVING</code>, <code>ORDER BY</code>, inside another function or inside <code>CASE</code>. Function names are case-insensitive. Most functions return <code>NULL</code> when an argument is <code>NULL</code>; <code>COALESCE</code>, <code>IFNULL</code>, <code>NULLIF</code>, <code>IF</code> and <code>CASE</code> are the ones that handle <code>NULL</code> explicitly. The examples show the expression and its result.</p>
+<table class="help-table">
+<thead>
+<tr><th>Function</th><th>What it does</th><th>Examples</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ABS(x)</code></td><td>Absolute value: removes the sign.</td><td><code>ABS(-7)</code> → <code>7</code><br><code>ABS(3.5)</code> → <code>3.5</code><br><code>ABS(0)</code> → <code>0</code></td></tr>
+<tr><td><code>ROUND(x[, dec])</code></td><td>Rounds to <code>dec</code> decimals (0 by default). A halfway value moves away from zero.</td><td><code>ROUND(3.1416, 2)</code> → <code>3.14</code><br><code>ROUND(2.5)</code> → <code>3</code><br><code>ROUND(-2.5)</code> → <code>-3</code><br><code>ROUND(7.8)</code> → <code>8</code></td></tr>
+<tr><td><code>UPPER(x)</code></td><td>Turns text into upper case.</td><td><code>UPPER('Ana')</code> → <code>'ANA'</code><br><code>UPPER('a b')</code> → <code>'A B'</code><br><code>UPPER(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>LOWER(x)</code></td><td>Turns text into lower case.</td><td><code>LOWER('Ana')</code> → <code>'ana'</code><br><code>LOWER('A B')</code> → <code>'a b'</code><br><code>LOWER(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>LENGTH(x)</code></td><td>Number of characters, spaces included.</td><td><code>LENGTH('abc')</code> → <code>3</code><br><code>LENGTH('  a  ')</code> → <code>5</code><br><code>LENGTH(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>TRIM(x)</code></td><td>Removes the spaces at both ends; the spaces inside are kept.</td><td><code>TRIM('  Ana  ')</code> → <code>'Ana'</code><br><code>TRIM(' a b ')</code> → <code>'a b'</code><br><code>TRIM(NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>SUBSTR(x, start[, length])</code></td><td>Piece of text. <code>start</code> 1 is the first character; a negative <code>start</code> counts from the end; <code>length</code> is optional.</td><td><code>SUBSTR('abcdef', 2, 3)</code> → <code>'bcd'</code><br><code>SUBSTR('abcdef', -2)</code> → <code>'ef'</code><br><code>SUBSTR('abcdef', 2)</code> → <code>'bcdef'</code><br><code>SUBSTR('abc', 10)</code> → <code>''</code></td></tr>
+<tr><td><code>REGEXPR_REPLACE(x, pattern, replacement[, flags])</code></td><td>Replaces every match. In the replacement, <code>$1</code>, <code>$2</code>… are the groups and <code>$&amp;</code> is the whole match. Flags: <code>i</code> (case), <code>m</code> (multiline), <code>s</code> (dot includes line breaks), <code>u</code> (Unicode); <code>g</code> is included. Also accepted as <code>REGEXP_REPLACE</code>.</td><td><code>REGEXPR_REPLACE('a1 b2', '[0-9]', '#')</code> → <code>'a# b#'</code><br><code>REGEXPR_REPLACE('Ana García', '([^ ]+) ([^ ]+)', '$2 $1')</code> → <code>'García Ana'</code><br><code>REGEXPR_REPLACE('A-01', '([A-Z])-([0-9]+)', '$2/$1')</code> → <code>'01/A'</code><br><code>REGEXPR_REPLACE('abc', 'B', 'x', 'i')</code> → <code>'axc'</code></td></tr>
+<tr><td><code>REGEXPR_INSTR(x, pattern[, flags])</code></td><td>Position of the first match, starting at 1; <code>0</code> when there is none. Same flags as <code>REGEXPR_REPLACE</code>. Also accepted as <code>REGEXP_INSTR</code>.</td><td><code>REGEXPR_INSTR('abc123def', '[0-9]+')</code> → <code>4</code><br><code>REGEXPR_INSTR('hola', '[0-9]+')</code> → <code>0</code><br><code>REGEXPR_INSTR('404 Not Found', '^[0-9]+')</code> → <code>1</code><br><code>REGEXPR_INSTR('xxABCyy', 'abc', 'i')</code> → <code>3</code></td></tr>
+<tr><td><code>CONCAT(x, y, …)</code></td><td>Joins texts (numbers are converted to text); returns <code>NULL</code> if any argument is <code>NULL</code>.</td><td><code>CONCAT('Ana', ' ', 'García')</code> → <code>'Ana García'</code><br><code>CONCAT('ID-', 7)</code> → <code>'ID-7'</code><br><code>CONCAT('a', NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>COALESCE(a, b, …)</code></td><td>First value that is not <code>NULL</code>; <code>NULL</code> if all of them are.</td><td><code>COALESCE(NULL, 'x', 'y')</code> → <code>'x'</code><br><code>COALESCE(NULL, NULL, 3)</code> → <code>3</code><br><code>COALESCE(NULL, NULL)</code> → <code>NULL</code></td></tr>
+<tr><td><code>IFNULL(a, b)</code></td><td><code>b</code> when <code>a</code> is <code>NULL</code>; otherwise <code>a</code>.</td><td><code>IFNULL(NULL, 0)</code> → <code>0</code><br><code>IFNULL(5, 0)</code> → <code>5</code><br><code>IFNULL('', 'x')</code> → <code>''</code></td></tr>
+<tr><td><code>NULLIF(a, b)</code></td><td><code>NULL</code> when <code>a</code> and <code>b</code> are equal; otherwise <code>a</code>. Equality is strict: number and text do not match.</td><td><code>NULLIF(3, 3)</code> → <code>NULL</code><br><code>NULLIF(3, 4)</code> → <code>3</code><br><code>NULLIF('3', 3)</code> → <code>'3'</code><br><code>NULLIF('', '')</code> → <code>NULL</code></td></tr>
+<tr><td><code>IF(cond, x, y)</code></td><td>Shorthand for <code>CASE WHEN cond THEN x ELSE y END</code>. <code>cond</code> must be boolean; <code>NULL</code> counts as not true; only the chosen branch is evaluated.</td><td><code>IF(3 &gt; 2, 'yes', 'no')</code> → <code>'yes'</code><br><code>IF(2 &gt; 3, 'a', 'b')</code> → <code>'b'</code><br><code>IF(NULL, 'x', 'y')</code> → <code>'y'</code></td></tr>
+<tr><td><code>CASE … END</code></td><td>Conditional expression. The searched form uses <code>WHEN condition</code> and picks the first true one; the simple form <code>CASE value WHEN candidate</code> compares with <code>=</code>. Only the chosen branch is evaluated; no true branch and no <code>ELSE</code> gives <code>NULL</code>; a <code>NULL</code> condition is not true; every <code>THEN</code>/<code>ELSE</code> must share a common type.</td><td><code>CASE WHEN 20 &lt; 20 THEN 'no' WHEN 20 BETWEEN 20 AND 50 THEN 'medium' ELSE 'high' END</code> → <code>'medium'</code><br><code>CASE 2 WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'other' END</code> → <code>'two'</code><br><code>CASE WHEN NULL THEN 'yes' ELSE 'no' END</code> → <code>'no'</code><br><code>CASE WHEN 1 = 2 THEN 'x' END</code> → <code>NULL</code></td></tr>
+</tbody>
+</table>
+<p><b>Aggregates</b> (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code>) are explained in <b>GROUP BY / HAVING</b>: they work on a group of rows, not on one value, and cannot appear in <code>WHERE</code>, <code>ON</code> or <code>GROUP BY</code>.</p>
+</dd>
 <dt>Types and conversion</dt>
 <dd>The <b>field type</b> converts when querying: a <code>number</code> field with «31» values responds to <code>= 31</code>, and a <code>boolean</code> one to <code>= true</code>. The stored data is not touched.</dd>
 <dt>Read-only</dt>
@@ -2065,8 +2183,24 @@ LIMIT 3 OFFSET 2;</pre>
 </section>
 <section>
 <h4>Functions</h4>
-<p><code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>REGEXPR_REPLACE(x, pattern, replacement[, flags])</code> replaces every match of the regular expression: in the replacement, <code>$1</code>, <code>$2</code>… are the groups and <code>$&amp;</code> the matched text; the optional flags are <code>i</code> (case), <code>m</code> (multiline), <code>s</code> (dot includes line breaks) and <code>u</code> (Unicode), and <code>g</code> is included by default (the name <code>REGEXP_REPLACE</code> is also accepted) · <code>CONCAT(a, b, …)</code> joins texts, with <code>null</code> if any argument is · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal.</p>
+<p><code>ABS(x)</code> absolute value · <code>ROUND(x[, dec])</code> rounds to dec decimals (0 by default) · <code>UPPER(x)</code> and <code>LOWER(x)</code> change the case · <code>LENGTH(x)</code> number of characters · <code>TRIM(x)</code> removes spaces from the ends · <code>SUBSTR(x, start[, length])</code> piece of text, with start 1 = first character and negative ones counting from the end · <code>REGEXPR_REPLACE(x, pattern, replacement[, flags])</code> replaces every match of the regular expression: in the replacement, <code>$1</code>, <code>$2</code>… are the groups and <code>$&amp;</code> the matched text; the optional flags are <code>i</code> (case), <code>m</code> (multiline), <code>s</code> (dot includes line breaks) and <code>u</code> (Unicode), and <code>g</code> is included by default (the name <code>REGEXP_REPLACE</code> is also accepted) · <code>REGEXPR_INSTR(x, pattern[, flags])</code> returns the <b>position of the first match</b>, starting at 1, and <code>0</code> when there is none (the name <code>REGEXP_INSTR</code> is also accepted; the flags are the same, without needing <code>g</code>) · <code>CONCAT(a, b, …)</code> joins texts, with <code>null</code> if any argument is · <code>COALESCE(a, b, …)</code> first value that is not <code>null</code> · <code>IFNULL(a, b)</code> b if a is <code>null</code> · <code>NULLIF(a, b)</code> <code>null</code> if a and b are equal · <code>IF(cond, x, y)</code> is shorthand for <code>CASE WHEN cond THEN x ELSE y END</code>; <code>CASE … END</code> is explained in the next section.</p>
 <p>They can be nested inside each other and used both in the <code>SELECT</code> and in the <code>WHERE</code>, <code>GROUP BY</code> or <code>ORDER BY</code>. If the argument is <code>null</code>, the result is usually <code>null</code>.</p>
+</section>
+<section>
+<h4>CASE: a conditional expression</h4>
+<p><code>CASE</code> is <b>not a function</b>: it is a conditional expression and the standard SQL way to choose a value according to conditions. It uses the reserved words <code>CASE</code>, <code>WHEN</code>, <code>THEN</code>, <code>ELSE</code> and <code>END</code>:</p>
+<pre class="sql-ejemplo mono">CASE { WHEN condition THEN result }... [ ELSE result ] END</pre>
+<p>Evaluation rules:</p>
+<ul>
+<li>The <code>WHEN</code> branches are evaluated <b>in order</b> and the <b>first true one wins</b>; the others <b>are not evaluated</b> (short-circuit). The order matters when conditions overlap: <code>20</code> falls into <code>BETWEEN 20 AND 50</code> because the first condition already ruled it out of <code>'Low Cost'</code>.</li>
+<li>Only the chosen branch is evaluated (the chosen <code>THEN</code> or the <code>ELSE</code>). That enables safe patterns: <code>CASE WHEN b = 0 THEN NULL ELSE x / b END</code> never evaluates the division by zero.</li>
+<li>No true branch and no <code>ELSE</code> → <code>NULL</code>. <code>ELSE</code> is optional.</li>
+<li>A <code>WHEN</code> condition that yields <code>NULL</code> counts as <b>not true</b>, just like in <code>IF</code>.</li>
+<li>The <b>simple form</b> <code>CASE value WHEN candidate THEN result … END</code> compares with <code>=</code>: <code>NULL</code> never matches anything. To test <code>NULL</code>, use the searched form: <code>CASE WHEN price IS NULL THEN 'Unknown' … END</code>.</li>
+<li><b>Types:</b> every <code>THEN</code>/<code>ELSE</code> must have a compatible common type (in the examples, all text); otherwise it is an <b>analysis-time error</b>, not a silent one. The result type is that common type, plus a possible <code>NULL</code>. <code>NULL</code> fits any type; number and text, or boolean and number, do not mix.</li>
+<li><code>CASE</code> is an <b>expression</b>: it works anywhere an expression is expected, such as <code>SELECT</code>, <code>WHERE</code>, <code>ORDER BY</code>, <code>GROUP BY</code>, inside a function (<code>LENGTH(CASE … END)</code>) and nested inside another <code>CASE</code>.</li>
+<li><code>IF(cond, x, y)</code> ≡ <code>CASE WHEN cond THEN x ELSE y END</code>. Both are kept: <code>IF</code> is syntactic sugar and <code>CASE</code> is the general form.</li>
+</ul>
 </section>
 <section>
 <h4>Field types and conversion</h4>
@@ -2088,6 +2222,45 @@ ORDER BY letras DESC;</pre>
 <pre class="sql-ejemplo mono">SELECT TRIM(REGEXPR_REPLACE('  Ana   García  ', '[ ]+', ' ')) AS nombre_limpio,
        REGEXPR_REPLACE('García, Ana', '([^,]+), (.+)', '$2 $1') AS nombre_ordenado,
        REGEXPR_REPLACE('A-01 / B-02', '[A-Z]-([0-9]+)', 'code-$1') AS codigos;</pre>
+<h4>Position of the first match with REGEXPR_INSTR</h4>
+<pre class="sql-ejemplo mono">SELECT REGEXPR_INSTR('abc123def', '[0-9]+') AS digits,       -- 4
+       REGEXPR_INSTR('hola', '[0-9]+') AS no_digits,        -- 0
+       REGEXPR_INSTR('404 Not Found', '^[0-9]+') AS at_start, -- 1
+       REGEXPR_INSTR('xxABCyy', 'abc', 'i') AS with_flag;    -- 3
+
+-- The position starts at 1. If the text or the pattern are NULL, the result is NULL.
+SELECT code, REGEXPR_INSTR(code, '[0-9]+') AS first_digit
+FROM classrooms
+WHERE code IN ('K-101', 'B-SALA', 'C-LAB1')
+ORDER BY code;</pre>
+<h4>CASE: categories with the searched form</h4>
+<pre class="sql-ejemplo mono">SELECT name, price,
+  CASE
+    WHEN price &lt; 20 THEN 'Low Cost'
+    WHEN price BETWEEN 20 AND 50 THEN 'Medium Cost'
+    ELSE 'High Cost'
+  END AS price_category
+FROM products;
+-- 19.99 → Low Cost · 20 → Medium Cost · 50 → Medium Cost · 50.01 → High Cost
+-- price NULL → no condition is true → 'High Cost'</pre>
+<h4>The NULL trap and the simple form</h4>
+<pre class="sql-ejemplo mono">-- If a NULL price must be classified apart, the first branch detects it:
+SELECT name,
+  CASE WHEN price IS NULL THEN 'Unknown' ELSE 'Known' END AS known_price
+FROM products;
+
+-- Simple form: compares the column with each WHEN using =
+SELECT name,
+  CASE category_id
+    WHEN 1 THEN 'Beverages'
+    WHEN 2 THEN 'Condiments'
+    ELSE 'Other'
+  END AS category
+FROM products;
+
+-- IF is shorthand for CASE
+SELECT name, IF(price &lt; 20, 'Low Cost', 'Not low cost') AS tier
+FROM products;</pre>
 <h4>Comments, quotes and names in brackets</h4>
 <pre class="sql-ejemplo mono">-- Ventas sin anular (nombre con espacios)
 SELECT [fecha pedido] AS fecha,
@@ -2202,7 +2375,7 @@ TOTALS ROWS GRAND
 <section>
 <h4>Errors, plan and limits</h4>
 <p>If something is badly written, the message gives <b>line and column</b>, shows the fragment and suggests the closest name. When running, the <b>plan</b> shows every step with its time.</p>
-<p>Queries are read-only: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and neither <code>CASE</code>. Joins and subqueries are used to cross tables; <code>UNION</code> to stack results.</p>
+<p>Queries are read-only: there is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>. Joins and subqueries are used to cross tables; <code>UNION</code> to stack results; <code>CASE</code> and <code>IF</code> to choose values according to conditions.</p>
 <p><b>One single statement</b> runs: the final <code>;</code> is accepted, but do not chain several queries separated by <code>;</code> (everything after it is treated as a spurious error).</p>
 </section>
 <section>
@@ -2274,7 +2447,8 @@ keyword      = "SELECT" | "DISTINCT" | "UNION" | "FROM" | "AS" | "INNER"
              | "FIRST" | "LAST" | "LIMIT" | "OFFSET" | "AND" | "OR"
              | "NOT" | "NULL" | "TRUE" | "FALSE" | "IS" | "IN"
              | "BETWEEN" | "LIKE" | "ESCAPE" | "EXISTS" | "ANY"
-             | "SOME" | "ALL" ;
+             | "SOME" | "ALL" | "CASE" | "WHEN" | "THEN" | "ELSE"
+             | "END" ;
 integer      = digit { digit } ;
 number       = digit { digit } [ "." { digit } ] | "." digit { digit } ;
 string       = "'" { char | "''" } "'" | '"' { char | '""' } '"' ;
@@ -2354,13 +2528,24 @@ primary        = number | string | "NULL" | "TRUE" | "FALSE"
                | "(" select_query ")"
                | "(" expression ")"
                | "*"
+               | case_expr
                | identifier [ "(" [ "DISTINCT" ]
                                   [ "*" | expression { "," expression } ] ")"
-                            | "." ( identifier | "*" ) ] ;</pre>
+                            | "." ( identifier | "*" ) ] ;
+
+case_expr      = searched_case | simple_case ;
+searched_case  = "CASE" "WHEN" expression "THEN" expression
+                 { "WHEN" expression "THEN" expression }
+                 [ "ELSE" expression ] "END" ;
+simple_case    = "CASE" expression
+                 "WHEN" expression "THEN" expression
+                 { "WHEN" expression "THEN" expression }
+                 [ "ELSE" expression ] "END" ;</pre>
 <ul>
 <li>The order of the rules is the <b>precedence</b> order: <code>OR</code> binds less than <code>AND</code>, <code>AND</code> less than <code>NOT</code>, <code>NOT</code> less than comparisons, and so on down to brackets. Two details of this dialect: comparisons can be <b>chained</b> left to right (<code>a = b = c</code>) and concatenation <code>||</code> binds <b>before</b> <code>* / %</code>; therefore <code>a * b || c</code> is <code>a * (b || c)</code>. Use brackets for any other grouping.</li>
 <li><code>IS</code> only accepts <code>NULL</code> (<code>IS NULL</code>, <code>IS NOT NULL</code>). In <code>BETWEEN</code> both bounds are additive expressions; in <code>LIKE</code> the pattern is additive and <code>ESCAPE</code> requires a quoted string.</li>
 <li><code>IN</code> accepts a list of expressions, a subquery or a parameter; <code>EXISTS</code> and scalar subqueries go between brackets. <code>ANY</code>/<code>SOME</code>/<code>ALL</code> are only valid after a comparison operator and before a subquery.</li>
+<li><code>CASE</code> has two forms: searched (<code>CASE WHEN condition THEN result … END</code>) and simple (<code>CASE value WHEN candidate THEN result … END</code>). <code>ELSE</code> is optional; with no true branch and no <code>ELSE</code> the result is <code>null</code>. In the simple form the comparison is <code>=</code>, so <code>null</code> matches nothing. The branches are evaluated in order and only the chosen one runs; every <code>THEN</code>/<code>ELSE</code> must share a common type. <code>IF(cond, x, y)</code> is equivalent to <code>CASE WHEN cond THEN x ELSE y END</code>.</li>
 <li>The grammar accepts any <code>identifier(…)</code> as a call; the validator only supports the functions in “General shape and dialect”. The aggregates are <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code>, with <code>DISTINCT</code> inside. Aggregates are not nested, do not go in <code>WHERE</code>, <code>ON</code> or <code>GROUP BY</code>, and <code>*</code> is only valid in <code>COUNT</code>.</li>
 <li><code>table.*</code> and <code>*</code> are expressions of the grammar; the validator decides where they make sense. A qualified name is <code>table.column</code> or <code>table.*</code>, with a single dot.</li>
 </ul>
@@ -2450,6 +2635,7 @@ hidden_option = ( "INCLUDE" | "EXCLUDE" ) "HIDDEN" ;</pre>
 <li><b>Aggregates.</b> <code>COUNT(*)</code> counts rows; <code>COUNT(expr)</code> counts non-null values; <code>SUM</code> and <code>AVG</code> ignore <code>null</code> (<code>AVG</code> divides by the non-null values); <code>MIN</code>/<code>MAX</code> ignore <code>null</code>; with no values, all except <code>COUNT</code> return <code>null</code>. <code>DISTINCT</code> inside the aggregate removes repeated values. Columns of the query that are not inside an aggregate must appear in the <code>GROUP BY</code> list, alone or inside an expression.</li>
 <li><b>Comparisons and types.</b> <code>=</code> and <code>&lt;&gt;</code> tell the type apart (<code>1</code> is not <code>'1'</code>). For sorting and for <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> numeric texts are compared by value and the types are ordered <code>boolean &lt; number &lt; string</code>. Fields with a declared type are converted before comparing.</li>
 <li><b>Arithmetic and functions.</b> An operation with <code>null</code> gives <code>null</code>; dividing or taking <code>%</code> by zero gives <code>null</code>; <code>||</code> and <code>CONCAT</code> give <code>null</code> if any argument is <code>null</code>. Scalar functions usually return <code>null</code> if an argument is <code>null</code>, except <code>COALESCE</code>, <code>IFNULL</code> and <code>NULLIF</code>.</li>
+<li><b>CASE and IF.</b> The <code>WHEN</code> branches are tried in order and the first true one wins; a <code>null</code> condition is not true. Only the chosen branch (or the <code>ELSE</code>) is evaluated, so the others never run. With no true branch and no <code>ELSE</code> the result is <code>null</code>. In the simple form <code>CASE value WHEN candidate … END</code> the comparison is <code>=</code> and <code>null</code> matches nothing. Every <code>THEN</code>/<code>ELSE</code> must share a common type (<code>null</code> allowed); otherwise the query is rejected during analysis. <code>IF(cond, x, y)</code> is exactly <code>CASE WHEN cond THEN x ELSE y END</code>.</li>
 </ul>
 
 <h4>Sources, views and parameters</h4>
@@ -2495,10 +2681,10 @@ hidden_option = ( "INCLUDE" | "EXCLUDE" ) "HIDDEN" ;</pre>
 
 <ul>
 <li><b>Names and dependencies.</b> Tables, queries, scripts and columns must exist; queries can be read as tables (views) and cannot form cycles. A table name wins over a query with the same name.</li>
-<li><b>Functions and aggregates.</b> Only the supported functions run, with their number of arguments; <code>DISTINCT</code> is only valid inside an aggregate, aggregates are not nested and do not appear in <code>WHERE</code>, <code>ON</code> or <code>GROUP BY</code>, and <code>*</code> is only valid in <code>COUNT</code>.</li>
+<li><b>Functions and aggregates.</b> Only the supported functions run, with their number of arguments; <code>CASE</code> and <code>IF</code> are expressions and follow their own rules (branches and a common type). <code>DISTINCT</code> is only valid inside an aggregate, aggregates are not nested and do not appear in <code>WHERE</code>, <code>ON</code> or <code>GROUP BY</code>, and <code>*</code> is only valid in <code>COUNT</code>.</li>
 <li><b>PIVOT limits.</b> <code>TOP</code>/<code>BOTTOM</code> only applies to the last dimension of its axis; <code>WITHIN PARENT</code> is not valid on the first; <code>SUBTOTAL BY</code> cannot use the last; <code>COMPUTE CELLS</code> is only valid for <code>SUM</code>, <code>COUNT</code>, <code>MIN</code> and <code>MAX</code> without <code>DISTINCT</code> or <code>SHOW</code>; <code>ONLY</code> must name existing measures and measure aliases cannot repeat.</li>
 <li><b>Parameters.</b> Ranges allow at most 1000 values and sources at most 2000 rows; the chosen value is not saved in the project. The details are in “Parameters of queries and scripts”.</li>
-<li><b>Read-only and one statement.</b> There is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and no <code>CASE</code>, <code>CAST</code>, <code>WITH</code> or window functions: none of that is in the grammar. One statement runs; anything after the final <code>;</code> is an error.</li>
+<li><b>Read-only and one statement.</b> There is no <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>, and no <code>CAST</code>, <code>WITH</code> or window functions: none of that is in the grammar. <code>CASE</code> and <code>IF</code> are available: they are conditional expressions, not writing statements. One statement runs; anything after the final <code>;</code> is an error.</li>
 </ul>
 <p class="muted">The grammar is syntactic: <code>SELECT foo FROM bar</code> fits the shape even if <code>bar</code> does not exist. Errors, the plan and execution limits are explained in “<a href="#en-sql-limites">Limits, errors and tests</a>”.</p>
 <div class="help-top-wrap"><a class="help-top" href="#top">↑ Back to top</a></div></section>
