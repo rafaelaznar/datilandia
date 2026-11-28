@@ -3849,6 +3849,113 @@
         "utils.zeroRowsPerPage": "0 filas · {perPage} por página",
       },
     };
+
+    /* Messages the SQL engine needs and this copy did not have yet: PIVOT,
+       CASE/IF, REGEXPR_INSTR and their hints. Only missing keys are merged,
+       so no existing message is overwritten. */
+    (() => {
+      const added = {
+        "en": {
+          "pivot.measureColumn": "Measure",
+          "pivot.null": "(null)",
+          "pivot.others": "Others",
+          "pivot.parse.aggregate": "Expected an aggregate measure such as SUM(revenue).",
+          "pivot.parse.axisDim": "Expected a dimension inside the axis.",
+          "pivot.parse.end": "end of query",
+          "pivot.parse.expected": "Expected {expected} in the PIVOT query, but found {found}.",
+          "pivot.parse.fromInsideAxis": "PIVOT and BY do not take a FROM: the query has a single FROM after BY.",
+          "pivot.parse.hint": "The shape is: PIVOT (SELECT …) BY (SELECT …) FROM … VALUES …; the FROM appears only once.",
+          "pivot.parse.number": "Expected a whole number for TOP/BOTTOM.",
+          "pivot.parse.value": "Expected a number, a quoted text or NULL.",
+          "pivot.runtime.queryFailed": "The PIVOT {phase} query failed: {message}",
+          "pivot.step.build": "PIVOT · pivot table",
+          "pivot.step.columns": "PIVOT · column members",
+          "pivot.step.detail": "PIVOT · detail",
+          "pivot.step.having": "PIVOT · HAVING",
+          "pivot.step.ranking": "PIVOT · ranking",
+          "pivot.step.rowOrder": "PIVOT · row order",
+          "pivot.total.grand": "Grand total",
+          "pivot.total.subtotal": "Subtotal",
+          "pivot.validation.aggregateDimension": "The dimension {expression} cannot contain an aggregate function.",
+          "pivot.validation.aggregateDimensionHint": "Dimensions are row expressions; put the aggregate in VALUES.",
+          "pivot.validation.axisEmpty": "PIVOT and BY need at least one dimension.",
+          "pivot.validation.computeCells": "COMPUTE CELLS is not valid for {name}.",
+          "pivot.validation.computeCellsHint": "COMPUTE CELLS only supports SUM, COUNT, MIN and MAX, without DISTINCT or SHOW AS.",
+          "pivot.validation.distinctStar": "DISTINCT cannot be combined with *.",
+          "pivot.validation.duplicateMeasure": "The measure alias {name} is used twice.",
+          "pivot.validation.limitByAggregate": "The BY expression of TOP/BOTTOM must be an aggregate: {expression}.",
+          "pivot.validation.limitLast": "TOP/BOTTOM can only be applied to the last dimension of its axis ({dimension}).",
+          "pivot.validation.limitLastHint": "Move the limited dimension to the end of the axis.",
+          "pivot.validation.onlyUnknown": "The total refers to the measure {name}, which does not exist.",
+          "pivot.validation.starOnlyCount": "The asterisk (*) is only allowed in COUNT(*), not in {name}.",
+          "pivot.validation.starOnlyCountHint": "Write the column name inside the aggregate.",
+          "pivot.validation.subtotalLast": "SUBTOTAL BY cannot use the last dimension ({dimension}).",
+          "pivot.validation.subtotalLastHint": "Use a dimension with another level below it, or GRAND.",
+          "pivot.validation.unknownDimension": "The dimension {name} does not exist in that axis.",
+          "pivot.validation.unsupportedAggregate": "The aggregate {name} is not supported in PIVOT.",
+          "pivot.validation.unsupportedAggregateHint": "Use SUM, COUNT, AVG, MIN, MAX, MEDIAN or STDDEV.",
+          "pivot.validation.withinParentFirst": "WITHIN PARENT cannot be used on the first dimension ({dimension}).",
+          "pivot.validation.withinParentFirstHint": "WITHIN PARENT needs a parent level before the ranked dimension.",
+          "sqlFunctions.case": "CASE WHEN condition THEN result [WHEN …] [ELSE result] END",
+          "sqlFunctions.if": "IF(condition, value, substitute)",
+          "sqlFunctions.regexprInstr": "REGEXPR_INSTR(text, pattern[, flags])",
+          "sqlValidator.caseTypes": "The result branches of {expression} must share a common type; found: {types}.",
+          "sqlValidator.caseTypesHint": "Use the same type in every THEN/ELSE branch; NULL fits any type. Example: CASE WHEN … THEN 'text' ELSE 'other text' END."
+        },
+        "es": {
+          "pivot.measureColumn": "Medida",
+          "pivot.null": "(null)",
+          "pivot.others": "Otros",
+          "pivot.parse.aggregate": "Se esperaba una medida agregada como SUM(importe).",
+          "pivot.parse.axisDim": "Se esperaba una dimensión dentro del eje.",
+          "pivot.parse.end": "el final de la consulta",
+          "pivot.parse.expected": "Se esperaba {expected} en la consulta PIVOT, pero se encontró {found}.",
+          "pivot.parse.fromInsideAxis": "PIVOT y BY no llevan FROM: la consulta tiene un único FROM después de BY.",
+          "pivot.parse.hint": "La forma es: PIVOT (SELECT …) BY (SELECT …) FROM … VALUES …; el FROM aparece una sola vez.",
+          "pivot.parse.number": "Se esperaba un número entero para TOP/BOTTOM.",
+          "pivot.parse.value": "Se esperaba un número, un texto entrecomillado o NULL.",
+          "pivot.runtime.queryFailed": "La consulta PIVOT de {phase} falló: {message}",
+          "pivot.step.build": "PIVOT · tabla dinámica",
+          "pivot.step.columns": "PIVOT · miembros de columna",
+          "pivot.step.detail": "PIVOT · detalle",
+          "pivot.step.having": "PIVOT · HAVING",
+          "pivot.step.ranking": "PIVOT · ranking",
+          "pivot.step.rowOrder": "PIVOT · orden de filas",
+          "pivot.total.grand": "Total general",
+          "pivot.total.subtotal": "Subtotal",
+          "pivot.validation.aggregateDimension": "La dimensión {expression} no puede contener una función de agregado.",
+          "pivot.validation.aggregateDimensionHint": "Las dimensiones son expresiones de fila; pon el agregado en VALUES.",
+          "pivot.validation.axisEmpty": "PIVOT y BY necesitan al menos una dimensión.",
+          "pivot.validation.computeCells": "COMPUTE CELLS no es válido para {name}.",
+          "pivot.validation.computeCellsHint": "COMPUTE CELLS solo admite SUM, COUNT, MIN y MAX, sin DISTINCT ni SHOW AS.",
+          "pivot.validation.distinctStar": "DISTINCT no se puede combinar con *.",
+          "pivot.validation.duplicateMeasure": "El alias de medida {name} se usa dos veces.",
+          "pivot.validation.limitByAggregate": "La expresión BY de TOP/BOTTOM debe ser un agregado: {expression}.",
+          "pivot.validation.limitLast": "TOP/BOTTOM solo se puede aplicar a la última dimensión de su eje ({dimension}).",
+          "pivot.validation.limitLastHint": "Mueve la dimensión limitada al final del eje.",
+          "pivot.validation.onlyUnknown": "El total se refiere a la medida {name}, que no existe.",
+          "pivot.validation.starOnlyCount": "El asterisco (*) solo se admite en COUNT(*), no en {name}.",
+          "pivot.validation.starOnlyCountHint": "Escribe el nombre de la columna dentro del agregado.",
+          "pivot.validation.subtotalLast": "SUBTOTAL BY no puede usar la última dimensión ({dimension}).",
+          "pivot.validation.subtotalLastHint": "Usa una dimensión con otro nivel por debajo, o GRAND.",
+          "pivot.validation.unknownDimension": "La dimensión {name} no existe en ese eje.",
+          "pivot.validation.unsupportedAggregate": "La función de agregado {name} no se admite en PIVOT.",
+          "pivot.validation.unsupportedAggregateHint": "Usa SUM, COUNT, AVG, MIN, MAX, MEDIAN o STDDEV.",
+          "pivot.validation.withinParentFirst": "WITHIN PARENT no se puede usar en la primera dimensión ({dimension}).",
+          "pivot.validation.withinParentFirstHint": "WITHIN PARENT necesita un nivel padre antes de la dimensión clasificada.",
+          "sqlFunctions.case": "CASE WHEN condición THEN resultado [WHEN …] [ELSE resultado] END",
+          "sqlFunctions.if": "IF(condición, valor, sustituto)",
+          "sqlFunctions.regexprInstr": "REGEXPR_INSTR(texto, patrón[, banderas])",
+          "sqlValidator.caseTypes": "Las ramas de resultado de {expression} deben compartir un tipo común; se encontraron: {types}.",
+          "sqlValidator.caseTypesHint": "Usa el mismo tipo en todas las ramas THEN/ELSE; NULL encaja con cualquiera. Ejemplo: CASE WHEN … THEN 'texto' ELSE 'otro texto' END."
+        }
+      };
+      Object.keys(added).forEach((lang) => {
+        if (window.datilandia.messages[lang]) {
+          Object.assign(window.datilandia.messages[lang], added[lang]);
+        }
+      });
+    })();
   </script>
 
   <script>
@@ -6889,6 +6996,7 @@
       "WHERE", "GROUP", "BY", "HAVING", "ORDER", "ASC", "DESC", "NULLS", "FIRST",
       "LAST", "LIMIT", "OFFSET", "AND", "OR", "NOT", "NULL", "TRUE", "FALSE",
       "IS", "IN", "BETWEEN", "LIKE", "ESCAPE", "EXISTS", "ANY", "SOME", "ALL",
+      "CASE", "WHEN", "THEN", "ELSE", "END",
     ];
 
     /** Turns the SQL text into tokens with line and column. */
@@ -7153,6 +7261,14 @@
         let esperandoAlias = false;
         let enOrderBy = false;
         tokens.forEach((token, index) => {
+          // In a PIVOT query the table block ends at VALUES: the identifiers
+          // that follow are dimensions and measures, not table aliases.
+          if (token.type === "identifier" && String(token.value).toUpperCase() === "VALUES") {
+            enTables = false;
+            esperandoTable = false;
+            esperandoAlias = false;
+            return;
+          }
           if (token.type === "keyword") {
             if (token.value === "FROM" || token.value === "JOIN") {
               enTables = true;
@@ -7871,6 +7987,10 @@
             this.next();
             return { type: "exists", query: this.parseSubquery(), not: false };
           }
+          if (token.value === "CASE") {
+            this.next();
+            return this.parseCase();
+          }
           if (token.value === "SELECT") {
             throw this.expectedError(token, I18n.t("sqlParser.expression"));
           }
@@ -7914,6 +8034,33 @@
           return { type: "column", table, name };
         }
         throw this.expectedError(token, I18n.t("sqlParser.expression"));
+      }
+
+      /** CASE expression, already consumed the CASE keyword. Two forms:
+       *
+       *   CASE WHEN condition THEN result … [ELSE result] END
+       *   CASE value WHEN candidate THEN result … [ELSE result] END
+       *
+       * The searched form keeps the condition; the simple one keeps the value
+       * to compare and every candidate. The runtime decides between them. */
+      parseCase() {
+        let operand = null;
+        if (!(this.peek().type === "keyword" && this.peek().value === "WHEN")) {
+          operand = this.parseExpression();
+        }
+        if (this.matchKeyword("WHEN")) {
+          const whens = [];
+          do {
+            const when = this.parseExpression();
+            this.expectKeyword("THEN");
+            const then = this.parseExpression();
+            whens.push({ when, then });
+          } while (this.matchKeyword("WHEN"));
+          const elseExpr = this.matchKeyword("ELSE") ? this.parseExpression() : null;
+          this.expectKeyword("END");
+          return { type: "case", operand, whens, else: elseExpr };
+        }
+        throw this.expectedError(this.peek(), "WHEN");
       }
 
       parseCall(name) {
@@ -8091,12 +8238,16 @@
         ejecucion.stack.push({ key, name: query.name });
         let result;
         try {
-          const ast = new SqlParser(query.sql).parse();
-          if (String(query.sql).includes("{{")) {
-            SqlParams.bind(ast, project, ejecucion, null, String(query.sql));
+          if (PivotEngine.isPivot(query.sql)) {
+            result = PivotEngine.run(query.sql, project, ejecucion);
+          } else {
+            const ast = new SqlParser(query.sql).parse();
+            if (String(query.sql).includes("{{")) {
+              SqlParams.bind(ast, project, ejecucion, null, String(query.sql));
+            }
+            const resolved = SqlValidator.validate(ast, project, ejecucion);
+            result = SqlExecutor.execute(SqlPlanner.build(ast, resolved));
           }
-          const resolved = SqlValidator.validate(ast, project, ejecucion);
-          result = SqlExecutor.execute(SqlPlanner.build(ast, resolved));
         } catch (err) {
           throw SqlViews.wrapError(query, err);
         } finally {
@@ -8677,10 +8828,13 @@
       SUBSTR: { min: 2, max: 3, doc: "sqlFunctions.substr" },
       REGEXPR_REPLACE: { min: 3, max: 4, doc: "sqlFunctions.regexprReplace" },
       REGEXP_REPLACE: { min: 3, max: 4, doc: "sqlFunctions.regexprReplace" },
+      REGEXPR_INSTR: { min: 2, max: 3, doc: "sqlFunctions.regexprInstr" },
+      REGEXP_INSTR: { min: 2, max: 3, doc: "sqlFunctions.regexprInstr" },
       CONCAT: { min: 1, max: 9, doc: "sqlFunctions.concat" },
       COALESCE: { min: 1, max: 9, doc: "sqlFunctions.coalesce" },
       IFNULL: { min: 2, max: 2, doc: "sqlFunctions.ifnull" },
       NULLIF: { min: 2, max: 2, doc: "sqlFunctions.nullif" },
+      IF: { min: 3, max: 3, doc: "sqlFunctions.if" },
     };
 
     /** Aggregate functions available (min./max. arguments and usage). */
@@ -8918,6 +9072,22 @@
        *  left out so walks do not reach into another query. */
       childExpressions(expr) {
         const children = [];
+        // CASE keeps its branches in { when, then } objects: walk them by hand
+        // so every generic walk (aggregates, sources, subqueries, grouping)
+        // reaches the conditions and the results.
+        if (expr.type === "case") {
+          if (expr.operand) {
+            children.push(expr.operand);
+          }
+          expr.whens.forEach((branch) => {
+            children.push(branch.when);
+            children.push(branch.then);
+          });
+          if (expr.else) {
+            children.push(expr.else);
+          }
+          return children;
+        }
         const isExpression = (value) => value && typeof value === "object"
           && typeof value.type === "string" && value.type !== "select" && value.type !== "union";
         Object.values(expr).forEach((value) => {
@@ -9009,6 +9179,9 @@
           case "subquery":
             SqlValidator.validateSubquery(expr, context, true);
             return;
+          case "case":
+            SqlValidator.validateCase(expr, contextName, context, insideAggregate);
+            return;
           case "call":
             SqlValidator.validateCall(expr, contextName, context, insideAggregate);
             return;
@@ -9043,6 +9216,7 @@
           node.source = target.alias;
           node.field = canonical;
           node.meta = target.table.fields.find((field) => field.name === canonical) || null;
+          node.valueTable = target.table;
           if (outerSource) {
             node.outer = true;
             context.outerRefs.add(outerSource.alias.toLowerCase());
@@ -9066,6 +9240,7 @@
               node.source = source.alias;
               node.field = source.fields.get(node.name.toLowerCase());
               node.meta = source.table.fields.find((field) => field.name === node.field) || null;
+              node.valueTable = source.table;
               node.outer = true;
               context.outerRefs.add(source.alias.toLowerCase());
               return;
@@ -9082,6 +9257,7 @@
           node.source = matches[0].alias;
           node.field = matches[0].fields.get(node.name.toLowerCase());
           node.meta = matches[0].table.fields.find((field) => field.name === node.field) || null;
+          node.valueTable = matches[0].table;
         }
         if (context.requiresGrouping && !insideAggregate && ["select", "having", "order"].includes(contextName)) {
           const key = `${node.source}.${node.field}`.toLowerCase();
@@ -9159,6 +9335,142 @@
         expr.source = source.alias;
       },
 
+      /** Validates a CASE expression and checks that every result branch has
+       *  a common type. The searched form (operand null) uses each `when` as a
+       *  condition; the simple form compares the operand with each one. */
+      validateCase(node, contextName, context, insideAggregate) {
+        if (node.operand) {
+          SqlValidator.walk(node.operand, contextName, context, insideAggregate);
+        }
+        node.whens.forEach((branch) => {
+          SqlValidator.walk(branch.when, contextName, context, insideAggregate);
+          SqlValidator.walk(branch.then, contextName, context, insideAggregate);
+        });
+        if (node.else) {
+          SqlValidator.walk(node.else, contextName, context, insideAggregate);
+        }
+        SqlValidator.checkResultTypes(node, "CASE", node.whens.map((branch) => branch.then).concat(node.else ? [node.else] : []));
+      },
+
+      /** Type of an expression, as far as the engine can know it without
+       *  running it. `null` is a value that fits any branch; `unknown` is an
+       *  expression whose type cannot be told in advance. */
+      expressionType(expr) {
+        if (!expr) {
+          return "null";
+        }
+        switch (expr.type) {
+          case "literal":
+            return expr.value === null ? "null" : typeof expr.value;
+          case "param":
+            return Object.hasOwn(expr, "value") && expr.value !== null ? typeof expr.value : "unknown";
+          case "column": {
+            if (!expr.meta || !Model.FIELD_TYPES.includes(expr.meta.type)) {
+              return "unknown";
+            }
+            // A field declared as string may hold numbers (tables created in
+            // code or imported without inference). The value read at runtime
+            // is the number, so the branch type follows the values.
+            if (expr.meta.type === "string" && expr.valueTable && Array.isArray(expr.valueTable.rows)) {
+              return Model.fieldTypeFromRows(expr.valueTable.rows, expr.field);
+            }
+            return expr.meta.type;
+          }
+          case "unary":
+            return expr.op === "not" ? "boolean" : "number";
+          case "binary":
+            if (expr.op === "and" || expr.op === "or") {
+              return "boolean";
+            }
+            if (["=", "==", "!=", "<>", "<", "<=", ">", ">="].includes(expr.op)) {
+              return "boolean";
+            }
+            return expr.op === "||" ? "string" : "number";
+          case "isnull":
+          case "between":
+          case "like":
+          case "in":
+          case "exists":
+          case "quantified":
+            return "boolean";
+          case "case":
+            return expr.resultType || "unknown";
+          case "subquery": {
+            const ast = expr.query || expr.ast;
+            if (!ast || ast.type !== "select" || !ast.columns || ast.columns.length !== 1) {
+              return "unknown";
+            }
+            const column = ast.columns[0];
+            return column && column.expr && column.expr.type !== "star"
+              ? SqlValidator.expressionType(column.expr)
+              : "unknown";
+          }
+          case "call":
+            return SqlValidator.callType(expr);
+          default:
+            return "unknown";
+        }
+      },
+
+      /** Type returned by a function call, according to its name. */
+      callType(node) {
+        const name = node.func || String(node.name || "").toUpperCase();
+        if (node.isAggregate) {
+          if (name === "COUNT" || name === "SUM" || name === "AVG") {
+            return "number";
+          }
+          return node.args && node.args[0] ? SqlValidator.expressionType(node.args[0]) : "unknown";
+        }
+        if (["ABS", "ROUND", "LENGTH", "REGEXPR_INSTR", "REGEXP_INSTR"].includes(name)) {
+          return "number";
+        }
+        if (["UPPER", "LOWER", "TRIM", "SUBSTR", "REGEXPR_REPLACE", "REGEXP_REPLACE", "CONCAT"].includes(name)) {
+          return "string";
+        }
+        if (name === "COALESCE" || name === "IFNULL") {
+          return SqlValidator.commonType((node.args || []).map((arg) => SqlValidator.expressionType(arg))).type;
+        }
+        if (name === "NULLIF") {
+          return node.args && node.args[0] ? SqlValidator.expressionType(node.args[0]) : "unknown";
+        }
+        if (name === "IF") {
+          return SqlValidator.commonType((node.args || []).map((arg) => SqlValidator.expressionType(arg)).slice(1)).type;
+        }
+        return "unknown";
+      },
+
+      /** Common type of a list of branch types. NULL and unknown fit any type;
+       *  two different known types have no common type (conflict). */
+      commonType(types) {
+        let common = "null";
+        for (const type of types) {
+          if (type === "null" || type === "unknown" || type === undefined) {
+            continue;
+          }
+          if (common === "null") {
+            common = type;
+          } else if (common !== type) {
+            return { type: null, conflict: true };
+          }
+        }
+        return { type: common, conflict: false };
+      },
+
+      /** Checks the common type of the result branches of CASE/IF and stores
+       *  it in the node. A mismatch is a validation error, not a silent
+       *  coercion. */
+      checkResultTypes(node, expression, branches) {
+        const types = branches.map((branch) => SqlValidator.expressionType(branch));
+        const merged = SqlValidator.commonType(types);
+        if (merged.conflict) {
+          throw new SqlValidationError(
+            I18n.t("sqlValidator.caseTypes", { expression: expression, types: types.join(", ") }),
+            { hint: I18n.t("sqlValidator.caseTypesHint") },
+          );
+        }
+        node.resultType = merged.type;
+      },
+
       /** Validates a function: existence, use, arity and arguments. */
       validateCall(node, contextName, context, insideAggregate) {
         const name = node.name.toUpperCase();
@@ -9220,6 +9532,11 @@
         node.isAggregate = Boolean(aggregate);
         if (!isStar) {
           node.args.forEach((arg) => SqlValidator.walk(arg, contextName, context, insideAggregate || Boolean(aggregate)));
+        }
+        // IF(condition, x, y) is shorthand for CASE WHEN condition THEN x ELSE y
+        // END: both result branches must share a type, checked now.
+        if (name === "IF") {
+          SqlValidator.checkResultTypes(node, "IF", node.args.slice(1));
         }
       },
 
@@ -9610,6 +9927,10 @@
             return `${SqlPlanner.expressionLabel(expr.expr)} ${expr.op.toUpperCase()} ${expr.quantifier.toUpperCase()} (…)`;
           case "subquery":
             return I18n.t("sqlPlanner.subqueryColumn");
+          case "case":
+            return expr.operand
+              ? `CASE ${SqlPlanner.expressionLabel(expr.operand)} … END`
+              : "CASE … END";
           default:
             return "?";
         }
@@ -10036,14 +10357,53 @@
             return SqlExecutor.evalQuantified(expr, context);
           case "subquery":
             return SqlExecutor.evalScalarSubquery(expr, context);
+          case "case":
+            return SqlExecutor.evalCase(expr, context);
           case "call":
             if (expr.isAggregate) {
               return context.aggregates ? context.aggregates.get(expr) : null;
+            }
+            if (expr.func === "IF") {
+              return SqlExecutor.evalIf(expr, context);
             }
             return SqlExecutor.evalScalarFunction(expr, context);
           default:
             throw new SqlRuntimeError(I18n.t("sqlExecutor.cannotEvaluate", { expressionType: expr.type }), {});
         }
+      },
+
+      /** CASE, in both forms. Only the chosen result is evaluated, and the
+       *  WHEN conditions are tried in order, so the first true one wins. A
+       *  NULL condition is not true. Without a true branch and without ELSE the
+       *  result is NULL. In the simple form the comparison is `=`: a NULL
+       *  operand or candidate never matches. */
+      evalCase(expr, context) {
+        if (expr.operand) {
+          const value = SqlExecutor.evalExpr(expr.operand, context);
+          if (value !== null) {
+            for (const branch of expr.whens) {
+              const candidate = SqlExecutor.evalExpr(branch.when, context);
+              if (candidate !== null && SqlExecutor.strictEquals(value, candidate)) {
+                return SqlExecutor.evalExpr(branch.then, context);
+              }
+            }
+          }
+          return expr.else ? SqlExecutor.evalExpr(expr.else, context) : null;
+        }
+        for (const branch of expr.whens) {
+          if (SqlExecutor.evalCondition(branch.when, context) === true) {
+            return SqlExecutor.evalExpr(branch.then, context);
+          }
+        }
+        return expr.else ? SqlExecutor.evalExpr(expr.else, context) : null;
+      },
+
+      /** IF(condition, x, y), the shorthand of CASE WHEN condition THEN x ELSE
+       *  y END. The condition must be boolean (NULL counts as not true) and
+       *  only the chosen branch is evaluated. */
+      evalIf(expr, context) {
+        const condition = SqlExecutor.evalCondition(expr.args[0], context);
+        return SqlExecutor.evalExpr(condition === true ? expr.args[1] : expr.args[2], context);
       },
 
       evalUnary(expr, context) {
@@ -10362,6 +10722,19 @@
         return comparison >= 0;
       },
 
+      /** Compiles a regular expression with its flags, with a detailed error
+       *  when the pattern is not valid. */
+      compileRegex(pattern, flags) {
+        try {
+          return new RegExp(pattern, flags);
+        } catch (err) {
+          throw new SqlRuntimeError(
+            I18n.t("sqlExecutor.invalidRegex", { message: err.message }),
+            { hint: I18n.t("sqlExecutor.invalidRegexHint") },
+          );
+        }
+      },
+
       evalScalarFunction(expr, context) {
         const args = expr.args.map((arg) => SqlExecutor.evalExpr(arg, context));
         switch (expr.func) {
@@ -10410,16 +10783,18 @@
             const replacement = String(args[2]);
             const extra = args.length > 3 && args[3] !== null ? String(args[3]) : "";
             const flags = extra.includes("g") ? extra : `g${extra}`;
-            let regex;
-            try {
-              regex = new RegExp(pattern, flags);
-            } catch (err) {
-              throw new SqlRuntimeError(
-                I18n.t("sqlExecutor.invalidRegex", { message: err.message }),
-                { hint: I18n.t("sqlExecutor.invalidRegexHint") },
-              );
+            return text.replace(SqlExecutor.compileRegex(pattern, flags), replacement);
+          }
+          case "REGEXPR_INSTR":
+          case "REGEXP_INSTR": {
+            if (args[0] === null || args[1] === null) {
+              return null;
             }
-            return text.replace(regex, replacement);
+            const text = String(args[0]);
+            const pattern = String(args[1]);
+            const flags = args.length > 2 && args[2] !== null ? String(args[2]) : "";
+            const match = SqlExecutor.compileRegex(pattern, flags).exec(text);
+            return match ? match.index + 1 : 0;
           }
           case "CONCAT":
             return args.some((value) => value === null) ? null : args.join("");
@@ -10440,6 +10815,9 @@
     /** Entry point of the engine: parse, validate, plan and run. */
     const SqlEngine = {
       run(sql, project, state, selections) {
+        if (PivotEngine.isPivot(sql)) {
+          return PivotEngine.run(sql, project, state, selections);
+        }
         const ejecucion = state || SqlViews.newState();
         const before = ejecucion.ms;
         const ast = new SqlParser(sql).parse();
@@ -10471,6 +10849,9 @@
        *  (the plan already has them resolved: alias and asterisk included).
        *  Returns { ok: true, columns } or { ok: false, error }. */
       columnsSafe(sql, project, state, selections) {
+        if (PivotEngine.isPivot(sql)) {
+          return PivotEngine.columnsSafe(sql, project, state, selections);
+        }
         const ejecucion = state || SqlViews.newState();
         try {
           const ast = new SqlParser(sql).parse();
@@ -10484,6 +10865,2037 @@
         }
       },
     };
+
+    /* =====================================================================
+       5.6a PIVOT QUERY
+       PIVOT is a small declarative dialect on top of the SELECT engine:
+       the query is parsed here, translated into a few SELECT statements and
+       the rows are post-processed into the final pivot table. The SELECT
+       engine still does the scanning, filtering, grouping, ordering and
+       HAVING work; this module only knows how to turn a PIVOT query into
+       those SELECTs and how to assemble their results.
+       ===================================================================== */
+
+    /** Parser of the PIVOT dialect. It uses the SQL lexer, keeps the original
+     *  text of every expression and produces a plain object (the AST). */
+    class PivotParser {
+      constructor(sql) {
+        this.sql = String(sql);
+        this.tokens = new SqlLexer(this.sql).tokenize();
+        this.pos = 0;
+      }
+
+      peek(offset) {
+        return this.tokens[this.pos + (offset || 0)] || this.tokens[this.tokens.length - 1];
+      }
+
+      next() {
+        const token = this.peek();
+        if (this.pos < this.tokens.length - 1) {
+          this.pos += 1;
+        }
+        return token;
+      }
+
+      atEnd() {
+        return this.peek().type === "eof";
+      }
+
+      isWord(token, word) {
+        return Boolean(token)
+          && (token.type === "identifier" || token.type === "keyword")
+          && String(token.value).toUpperCase() === String(word).toUpperCase();
+      }
+
+      peekWord(word, offset) {
+        return this.isWord(this.peek(offset), word);
+      }
+
+      isPunct(token, value) {
+        return Boolean(token) && token.type === "punct" && token.value === value;
+      }
+
+      peekPunct(value, offset) {
+        return this.isPunct(this.peek(offset), value);
+      }
+
+      describe(token) {
+        return token && token.type !== "eof" ? (token.raw || token.value) : I18n.t("pivot.parse.end");
+      }
+
+      error(token, key, params) {
+        const where = token || this.peek();
+        throw new SqlParseError(I18n.t(key, params || {}), {
+          line: where.line,
+          col: where.col,
+          snippet: sqlSnippet(this.sql, where.line, where.col),
+          hint: I18n.t("pivot.parse.hint"),
+        });
+      }
+
+      expectWord(word) {
+        const token = this.next();
+        if (!this.isWord(token, word)) {
+          this.error(token, "pivot.parse.expected", { expected: word, found: this.describe(token) });
+        }
+        return token;
+      }
+
+      expectPunct(value) {
+        const token = this.next();
+        if (!this.isPunct(token, value)) {
+          this.error(token, "pivot.parse.expected", { expected: value, found: this.describe(token) });
+        }
+        return token;
+      }
+
+      raw(start, end) {
+        return end > start ? this.sql.slice(this.tokens[start].start, this.tokens[end - 1].end) : "";
+      }
+
+      /** Consumes tokens until one of the stop words/punctuation at depth 0.
+       *  The stop token is left for the caller. */
+      takeUntil(stopWords, stopPuncts) {
+        const words = (stopWords || []).map((word) => String(word).toUpperCase());
+        const puncts = stopPuncts || [];
+        let depth = 0;
+        while (!this.atEnd()) {
+          const token = this.peek();
+          if (token.type === "punct") {
+            if (token.value === "(") {
+              depth += 1;
+            } else if (token.value === ")") {
+              if (depth === 0) {
+                return;
+              }
+              depth -= 1;
+            } else if (depth === 0 && puncts.includes(token.value)) {
+              return;
+            }
+          }
+          if (depth === 0 && (token.type === "identifier" || token.type === "keyword")) {
+            if (words.includes(String(token.value).toUpperCase())) {
+              return;
+            }
+          }
+          this.next();
+        }
+      }
+
+      /** Finds where the expression of a dimension ends: the alias and the
+       *  options are parsed separately. */
+      dimensionBoundary() {
+        let depth = 0;
+        for (let index = this.pos; index < this.tokens.length; index += 1) {
+          const token = this.tokens[index];
+          if (token.type === "eof") {
+            return { exprEnd: index, optionsStart: index, alias: null };
+          }
+          if (token.type === "punct") {
+            if (token.value === "(") {
+              depth += 1;
+              continue;
+            }
+            if (token.value === ")") {
+              if (depth === 0) {
+                return { exprEnd: index, optionsStart: index, alias: null };
+              }
+              depth -= 1;
+              continue;
+            }
+            if (depth === 0 && token.value === ",") {
+              return { exprEnd: index, optionsStart: index, alias: null };
+            }
+          }
+          if (depth !== 0) {
+            continue;
+          }
+          if (this.isWord(token, "WHERE") || this.isWord(token, "ORDER") || this.isWord(token, "FROM")) {
+            return { exprEnd: index, optionsStart: index, alias: null };
+          }
+          if (this.isWord(token, "NULLS") || this.isWord(token, "TOP") || this.isWord(token, "BOTTOM")) {
+            return { exprEnd: index, optionsStart: index, alias: null };
+          }
+          if (this.isWord(token, "AS")) {
+            const aliasToken = this.tokens[index + 1];
+            const after = this.tokens[index + 2];
+            const aliasOk = aliasToken
+              && (aliasToken.type === "identifier" || aliasToken.type === "keyword")
+              && after
+              && (this.isWord(after, "NULLS") || this.isWord(after, "TOP") || this.isWord(after, "BOTTOM")
+                || this.isWord(after, "WHERE") || this.isWord(after, "ORDER")
+                || this.isPunct(after, ",") || this.isPunct(after, ")") || after.type === "eof");
+            if (aliasOk) {
+              return { exprEnd: index, optionsStart: index + 2, alias: aliasToken.value };
+            }
+          }
+        }
+        return { exprEnd: this.tokens.length - 1, optionsStart: this.tokens.length - 1, alias: null };
+      }
+
+      parseDimension() {
+        const start = this.pos;
+        const boundary = this.dimensionBoundary();
+        const expr = this.raw(start, boundary.exprEnd).trim();
+        if (!expr) {
+          this.error(this.peek(), "pivot.parse.axisDim");
+        }
+        this.pos = boundary.optionsStart;
+        let nulls = null;
+        let limit = null;
+        while (true) {
+          if (this.peekWord("NULLS")) {
+            this.next();
+            if (this.peekWord("AS")) {
+              this.next();
+              const label = this.next();
+              if (label.type !== "string") {
+                this.error(label, "pivot.parse.expected", { expected: "a quoted label", found: this.describe(label) });
+              }
+              nulls = { mode: "label", label: label.value };
+            } else if (this.peekWord("HIDE")) {
+              this.next();
+              nulls = { mode: "hide", label: null };
+            } else if (this.peekWord("EXCLUDE")) {
+              this.next();
+              nulls = { mode: "exclude", label: null };
+            } else {
+              this.error(this.peek(), "pivot.parse.expected", { expected: "AS, HIDE or EXCLUDE", found: this.describe(this.peek()) });
+            }
+            continue;
+          }
+          if (this.peekWord("TOP") || this.peekWord("BOTTOM")) {
+            const kind = String(this.next().value).toLowerCase();
+            const count = this.next();
+            if (count.type !== "number" || !Number.isInteger(count.value) || count.value < 0) {
+              this.error(count, "pivot.parse.number");
+            }
+            limit = { kind, n: count.value, by: null, withinParent: false, others: null };
+            if (this.peekWord("BY")) {
+              this.next();
+              const byStart = this.pos;
+              this.takeUntil(["WITHIN", "OTHERS", "WHERE", "ORDER"], [",", ")"]);
+              limit.by = this.raw(byStart, this.pos).trim();
+              if (!limit.by) {
+                this.error(this.peek(), "pivot.parse.aggregate");
+              }
+            }
+            if (this.peekWord("WITHIN")) {
+              this.next();
+              this.expectWord("PARENT");
+              limit.withinParent = true;
+            }
+            if (this.peekWord("OTHERS")) {
+              this.next();
+              if (this.peekWord("AS")) {
+                this.next();
+                const label = this.next();
+                if (label.type !== "string") {
+                  this.error(label, "pivot.parse.expected", { expected: "a quoted label", found: this.describe(label) });
+                }
+                limit.others = { mode: "label", label: label.value };
+              } else if (this.peekWord("HIDE")) {
+                this.next();
+                limit.others = { mode: "hide", label: null };
+              } else {
+                this.error(this.peek(), "pivot.parse.expected", { expected: "AS or HIDE", found: this.describe(this.peek()) });
+              }
+            }
+            continue;
+          }
+          break;
+        }
+        return { expr, alias: boundary.alias || null, nulls, limit };
+      }
+
+      parseOrderItems(stopPuncts) {
+        const items = [];
+        while (!this.atEnd() && !this.peekPunct(")")) {
+          const start = this.pos;
+          this.takeUntil([], stopPuncts || [",", ")"]);
+          let end = this.pos;
+          if (end <= start) {
+            this.error(this.peek(), "pivot.parse.expected", { expected: "an expression in ORDER BY", found: this.describe(this.peek()) });
+          }
+          let direction = "asc";
+          let nulls = null;
+          if (end - start >= 2 && this.isWord(this.tokens[end - 2], "NULLS")
+            && (this.isWord(this.tokens[end - 1], "FIRST") || this.isWord(this.tokens[end - 1], "LAST"))) {
+            nulls = String(this.tokens[end - 1].value).toLowerCase();
+            end -= 2;
+          }
+          if (end > start && (this.isWord(this.tokens[end - 1], "ASC") || this.isWord(this.tokens[end - 1], "DESC"))) {
+            direction = String(this.tokens[end - 1].value).toLowerCase();
+            end -= 1;
+          }
+          const expr = this.raw(start, end).trim();
+          if (!expr) {
+            this.error(this.tokens[start], "pivot.parse.expected", { expected: "an expression in ORDER BY", found: this.describe(this.tokens[start]) });
+          }
+          items.push({ expr, direction, nulls });
+          if (this.peekPunct(",")) {
+            this.next();
+          } else {
+            break;
+          }
+        }
+        return items;
+      }
+
+      parseAxis(kind) {
+        this.expectPunct("(");
+        this.expectWord("SELECT");
+        const dims = [];
+        while (true) {
+          dims.push(this.parseDimension());
+          if (this.peekPunct(",")) {
+            this.next();
+            continue;
+          }
+          break;
+        }
+        if (this.peekWord("FROM")) {
+          this.error(this.peek(), "pivot.parse.fromInsideAxis");
+        }
+        let where = null;
+        if (this.peekWord("WHERE")) {
+          this.next();
+          const start = this.pos;
+          this.takeUntil(["ORDER"], [")"]);
+          where = this.raw(start, this.pos).trim();
+          if (!where) {
+            this.error(this.peek(), "pivot.parse.expected", { expected: "a predicate after WHERE", found: this.describe(this.peek()) });
+          }
+        }
+        let orderBy = [];
+        if (this.peekWord("ORDER")) {
+          this.next();
+          this.expectWord("BY");
+          orderBy = this.parseOrderItems([",", ")"]);
+        }
+        this.expectPunct(")");
+        return { dims, where, orderBy, kind };
+      }
+
+      parseAggregate(expr, token) {
+        const tokens = new SqlLexer(expr).tokenize();
+        const first = tokens[0];
+        if (!first || (first.type !== "identifier" && first.type !== "keyword")) {
+          this.error(token, "pivot.parse.aggregate");
+        }
+        const fn = String(first.value).toUpperCase();
+        if (!PivotEngine.AGGREGATES[fn]) {
+          throw new SqlValidationError(
+            I18n.t("pivot.validation.unsupportedAggregate", { name: fn }),
+            { hint: I18n.t("pivot.validation.unsupportedAggregateHint") },
+          );
+        }
+        if (!this.isPunct(tokens[1], "(")) {
+          this.error(token, "pivot.parse.aggregate");
+        }
+        let index = 2;
+        let distinct = false;
+        if (this.isWord(tokens[index], "DISTINCT")) {
+          distinct = true;
+          index += 1;
+        }
+        let star = false;
+        let arg = null;
+        let close = -1;
+        if (this.isPunct(tokens[index], "*")) {
+          star = true;
+          index += 1;
+          if (!this.isPunct(tokens[index], ")")) {
+            this.error(token, "pivot.parse.aggregate");
+          }
+          close = index;
+        } else {
+          const argStart = index;
+          let depth = 1;
+          for (; index < tokens.length; index += 1) {
+            if (this.isPunct(tokens[index], "(")) {
+              depth += 1;
+            } else if (this.isPunct(tokens[index], ")")) {
+              depth -= 1;
+              if (depth === 0) {
+                close = index;
+                break;
+              }
+            }
+          }
+          if (close < 0 || close === argStart) {
+            this.error(token, "pivot.parse.aggregate");
+          }
+          arg = expr.slice(tokens[argStart].start, tokens[close].start).trim();
+        }
+        const trailing = tokens[close + 1];
+        if (trailing && trailing.type !== "eof") {
+          this.error(token, "pivot.parse.aggregate");
+        }
+        if (star && fn !== "COUNT") {
+          throw new SqlValidationError(
+            I18n.t("pivot.validation.starOnlyCount", { name: fn }),
+            { hint: I18n.t("pivot.validation.starOnlyCountHint") },
+          );
+        }
+        if (star && distinct) {
+          throw new SqlValidationError(I18n.t("pivot.validation.distinctStar"), {});
+        }
+        return { expr, fn, distinct, star, arg, alias: null, show: null, fill: null, argIndex: null };
+      }
+
+      parseMeasures() {
+        const measures = [];
+        while (!this.atEnd() && !this.peekPunct(";")) {
+          if (this.peekWord("HAVING") || this.peekWord("TOTALS") || this.peekWord("FILL") || this.peekWord("MEASURES")) {
+            break;
+          }
+          const start = this.pos;
+          this.takeUntil(["SHOW", "AS", "FILL", "HAVING", "TOTALS", "MEASURES"], [",", ";"]);
+          const expr = this.raw(start, this.pos).trim();
+          if (!expr) {
+            this.error(this.peek(), "pivot.parse.aggregate");
+          }
+          const measure = this.parseAggregate(expr, this.tokens[start]);
+          if (this.peekWord("SHOW")) {
+            this.next();
+            this.expectWord("AS");
+            const modeToken = this.next();
+            if (!this.isWord(modeToken, "PCT_OF")) {
+              this.error(modeToken, "pivot.parse.expected", { expected: "PCT_OF", found: this.describe(modeToken) });
+            }
+            const part = this.next();
+            const mode = String(part.value).toUpperCase();
+            if (!["ROW", "COLUMN", "GRAND", "PARENT_ROW", "PARENT_COLUMN"].includes(mode)) {
+              this.error(part, "pivot.parse.expected", { expected: "ROW, COLUMN, GRAND, PARENT_ROW or PARENT_COLUMN", found: this.describe(part) });
+            }
+            measure.show = `PCT_OF ${mode}`;
+          }
+          if (this.peekWord("AS")) {
+            this.next();
+            const alias = this.next();
+            if (alias.type !== "identifier" && alias.type !== "keyword") {
+              this.error(alias, "pivot.parse.expected", { expected: "a measure alias", found: this.describe(alias) });
+            }
+            measure.alias = alias.value;
+          }
+          let globalFill = false;
+          if (this.peekWord("FILL")) {
+            const after = this.peek(1);
+            if (this.isWord(after, "EMPTY") || this.isWord(after, "NULLVALUE")) {
+              globalFill = true;
+            } else {
+              this.next();
+              measure.fill = this.parseFillValue();
+            }
+          }
+          measures.push(measure);
+          if (globalFill) {
+            break;
+          }
+          if (this.peekPunct(",")) {
+            this.next();
+            continue;
+          }
+          break;
+        }
+        if (measures.length === 0) {
+          this.error(this.peek(), "pivot.parse.aggregate");
+        }
+        return measures;
+      }
+
+      parseFillValue() {
+        const token = this.next();
+        if (token.type === "number" || token.type === "string") {
+          return { value: token.value, defined: true };
+        }
+        if (this.isWord(token, "NULL")) {
+          return { value: null, defined: true };
+        }
+        this.error(token, "pivot.parse.value");
+        return { value: null, defined: false };
+      }
+
+      parseTotalOpts() {
+        const opts = { position: "after", label: null, compute: "source", only: null };
+        let any = false;
+        while (true) {
+          if (this.peekWord("POSITION")) {
+            this.next();
+            const token = this.next();
+            if (this.isWord(token, "BEFORE")) {
+              opts.position = "before";
+            } else if (this.isWord(token, "AFTER")) {
+              opts.position = "after";
+            } else {
+              this.error(token, "pivot.parse.expected", { expected: "BEFORE or AFTER", found: this.describe(token) });
+            }
+            any = true;
+            continue;
+          }
+          if (this.peekWord("AS")) {
+            this.next();
+            const label = this.next();
+            if (label.type !== "string") {
+              this.error(label, "pivot.parse.expected", { expected: "a quoted label", found: this.describe(label) });
+            }
+            opts.label = label.value;
+            any = true;
+            continue;
+          }
+          if (this.peekWord("COMPUTE")) {
+            this.next();
+            const token = this.next();
+            if (this.isWord(token, "SOURCE")) {
+              opts.compute = "source";
+            } else if (this.isWord(token, "CELLS")) {
+              opts.compute = "cells";
+            } else {
+              this.error(token, "pivot.parse.expected", { expected: "SOURCE or CELLS", found: this.describe(token) });
+            }
+            any = true;
+            continue;
+          }
+          if (this.peekWord("ONLY")) {
+            this.next();
+            const only = [];
+            while (true) {
+              if (this.peekWord("GRAND") || this.peekWord("SUBTOTAL") || this.peekWord("ROWS")
+                || this.peekWord("COLUMNS") || this.peekWord("INCLUDE") || this.peekWord("EXCLUDE")
+                || this.peekWord("POSITION") || this.peekWord("COMPUTE") || this.peekWord("FILL")
+                || this.peekWord("MEASURES")) {
+                break;
+              }
+              const token = this.next();
+              if (token.type !== "identifier" && token.type !== "keyword") {
+                this.error(token, "pivot.parse.expected", { expected: "a measure alias", found: this.describe(token) });
+              }
+              only.push(token.value);
+              if (this.peekPunct(",")) {
+                this.next();
+                continue;
+              }
+              break;
+            }
+            opts.only = only;
+            any = true;
+            continue;
+          }
+          break;
+        }
+        return any ? opts : null;
+      }
+
+      parseTotals() {
+        const totals = { mode: "none", rows: [], columns: [], hidden: "include", allOpts: null };
+        if (this.peekWord("NONE")) {
+          this.next();
+          return totals;
+        }
+        if (this.peekWord("ALL")) {
+          this.next();
+          totals.mode = "all";
+          totals.allOpts = this.parseTotalOpts();
+          return totals;
+        }
+        totals.mode = "axes";
+        let axis = null;
+        while (!this.atEnd() && !this.peekPunct(";")) {
+          if (this.peekWord("ROWS") || this.peekWord("COLUMNS")) {
+            axis = String(this.next().value).toLowerCase();
+            continue;
+          }
+          if (this.peekWord("INCLUDE") || this.peekWord("EXCLUDE")) {
+            const token = this.next();
+            this.expectWord("HIDDEN");
+            totals.hidden = this.isWord(token, "INCLUDE") ? "include" : "exclude";
+            break;
+          }
+          if (this.peekWord("FILL") || this.peekWord("MEASURES")) {
+            break;
+          }
+          if (!axis) {
+            this.error(this.peek(), "pivot.parse.expected", { expected: "ROWS or COLUMNS", found: this.describe(this.peek()) });
+          }
+          if (this.peekWord("GRAND")) {
+            this.next();
+            const opts = this.parseTotalOpts() || {};
+            totals[axis].push(Object.assign({ kind: "grand", by: null }, opts));
+            continue;
+          }
+          if (this.peekWord("SUBTOTAL")) {
+            this.next();
+            this.expectWord("BY");
+            const by = this.next();
+            if (by.type !== "identifier" && by.type !== "keyword") {
+              this.error(by, "pivot.parse.expected", { expected: "a dimension", found: this.describe(by) });
+            }
+            const opts = this.parseTotalOpts() || {};
+            totals[axis].push(Object.assign({ kind: "subtotal", by: by.value }, opts));
+            continue;
+          }
+          this.error(this.peek(), "pivot.parse.expected", { expected: "GRAND, SUBTOTAL, INCLUDE or EXCLUDE", found: this.describe(this.peek()) });
+        }
+        return totals;
+      }
+
+      parseFill() {
+        const fill = { empty: null, nullValue: null };
+        if (this.peekWord("EMPTY") || this.peekWord("NULLVALUE")) {
+          while (true) {
+            if (this.peekWord("EMPTY")) {
+              this.next();
+              fill.empty = this.parseFillValue();
+            } else if (this.peekWord("NULLVALUE")) {
+              this.next();
+              fill.nullValue = this.parseFillValue();
+            } else {
+              break;
+            }
+            if (this.peekPunct(",")) {
+              this.next();
+              continue;
+            }
+            break;
+          }
+        } else {
+          const value = this.parseFillValue();
+          fill.empty = value;
+          fill.nullValue = value;
+        }
+        return fill;
+      }
+
+      parseMeasuresOn() {
+        this.expectWord("MEASURES");
+        this.expectWord("ON");
+        const token = this.next();
+        if (this.isWord(token, "ROWS")) {
+          return "rows";
+        }
+        if (this.isWord(token, "COLUMNS")) {
+          return "columns";
+        }
+        this.error(token, "pivot.parse.expected", { expected: "ROWS or COLUMNS", found: this.describe(token) });
+        return "columns";
+      }
+
+      parseSource() {
+        const start = this.pos;
+        this.takeUntil(["VALUES"], []);
+        const source = this.raw(start, this.pos).trim();
+        if (!source) {
+          this.error(this.peek(), "pivot.parse.expected", { expected: "a source after FROM", found: this.describe(this.peek()) });
+        }
+        return source;
+      }
+
+      parse() {
+        this.expectWord("PIVOT");
+        const row = this.parseAxis("row");
+        this.expectWord("BY");
+        const col = this.parseAxis("col");
+        this.expectWord("FROM");
+        const source = this.parseSource();
+        this.expectWord("VALUES");
+        const values = this.parseMeasures();
+        let having = null;
+        if (this.peekWord("HAVING")) {
+          this.next();
+          const start = this.pos;
+          this.takeUntil(["TOTALS", "FILL", "MEASURES"], [";"]);
+          having = this.raw(start, this.pos).trim();
+          if (!having) {
+            this.error(this.peek(), "pivot.parse.expected", { expected: "a predicate after HAVING", found: this.describe(this.peek()) });
+          }
+        }
+        let totals = { mode: "none", rows: [], columns: [], hidden: "include", allOpts: null };
+        if (this.peekWord("TOTALS")) {
+          this.next();
+          totals = this.parseTotals();
+        }
+        let fill = { empty: null, nullValue: null };
+        if (this.peekWord("FILL")) {
+          this.next();
+          fill = this.parseFill();
+        }
+        let measuresOn = "columns";
+        if (this.peekWord("MEASURES")) {
+          measuresOn = this.parseMeasuresOn();
+        }
+        if (this.peekPunct(";")) {
+          this.next();
+        }
+        if (!this.atEnd()) {
+          this.error(this.peek(), "pivot.parse.expected", { expected: "the end of the query", found: this.describe(this.peek()) });
+        }
+        return { sql: this.sql, row, col, source, values, having, totals, fill, measuresOn };
+      }
+    }
+
+    /** Runs a PIVOT query: parse, validate, translate to SELECTs, execute and
+     *  build the pivot table. */
+    const PivotEngine = {
+      /** Aggregate functions the PIVOT post-processor knows. */
+      AGGREGATES: {
+        SUM: true, COUNT: true, AVG: true, MIN: true, MAX: true, MEDIAN: true, STDDEV: true,
+      },
+
+      /** Is this SQL a PIVOT query? Comments are skipped by the lexer. */
+      isPivot(sql) {
+        try {
+          const tokens = new SqlLexer(String(sql === undefined || sql === null ? "" : sql)).tokenize();
+          return tokens.length > 0 && tokens[0].type !== "eof" && String(tokens[0].value).toUpperCase() === "PIVOT";
+        } catch (err) {
+          return false;
+        }
+      },
+
+      /** Safe entry point, mirroring SqlEngine.runSafe. */
+      runSafe(sql, project, state, selections) {
+        try {
+          return { ok: true, result: PivotEngine.run(sql, project, state, selections) };
+        } catch (err) {
+          return { ok: false, error: err };
+        }
+      },
+
+      /** Runs a PIVOT query and returns { columns, rows, steps, ms }. */
+      run(sql, project, state, selections) {
+        const ast = new PivotParser(sql).parse();
+        PivotEngine.validate(ast);
+        const builder = new PivotBuilder(ast, project, state, selections);
+        return builder.build();
+      },
+
+      /** Columns of a PIVOT query, for tips and the insert menu. It runs the
+       *  query because the columns depend on the data of the axes. */
+      columnsSafe(sql, project, state, selections) {
+        const outcome = PivotEngine.runSafe(sql, project, state, selections);
+        return outcome.ok
+          ? { ok: true, columns: outcome.result.columns }
+          : { ok: false, error: outcome.error };
+      },
+
+      /** Fields that a PIVOT query returns without reading a single row: the
+       *  dimensions of the row axis (and the measure column, when the
+       *  measures go on the rows). The columns of the result depend on the
+       *  members of the column axis, so they cannot be known without running
+       *  the query; tips use this instead of paying that cost. */
+      staticColumns(sql) {
+        try {
+          const ast = new PivotParser(sql).parse();
+          PivotEngine.validate(ast);
+          const columns = ast.row.dims.map((dim) => dim.alias || dim.expr);
+          if (ast.measuresOn === "rows") {
+            columns.push(I18n.t("pivot.measureColumn"));
+          }
+          return { ok: true, columns };
+        } catch (err) {
+          return { ok: false, error: err };
+        }
+      },
+
+      /** Parameters of a PIVOT query for the drop-down bar. The SQL parser does
+       *  not understand PIVOT, so the param tokens are read directly. */
+      analyzeParams(sql, project, state) {
+        const ejecucion = SqlParams.stateOf(state);
+        const params = [];
+        try {
+          const tokens = new SqlLexer(String(sql)).tokenize();
+          tokens.forEach((token) => {
+            if (token.type !== "param") {
+              return;
+            }
+            const info = SqlParams.describe(token.value);
+            const base = {
+              raw: token.value,
+              source: info.source,
+              label: info.label,
+              start: token.start,
+              end: token.end,
+              line: token.line,
+              col: token.col,
+              listContext: false,
+              header: info.label || info.source || "",
+            };
+            try {
+              const options = SqlParams.optionsOf(token.value, project, ejecucion, false);
+              params.push(Object.assign(base, {
+                kind: options.info.kind,
+                options: options.options,
+                defaultIndex: options.defaultIndex,
+                error: "",
+                hint: "",
+              }));
+            } catch (err) {
+              params.push(Object.assign(base, {
+                kind: "invalid",
+                options: [],
+                defaultIndex: 0,
+                error: err.message,
+                hint: err.hint || "",
+              }));
+            }
+          });
+          return { ok: true, params, error: null };
+        } catch (err) {
+          return { ok: false, error: err, params: [] };
+        }
+      },
+
+      /** Semantic checks that the grammar alone cannot express. */
+      validate(ast) {
+        [ast.row, ast.col].forEach((axis) => {
+          if (!axis.dims || axis.dims.length === 0) {
+            throw new SqlValidationError(I18n.t("pivot.validation.axisEmpty"), {});
+          }
+          axis.dims.forEach((dim, index) => {
+            if (PivotEngine.hasAggregateCall(dim.expr)) {
+              throw new SqlValidationError(
+                I18n.t("pivot.validation.aggregateDimension", { expression: dim.expr }),
+                { hint: I18n.t("pivot.validation.aggregateDimensionHint") },
+              );
+            }
+            if (dim.limit) {
+              if (index !== axis.dims.length - 1) {
+                throw new SqlValidationError(
+                  I18n.t("pivot.validation.limitLast", { dimension: dim.alias || dim.expr }),
+                  { hint: I18n.t("pivot.validation.limitLastHint") },
+                );
+              }
+              if (dim.limit.withinParent && index === 0) {
+                throw new SqlValidationError(
+                  I18n.t("pivot.validation.withinParentFirst", { dimension: dim.alias || dim.expr }),
+                  { hint: I18n.t("pivot.validation.withinParentFirstHint") },
+                );
+              }
+              if (dim.limit.by && !PivotEngine.hasAggregateCall(dim.limit.by)) {
+                throw new SqlValidationError(
+                  I18n.t("pivot.validation.limitByAggregate", { expression: dim.limit.by }),
+                  {},
+                );
+              }
+            }
+          });
+        });
+        const aliases = new Map();
+        ast.values.forEach((measure) => {
+          if (measure.alias) {
+            const key = measure.alias.toLowerCase();
+            if (aliases.has(key)) {
+              throw new SqlValidationError(I18n.t("pivot.validation.duplicateMeasure", { name: measure.alias }), {});
+            }
+            aliases.set(key, measure);
+          }
+          if (measure.star && measure.fn !== "COUNT") {
+            throw new SqlValidationError(I18n.t("pivot.validation.starOnlyCount", { name: measure.fn }), {});
+          }
+          if (measure.distinct && measure.star) {
+            throw new SqlValidationError(I18n.t("pivot.validation.distinctStar"), {});
+          }
+        });
+        const checkTotals = (axis, items) => {
+          items.forEach((item) => {
+            if (item.kind === "subtotal") {
+              const index = PivotEngine.dimensionIndex(axis, item.by);
+              if (index < 0) {
+                throw new SqlValidationError(I18n.t("pivot.validation.unknownDimension", { name: item.by }), {});
+              }
+              if (index === axis.dims.length - 1) {
+                throw new SqlValidationError(
+                  I18n.t("pivot.validation.subtotalLast", { dimension: item.by }),
+                  { hint: I18n.t("pivot.validation.subtotalLastHint") },
+                );
+              }
+            }
+            if (item.only) {
+              item.only.forEach((name) => {
+                const found = ast.values.some((measure) => PivotEngine.measureName(measure).toLowerCase() === String(name).toLowerCase());
+                if (!found) {
+                  throw new SqlValidationError(I18n.t("pivot.validation.onlyUnknown", { name }), {});
+                }
+              });
+            }
+            if (item.compute === "cells") {
+              const allowed = item.only
+                ? ast.values.filter((measure) => item.only.some((name) => String(name).toLowerCase() === PivotEngine.measureName(measure).toLowerCase()))
+                : ast.values;
+              allowed.forEach((measure) => {
+                if (measure.show || measure.distinct || !["SUM", "COUNT", "MIN", "MAX"].includes(measure.fn)) {
+                  throw new SqlValidationError(
+                    I18n.t("pivot.validation.computeCells", { name: PivotEngine.measureName(measure) }),
+                    { hint: I18n.t("pivot.validation.computeCellsHint") },
+                  );
+                }
+              });
+            }
+          });
+        };
+        checkTotals(ast.row, ast.totals.rows);
+        checkTotals(ast.col, ast.totals.columns);
+        // TOTALS ALL carries its options once for every generated total.
+        if (ast.totals.mode === "all" && ast.totals.allOpts) {
+          const item = ast.totals.allOpts;
+          if (item.only) {
+            item.only.forEach((name) => {
+              const found = ast.values.some((measure) => PivotEngine.measureName(measure).toLowerCase() === String(name).toLowerCase());
+              if (!found) {
+                throw new SqlValidationError(I18n.t("pivot.validation.onlyUnknown", { name }), {});
+              }
+            });
+          }
+          if (item.compute === "cells") {
+            const allowed = item.only
+              ? ast.values.filter((measure) => item.only.some((name) => String(name).toLowerCase() === PivotEngine.measureName(measure).toLowerCase()))
+              : ast.values;
+            allowed.forEach((measure) => {
+              if (measure.show || measure.distinct || !["SUM", "COUNT", "MIN", "MAX"].includes(measure.fn)) {
+                throw new SqlValidationError(
+                  I18n.t("pivot.validation.computeCells", { name: PivotEngine.measureName(measure) }),
+                  { hint: I18n.t("pivot.validation.computeCellsHint") },
+                );
+              }
+            });
+          }
+        }
+      },
+
+      /** Does the expression contain an aggregate call? Dimensions are not
+       *  allowed to aggregate. */
+      hasAggregateCall(expr) {
+        return /\b(SUM|COUNT|AVG|MIN|MAX|MEDIAN|STDDEV)\s*\(/i.test(String(expr || ""));
+      },
+
+      /** Position of a dimension in an axis, by alias or expression. */
+      dimensionIndex(axis, name) {
+        const wanted = String(name || "").toLowerCase();
+        return axis.dims.findIndex((dim, index) => {
+          const alias = dim.alias ? String(dim.alias).toLowerCase() : "";
+          const expr = String(dim.expr).toLowerCase();
+          return alias === wanted || expr === wanted || String(index + 1) === wanted;
+        });
+      },
+
+      /** Visible name of a measure. */
+      measureName(measure) {
+        return measure.alias || measure.expr;
+      },
+
+      /** Key of a tuple of values; JSON keeps types and nulls apart. */
+      keyOf(values) {
+        return JSON.stringify((values || []).map((value) => (value === undefined ? null : value)));
+      },
+
+      /** Key of the first `level` values of a tuple. */
+      prefixKey(values, level) {
+        return PivotEngine.keyOf((values || []).slice(0, level));
+      },
+
+      /** Formatted value of a dimension, honouring NULLS AS and the OTHERS
+       *  sentinel. */
+      formatDim(dim, value) {
+        if (PivotEngine.isOthersValue(value)) {
+          return I18n.t("pivot.others");
+        }
+        if (value === null || value === undefined) {
+          return dim && dim.nulls && dim.nulls.mode === "label" && dim.nulls.label
+            ? dim.nulls.label
+            : I18n.t("pivot.null");
+        }
+        return Utils.formatValue(value);
+      },
+
+      /** Sentinel used for the synthetic OTHERS member. */
+      OTHERS: { pivotOthers: true },
+
+      isOthersValue(value) {
+        return Boolean(value && typeof value === "object" && value.pivotOthers === true);
+      },
+    };
+
+    /** Builds the pivot table from the detail rows and the member queries. */
+    class PivotBuilder {
+      constructor(ast, project, state, selections) {
+        this.ast = ast;
+        this.project = project;
+        this.selections = selections;
+        this.steps = [];
+        const base = state || SqlViews.newState();
+        // Share stack, cache and names so views keep being cached and circular
+        // views keep being detected; keep a private clock so SqlViews.materialize
+        // can add the total time once.
+        // Copy the caller's state so caches, cycles and script results are
+        // shared, but keep a private clock for the time of this PIVOT query.
+        this.ejecucion = Object.assign({}, base, { ms: 0 });
+        this.detail = [];
+        this.rowAxis = null;
+        this.colAxis = null;
+        this.enriched = [];
+        this.cellMap = new Map();
+      }
+
+      /** Runs one generated SELECT and records its step. */
+      query(sql, labelKey) {
+        const label = I18n.t(labelKey);
+        const outcome = SqlEngine.runSafe(sql, this.project, this.ejecucion, this.selections);
+        if (!outcome.ok) {
+          const error = outcome.error;
+          const message = I18n.t("pivot.runtime.queryFailed", { phase: label, message: error.message });
+          const wrapped = error instanceof SqlRuntimeError
+            ? new SqlRuntimeError(message, { hint: error.hint || "" })
+            : new SqlValidationError(message, { hint: error.hint || "" });
+          wrapped.snippet = error.snippet || "";
+          throw wrapped;
+        }
+        this.steps.push({ label, rows: outcome.result.rows.length, ms: outcome.result.ms });
+        return outcome.result;
+      }
+
+      /** SQL condition that removes the NULLs asked with NULLS EXCLUDE. */
+      excludeConditions() {
+        const conditions = [];
+        [this.ast.row, this.ast.col].forEach((axis) => {
+          axis.dims.forEach((dim) => {
+            if (dim.nulls && dim.nulls.mode === "exclude") {
+              conditions.push(`(${dim.expr}) IS NOT NULL`);
+            }
+          });
+        });
+        return conditions;
+      }
+
+      baseFilter() {
+        const parts = [];
+        if (this.ast.row.where) {
+          parts.push(`(${this.ast.row.where})`);
+        }
+        this.excludeConditions().forEach((condition) => parts.push(condition));
+        return parts.length ? parts.join(" AND ") : "";
+      }
+
+      columnFilter() {
+        const parts = [];
+        // The row WHERE is the base filter of the whole query: it also limits
+        // which column members exist. The BY WHERE is an extra member filter.
+        const base = this.baseFilter();
+        if (base) {
+          parts.push(`(${base})`);
+        }
+        if (this.ast.col.where) {
+          parts.push(`(${this.ast.col.where})`);
+        }
+        return parts.length ? parts.join(" AND ") : "";
+      }
+
+      whereClause(filter) {
+        return filter ? ` WHERE ${filter}` : "";
+      }
+
+      /** Resolves an ORDER BY expression: a dimension alias or a measure
+       *  alias becomes its expression. */
+      resolveOrderExpr(expr) {
+        const text = String(expr).trim();
+        const lower = text.toLowerCase();
+        const dim = this.ast.row.dims.concat(this.ast.col.dims)
+          .find((candidate) => candidate.alias && String(candidate.alias).toLowerCase() === lower);
+        if (dim) {
+          return dim.expr;
+        }
+        const measure = this.ast.values
+          .find((candidate) => candidate.alias && String(candidate.alias).toLowerCase() === lower);
+        return measure ? measure.expr : text;
+      }
+
+      orderSql(items) {
+        return items.map((item) => {
+          let text = this.resolveOrderExpr(item.expr);
+          if (item.direction === "desc") {
+            text += " DESC";
+          } else if (item.direction === "asc") {
+            text += " ASC";
+          }
+          if (item.nulls === "first" || item.nulls === "last") {
+            text += ` NULLS ${item.nulls.toUpperCase()}`;
+          }
+          return text;
+        }).join(", ");
+      }
+
+      /** Runs the detail SELECT: dimensions and measure arguments, with no
+       *  GROUP BY. The post-processor aggregates these rows. */
+      loadDetail() {
+        const selects = [];
+        const rowCount = this.ast.row.dims.length;
+        const colCount = this.ast.col.dims.length;
+        this.ast.row.dims.forEach((dim, index) => selects.push(`${dim.expr} AS __pr${index}`));
+        this.ast.col.dims.forEach((dim, index) => selects.push(`${dim.expr} AS __pc${index}`));
+        let argSlot = 0;
+        this.ast.values.forEach((measure) => {
+          if (!measure.star && measure.arg) {
+            measure.argIndex = argSlot;
+            selects.push(`${measure.arg} AS __pa${argSlot}`);
+            argSlot += 1;
+          }
+        });
+        const sql = `SELECT ${selects.join(", ")} FROM ${this.ast.source}${this.whereClause(this.baseFilter())}`;
+        const result = this.query(sql, "pivot.step.detail");
+        this.detail = result.rows.map((row) => ({
+          r: row.slice(0, rowCount),
+          c: row.slice(rowCount, rowCount + colCount),
+          a: row.slice(rowCount + colCount),
+        }));
+      }
+
+      /** Runs the SELECT that lists the column members. The WHERE of the BY
+       *  axis only chooses members; it does not filter the detail rows. */
+      loadColumnMembers() {
+        const selects = [];
+        this.ast.col.dims.forEach((dim, index) => selects.push(`${dim.expr} AS __pc${index}`));
+        const rankSlots = [];
+        this.ast.col.dims.forEach((dim, index) => {
+          if (dim.limit) {
+            const rank = dim.limit.by || this.ast.values[0].expr;
+            selects.push(`${rank} AS __rank${index}`);
+            rankSlots[index] = selects.length - 1;
+          }
+        });
+        const groups = this.ast.col.dims.map((dim) => dim.expr).join(", ");
+        const order = this.ast.col.orderBy.length ? ` ORDER BY ${this.orderSql(this.ast.col.orderBy)}` : "";
+        const sql = `SELECT ${selects.join(", ")} FROM ${this.ast.source}${this.whereClause(this.columnFilter())} GROUP BY ${groups}${order}`;
+        const result = this.query(sql, "pivot.step.columns");
+        const colCount = this.ast.col.dims.length;
+        return result.rows.map((row) => ({
+          values: row.slice(0, colCount),
+          ranks: this.ast.col.dims.map((dim, index) => (dim.limit ? row[rankSlots[index]] : null)),
+          order: this.ast.col.orderBy.length > 0 ? row : null,
+        }));
+      }
+
+      /** Runs the SELECT that orders the row members after aggregation. */
+      loadRowOrder() {
+        if (this.ast.row.orderBy.length === 0) {
+          return null;
+        }
+        const selects = this.ast.row.dims.map((dim, index) => `${dim.expr} AS __pr${index}`);
+        const groups = this.ast.row.dims.map((dim) => dim.expr).join(", ");
+        const sql = `SELECT ${selects.join(", ")} FROM ${this.ast.source}${this.whereClause(this.baseFilter())} GROUP BY ${groups} ORDER BY ${this.orderSql(this.ast.row.orderBy)}`;
+        const result = this.query(sql, "pivot.step.rowOrder");
+        return result.rows.map((row) => row.slice(0, this.ast.row.dims.length));
+      }
+
+      /** Runs the SELECT that returns the row members that pass HAVING. */
+      loadHaving() {
+        if (!this.ast.having) {
+          return null;
+        }
+        const selects = this.ast.row.dims.map((dim, index) => `${dim.expr} AS __pr${index}`);
+        const groups = this.ast.row.dims.map((dim) => dim.expr).join(", ");
+        const sql = `SELECT ${selects.join(", ")} FROM ${this.ast.source}${this.whereClause(this.baseFilter())} GROUP BY ${groups} HAVING ${this.ast.having}`;
+        const result = this.query(sql, "pivot.step.having");
+        return new Set(result.rows.map((row) => PivotEngine.keyOf(row.slice(0, this.ast.row.dims.length))));
+      }
+
+      /** Runs the SELECT that ranks the row members for TOP/BOTTOM. */
+      loadRowRanks() {
+        const limited = this.ast.row.dims.filter((dim) => dim.limit);
+        if (limited.length === 0) {
+          return null;
+        }
+        const selects = this.ast.row.dims.map((dim, index) => `${dim.expr} AS __pr${index}`);
+        const rankIndexes = [];
+        this.ast.row.dims.forEach((dim, index) => {
+          if (dim.limit) {
+            const rank = dim.limit.by || this.ast.values[0].expr;
+            selects.push(`${rank} AS __rank${index}`);
+            rankIndexes[index] = selects.length - 1;
+          }
+        });
+        const groups = this.ast.row.dims.map((dim) => dim.expr).join(", ");
+        const sql = `SELECT ${selects.join(", ")} FROM ${this.ast.source}${this.whereClause(this.baseFilter())} GROUP BY ${groups}`;
+        const result = this.query(sql, "pivot.step.ranking");
+        const map = new Map();
+        result.rows.forEach((row) => {
+          const values = row.slice(0, this.ast.row.dims.length);
+          const ranks = this.ast.row.dims.map((dim, index) => (dim.limit ? row[rankIndexes[index]] : null));
+          map.set(PivotEngine.keyOf(values), ranks);
+        });
+        return map;
+      }
+
+      /** Builds one axis: members, labels, NULL handling, TOP/OTHERS and
+       *  order. `rawMembers` are { values, ranks } objects. */
+      buildAxis(kind, axis, rawMembers, orderKeys, havingKeys) {
+        const dims = axis.dims;
+        const dimCount = dims.length;
+        const rawMap = new Map();
+        rawMembers.forEach((raw) => {
+          const key = PivotEngine.keyOf(raw.values);
+          if (!rawMap.has(key)) {
+            rawMap.set(key, {
+              values: raw.values.slice(),
+              key,
+              ranks: raw.ranks ? raw.ranks.slice() : [],
+              order: raw.order || null,
+              hidden: false,
+              others: false,
+            });
+          }
+        });
+        const orderIndex = new Map();
+        (orderKeys || []).forEach((key, index) => orderIndex.set(PivotEngine.keyOf(key), index));
+        rawMap.forEach((member) => {
+          member.orderIndex = orderIndex.has(member.key) ? orderIndex.get(member.key) : null;
+          dims.forEach((dim, index) => {
+            if (dim.nulls && dim.nulls.mode === "hide" && (member.values[index] === null || member.values[index] === undefined)) {
+              member.hidden = true;
+            }
+          });
+          if (havingKeys && !havingKeys.has(member.key)) {
+            member.hidden = true;
+          }
+        });
+
+        const limitDim = dims.findIndex((dim) => dim.limit);
+        const members = [];
+        const rawToDisplay = new Map();
+        const byKey = new Map();
+        const valuesByKey = new Map();
+        const addMember = (member) => {
+          members.push(member);
+          byKey.set(member.key, member);
+          valuesByKey.set(member.key, member.values);
+          member.labels = dims.map((dim, index) => {
+            if (member.others && index === limitDim) {
+              return dim.limit.others && dim.limit.others.label
+                ? dim.limit.others.label
+                : I18n.t("pivot.others");
+            }
+            if (member.others && index > limitDim) {
+              return "";
+            }
+            return PivotEngine.formatDim(dim, member.values[index]);
+          });
+        };
+
+        if (limitDim < 0) {
+          rawMap.forEach((member) => {
+            const display = Object.assign({}, member, { values: member.values.slice(), labels: null });
+            addMember(display);
+            rawToDisplay.set(member.key, display);
+          });
+        } else {
+          const dim = dims[limitDim];
+          const groups = new Map();
+          rawMap.forEach((member) => {
+            const parent = dim.limit.withinParent
+              ? PivotEngine.prefixKey(member.values, limitDim)
+              : "";
+            if (!groups.has(parent)) {
+              groups.set(parent, []);
+            }
+            groups.get(parent).push(member);
+          });
+          groups.forEach((group) => {
+            const sorted = group.slice().sort((a, b) => {
+              const rankA = a.ranks[limitDim];
+              const rankB = b.ranks[limitDim];
+              const rankOrder = this.compareRank(rankA, rankB, dim.limit.kind);
+              return rankOrder !== 0 ? rankOrder : this.compareMembers(dims, a.values, b.values);
+            });
+            const selected = sorted.slice(0, dim.limit.n);
+            const rest = sorted.slice(dim.limit.n);
+            selected.forEach((member) => {
+              const display = {
+                values: member.values.slice(),
+                key: member.key,
+                ranks: member.ranks.slice(),
+                orderIndex: member.orderIndex,
+                hidden: member.hidden,
+                others: false,
+              };
+              addMember(display);
+              rawToDisplay.set(member.key, display);
+            });
+            if (rest.length === 0) {
+              return;
+            }
+            if (dim.limit.others && dim.limit.others.mode === "label") {
+              const othersValues = (rest[0].values || []).slice();
+              othersValues[limitDim] = PivotEngine.OTHERS;
+              for (let index = limitDim + 1; index < dimCount; index += 1) {
+                othersValues[index] = null;
+              }
+              const othersKey = PivotEngine.keyOf(othersValues);
+              const display = {
+                values: othersValues,
+                key: othersKey,
+                ranks: [],
+                orderIndex: null,
+                hidden: false,
+                others: true,
+              };
+              addMember(display);
+              rest.forEach((member) => rawToDisplay.set(member.key, display));
+            } else {
+              rest.forEach((member) => {
+                const display = {
+                  values: member.values.slice(),
+                  key: member.key,
+                  ranks: member.ranks.slice(),
+                  orderIndex: member.orderIndex,
+                  hidden: true,
+                  others: false,
+                };
+                addMember(display);
+                rawToDisplay.set(member.key, display);
+              });
+            }
+          });
+        }
+
+        const visible = members.filter((member) => !member.hidden);
+        visible.sort((a, b) => this.compareDisplayMembers(dims, a, b, orderKeys !== null, limitDim, axis));
+        return {
+          kind,
+          config: axis,
+          dims,
+          members,
+          visibleMembers: visible,
+          rawToDisplay,
+          byKey,
+          valuesByKey,
+          limitDim,
+          subtotalItems: [],
+          grandItem: null,
+          prefixKey: (values, level) => PivotEngine.prefixKey(values, level),
+          isHiddenKey: (key) => {
+            const member = byKey.get(key);
+            return member ? member.hidden : true;
+          },
+          mapRaw: (values) => {
+            const rawKey = PivotEngine.keyOf(values);
+            const display = rawToDisplay.get(rawKey);
+            if (display) {
+              return display.key;
+            }
+            const hiddenKey = `__hidden__${rawKey}`;
+            valuesByKey.set(hiddenKey, values.slice());
+            return hiddenKey;
+          },
+        };
+      }
+
+      compareRank(a, b, kind) {
+        const aNull = a === null || a === undefined;
+        const bNull = b === null || b === undefined;
+        if (aNull && bNull) {
+          return 0;
+        }
+        if (aNull) {
+          return 1;
+        }
+        if (bNull) {
+          return -1;
+        }
+        const comparison = SqlExecutor.compareValues(a, b);
+        return kind === "bottom" ? comparison : -comparison;
+      }
+
+      compareMembers(dims, a, b) {
+        for (let index = 0; index < dims.length; index += 1) {
+          const va = a[index];
+          const vb = b[index];
+          if (va === null || va === undefined || vb === null || vb === undefined) {
+            if ((va === null || va === undefined) && (vb === null || vb === undefined)) {
+              continue;
+            }
+            return (va === null || va === undefined) ? 1 : -1;
+          }
+          const comparison = SqlExecutor.compareValues(va, vb);
+          if (comparison !== 0) {
+            return comparison;
+          }
+        }
+        return 0;
+      }
+
+      /** Sorts visible members: explicit ORDER BY first, then ranking order,
+       *  then default ascending. OTHERS always goes last in its parent. */
+      compareDisplayMembers(dims, a, b, hasOrder, limitDim, axis) {
+        if (limitDim >= 0) {
+          const parentOrder = this.compareMembers(
+            dims.slice(0, limitDim),
+            a.values.slice(0, limitDim),
+            b.values.slice(0, limitDim),
+          );
+          if (parentOrder !== 0) {
+            return parentOrder;
+          }
+          if (a.others !== b.others) {
+            return a.others ? 1 : -1;
+          }
+          if (hasOrder && a.orderIndex !== null && b.orderIndex !== null && a.orderIndex !== b.orderIndex) {
+            return a.orderIndex - b.orderIndex;
+          }
+          const rankOrder = this.compareRank(a.ranks[limitDim], b.ranks[limitDim], dims[limitDim].limit.kind);
+          if (rankOrder !== 0) {
+            return rankOrder;
+          }
+        } else if (hasOrder) {
+          if (a.orderIndex !== null && b.orderIndex !== null) {
+            return a.orderIndex - b.orderIndex;
+          }
+          if (a.orderIndex !== null) {
+            return -1;
+          }
+          if (b.orderIndex !== null) {
+            return 1;
+          }
+        }
+        return this.compareMembers(dims, a.values, b.values);
+      }
+
+      /** Expands TOTALS ALL / axes into a flat list of total items per axis. */
+      prepareTotals(axisName, axis) {
+        const output = [];
+        const totals = this.ast.totals;
+        if (totals.mode === "none") {
+          return output;
+        }
+        if (totals.mode === "all") {
+          const defaults = { position: "after", label: null, compute: "source", only: null };
+          const base = totals.allOpts || {};
+          for (let index = 0; index < axis.dims.length - 1; index += 1) {
+            output.push(Object.assign({}, defaults, {
+              kind: "subtotal",
+              by: axis.dims[index].alias || axis.dims[index].expr,
+            }, base));
+          }
+          output.push(Object.assign({}, defaults, { kind: "grand", by: null }, base));
+          return output;
+        }
+        const source = axisName === "row" ? totals.rows : totals.columns;
+        return source.map((item) => Object.assign({
+          position: "after",
+          label: null,
+          compute: "source",
+          only: null,
+        }, item));
+      }
+
+      /** Adds the total configuration to an axis object. */
+      attachTotals(axisObject, axisName) {
+        const items = this.prepareTotals(axisName, axisObject.config);
+        const subtotals = [];
+        let grand = null;
+        items.forEach((item) => {
+          if (item.kind === "grand") {
+            if (!grand) {
+              grand = item;
+            }
+            return;
+          }
+          const index = PivotEngine.dimensionIndex(axisObject.config, item.by);
+          if (index < 0 || index >= axisObject.dims.length - 1) {
+            return;
+          }
+          const level = index + 1;
+          if (!subtotals.some((candidate) => candidate.level === level)) {
+            subtotals.push({ level, item });
+          }
+        });
+        subtotals.sort((a, b) => a.level - b.level);
+        axisObject.subtotalItems = subtotals;
+        axisObject.grandItem = grand;
+      }
+
+      /** Group members by the first `level` values, preserving their order. */
+      groupByPrefix(members, level) {
+        const groups = new Map();
+        members.forEach((member) => {
+          const key = PivotEngine.prefixKey(member.values, level);
+          if (!groups.has(key)) {
+            groups.set(key, []);
+          }
+          groups.get(key).push(member);
+        });
+        return Array.from(groups.values());
+      }
+
+      /** Label of a total. `{value}` is the member of the level and `{dim}` its
+       *  dimension name. */
+      totalLabel(item, kind, dims, values, level) {
+        const dim = level > 0 ? dims[level - 1] : null;
+        const value = level > 0 ? PivotEngine.formatDim(dim, values[level - 1]) : "";
+        const dimName = dim ? (dim.alias || dim.expr) : "";
+        if (item && item.label) {
+          return String(item.label)
+            .replace(/\{value\}/g, value)
+            .replace(/\{dim\}/g, dimName);
+        }
+        if (kind === "grand") {
+          return I18n.t("pivot.total.grand");
+        }
+        const base = I18n.t("pivot.total.subtotal");
+        return value ? `${value} ${base}` : base;
+      }
+
+      /** Row descriptors: leaves, subtotal rows and the grand total row. */
+      buildRowSpecs(axisObject) {
+        const dims = axisObject.dims;
+        const specs = [];
+        const grand = axisObject.grandItem;
+        const addGrand = () => specs.push({
+          kind: "grand",
+          cells: this.grandCells(dims.length, grand, dims),
+          item: grand,
+          measureIndex: null,
+        });
+        if (grand && grand.position === "before") {
+          addGrand();
+        }
+        const subtotalByLevel = new Map(axisObject.subtotalItems.map((entry) => [entry.level, entry.item]));
+        const render = (level, members) => {
+          if (level > dims.length) {
+            return;
+          }
+          this.groupByPrefix(members, level).forEach((group) => {
+            const item = subtotalByLevel.get(level) || null;
+            if (item && item.position === "before") {
+              specs.push(this.subtotalRowSpec(level, group, item, dims));
+            }
+            if (level === dims.length) {
+              group.forEach((member) => specs.push({
+                kind: "leaf",
+                key: member.key,
+                cells: member.labels.slice(),
+                member,
+                item: null,
+                measureIndex: null,
+              }));
+            } else {
+              render(level + 1, group);
+            }
+            if (item && item.position === "after") {
+              specs.push(this.subtotalRowSpec(level, group, item, dims));
+            }
+          });
+        };
+        render(1, axisObject.visibleMembers);
+        if (grand && grand.position !== "before") {
+          addGrand();
+        }
+        return specs;
+      }
+
+      grandCells(level, item, dims) {
+        const label = this.totalLabel(item, "grand", dims, [], 0);
+        const cells = [label];
+        for (let index = 1; index < dims.length; index += 1) {
+          cells.push("");
+        }
+        return cells;
+      }
+
+      subtotalRowSpec(level, group, item, dims) {
+        const values = group[0] ? group[0].values : [];
+        const cells = [];
+        for (let index = 0; index < level - 1; index += 1) {
+          cells.push(PivotEngine.formatDim(dims[index], values[index]));
+        }
+        cells.push(this.totalLabel(item, "subtotal", dims, values, level));
+        for (let index = level; index < dims.length; index += 1) {
+          cells.push("");
+        }
+        return {
+          kind: "subtotal",
+          cells,
+          item,
+          level,
+          prefix: PivotEngine.prefixKey(values, level),
+          measureIndex: null,
+        };
+      }
+
+      /** Column descriptors: leaves, subtotal columns and the grand total. */
+      buildColSpecs(axisObject) {
+        const dims = axisObject.dims;
+        const specs = [];
+        const grand = axisObject.grandItem;
+        const addGrand = () => specs.push({
+          kind: "grand",
+          key: "__grand",
+          label: this.totalLabel(grand, "grand", dims, [], 0),
+          item: grand,
+        });
+        if (grand && grand.position === "before") {
+          addGrand();
+        }
+        const subtotalByLevel = new Map(axisObject.subtotalItems.map((entry) => [entry.level, entry.item]));
+        const render = (level, members) => {
+          if (level > dims.length) {
+            return;
+          }
+          this.groupByPrefix(members, level).forEach((group) => {
+            const item = subtotalByLevel.get(level) || null;
+            if (item && item.position === "before") {
+              specs.push(this.subtotalColSpec(level, group, item, dims));
+            }
+            if (level === dims.length) {
+              group.forEach((member) => specs.push({
+                kind: "leaf",
+                key: member.key,
+                label: member.labels.join(" · "),
+                member,
+                item: null,
+              }));
+            } else {
+              render(level + 1, group);
+            }
+            if (item && item.position === "after") {
+              specs.push(this.subtotalColSpec(level, group, item, dims));
+            }
+          });
+        };
+        render(1, axisObject.visibleMembers);
+        if (grand && grand.position !== "before") {
+          addGrand();
+        }
+        return specs;
+      }
+
+      subtotalColSpec(level, group, item, dims) {
+        const values = group[0] ? group[0].values : [];
+        const parentLabels = [];
+        for (let index = 0; index < level; index += 1) {
+          parentLabels.push(PivotEngine.formatDim(dims[index], values[index]));
+        }
+        return {
+          kind: "subtotal",
+          key: `__subtotal__${PivotEngine.prefixKey(values, level)}`,
+          label: this.totalLabel(item, "subtotal", dims, values, level),
+          prefix: PivotEngine.prefixKey(values, level),
+          level,
+          item,
+        };
+      }
+
+      /** Builds the enriched detail rows: each row carries the display key of
+       *  its row and column members and whether each one is hidden. */
+      enrich() {
+        this.enriched = this.detail.map((row) => {
+          const rowKey = this.rowAxis.mapRaw(row.r);
+          const colKey = this.colAxis.mapRaw(row.c);
+          return Object.assign({}, row, {
+            rowKey,
+            colKey,
+            rowHidden: this.rowAxis.isHiddenKey(rowKey),
+            colHidden: this.colAxis.isHiddenKey(colKey),
+          });
+        });
+      }
+
+      /** Raw values of the cells of the visible leaves. */
+      buildCellMap() {
+        const rows = new Map();
+        this.enriched.forEach((row) => {
+          if (!rows.has(row.rowKey)) {
+            rows.set(row.rowKey, new Map());
+          }
+          const cols = rows.get(row.rowKey);
+          if (!cols.has(row.colKey)) {
+            cols.set(row.colKey, []);
+          }
+          cols.get(row.colKey).push(row);
+        });
+        this.cellIndex = rows;
+        this.cellMap = new Map();
+        this.rowAxis.visibleMembers.forEach((rowMember) => {
+          this.colAxis.visibleMembers.forEach((colMember) => {
+            const bucket = rows.get(rowMember.key) && rows.get(rowMember.key).get(colMember.key);
+            const key = `${rowMember.key}\u0000${colMember.key}`;
+            this.cellMap.set(key, {
+              rows: bucket || [],
+              empty: !bucket || bucket.length === 0,
+            });
+          });
+        });
+      }
+
+      cellBucket(rowKey, colKey) {
+        return this.cellMap.get(`${rowKey}\u0000${colKey}`) || { rows: [], empty: true };
+      }
+
+      /** Aggregates one measure over a list of enriched rows. */
+      measureValue(rows, measure) {
+        if (measure.star) {
+          return rows.length;
+        }
+        let values = rows
+          .map((row) => (measure.argIndex === null ? null : row.a[measure.argIndex]))
+          .filter((value) => value !== null && value !== undefined);
+        if (measure.distinct) {
+          const seen = new Set();
+          values = values.filter((value) => {
+            const key = SqlExecutor.keyOf([value]);
+            if (seen.has(key)) {
+              return false;
+            }
+            seen.add(key);
+            return true;
+          });
+        }
+        if (measure.fn === "COUNT") {
+          return values.length;
+        }
+        if (values.length === 0) {
+          return null;
+        }
+        if (measure.fn === "MIN" || measure.fn === "MAX") {
+          return values.reduce((best, value) => {
+            const comparison = SqlExecutor.compareValues(value, best);
+            if (measure.fn === "MIN") {
+              return comparison < 0 ? value : best;
+            }
+            return comparison > 0 ? value : best;
+          });
+        }
+        const numbers = values.map((value) => SqlExecutor.coerceNumber(value, measure.fn));
+        if (measure.fn === "MEDIAN") {
+          const sorted = numbers.slice().sort((a, b) => a - b);
+          const middle = Math.floor(sorted.length / 2);
+          return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+        }
+        if (measure.fn === "STDDEV") {
+          const mean = numbers.reduce((sum, value) => sum + value, 0) / numbers.length;
+          const variance = numbers.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / numbers.length;
+          return Math.sqrt(variance);
+        }
+        const total = numbers.reduce((sum, value) => sum + value, 0);
+        return measure.fn === "AVG" ? total / numbers.length : total;
+      }
+
+      /** Rows that belong to a row/column scope. With EXCLUDE HIDDEN, the
+       *  hidden members of both axes are left out. */
+      scopeRows(rowSpec, colSpec) {
+        const includeHidden = this.ast.totals.hidden !== "exclude";
+        return this.enriched.filter((row) => {
+          if (!includeHidden && (row.rowHidden || row.colHidden)) {
+            return false;
+          }
+          if (rowSpec.kind === "leaf" && row.rowKey !== rowSpec.key) {
+            return false;
+          }
+          if (rowSpec.kind === "subtotal" && PivotEngine.prefixKey(row.r, rowSpec.level) !== rowSpec.prefix) {
+            return false;
+          }
+          if (colSpec.kind === "leaf" && row.colKey !== colSpec.key) {
+            return false;
+          }
+          if (colSpec.kind === "subtotal" && PivotEngine.prefixKey(row.c, colSpec.level) !== colSpec.prefix) {
+            return false;
+          }
+          return true;
+        });
+      }
+
+      /** Computes a total from the visible cells (COMPUTE CELLS). */
+      computeCells(rowSpec, colSpec, measure) {
+        const rowMembers = this.rowAxis.visibleMembers.filter((member) => {
+          if (rowSpec.kind === "leaf") {
+            return member.key === rowSpec.key;
+          }
+          if (rowSpec.kind === "subtotal") {
+            return PivotEngine.prefixKey(member.values, rowSpec.level) === rowSpec.prefix;
+          }
+          return true;
+        });
+        const colMembers = this.colAxis.visibleMembers.filter((member) => {
+          if (colSpec.kind === "leaf") {
+            return member.key === colSpec.key;
+          }
+          if (colSpec.kind === "subtotal") {
+            return PivotEngine.prefixKey(member.values, colSpec.level) === colSpec.prefix;
+          }
+          return true;
+        });
+        const values = [];
+        rowMembers.forEach((rowMember) => {
+          colMembers.forEach((colMember) => {
+            const bucket = this.cellBucket(rowMember.key, colMember.key);
+            if (!bucket.empty) {
+              const value = this.measureValue(bucket.rows, measure);
+              if (value !== null && value !== undefined) {
+                values.push(value);
+              }
+            }
+          });
+        });
+        if (values.length === 0) {
+          return measure.fn === "COUNT" ? 0 : null;
+        }
+        if (measure.fn === "COUNT" || measure.fn === "SUM") {
+          return values.reduce((sum, value) => sum + Number(value), 0);
+        }
+        return values.reduce((best, value) => {
+          const comparison = SqlExecutor.compareValues(value, best);
+          if (measure.fn === "MIN") {
+            return comparison < 0 ? value : best;
+          }
+          return comparison > 0 ? value : best;
+        });
+      }
+
+      /** Measure value of a cell or of a total. */
+      cellValue(rowSpec, colSpec, measure) {
+        if (rowSpec.item && rowSpec.item.only && !this.onlyAllows(rowSpec.item, measure)) {
+          return { value: null, empty: false, allowed: false };
+        }
+        if (colSpec.item && colSpec.item.only && !this.onlyAllows(colSpec.item, measure)) {
+          return { value: null, empty: false, allowed: false };
+        }
+        if (rowSpec.kind === "leaf" && colSpec.kind === "leaf") {
+          const bucket = this.cellBucket(rowSpec.key, colSpec.key);
+          return { value: this.measureValue(bucket.rows, measure), empty: bucket.empty, allowed: true };
+        }
+        if ((rowSpec.item && rowSpec.item.compute === "cells") || (colSpec.item && colSpec.item.compute === "cells")) {
+          return { value: this.computeCells(rowSpec, colSpec, measure), empty: false, allowed: true };
+        }
+        const rows = this.scopeRows(rowSpec, colSpec);
+        return { value: this.measureValue(rows, measure), empty: rows.length === 0, allowed: true };
+      }
+
+      onlyAllows(item, measure) {
+        if (!item || !item.only) {
+          return true;
+        }
+        const name = PivotEngine.measureName(measure).toLowerCase();
+        return item.only.some((candidate) => String(candidate).toLowerCase() === name);
+      }
+
+      /** Denominator of a percentage measure. */
+      percentDenominator(rowSpec, colSpec, measure) {
+        const mode = measure.show;
+        if (mode === "PCT_OF ROW") {
+          return this.measureValue(this.scopeRows(rowSpec, { kind: "grand" }), measure);
+        }
+        if (mode === "PCT_OF COLUMN") {
+          return this.measureValue(this.scopeRows({ kind: "grand" }, colSpec), measure);
+        }
+        if (mode === "PCT_OF GRAND") {
+          return this.measureValue(this.scopeRows({ kind: "grand" }, { kind: "grand" }), measure);
+        }
+        if (mode === "PCT_OF PARENT_ROW") {
+          let level = 0;
+          this.rowAxis.subtotalItems.forEach((entry) => {
+            if (entry.level < (rowSpec.level || this.rowAxis.dims.length) && entry.level > level) {
+              level = entry.level;
+            }
+          });
+          if (level > 0) {
+            const values = rowSpec.kind === "subtotal" ? this.rowPrefixValues(rowSpec) : this.rowMemberValues(rowSpec);
+            const prefix = PivotEngine.prefixKey(values, level);
+            return this.measureValue(this.scopeRows({ kind: "subtotal", level, prefix }, { kind: "grand" }), measure);
+          }
+          return this.measureValue(this.scopeRows({ kind: "grand" }, { kind: "grand" }), measure);
+        }
+        if (mode === "PCT_OF PARENT_COLUMN") {
+          let level = 0;
+          this.colAxis.subtotalItems.forEach((entry) => {
+            if (entry.level < (colSpec.level || this.colAxis.dims.length) && entry.level > level) {
+              level = entry.level;
+            }
+          });
+          if (level > 0) {
+            const values = colSpec.kind === "subtotal" ? this.colPrefixValues(colSpec) : this.colMemberValues(colSpec);
+            const prefix = PivotEngine.prefixKey(values, level);
+            return this.measureValue(this.scopeRows({ kind: "grand" }, { kind: "subtotal", level, prefix }), measure);
+          }
+          return this.measureValue(this.scopeRows({ kind: "grand" }, { kind: "grand" }), measure);
+        }
+        return null;
+      }
+
+      rowPrefixValues(spec) {
+        const member = this.rowAxis.visibleMembers.find((candidate) => PivotEngine.prefixKey(candidate.values, spec.level) === spec.prefix);
+        return member ? member.values : [];
+      }
+
+      rowMemberValues(spec) {
+        const member = this.rowAxis.byKey.get(spec.key);
+        return member ? member.values : [];
+      }
+
+      colPrefixValues(spec) {
+        const member = this.colAxis.visibleMembers.find((candidate) => PivotEngine.prefixKey(candidate.values, spec.level) === spec.prefix);
+        return member ? member.values : [];
+      }
+
+      colMemberValues(spec) {
+        const member = this.colAxis.byKey.get(spec.key);
+        return member ? member.values : [];
+      }
+
+      /** Applies the FILL priority: measure, global, default. */
+      filled(value, empty, measure) {
+        if (empty) {
+          if (measure.fill && measure.fill.defined) {
+            return measure.fill.value;
+          }
+          if (this.ast.fill.empty && this.ast.fill.empty.defined) {
+            return this.ast.fill.empty.value;
+          }
+          return measure.fn === "COUNT" ? 0 : null;
+        }
+        if (value === null || value === undefined) {
+          if (measure.fill && measure.fill.defined) {
+            return measure.fill.value;
+          }
+          if (this.ast.fill.nullValue && this.ast.fill.nullValue.defined) {
+            return this.ast.fill.nullValue.value;
+          }
+          return null;
+        }
+        return value;
+      }
+
+      /** Final columns and rows of the pivot table. */
+      buildLayout(rowSpecs, colSpecs) {
+        const measures = this.ast.values;
+        const columnsMode = this.ast.measuresOn !== "rows";
+        const rowHeaders = this.ast.row.dims.map((dim) => dim.alias || dim.expr);
+        if (!columnsMode) {
+          rowHeaders.push(I18n.t("pivot.measureColumn"));
+        }
+        const columns = [];
+        const columnSpecs = [];
+        if (columnsMode) {
+          colSpecs.forEach((spec) => {
+            measures.forEach((measure, index) => {
+              if (spec.item && spec.item.only && !this.onlyAllows(spec.item, measure)) {
+                return;
+              }
+              const suffix = measures.length > 1 ? ` ${PivotEngine.measureName(measure)}` : "";
+              columnSpecs.push({
+                source: spec,
+                measureIndex: index,
+                label: `${spec.label}${suffix}`,
+              });
+            });
+          });
+        } else {
+          colSpecs.forEach((spec) => columnSpecs.push({
+            source: spec,
+            measureIndex: null,
+            label: spec.label,
+          }));
+        }
+        if (columnSpecs.length === 0) {
+          return { columns: this.uniqueHeaders(rowHeaders), rows: [] };
+        }
+        const headers = rowHeaders.concat(columnSpecs.map((spec) => spec.label));
+        const rows = [];
+        rowSpecs.forEach((rowSpec) => {
+          if (columnsMode) {
+            const values = rowSpec.cells.slice();
+            columnSpecs.forEach((columnSpec) => {
+              const measure = measures[columnSpec.measureIndex];
+              values.push(this.renderCell(rowSpec, columnSpec.source, measure));
+            });
+            rows.push(values);
+          } else {
+            measures.forEach((measure, measureIndex) => {
+              const values = rowSpec.cells.concat([PivotEngine.measureName(measure)]);
+              columnSpecs.forEach((columnSpec) => {
+                values.push(this.renderCell(rowSpec, columnSpec.source, measure));
+              });
+              rows.push(values);
+            });
+          }
+        });
+        return { columns: this.uniqueHeaders(headers), rows };
+      }
+
+      renderCell(rowSpec, colSpec, measure) {
+        const total = rowSpec.kind !== "leaf" || colSpec.kind !== "leaf";
+        const computed = this.cellValue(rowSpec, colSpec, measure);
+        if (!computed.allowed) {
+          return null;
+        }
+        let value = computed.value;
+        if (measure.show) {
+          if (total) {
+            return null;
+          }
+          if (value === null || value === undefined) {
+            return this.filled(null, computed.empty, measure);
+          }
+          const denominator = this.percentDenominator(rowSpec, colSpec, measure);
+          if (denominator === null || denominator === undefined || denominator === 0) {
+            return this.filled(null, computed.empty, measure);
+          }
+          value = Math.round((value / denominator) * 10000) / 10000;
+          return this.filled(value, computed.empty, measure);
+        }
+        return this.filled(value, computed.empty, measure);
+      }
+
+      uniqueHeaders(headers) {
+        const seen = new Map();
+        return headers.map((header) => {
+          const text = String(header);
+          const count = seen.get(text) || 0;
+          seen.set(text, count + 1);
+          return count === 0 ? text : `${text} (${count + 1})`;
+        });
+      }
+
+      /** Runs the whole pipeline and returns the standard result object. */
+      build() {
+        const startedAt = performance.now();
+        this.loadDetail();
+        const colRaw = this.loadColumnMembers();
+        const rowOrder = this.loadRowOrder();
+        const having = this.loadHaving();
+        const rowRanks = this.loadRowRanks();
+
+        const rowRaw = [];
+        const seenRows = new Set();
+        this.detail.forEach((row) => {
+          const key = PivotEngine.keyOf(row.r);
+          if (!seenRows.has(key)) {
+            seenRows.add(key);
+            const ranks = rowRanks && rowRanks.get(key) ? rowRanks.get(key) : [];
+            rowRaw.push({ values: row.r, ranks, order: null });
+          }
+        });
+        this.rowAxis = this.buildAxis("row", this.ast.row, rowRaw, rowOrder, having);
+        this.colAxis = this.buildAxis("col", this.ast.col, colRaw, this.ast.col.orderBy.length ? colRaw.map((member) => member.values) : null, null);
+        this.attachTotals(this.rowAxis, "row");
+        this.attachTotals(this.colAxis, "col");
+        this.enrich();
+        this.buildCellMap();
+
+        const rowSpecs = this.buildRowSpecs(this.rowAxis);
+        const colSpecs = this.buildColSpecs(this.colAxis);
+        const layout = this.buildLayout(rowSpecs, colSpecs);
+        const buildMs = performance.now() - startedAt;
+        this.steps.push({
+          label: I18n.t("pivot.step.build"),
+          rows: layout.rows.length,
+          ms: Math.round(buildMs * 1000) / 1000,
+        });
+        return {
+          columns: layout.columns,
+          rows: layout.rows,
+          steps: this.steps,
+          ms: Math.round((this.ejecucion.ms + buildMs) * 1000) / 1000,
+        };
+      }
+    }
+
 
     /* --- 5.6b Parameters ({{ … }}) --------------------------------------- */
 
@@ -10981,6 +13393,9 @@
         try {
           ast = new SqlParser(sql).parse();
         } catch (err) {
+          if (PivotEngine.isPivot(sql)) {
+            return PivotEngine.analyzeParams(sql, project, state);
+          }
           return { ok: false, error: err, params: [] };
         }
         const params = SqlParams.collect(ast).map((entry) => {
@@ -11168,14 +13583,6 @@
         return result + code.slice(cursor);
       },
     };
-
-    /* =====================================================================
-       7c · SCRIPT RUNNER
-       The engine of the JavaScript scripts, shared by the script view and by
-       the project tests. It exposes the tables, queries and scripts, turns the
-       returned value into { columns, rows } and materialises a script when a
-       query reads it as a table.
-       ===================================================================== */
 
     const ScriptRunner = {
       /** Runs a script as a SQL source: its result becomes a synthetic table,
@@ -11525,6 +13932,7 @@
         return { ok: true, result: normalized.result, ms: ms };
       },
     };
+
     /* Public engine surface used by markilandia. */
     window.markilandiaEngine = {
       Utils, I18n, Model, Persistence, Search,
