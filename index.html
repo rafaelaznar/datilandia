@@ -287,7 +287,7 @@
       padding: 0 2px 8px;
     }
 
-    /*  Handle between the sidebar and the view: drag it to change the width of the left column (minimum 140 px, maximum 480 px), with the arrow keys, or double-click to go back to the starting width.  */
+    /*  Handle between the sidebar and the view: drag it to change the width of the left column (minimum 140 px, up to half the window), with the arrow keys, or double-click to go back to the starting width.  */
     #separador-sidebar {
       flex: none;
       width: 6px;
@@ -2592,7 +2592,7 @@
     <!-- Handle to change the width of the left column -->
     <div data-i18n-aria-label="markup.div.widthLeftColumn" data-i18n-title="markup.div.dragChangeWidthMinimum140" id="separador-sidebar" role="separator" aria-orientation="vertical" tabindex="0"
          aria-label="Ancho de la columna izquierda" aria-valuemin="140" aria-valuemax="480" aria-valuenow="480"
-         title="Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 480 px; con el foco, las flechas del teclado"></div>
+         title="Arrastra para cambiar el ancho (mínimo 140 px, hasta la mitad de la ventana); doble clic para volver a 480 px; con el foco, las flechas del teclado"></div>
 
     <main id="principal">
       <!-- Welcome view: title, description and help, navigable by sections -->
@@ -3590,7 +3590,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.downloadTablesStructureJsonTip": "Download a JSON with the structure of every project table",
         "markup.button.updateTable": "Update table",
         "markup.button.updateTableDataFromImport": "Replace the data of the table importing a CSV or JSON (keeps fields, foreign keys and queries)",
-        "markup.div.dragChangeWidthMinimum140": "Drag to change the width (minimum 140 px, maximum 480 px); double-click to go back to 480 px; when it has the focus, the keyboard arrows",
+        "markup.div.dragChangeWidthMinimum140": "Drag to change the width (minimum 140 px, up to half the window); double-click to go back to 480 px; when it has the focus, the keyboard arrows",
         "markup.div.widthLeftColumn": "Width of the left column",
         "markup.dt.fields": "Fields",
         "markup.dt.fieldsEveryTable": "Fields in every table",
@@ -4834,7 +4834,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         "markup.button.downloadTablesStructureJsonTip": "Descargar un JSON con la estructura de todas las tablas del proyecto",
         "markup.button.updateTable": "Actualizar tabla",
         "markup.button.updateTableDataFromImport": "Sustituir los datos de la tabla importando un CSV o JSON (conserva campos, claves ajenas y consultas)",
-        "markup.div.dragChangeWidthMinimum140": "Arrastra para cambiar el ancho (mínimo 140 px, máximo 480 px); doble clic para volver a 480 px; con el foco, las flechas del teclado",
+        "markup.div.dragChangeWidthMinimum140": "Arrastra para cambiar el ancho (mínimo 140 px, hasta la mitad de la ventana); doble clic para volver a 480 px; con el foco, las flechas del teclado",
         "markup.div.widthLeftColumn": "Ancho de la columna izquierda",
         "markup.dt.fields": "Campos",
         "markup.dt.fieldsEveryTable": "Campos de todas las tablas",
@@ -19722,9 +19722,8 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
        ===================================================================== */
 
     const UiSidebar = {
-      /** Minimum, maximum and starting width and arrow step, in pixels. */
+      /** Minimum and starting width and arrow step, in pixels. */
       MIN: 140,
-      MAX: 480,
       DEFAULT: 480,
       STEP: 16,
 
@@ -19733,6 +19732,21 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       arrastrando: false,
       originX: 0,
       originAncho: 0,
+      /** Whether the window listener that re-clamps the width is wired. */
+      resizeWired: false,
+
+      /** Widest width allowed for a window of that width: half of it, and
+       *  never below the minimum. The maximum follows the window, so the
+       *  left column can grow with a big screen and is narrowed again when
+       *  the window shrinks. */
+      maxWidth(viewport = window.innerWidth) {
+        return Math.max(UiSidebar.MIN, Math.floor(viewport / 2));
+      },
+
+      /** Widest width allowed right now: half the window. */
+      get MAX() {
+        return UiSidebar.maxWidth();
+      },
 
       /** Wires the handle: pointer drag, arrow keys and double click. */
       bind() {
@@ -19744,6 +19758,10 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         handle.addEventListener("dblclick", () => UiSidebar.setWidth(UiSidebar.DEFAULT));
         handle.addEventListener("keydown", (event) => UiSidebar.onKeydown(event));
         UiSidebar.setWidth(UiSidebar.DEFAULT);
+        if (!UiSidebar.resizeWired) {
+          UiSidebar.resizeWired = true;
+          window.addEventListener("resize", () => UiSidebar.fit());
+        }
       },
 
       /** Applies a width, clamped between the minimum and the maximum. Returns
@@ -19757,6 +19775,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
         handle.setAttribute("aria-valuemin", String(UiSidebar.MIN));
         handle.setAttribute("aria-valuemax", String(UiSidebar.MAX));
         return ancho;
+      },
+
+      /** After a resize: if the window is narrower, half of it may be less
+       *  than the current width, so the column is clamped to the new maximum
+       *  (and the handle announces it). */
+      fit() {
+        UiSidebar.setWidth(UiSidebar.ancho);
       },
 
       /** Starts the drag: it remembers where it began. */
@@ -33019,7 +33044,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(document.getElementById("sidebar").style.width, "300px", "the width is applied to the left column");
       assertEqual(handle.getAttribute("aria-valuenow"), "300", "the handle announces the width");
       assertEqual(handle.getAttribute("aria-valuemin"), "140", "and the minimum");
-      assertEqual(handle.getAttribute("aria-valuemax"), "480", "and the maximum");
+      assertEqual(handle.getAttribute("aria-valuemax"), String(UiSidebar.MAX), "and the maximum");
       UiSidebar.onKeydown({ key: "ArrowRight", preventDefault() {} });
       assertEqual(UiSidebar.ancho, 316, "the right arrow widens it");
       UiSidebar.onKeydown({ key: "ArrowLeft", preventDefault() {} });
@@ -33027,7 +33052,7 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       UiSidebar.onKeydown({ key: "Home", preventDefault() {} });
       assertEqual(UiSidebar.ancho, 140, "Home goes to the minimum");
       UiSidebar.onKeydown({ key: "End", preventDefault() {} });
-      assertEqual(UiSidebar.ancho, 480, "End goes to the maximum");
+      assertEqual(UiSidebar.ancho, UiSidebar.MAX, "End goes to the maximum");
       assertEqual(UiSidebar.setWidth(antes), antes, "and it can go back to the starting width");
     });
 
@@ -33049,11 +33074,13 @@ Y88b 888 888  888 Y88b.  888 888 888  888 888  888 Y88b 888 888 888  888
       assertEqual(UiSidebar.setWidth(antes), antes, "the starting width is restored");
     });
 
-    SelfTests.add("When_AppStarts_Expect_SidebarAtItsWidest", () => {
-      assertEqual(UiSidebar.DEFAULT, UiSidebar.MAX, "the sidebar starts as wide as it can");
-      assertEqual(UiSidebar.DEFAULT, 480, "480 px");
+    SelfTests.add("When_AppStarts_Expect_SidebarWidensUpToHalfTheWindow", () => {
+      assertEqual(UiSidebar.maxWidth(1600), 800, "the maximum is half of a 1600 px window");
+      assertEqual(UiSidebar.maxWidth(200), UiSidebar.MIN, "and never goes below the minimum");
+      assertEqual(UiSidebar.MAX, UiSidebar.maxWidth(window.innerWidth), "the live maximum follows the window");
+      assertEqual(UiSidebar.DEFAULT, 480, "the column still starts at 480 px");
       const handle = document.getElementById("separador-sidebar");
-      assertEqual(handle.getAttribute("aria-valuemax"), String(UiSidebar.DEFAULT), "the handle announces that width as its maximum");
+      assertEqual(handle.getAttribute("aria-valuemax"), String(UiSidebar.MAX), "the handle announces that maximum");
       assertEqual(handle.getAttribute("aria-valuemin"), "140", "and the minimum is left as it was");
     });
 
